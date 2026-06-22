@@ -1,0 +1,19 @@
+{
+  "name": "job_display",
+  "description": "Show a single generation result in the UI widget by job ID. Pass exactly one job ID — to display multiple generations, call this tool once per ID. Use to re-display or inspect a previous generation.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+        "description": "Job ID to display"
+      }
+    },
+    "required": [
+      "id"
+    ]
+  }
+}

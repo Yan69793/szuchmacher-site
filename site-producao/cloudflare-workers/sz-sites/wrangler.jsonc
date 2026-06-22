@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "sz-sites",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-01",
+  "account_id": "7ac79fb1030e4e81115ef33c21a9b070",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    { "binding": "CACHE", "id": "fd40efe1057c4c54b3d33277d4665434" }
+  ],
+  "vars": {
+    "BRIEFING_ORIGIN": "https://szuchmacher-briefing.prospects-intel.workers.dev"
+  },
+  "routes": [
+    { "pattern": "szuchmacher.com.br/*", "zone_id": "cfe602627bd2ef210d225ee9deeb45d9" },
+    { "pattern": "www.szuchmacher.com.br/*", "zone_id": "cfe602627bd2ef210d225ee9deeb45d9" },
+    { "pattern": "multi-assets.com/*", "zone_id": "8ca066c2dda0d90e475b5c9eb255cbfd" },
+    { "pattern": "www.multi-assets.com/*", "zone_id": "8ca066c2dda0d90e475b5c9eb255cbfd" }
+  ],
+  "triggers": {
+    "crons": ["0 3 * * 1"]
+  }
+}

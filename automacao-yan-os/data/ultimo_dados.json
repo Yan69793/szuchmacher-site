@@ -1,0 +1,152 @@
+{
+  "brasil": {
+    "ibovespa": {
+      "valor_raw": 168454.0,
+      "pontos": "168454",
+      "valor": "168454",
+      "taxa": "168454",
+      "preco": "168454",
+      "variacao": "-0.70%",
+      "fonte": "Yahoo Finance"
+    },
+    "dolar": {
+      "valor_raw": 5.069200038909912,
+      "pontos": "5.0692",
+      "valor": "5.0692",
+      "taxa": "5.0692",
+      "preco": "5.0692",
+      "variacao": "-0.64%",
+      "fonte": "Yahoo Finance"
+    },
+    "di_jan28": {}
+  },
+  "eua": {
+    "sp500": {
+      "valor_raw": 7420.10009765625,
+      "pontos": "7420",
+      "valor": "7420",
+      "taxa": "7420",
+      "preco": "7420",
+      "variacao": "-1.21%",
+      "fonte": "Yahoo Finance"
+    },
+    "nasdaq": {
+      "valor_raw": 26021.66015625,
+      "pontos": "26022",
+      "valor": "26022",
+      "taxa": "26022",
+      "preco": "26022",
+      "variacao": "-1.34%",
+      "fonte": "Yahoo Finance"
+    },
+    "dow": {
+      "valor_raw": 51492.55078125,
+      "pontos": "51493",
+      "valor": "51493",
+      "taxa": "51493",
+      "preco": "51493",
+      "variacao": "-0.98%",
+      "fonte": "Yahoo Finance"
+    }
+  },
+  "europa": {
+    "dax": {
+      "valor_raw": 24884.509765625,
+      "pontos": "24885",
+      "valor": "24885",
+      "taxa": "24885",
+      "preco": "24885",
+      "variacao": "-0.20%",
+      "fonte": "Yahoo Finance"
+    },
+    "cac": {
+      "valor_raw": 8427.48046875,
+      "pontos": "8427",
+      "valor": "8427",
+      "taxa": "8427",
+      "preco": "8427",
+      "variacao": "-0.04%",
+      "fonte": "Yahoo Finance"
+    },
+    "ftse": {
+      "valor_raw": 10408.7998046875,
+      "pontos": "10409",
+      "valor": "10409",
+      "taxa": "10409",
+      "preco": "10409",
+      "variacao": "-0.95%",
+      "fonte": "Yahoo Finance"
+    }
+  },
+  "asia": {
+    "nikkei": {
+      "valor_raw": 71053.4921875,
+      "pontos": "71053",
+      "valor": "71053",
+      "taxa": "71053",
+      "preco": "71053",
+      "variacao": "+1.65%",
+      "fonte": "Yahoo Finance"
+    },
+    "hang_seng": {
+      "valor_raw": 23924.810546875,
+      "pontos": "23925",
+      "valor": "23925",
+      "taxa": "23925",
+      "preco": "23925",
+      "variacao": "-1.59%",
+      "fonte": "Yahoo Finance"
+    },
+    "shanghai": {
+      "valor_raw": 4090.481201171875,
+      "pontos": "4090.48",
+      "valor": "4090.48",
+      "taxa": "4090.48",
+      "preco": "4090.48",
+      "variacao": "-0.43%",
+      "fonte": "Yahoo Finance"
+    }
+  },
+  "yields": {
+    "treasury_10y": {
+      "valor_raw": 4.486999988555908,
+      "pontos": "4.487",
+      "valor": "4.487",
+      "taxa": "4.487",
+      "preco": "4.487",
+      "variacao": "+0.54%",
+      "fonte": "Yahoo Finance"
+    }
+  },
+  "commodities": {
+    "wti": {
+      "valor_raw": 73.8499984741211,
+      "pontos": "73.85",
+      "valor": "73.85",
+      "taxa": "73.85",
+      "preco": "73.85",
+      "variacao": "-3.83%",
+      "fonte": "Yahoo Finance"
+    },
+    "ouro": {
+      "valor_raw": 4298.60009765625,
+      "pontos": "4298.60",
+      "valor": "4298.60",
+      "taxa": "4298.60",
+      "preco": "4298.60",
+      "variacao": "-1.38%",
+      "fonte": "Yahoo Finance"
+    },
+    "minerio": {
+      "valor_raw": 101.27999877929688,
+      "pontos": "101.28",
+      "valor": "101.28",
+      "taxa": "101.28",
+      "preco": "101.28",
+      "variacao": "-0.37%",
+      "fonte": "Yahoo Finance"
+    }
+  },
+  "data": "2026-06-18",
+  "horario_coleta": "2026-06-18 05:58:18"
+}

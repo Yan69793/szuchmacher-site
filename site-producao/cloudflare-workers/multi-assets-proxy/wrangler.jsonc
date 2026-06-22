@@ -1,0 +1,10 @@
+{
+  "name": "multi-assets-proxy",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-01",
+  "account_id": "7ac79fb1030e4e81115ef33c21a9b070",
+  "routes": [
+    { "pattern": "multi-assets.com/*", "zone_id": "8ca066c2dda0d90e475b5c9eb255cbfd" },
+    { "pattern": "www.multi-assets.com/*", "zone_id": "8ca066c2dda0d90e475b5c9eb255cbfd" }
+  ]
+}

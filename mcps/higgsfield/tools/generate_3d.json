@@ -1,0 +1,62 @@
+{
+  "name": "generate_3d",
+  "description": "Generate a 3D GLB mesh. Use `models_explore(type:'3d')` to pick a model and see its `medias[].roles` and `parameters`. Apps UI local file: call `media_upload_widget`; remote tools cannot read Claude chat attachments. Web media URL: call `media_import_url`, pass returned `media_id`; `medias[].value` must be media_id/job_id, not URL. Defaults: `image_to_3d` for general image-to-3D with optional texturing, PBR, and rigging; `multi_image_to_3d` when 2-4 views of the same subject are available (better geometric accuracy); `sam_3_3d` for single-object reconstruction; `3d_rigging` to rig an existing 3D model (takes `model_url`, not images — pass a prior 3D job_id or an https GLB URL). For animated rigs, search clip ids with the `animation_actions` tool and pass `animation_action_id` with `enable_animation:true`. The mesh reproduces only what is in the source image — to add or change props, clothing, or held objects, edit the image first with `generate_image`, then convert the edited result. Pass model-specific params as top-level fields. Apply `adjustments` returned by the server. If `recovery_tool` is returned, call it immediately. `get_cost:true` preflights credits without submitting.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from the model catalog (required). Use models_explore(type:'3d') to discover."
+          },
+          "prompt": {
+            "description": "Optional text guidance. Only sam_3_3d accepts a prompt (to disambiguate which object to lift). Other 3D models ignore it.",
+            "type": "string"
+          },
+          "count": {
+            "default": 1,
+            "description": "Number of results (1-4).",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4
+          },
+          "medias": {
+            "description": "Reference media inputs.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "UUID from media_upload/media_import_url or job_id from a prior generation. Do not pass https:// URLs here."
+                },
+                "role": {
+                  "type": "string",
+                  "description": "Role — varies by model; inspect the selected model's medias[].roles. Server may auto-coerce when unambiguous."
+                }
+              },
+              "required": [
+                "value",
+                "role"
+              ]
+            }
+          },
+          "get_cost": {
+            "description": "If true, return the cost in credits for this generation without submitting any job. Use to preflight cost before generating.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

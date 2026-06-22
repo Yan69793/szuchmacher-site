@@ -1,0 +1,27 @@
+{
+  "name": "media_import_url",
+  "description": "Import an HTTPS image, video, or audio URL into Higgsfield storage and return a confirmed media_id. Use this before generate_image/generate_video when the user provides a web media URL; generation medias should receive the returned media_id, not the original URL. Max URL payload: 50 MB.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "description": "HTTPS URL of the media file to import."
+      },
+      "type": {
+        "description": "Expected media type. Use auto or omit when unknown.",
+        "type": "string",
+        "enum": [
+          "auto",
+          "image",
+          "video",
+          "audio"
+        ]
+      }
+    },
+    "required": [
+      "url"
+    ]
+  }
+}

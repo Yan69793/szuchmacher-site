@@ -1,0 +1,22 @@
+{
+  "name": "indicator_toggle_visibility",
+  "description": "Show or hide an indicator/study on the chart",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "entity_id": {
+        "type": "string",
+        "description": "Entity ID of the study (from chart_get_state)"
+      },
+      "visible": {
+        "type": "boolean",
+        "description": "true to show, false to hide"
+      }
+    },
+    "required": [
+      "entity_id",
+      "visible"
+    ]
+  }
+}

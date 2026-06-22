@@ -1,0 +1,26 @@
+{
+  "name": "alert_create",
+  "description": "Create a price alert via the TradingView alert dialog",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "condition": {
+        "type": "string",
+        "description": "Alert condition (e.g., \"crossing\", \"greater_than\", \"less_than\")"
+      },
+      "price": {
+        "type": "number",
+        "description": "Price level for the alert"
+      },
+      "message": {
+        "description": "Alert message",
+        "type": "string"
+      }
+    },
+    "required": [
+      "condition",
+      "price"
+    ]
+  }
+}

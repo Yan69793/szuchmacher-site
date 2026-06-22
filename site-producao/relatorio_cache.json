@@ -1,0 +1,37 @@
+{
+    "generated_at": "2026-06-20 08:00:00",
+    "date_label": "Fechamento · semana encerrada em 19 jun 2026",
+    "eyebrow": "Fechamento da semana",
+    "h2": "Leitura semanal dos vetores que movem preços",
+    "prices": {
+        "ibovespa": {
+            "value": "168.334",
+            "change_pct": "-1,56%",
+            "label": "Semana · -1,56%"
+        },
+        "usd_brl": {
+            "value": "5,1643",
+            "change_pct": "+2,0%",
+            "label": "Semana · +2,0%"
+        },
+        "sp500": {
+            "value": "7.500,58",
+            "change_pct": "+0,93%",
+            "label": "Semana · +0,93% (4 pregões)"
+        },
+        "wti": {
+            "value": "77,00",
+            "change_pct": "-4,6%",
+            "label": "Semana · -4,6% · acordo EUA-Irã"
+        }
+    },
+    "report": {
+        "headline": "COPOM mantém Selic em 14,25% e FOMC surpreende com dot plot hawkish; real recua a R$ 5,16 pressionado pelo Fed — Ibovespa fecha semana com baixa de 1,56% e petróleo cede para US$ 77",
+        "paragraph1": "O Ibovespa encerrou a sexta-feira, 19 de junho, em 168.334 pontos, com recuo de 1,56% na semana — período dominado pelas decisões simultâneas do COPOM e do FOMC, ambas em 17 de junho. O Banco Central do Brasil manteve a Selic em 14,25% a.a., em linha com o consenso de mercado, com comunicado que reafirmou vigilância sobre o IPCA projetado acima do teto da meta (5,3% para 2026). A ausência de surpresa doméstica, porém, não blindou o real: o dólar fechou em R$ 5,1643, depreciação de 2,0% em relação ao fechamento da semana anterior (R$ 5,0626 em 12/jun), pressionado pela postura hawkish do Fed e pela aversão generalizada a emergentes no pós-FOMC. Os mercados americanos permaneceram fechados na sexta-feira pelo feriado de Juneteenth, encerrando a semana americana em quatro pregões.",
+        "paragraph2": "Nos Estados Unidos, o FOMC manteve os Fed Funds inalterados em 17 de junho, mas o dot plot frustrou as expectativas do mercado: o comitê projetou apenas um corte de 25 bps até o fim de 2026, contra dois cortes precificados antes da reunião. O resultado fortaleceu o dólar globalmente e penalizou moedas de mercados emergentes, incluindo o real. O S&P 500 avançou 0,93% na semana truncada pelo Juneteenth, para 7.500 pontos, sustentado por rotação para setores defensivos e de valor. No petróleo, o WTI recuou para a faixa de US$ 77/barril — queda de aproximadamente 4,6% na semana — à medida que o acordo de paz interino entre EUA e Irã avançou para implementação, eliminando o prêmio geopolítico que havia sustentado os preços de energia nas semanas anteriores.",
+        "paragraph3": "Highlights da semana. A dinâmica foi de dupla compressão para ativos brasileiros: o FOMC reafirmou que os juros americanos permanecem elevados por mais tempo (dot plot hawkish), apertando o diferencial de juros e pressionando o real de R$ 5,06 para R$ 5,16 em apenas dois dias; e a queda do petróleo para US$ 77 impactou negativamente o segmento de óleo e gás, que pesou sobre o Ibovespa. O COPOM foi neutro — em linha com o esperado — sem reverter a pressão externa. Para ativos domésticos, a semana encerrou o ciclo de decisões de bancos centrais de junho sem nenhum catalisador positivo: o foco agora migra integralmente para o IPCA-15 de junho (25/jun) e o PCE americano de maio (26/jun) como calibradores do regime de juros para julho.",
+        "what_could_go_wrong": "IPCA-15 de junho (25/jun) acima do consenso consolidaria a narrativa de pausa longa do COPOM e poderia pressionar ainda mais o real além de R$ 5,20. PCE americano de maio (26/jun) abaixo do esperado reabriria o trade de afrouxamento do Fed e beneficiaria emergentes, aliviando o câmbio. Reescalonamento das tensões entre EUA e Irã reverteria a queda do petróleo abruptamente e reintroduziria prêmio inflacionário global, complicando a trajetória de ambos os bancos centrais.",
+        "next_week": "Segunda (22/jun), Boletim Focus — primeira leitura de mercado pós-COPOM e pós-FOMC, com atualização das medianas de Selic, IPCA 2026, câmbio e PIB. Quarta (24/jun), Confiança do Consumidor dos EUA (Conference Board). Quinta (25/jun), IPCA-15 de junho pelo IBGE — dado doméstico mais aguardado da semana — além do GDP Q1 final e dos pedidos semanais de desemprego nos EUA. Sexta (26/jun), PCE de maio nos EUA — o indicador de inflação preferido do Fed e o dado mais importante da semana para o pricing do FOMC de julho.",
+        "source_note": "Relatório interno Szuchmacher Consultoria com dados de Reuters, Bloomberg, Banco Central do Brasil, B3, IBGE, Federal Reserve, BLS, InfoMoney e CNBC, referentes à semana encerrada em 19 de junho de 2026. Onde a fonte primária não confirmou a variação semanal com precisão suficiente, o dado foi suprimido na peça pública."
+    }
+}

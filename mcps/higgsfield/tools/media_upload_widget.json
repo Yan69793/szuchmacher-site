@@ -1,0 +1,40 @@
+{
+  "name": "media_upload_widget",
+  "description": "Open the Higgsfield upload widget for a user-provided local image, video, or audio file. Call this immediately when the user says they have a local photo, image, video, or audio on their device to use as Higgsfield input and the MCP client can render Apps UI. Do not ask the user to upload the file directly into Claude chat for Higgsfield; remote MCP tools cannot read those chat attachments. The widget is the upload surface: the user chooses one or more files in the browser, the browser uploads them directly to Higgsfield storage, the widget confirms them, then sends the confirmed media_id/media_ids back to Claude for the next generation or analysis tool call. The widget accepts media only; for general files (archives, documents, code) use media_upload instead and upload the bytes to the presigned upload_url yourself.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "type": {
+        "description": "Expected media type. Use auto when the user has not specified image, video, or audio.",
+        "type": "string",
+        "enum": [
+          "auto",
+          "image",
+          "video",
+          "audio"
+        ]
+      },
+      "label": {
+        "description": "Optional short label shown in the widget header.",
+        "type": "string"
+      },
+      "multiple": {
+        "description": "Allow selecting multiple files. Defaults to true for image/auto and false for video/audio.",
+        "type": "boolean"
+      },
+      "min_files": {
+        "description": "Minimum confirmed uploads before Continue is enabled.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "max_files": {
+        "description": "Maximum files accepted by the widget.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      }
+    }
+  }
+}

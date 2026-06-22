@@ -1,0 +1,17 @@
+{
+  "name": "pine_analyze",
+  "description": "Run static analysis on Pine Script code WITHOUT compiling — catches array out-of-bounds, unguarded array.first()/last(), bad loop bounds, and implicit bool casts. Works offline, no TradingView connection needed.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "Pine Script source code to analyze"
+      }
+    },
+    "required": [
+      "source"
+    ]
+  }
+}

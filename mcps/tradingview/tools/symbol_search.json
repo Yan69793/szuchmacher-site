@@ -1,0 +1,21 @@
+{
+  "name": "symbol_search",
+  "description": "Search for symbols by name or keyword",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Search query (e.g., \"AAPL\", \"crude oil\", \"ES\")"
+      },
+      "type": {
+        "description": "Filter by type (e.g., \"stock\", \"futures\", \"crypto\", \"forex\")",
+        "type": "string"
+      }
+    },
+    "required": [
+      "query"
+    ]
+  }
+}

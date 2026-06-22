@@ -1,0 +1,22 @@
+{
+  "name": "capture_screenshot",
+  "description": "Take a screenshot of the TradingView chart",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "region": {
+        "description": "Region to capture: full, chart, strategy_tester (default full)",
+        "type": "string"
+      },
+      "filename": {
+        "description": "Custom filename (without extension)",
+        "type": "string"
+      },
+      "method": {
+        "description": "Capture method: cdp (Page.captureScreenshot) or api (chartWidgetCollection.takeScreenshot) (default cdp)",
+        "type": "string"
+      }
+    }
+  }
+}

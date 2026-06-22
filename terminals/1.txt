@@ -1,0 +1,7 @@
+---
+pid: 15628
+cwd: "E:\Diretorio\Claude\Site"
+command: "cd \"E:\\Diretorio\\Claude\\Site\\site-producao\\scripts\"; python _stripe_probe.py"
+started_at: 2026-06-17T03:39:53.616Z
+running_for_ms: 2740005  
+---

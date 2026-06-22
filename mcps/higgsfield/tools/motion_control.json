@@ -1,0 +1,54 @@
+{
+  "name": "motion_control",
+  "description": "Animate an existing character image with the motion and camera movement from a reference video using Kling 3.0 Motion Control. Use this when the user asks to recast, puppeteer, transfer motion, or make a character follow a driving clip. Pass image_id for the character still and motion_video_id for the reference motion video; each can be a confirmed uploaded media_id or a completed generation job_id. This tool does not use prompt or count; the scene prompt and background setup are handled automatically. resolution controls output quality, and scene_control chooses whether the background is based on the image or the video.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "image_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Character still. Confirmed uploaded image media_id or completed image job_id."
+          },
+          "motion_video_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Reference motion video. Confirmed uploaded video media_id or completed video job_id."
+          },
+          "resolution": {
+            "default": "720p",
+            "description": "Output quality tier: 720p (cheaper) or 1080p.",
+            "type": "string",
+            "enum": [
+              "720p",
+              "1080p"
+            ]
+          },
+          "scene_control": {
+            "default": "image",
+            "description": "Where the background comes from: image (the character image) or video (the motion clip).",
+            "type": "string",
+            "enum": [
+              "image",
+              "video"
+            ]
+          }
+        },
+        "required": [
+          "image_id",
+          "motion_video_id"
+        ],
+        "additionalProperties": false,
+        "description": "Kling 3.0 motion control parameters."
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

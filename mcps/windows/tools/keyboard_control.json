@@ -1,0 +1,81 @@
+{
+  "name": "keyboard_control",
+  "description": "⚠️ TO SAVE FILES: STOP! Use file_save(windowHandle, filePath) instead - keyboard_control CANNOT handle Save As dialogs! Sends keyboard input to a specific window. The window is activated before input is sent. Best for: typing text, hotkeys (key='s', modifiers='ctrl'), special keys. For typing into a specific UI element by name/automationId, use ui_type instead.\nSupports type (text), press (key), key_down, key_up, sequence, release_all, get_keyboard_layout, and wait_for_idle actions. WARNING: Do NOT put modifiers in the 'key' parameter (e.g., 'Ctrl+S' is WRONG). Use key='s', modifiers='ctrl'. ⚠️ FOR SAVE: Use file_save tool - it handles Save As dialogs!\nReturns: The result includes success status, operation details, and 'target_window' (handle, title, process_name) showing which window received the input.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "windowHandle": {
+        "description": "Window handle as decimal string (from app() or window_management 'find'). REQUIRED - ensures input goes to the correct window.",
+        "type": "string"
+      },
+      "action": {
+        "description": "The keyboard action: type, press, key_down, key_up, sequence, release_all, get_keyboard_layout, or wait_for_idle.",
+        "type": "string",
+        "enum": [
+          "type",
+          "press",
+          "key_down",
+          "key_up",
+          "sequence",
+          "release_all",
+          "get_keyboard_layout",
+          "wait_for_idle"
+        ]
+      },
+      "text": {
+        "description": "Text to type (required for type action).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "key": {
+        "description": "The MAIN key to press (for press, key_down, key_up actions). Examples: enter, tab, escape, f1, a, s, c, v, copilot. For Ctrl+S, this is 's' (not 'ctrl').",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "modifiers": {
+        "description": "Modifier keys HELD during the key press: ctrl, shift, alt, win (comma-separated). For Ctrl+S: key='s', modifiers='ctrl'. For Ctrl+Shift+S: key='s', modifiers='ctrl,shift'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "repeat": {
+        "description": "Number of times to repeat key press (default: 1, for press action).",
+        "type": "integer",
+        "default": 1
+      },
+      "sequence": {
+        "description": "JSON array for sequence action. Format: [{\"key\":\"f\",\"modifiers\":\"alt\"},{\"key\":\"s\"}] for Alt+F then S. Modifiers: \"ctrl\", \"shift\", \"alt\", \"win\" (or numbers: 1,2,4,8).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "interKeyDelayMs": {
+        "description": "Delay between keys in sequence (milliseconds).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "clearFirst": {
+        "description": "For type action only: If true, clears the current field content before typing by sending Ctrl+A (select all) followed by the new text.",
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": [
+      "windowHandle",
+      "action"
+    ]
+  }
+}

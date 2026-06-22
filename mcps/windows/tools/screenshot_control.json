@@ -1,0 +1,123 @@
+{
+  "name": "screenshot_control",
+  "description": "Captures screenshots of screens, monitors, windows, or regions on Windows.\n**COORDINATE SYSTEM**: Screenshot pixel coordinates = mouse coordinates. No conversion needed! If you see a button at pixel (450, 300) in the screenshot, use mouse_control(x=450, y=300, monitorIndex=N). Returns base64-encoded image data (JPEG by default, configurable via imageFormat parameter). Default: JPEG format at quality 60 (LLM-optimized), at logical resolution (matching mouse coordinate space). **ANNOTATION MODE** (annotate=true, default): - Returns element list with index, name, controlType, boundingRect, and elementId - By default, image data is NOT included (saves ~100K+ tokens per call!) - Element metadata provides all information needed for UI automation - Set includeImage=true only if you need to visually inspect the screenshot - Elements can be used directly with ui_automation actions using elementId **PLAIN SCREENSHOT** (annotate=false): - Returns full image data without element discovery - Use when you need raw visual inspection without structured elements Monitor targeting: - 'primary_screen': Captures the main display (with taskbar). Most common choice. - 'secondary_screen': Captures the other monitor. Only works with exactly 2 monitors. - 'monitor' with monitorIndex: For 3+ monitors, use list_monitors first to find the index. - 'all_monitors': Captures all monitors as a single composite image. The list_monitors action returns display_number (matches Windows Settings) and is_primary flag. Respects secure desktop (UAC/lock screen) restrictions.\nReturns: The result containing base64-encoded image data or file path, dimensions, original dimensions (if scaled), file size, and error details if failed.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "description": "The action to perform. Valid values: 'capture' (take screenshot), 'list_monitors' (enumerate displays). Default: 'capture'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "annotate": {
+        "description": "Overlay numbered labels on interactive elements and return element list. Use this when you need to discover UI elements before interacting.",
+        "type": "boolean",
+        "default": true
+      },
+      "target": {
+        "description": "Capture target. Valid values: 'primary_screen' (main display with taskbar), 'secondary_screen' (other monitor, only for 2-monitor setups), 'monitor' (by index for 3+ monitors), 'window' (by handle), 'region' (by coordinates), 'all_monitors' (composite of all displays). Default: 'primary_screen'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "monitorIndex": {
+        "description": "Monitor index for 'monitor' target (0-based). Use 'list_monitors' to get available indices.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "windowHandle": {
+        "description": "Window handle (HWND) as a decimal string for 'window' target. Get from window_management tool output and pass it through verbatim.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "regionX": {
+        "description": "X coordinate (left) for 'region' target. Can be negative for multi-monitor setups.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "regionY": {
+        "description": "Y coordinate (top) for 'region' target. Can be negative for multi-monitor setups.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "regionWidth": {
+        "description": "Width in pixels for 'region' target. Must be positive.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "regionHeight": {
+        "description": "Height in pixels for 'region' target. Must be positive.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "includeCursor": {
+        "description": "Include mouse cursor in capture. Default: false.",
+        "type": "boolean",
+        "default": false
+      },
+      "imageFormat": {
+        "description": "Screenshot format: 'jpeg'/'jpg' or 'png'. Default: 'jpeg' (LLM-optimized).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "quality": {
+        "description": "Image compression quality 1-100. Default: 60 (LLM-optimized). Only affects JPEG format.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "outputMode": {
+        "description": "How to return the screenshot. 'inline' returns base64 data, 'file' saves to disk and returns path. Default: 'inline'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "outputPath": {
+        "description": "Directory or file path for output when outputMode is 'file'. If directory, auto-generates filename. If null, uses temp directory.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "includeImage": {
+        "description": "Include the image in the response. Default: false for annotated screenshots (element metadata is sufficient). Set true to see the actual screenshot pixels.",
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "default": null
+      }
+    }
+  }
+}

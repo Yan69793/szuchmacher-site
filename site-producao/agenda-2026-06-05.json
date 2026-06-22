@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "version": "2026-06-05",
+    "curator": "Szuchmacher Consultoria",
+    "fontes_primarias": [
+      "BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)",
+      "BLS — US economic release schedule (bls.gov/schedule)",
+      "NFIB — Research Foundation calendar (nfib.com)",
+      "DoL — Unemployment Insurance Weekly Claims"
+    ],
+    "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado. Cada item traz fonte primária.",
+    "disciplina_en": "Scheduled releases from official sources. No result anticipation. Each item cites its primary source.",
+    "idiomas": ["pt-BR", "en"]
+  },
+  "gerado": "2026-06-05T07:07:00-03:00",
+  "janela": { "inicio": "2026-06-05", "fim": "2026-06-12" },
+  "eventos": [
+    {
+      "data": "2026-06-05",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Nonfarm Payrolls — Employment Situation (maio)",
+      "evento_en": "Nonfarm Payrolls — Employment Situation (May)",
+      "descricao": "Relatório de emprego dos EUA referente a maio. Driver dominante de Treasuries, dólar e do pricing de cortes do Fed antes da reunião de 16–17 de junho. Mercado monitora cabeçalho, taxa de desemprego e ganho médio horário — leitura crítica após o IPCA brasileiro romper o teto da meta e o mercado revisar a Selic para 13,25% no fim do ano.",
+      "descricao_en": "US jobs report for May. Dominant driver of Treasuries, the dollar and Fed cut pricing ahead of the June 16–17 meeting. Market watches headline, unemployment rate and average hourly earnings — critical read after Brazil's IPCA breached the 4.5% ceiling and Selic year-end expectations were revised to 13.25%.",
+      "fonte": "BLS",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-06-08",
+      "hora_brt": "08:25",
+      "regiao": "BR",
+      "evento": "Boletim Focus",
+      "evento_en": "Focus Market Report",
+      "descricao": "Primeira atualização das medianas de mercado após o payroll americano de 5 de junho e após o IPCA acumular 4,64% em 12 meses, rompendo o teto da meta. Expectativas para Selic, câmbio, IPCA 2026 e PIB são acompanhadas de perto.",
+      "descricao_en": "First update of market consensus estimates after the June 5 payroll and after Brazil's IPCA reached 4.64% over 12 months, breaching the 4.5% ceiling. Selic, FX, IPCA 2026 and GDP expectations closely watched.",
+      "fonte": "BCB",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-06-09",
+      "hora_brt": "11:00",
+      "regiao": "US",
+      "evento": "NFIB — Confiança de pequenas empresas (maio)",
+      "evento_en": "NFIB — Small Business Optimism (May)",
+      "descricao": "Índice de confiança das pequenas empresas americanas. Componentes de contratação, capex e precificação complementam a leitura do payroll de sexta-feira sobre o estado da economia americana.",
+      "descricao_en": "US small business confidence index. Hiring, capex and pricing components supplement Friday's payroll read on the state of the US economy.",
+      "fonte": "NFIB",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-10",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "CPI — Índice de preços ao consumidor (maio)",
+      "evento_en": "CPI — Consumer Price Index (May)",
+      "descricao": "Dado de inflação dos EUA referente a maio. Leitura decisiva para o Fed antes da reunião de 16–17 de junho. Surpresa altista pode afastar cortes de juros e pressionar emergentes via apreciação do dólar; surpresa baixista reabre o trade de afrouxamento.",
+      "descricao_en": "US inflation data for May. Decisive read for the Fed ahead of the June 16–17 meeting. An upside surprise may push back rate cuts and pressure emerging markets via dollar strength; a downside surprise reopens the easing trade.",
+      "fonte": "BLS",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-06-11",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Initial Jobless Claims",
+      "evento_en": "Initial Jobless Claims",
+      "descricao": "Pedidos semanais de seguro-desemprego. Indicador de alta frequência para o estado do mercado de trabalho americano, lido em conjunto com o payroll de 5 de junho.",
+      "descricao_en": "Weekly initial unemployment insurance claims. High-frequency labor market indicator, read alongside the June 5 payroll.",
+      "fonte": "DoL",
+      "relevancia": "media"
+    }
+  ]
+}

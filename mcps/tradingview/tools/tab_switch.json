@@ -1,0 +1,17 @@
+{
+  "name": "tab_switch",
+  "description": "Switch to a chart tab by index",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "index": {
+        "type": "number",
+        "description": "Tab index (0-based, from tab_list)"
+      }
+    },
+    "required": [
+      "index"
+    ]
+  }
+}

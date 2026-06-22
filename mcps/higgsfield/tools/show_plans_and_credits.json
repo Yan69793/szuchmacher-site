@@ -1,0 +1,21 @@
+{
+  "name": "show_plans_and_credits",
+  "description": "Open the single combined pricing widget for everything billing-related. The widget has two tabs the user can switch between: **Upgrade Plan** (Plus + Ultra, monthly + annual subscription cards) and **Top-up Credits** (one-time credit packs of 500 / 1,000 / 2,000 / 4,000 credits). Cards include feature lists, 7-Day Unlimited highlights, and 365-Day Unlimited blocks pulled from the live pricing config. Each plan card and credit pack has a CTA that links directly to the relevant Stripe or Higgsfield checkout/setup URL — no separate tool is needed to mint checkouts. For every billing request, the text response and `assistant_response` are intentionally short, user-facing sales copy with checkout URLs wrapped as action-specific Markdown links such as `[Go to Checkout](url)`, `[Higgsfield Upgrade](url)`, `[Higgsfield Credit Top-up](url)`, `[Higgsfield Auto-refill](url)`, `[Higgsfield Team Top-up](url)`, or `[Higgsfield Team Auto-refill](url)`; relay that response verbatim instead of summarizing, saying only that the widget opened, or listing options without links. If the user asks to buy credits or they are out of credits, first push auto-refill when `auto_refill_purchase_link` is present, then show `credit_purchase_links`. If the user asks to upgrade or a minimum plan is required, show `plan_purchase_links`. Pass `intent='auto_refill'` for out-of-credits recovery, `intent='topup'` for one-time credit packs, or `intent='upgrade'` for plan upgrades so the response is ordered for that purchase path. Use this tool for ANY of these requests: plans, pricing, subscriptions, upgrade options, comparing tiers, buying credits, topping up credits, refilling credits, credit packs. Do not look for separate `show_plans` or `show_credit_topups` tools — both have been merged into this one. Returns `already_subscribed: true` when the workspace is already on a paid plan; the widget hides the Upgrade tab in that case and shows only credit top-ups. Team-plan workspaces: `workspace_kind` field indicates the context. When `workspace_kind='team_owner'`, the widget renders team-specific Top-up and Auto-refill UIs and emits `team_purchase_links` (two links: `team_top_up` and `team_auto_refill`) that deeplink to the team billing modals on higgsfield.ai — relay both Markdown links in the text response. When `workspace_kind='team_member'`, no purchase links are returned; the widget shows a read-only notice and the text response tells the user only the workspace owner can buy credits or change auto-refill. Do not invent purchase links for members.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "intent": {
+        "default": "general",
+        "description": "Purchase path to prioritize in the widget and text fallback. Use auto_refill for out-of-credits recovery, topup for one-time credit packs, upgrade for minimum-plan errors or plan changes, and general for pricing comparison.",
+        "type": "string",
+        "enum": [
+          "upgrade",
+          "topup",
+          "auto_refill",
+          "general"
+        ]
+      }
+    }
+  }
+}

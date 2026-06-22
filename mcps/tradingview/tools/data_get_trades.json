@@ -1,0 +1,14 @@
+{
+  "name": "data_get_trades",
+  "description": "Get trade list from Strategy Tester",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "max_trades": {
+        "description": "Maximum trades to return",
+        "type": "number"
+      }
+    }
+  }
+}

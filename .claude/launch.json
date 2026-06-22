@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sz-sites (Cloudflare Worker dev)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "site-producao/cloudflare-workers/sz-sites",
+      "port": 8787
+    },
+    {
+      "name": "leads-webhook (qualificador)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["qualificador_leads.py"],
+      "cwd": "automacao-yan-os",
+      "port": 8765
+    }
+  ]
+}

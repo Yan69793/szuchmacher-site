@@ -1,0 +1,9 @@
+{
+  "name": "data_get_strategy_results",
+  "description": "Get strategy performance metrics from Strategy Tester",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "sz-sites",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pwsh -File ../../scripts/build-cloudflare-public.ps1",
+    "deploy": "npm run build && wrangler deploy",
+    "dev": "npm run build && wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.101.0"
+  }
+}

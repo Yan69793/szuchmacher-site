@@ -1,0 +1,84 @@
+{
+  "name": "ui_type",
+  "description": "Types text into a text field or other input element. Automatically activates the target window. ✅ WORKS ON ELEVATED WINDOWS - use this when keyboard_control fails with \"elevated window\" error. WARNING: Do NOT use for Save As dialogs - use file_save(windowHandle, filePath) instead. It handles path entry and Save button automatically.\nType text into Edit, Document, TextBox, or search fields. Auto-activates window, optionally clears existing text first. ✅ Works on elevated/admin windows where keyboard_control fails. For Notepad, use controlType=\"Document\" (not \"Edit\"). TO SAVE FILES: Use file_save(windowHandle='...', filePath='C:/path/file.txt') - it handles the full Save As workflow automatically.\nReturns: The result of the type operation including success status and element information.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "windowHandle": {
+        "description": "Window handle as decimal string (from window_management 'find' or 'list'). REQUIRED.",
+        "type": "string"
+      },
+      "text": {
+        "description": "Text to type. Required.",
+        "type": "string"
+      },
+      "name": {
+        "description": "Element name (exact match, case-insensitive).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "nameContains": {
+        "description": "Substring in element name (case-insensitive).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "namePattern": {
+        "description": "Regex pattern for element name matching.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "controlType": {
+        "description": "Control type (Edit, Document, TextBox, etc.)",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "automationId": {
+        "description": "AutomationId for precise matching.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "className": {
+        "description": "Element class name.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "foundIndex": {
+        "description": "Return Nth match (1-based, default: 1).",
+        "type": "integer",
+        "default": 1
+      },
+      "clearFirst": {
+        "description": "Clear existing text before typing (default: false).",
+        "type": "boolean",
+        "default": false
+      },
+      "includeDiagnostics": {
+        "description": "Include diagnostics (timing, query, elements scanned) in response. Default: false.",
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": [
+      "windowHandle",
+      "text"
+    ]
+  }
+}

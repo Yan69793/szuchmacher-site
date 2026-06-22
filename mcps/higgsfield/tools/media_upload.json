@@ -1,0 +1,43 @@
+{
+  "name": "media_upload",
+  "description": "Upload media for use in generation, or general files (documents, archives, code) for sharing. Returns presigned URLs for clients that can upload bytes themselves; run the generated curl commands or PUT the bytes to each upload_url, then call media_confirm. The media type is inferred from the filename extension: image/video/audio extensions become generation inputs; other whitelisted extensions (pdf, zip, tar, docx, csv, code files, …) are uploaded as general files and return a permanent URL, but cannot be used as generation inputs. General files are the agent's own upload path — the widget does not accept them, so upload the bytes to upload_url yourself (e.g. from a code execution environment). Supports batch uploads via files[]. Do not use this for user-provided local image/video/audio in Claude Apps UI-capable clients; call media_upload_widget instead so the user chooses the file in the Higgsfield widget and the browser uploads it directly.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "method": {
+        "description": "Only supported method. Omit this or set it to 'upload_url'.",
+        "type": "string",
+        "const": "upload_url"
+      },
+      "filename": {
+        "description": "Single filename for upload",
+        "type": "string"
+      },
+      "files": {
+        "description": "Multiple files for parallel presigned URL generation",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "filename": {
+              "type": "string",
+              "description": "Filename for the upload"
+            },
+            "content_type": {
+              "description": "MIME type, e.g. 'image/jpeg' or 'video/mp4'. Inferred from filename when omitted.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "filename"
+          ]
+        }
+      },
+      "content_type": {
+        "description": "MIME type for single file upload, e.g. 'image/jpeg', 'image/png', or 'video/mp4'. Inferred from filename when omitted.",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "ui_keyboard",
+  "description": "Press keyboard keys or shortcuts (e.g., Enter, Escape, Alt+S, Ctrl+Z)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "key": {
+        "type": "string",
+        "description": "Key to press (e.g., \"Enter\", \"Escape\", \"Tab\", \"a\", \"ArrowUp\")"
+      },
+      "modifiers": {
+        "description": "Modifier keys to hold (e.g., [\"ctrl\", \"shift\"])",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "ctrl",
+            "alt",
+            "shift",
+            "meta"
+          ]
+        }
+      }
+    },
+    "required": [
+      "key"
+    ]
+  }
+}

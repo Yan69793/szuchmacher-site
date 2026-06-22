@@ -1,0 +1,22 @@
+{
+  "name": "pane_set_symbol",
+  "description": "Set the symbol on a specific pane by index",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "index": {
+        "type": "number",
+        "description": "Pane index (0-based)"
+      },
+      "symbol": {
+        "type": "string",
+        "description": "Symbol to set (e.g., NQ1!, ES1!, AAPL)"
+      }
+    },
+    "required": [
+      "index",
+      "symbol"
+    ]
+  }
+}

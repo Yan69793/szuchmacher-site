@@ -1,0 +1,693 @@
+{
+  "metadata": {
+    "generated_at": "2026-03-30T04:58:01.466250+00:00",
+    "platform": "MultiAsset Pro",
+    "platform_url": "https://szuchmacher.com.br/multiasset.html",
+    "audit_version": "1.0.0",
+    "hash": "eb8c723acceea073d4e1fefcc623c394a589068e3e7eae846936d50fde982a44"
+  },
+  "results": {
+    "scenarios": [
+      {
+        "asset": "gold",
+        "scenario": "conservador",
+        "platform_return": 0.04,
+        "platform_volatility": 0.15,
+        "historical_cagr_10y": 0.1393,
+        "historical_vol_10y": 0.1639,
+        "historical_cagr_5y": 0.2183,
+        "historical_cagr_15y": 0.08,
+        "coherence": "ACEITÁVEL",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.2183,
+            "scenario_cagr": 0.04,
+            "deviation": 0.1783,
+            "actual_cumulative": 1.6832,
+            "scenario_cumulative": 0.2166
+          },
+          "10y": {
+            "actual_cagr": 0.1393,
+            "scenario_cagr": 0.04,
+            "deviation": 0.0993,
+            "actual_cumulative": 2.6826,
+            "scenario_cumulative": 0.4802
+          },
+          "15y": {
+            "actual_cagr": 0.08,
+            "scenario_cagr": 0.04,
+            "deviation": 0.04,
+            "actual_cumulative": 2.1733,
+            "scenario_cumulative": 0.801
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.106,
+            "COVID 2020": 0.0678,
+            "Hike 2022": 0.0113
+          }
+        }
+      },
+      {
+        "asset": "gold",
+        "scenario": "moderado",
+        "platform_return": 0.093,
+        "platform_volatility": 0.15,
+        "historical_cagr_10y": 0.1393,
+        "historical_vol_10y": 0.1639,
+        "historical_cagr_5y": 0.2183,
+        "historical_cagr_15y": 0.08,
+        "coherence": "COERENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.2183,
+            "scenario_cagr": 0.093,
+            "deviation": 0.1253,
+            "actual_cumulative": 1.6832,
+            "scenario_cumulative": 0.5598
+          },
+          "10y": {
+            "actual_cagr": 0.1393,
+            "scenario_cagr": 0.093,
+            "deviation": 0.0463,
+            "actual_cumulative": 2.6826,
+            "scenario_cumulative": 1.433
+          },
+          "15y": {
+            "actual_cagr": 0.08,
+            "scenario_cagr": 0.093,
+            "deviation": -0.013,
+            "actual_cumulative": 2.1733,
+            "scenario_cumulative": 2.796
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.106,
+            "COVID 2020": 0.0678,
+            "Hike 2022": 0.0113
+          }
+        }
+      },
+      {
+        "asset": "gold",
+        "scenario": "agressivo",
+        "platform_return": 0.15,
+        "platform_volatility": 0.15,
+        "historical_cagr_10y": 0.1393,
+        "historical_vol_10y": 0.1639,
+        "historical_cagr_5y": 0.2183,
+        "historical_cagr_15y": 0.08,
+        "coherence": "COERENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.2183,
+            "scenario_cagr": 0.15,
+            "deviation": 0.0683,
+            "actual_cumulative": 1.6832,
+            "scenario_cumulative": 1.0112
+          },
+          "10y": {
+            "actual_cagr": 0.1393,
+            "scenario_cagr": 0.15,
+            "deviation": -0.0107,
+            "actual_cumulative": 2.6826,
+            "scenario_cumulative": 3.0448
+          },
+          "15y": {
+            "actual_cagr": 0.08,
+            "scenario_cagr": 0.15,
+            "deviation": -0.07,
+            "actual_cumulative": 2.1733,
+            "scenario_cumulative": 7.1378
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.106,
+            "COVID 2020": 0.0678,
+            "Hike 2022": 0.0113
+          }
+        }
+      },
+      {
+        "asset": "silver",
+        "scenario": "conservador",
+        "platform_return": 0.03,
+        "platform_volatility": 0.28,
+        "historical_cagr_10y": 0.1648,
+        "historical_vol_10y": 0.3419,
+        "historical_cagr_5y": 0.2372,
+        "historical_cagr_15y": 0.0424,
+        "coherence": "ACEITÁVEL",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.2372,
+            "scenario_cagr": 0.03,
+            "deviation": 0.2072,
+            "actual_cumulative": 1.8983,
+            "scenario_cumulative": 0.1593
+          },
+          "10y": {
+            "actual_cagr": 0.1648,
+            "scenario_cagr": 0.03,
+            "deviation": 0.1348,
+            "actual_cumulative": 3.5975,
+            "scenario_cumulative": 0.3439
+          },
+          "15y": {
+            "actual_cagr": 0.0424,
+            "scenario_cagr": 0.03,
+            "deviation": 0.0124,
+            "actual_cumulative": 0.8642,
+            "scenario_cumulative": 0.558
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.1245,
+            "COVID 2020": -0.1554,
+            "Hike 2022": 0.047
+          }
+        }
+      },
+      {
+        "asset": "silver",
+        "scenario": "moderado",
+        "platform_return": 0.085,
+        "platform_volatility": 0.28,
+        "historical_cagr_10y": 0.1648,
+        "historical_vol_10y": 0.3419,
+        "historical_cagr_5y": 0.2372,
+        "historical_cagr_15y": 0.0424,
+        "coherence": "ACEITÁVEL",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.2372,
+            "scenario_cagr": 0.085,
+            "deviation": 0.1522,
+            "actual_cumulative": 1.8983,
+            "scenario_cumulative": 0.5036
+          },
+          "10y": {
+            "actual_cagr": 0.1648,
+            "scenario_cagr": 0.085,
+            "deviation": 0.0798,
+            "actual_cumulative": 3.5975,
+            "scenario_cumulative": 1.2607
+          },
+          "15y": {
+            "actual_cagr": 0.0424,
+            "scenario_cagr": 0.085,
+            "deviation": -0.0426,
+            "actual_cumulative": 0.8642,
+            "scenario_cumulative": 2.3999
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.1245,
+            "COVID 2020": -0.1554,
+            "Hike 2022": 0.047
+          }
+        }
+      },
+      {
+        "asset": "silver",
+        "scenario": "agressivo",
+        "platform_return": 0.18,
+        "platform_volatility": 0.28,
+        "historical_cagr_10y": 0.1648,
+        "historical_vol_10y": 0.3419,
+        "historical_cagr_5y": 0.2372,
+        "historical_cagr_15y": 0.0424,
+        "coherence": "COERENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.2372,
+            "scenario_cagr": 0.18,
+            "deviation": 0.0572,
+            "actual_cumulative": 1.8983,
+            "scenario_cumulative": 1.2875
+          },
+          "10y": {
+            "actual_cagr": 0.1648,
+            "scenario_cagr": 0.18,
+            "deviation": -0.0152,
+            "actual_cumulative": 3.5975,
+            "scenario_cumulative": 4.2326
+          },
+          "15y": {
+            "actual_cagr": 0.0424,
+            "scenario_cagr": 0.18,
+            "deviation": -0.1376,
+            "actual_cumulative": 0.8642,
+            "scenario_cumulative": 10.9751
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.1245,
+            "COVID 2020": -0.1554,
+            "Hike 2022": 0.047
+          }
+        }
+      },
+      {
+        "asset": "platinum",
+        "scenario": "conservador",
+        "platform_return": -0.05,
+        "platform_volatility": 0.22,
+        "historical_cagr_10y": 0.0706,
+        "historical_vol_10y": 0.3169,
+        "historical_cagr_5y": 0.1051,
+        "historical_cagr_15y": 0.005,
+        "coherence": "ACEITÁVEL",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.1051,
+            "scenario_cagr": -0.05,
+            "deviation": 0.1551,
+            "actual_cumulative": 0.6484,
+            "scenario_cumulative": -0.2262
+          },
+          "10y": {
+            "actual_cagr": 0.0706,
+            "scenario_cagr": -0.05,
+            "deviation": 0.1206,
+            "actual_cumulative": 0.9789,
+            "scenario_cumulative": -0.4012
+          },
+          "15y": {
+            "actual_cagr": 0.005,
+            "scenario_cagr": -0.05,
+            "deviation": 0.055,
+            "actual_cumulative": 0.0773,
+            "scenario_cumulative": -0.5367
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.2588,
+            "COVID 2020": -0.1637,
+            "Hike 2022": 0.1258
+          }
+        }
+      },
+      {
+        "asset": "platinum",
+        "scenario": "moderado",
+        "platform_return": 0.06,
+        "platform_volatility": 0.22,
+        "historical_cagr_10y": 0.0706,
+        "historical_vol_10y": 0.3169,
+        "historical_cagr_5y": 0.1051,
+        "historical_cagr_15y": 0.005,
+        "coherence": "COERENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.1051,
+            "scenario_cagr": 0.06,
+            "deviation": 0.0451,
+            "actual_cumulative": 0.6484,
+            "scenario_cumulative": 0.3382
+          },
+          "10y": {
+            "actual_cagr": 0.0706,
+            "scenario_cagr": 0.06,
+            "deviation": 0.0106,
+            "actual_cumulative": 0.9789,
+            "scenario_cumulative": 0.7907
+          },
+          "15y": {
+            "actual_cagr": 0.005,
+            "scenario_cagr": 0.06,
+            "deviation": -0.055,
+            "actual_cumulative": 0.0773,
+            "scenario_cumulative": 1.3967
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.2588,
+            "COVID 2020": -0.1637,
+            "Hike 2022": 0.1258
+          }
+        }
+      },
+      {
+        "asset": "platinum",
+        "scenario": "agressivo",
+        "platform_return": 0.2,
+        "platform_volatility": 0.22,
+        "historical_cagr_10y": 0.0706,
+        "historical_vol_10y": 0.3169,
+        "historical_cagr_5y": 0.1051,
+        "historical_cagr_15y": 0.005,
+        "coherence": "ACEITÁVEL",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.1051,
+            "scenario_cagr": 0.2,
+            "deviation": -0.0949,
+            "actual_cumulative": 0.6484,
+            "scenario_cumulative": 1.488
+          },
+          "10y": {
+            "actual_cagr": 0.0706,
+            "scenario_cagr": 0.2,
+            "deviation": -0.1294,
+            "actual_cumulative": 0.9789,
+            "scenario_cumulative": 5.1902
+          },
+          "15y": {
+            "actual_cagr": 0.005,
+            "scenario_cagr": 0.2,
+            "deviation": -0.195,
+            "actual_cumulative": 0.0773,
+            "scenario_cumulative": 14.4089
+          },
+          "stress_tests": {
+            "Brasil 2015": -0.2588,
+            "COVID 2020": -0.1637,
+            "Hike 2022": 0.1258
+          }
+        }
+      },
+      {
+        "asset": "btc",
+        "scenario": "conservador",
+        "platform_return": -0.6,
+        "platform_volatility": 0.85,
+        "historical_cagr_10y": 0.6642,
+        "historical_vol_10y": 0.5619,
+        "historical_cagr_5y": 0.0278,
+        "historical_cagr_15y": 0.5422,
+        "coherence": "DIVERGENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.0278,
+            "scenario_cagr": -0.6,
+            "deviation": 0.6278,
+            "actual_cumulative": 0.1467,
+            "scenario_cumulative": -0.9898
+          },
+          "10y": {
+            "actual_cagr": 0.6642,
+            "scenario_cagr": -0.6,
+            "deviation": 1.2642,
+            "actual_cumulative": 161.8628,
+            "scenario_cumulative": -0.9999
+          },
+          "15y": {
+            "actual_cagr": 0.5422,
+            "scenario_cagr": -0.6,
+            "deviation": 1.1422,
+            "actual_cumulative": 146.7216,
+            "scenario_cumulative": -1.0
+          },
+          "stress_tests": {
+            "Brasil 2015": 0.3701,
+            "COVID 2020": -0.0782,
+            "Hike 2022": -0.653
+          }
+        }
+      },
+      {
+        "asset": "btc",
+        "scenario": "moderado",
+        "platform_return": 0.4,
+        "platform_volatility": 0.85,
+        "historical_cagr_10y": 0.6642,
+        "historical_vol_10y": 0.5619,
+        "historical_cagr_5y": 0.0278,
+        "historical_cagr_15y": 0.5422,
+        "coherence": "DIVERGENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.0278,
+            "scenario_cagr": 0.4,
+            "deviation": -0.3722,
+            "actual_cumulative": 0.1467,
+            "scenario_cumulative": 4.377
+          },
+          "10y": {
+            "actual_cagr": 0.6642,
+            "scenario_cagr": 0.4,
+            "deviation": 0.2642,
+            "actual_cumulative": 161.8628,
+            "scenario_cumulative": 27.9121
+          },
+          "15y": {
+            "actual_cagr": 0.5422,
+            "scenario_cagr": 0.4,
+            "deviation": 0.1422,
+            "actual_cumulative": 146.7216,
+            "scenario_cumulative": 47.431
+          },
+          "stress_tests": {
+            "Brasil 2015": 0.3701,
+            "COVID 2020": -0.0782,
+            "Hike 2022": -0.653
+          }
+        }
+      },
+      {
+        "asset": "btc",
+        "scenario": "agressivo",
+        "platform_return": 1.2,
+        "platform_volatility": 0.85,
+        "historical_cagr_10y": 0.6642,
+        "historical_vol_10y": 0.5619,
+        "historical_cagr_5y": 0.0278,
+        "historical_cagr_15y": 0.5422,
+        "coherence": "DIVERGENTE",
+        "backtest": {
+          "5y": {
+            "actual_cagr": 0.0278,
+            "scenario_cagr": 1.2,
+            "deviation": -1.1722,
+            "actual_cumulative": 0.1467,
+            "scenario_cumulative": 50.5085
+          },
+          "10y": {
+            "actual_cagr": 0.6642,
+            "scenario_cagr": 1.2,
+            "deviation": -0.5358,
+            "actual_cumulative": 161.8628,
+            "scenario_cumulative": 2652.1271
+          },
+          "15y": {
+            "actual_cagr": 0.5422,
+            "scenario_cagr": 1.2,
+            "deviation": -0.6578,
+            "actual_cumulative": 146.7216,
+            "scenario_cumulative": 8886.0842
+          },
+          "stress_tests": {
+            "Brasil 2015": 0.3701,
+            "COVID 2020": -0.0782,
+            "Hike 2022": -0.653
+          }
+        }
+      }
+    ],
+    "montecarlo": [
+      {
+        "asset": "gold",
+        "scenario": "conservador",
+        "platform_deterministic": 88150.41,
+        "mc_p10": 57453.76,
+        "mc_p50": 84273.34,
+        "mc_p90": 125543.69,
+        "mc_mean": 88785.57,
+        "mc_std": 28339.69,
+        "deviation_p50_vs_deterministic": -4.4,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "gold",
+        "scenario": "moderado",
+        "platform_deterministic": 120684.84,
+        "mc_p10": 76993.63,
+        "mc_p50": 114371.33,
+        "mc_p90": 175301.55,
+        "mc_mean": 121735.6,
+        "mc_std": 41298.98,
+        "deviation_p50_vs_deterministic": -5.23,
+        "risk_of_loss_pct": 0.0
+      },
+      {
+        "asset": "gold",
+        "scenario": "agressivo",
+        "platform_deterministic": 170441.89,
+        "mc_p10": 106843.33,
+        "mc_p50": 161044.4,
+        "mc_p90": 252780.91,
+        "mc_mean": 172492.17,
+        "mc_std": 61847.93,
+        "deviation_p50_vs_deterministic": -5.51,
+        "risk_of_loss_pct": 0.0
+      },
+      {
+        "asset": "silver",
+        "scenario": "conservador",
+        "platform_deterministic": 83163.16,
+        "mc_p10": 36617.98,
+        "mc_p50": 70304.3,
+        "mc_p90": 145084.29,
+        "mc_mean": 84155.81,
+        "mc_std": 54864.0,
+        "deviation_p50_vs_deterministic": -15.46,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "silver",
+        "scenario": "moderado",
+        "platform_deterministic": 115037.06,
+        "mc_p10": 47329.63,
+        "mc_p50": 95573.56,
+        "mc_p90": 206576.08,
+        "mc_mean": 116452.51,
+        "mc_std": 81620.6,
+        "deviation_p50_vs_deterministic": -16.92,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "silver",
+        "scenario": "agressivo",
+        "platform_deterministic": 204761.47,
+        "mc_p10": 76892.2,
+        "mc_p50": 164430.26,
+        "mc_p90": 382479.29,
+        "mc_mean": 208236.63,
+        "mc_std": 161282.74,
+        "deviation_p50_vs_deterministic": -19.7,
+        "risk_of_loss_pct": 0.0
+      },
+      {
+        "asset": "platinum",
+        "scenario": "conservador",
+        "platform_deterministic": 53025.24,
+        "mc_p10": 30428.52,
+        "mc_p50": 48712.71,
+        "mc_p90": 81415.35,
+        "mc_mean": 53619.24,
+        "mc_std": 23044.87,
+        "deviation_p50_vs_deterministic": -8.13,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "platinum",
+        "scenario": "moderado",
+        "platform_deterministic": 99145.2,
+        "mc_p10": 50953.31,
+        "mc_p50": 88995.64,
+        "mc_p90": 161076.99,
+        "mc_mean": 100141.12,
+        "mc_std": 50330.62,
+        "deviation_p50_vs_deterministic": -10.24,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "platinum",
+        "scenario": "agressivo",
+        "platform_deterministic": 231477.0,
+        "mc_p10": 109435.95,
+        "mc_p50": 203394.93,
+        "mc_p90": 399054.62,
+        "mc_mean": 235615.11,
+        "mc_std": 136197.92,
+        "deviation_p50_vs_deterministic": -12.13,
+        "risk_of_loss_pct": 0.0
+      },
+      {
+        "asset": "btc",
+        "scenario": "conservador",
+        "platform_deterministic": 6801.66,
+        "mc_p10": 3150.31,
+        "mc_p50": 5718.06,
+        "mc_p90": 13263.43,
+        "mc_mean": 7506.68,
+        "mc_std": 7200.15,
+        "deviation_p50_vs_deterministic": -15.93,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "btc",
+        "scenario": "moderado",
+        "platform_deterministic": 780275.06,
+        "mc_p10": 16681.12,
+        "mc_p50": 95536.43,
+        "mc_p90": 962530.07,
+        "mc_mean": 853341.62,
+        "mc_std": 7865832.99,
+        "deviation_p50_vs_deterministic": -87.76,
+        "risk_of_loss_pct": 100.0
+      },
+      {
+        "asset": "btc",
+        "scenario": "agressivo",
+        "platform_deterministic": 46107393.52,
+        "mc_p10": 185414.84,
+        "mc_p50": 2813339.58,
+        "mc_p90": 56534629.66,
+        "mc_mean": 61758987.89,
+        "mc_std": 690500972.4,
+        "deviation_p50_vs_deterministic": -93.9,
+        "risk_of_loss_pct": 0.0
+      }
+    ],
+    "alerts": [
+      {
+        "level": "WARNING",
+        "asset": "gold",
+        "scenario": "conservador",
+        "message": "Cenário 'conservador' para gold: desvio moderado (9.9pp) entre retorno esperado e histórico.",
+        "recommendation": "Monitorar. Sem ação imediata necessária.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "WARNING",
+        "asset": "silver",
+        "scenario": "conservador",
+        "message": "Cenário 'conservador' para silver: desvio moderado (13.5pp) entre retorno esperado e histórico.",
+        "recommendation": "Monitorar. Sem ação imediata necessária.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "WARNING",
+        "asset": "silver",
+        "scenario": "moderado",
+        "message": "Cenário 'moderado' para silver: desvio moderado (8.0pp) entre retorno esperado e histórico.",
+        "recommendation": "Monitorar. Sem ação imediata necessária.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "WARNING",
+        "asset": "platinum",
+        "scenario": "conservador",
+        "message": "Cenário 'conservador' para platinum: desvio moderado (12.1pp) entre retorno esperado e histórico.",
+        "recommendation": "Monitorar. Sem ação imediata necessária.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "WARNING",
+        "asset": "platinum",
+        "scenario": "agressivo",
+        "message": "Cenário 'agressivo' para platinum: desvio moderado (12.9pp) entre retorno esperado e histórico.",
+        "recommendation": "Monitorar. Sem ação imediata necessária.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "CRITICAL",
+        "asset": "btc",
+        "scenario": "conservador",
+        "message": "Cenário 'conservador' para btc: retorno esperado (-60.0%) diverge significativamente do CAGR histórico 10y (66.4%). Desvio: 126.4pp.",
+        "recommendation": "Revisar premissas do cenário. Considerar ajuste do retorno esperado ou adicionar disclaimer sobre a divergência histórica.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "CRITICAL",
+        "asset": "btc",
+        "scenario": "moderado",
+        "message": "Cenário 'moderado' para btc: retorno esperado (40.0%) diverge significativamente do CAGR histórico 10y (66.4%). Desvio: 26.4pp.",
+        "recommendation": "Revisar premissas do cenário. Considerar ajuste do retorno esperado ou adicionar disclaimer sobre a divergência histórica.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      },
+      {
+        "level": "CRITICAL",
+        "asset": "btc",
+        "scenario": "agressivo",
+        "message": "Cenário 'agressivo' para btc: retorno esperado (120.0%) diverge significativamente do CAGR histórico 10y (66.4%). Desvio: 53.6pp.",
+        "recommendation": "Revisar premissas do cenário. Considerar ajuste do retorno esperado ou adicionar disclaimer sobre a divergência histórica.",
+        "timestamp": "2026-03-30T04:57:58.983203+00:00"
+      }
+    ]
+  }
+}

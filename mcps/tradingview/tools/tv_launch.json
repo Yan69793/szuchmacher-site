@@ -1,0 +1,18 @@
+{
+  "name": "tv_launch",
+  "description": "Launch TradingView Desktop with Chrome DevTools Protocol (remote debugging) enabled. Auto-detects install location on Mac, Windows, and Linux.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "port": {
+        "description": "CDP port (default 9222)",
+        "type": "number"
+      },
+      "kill_existing": {
+        "description": "Kill existing TradingView instances first (default true)",
+        "type": "boolean"
+      }
+    }
+  }
+}

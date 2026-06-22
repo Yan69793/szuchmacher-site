@@ -1,0 +1,27 @@
+{
+  "name": "video_analysis_jobs",
+  "description": "List the user's video analyses in the current workspace, newest first. Paginate by passing the previous response's cursor.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "size": {
+        "description": "Page size.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "cursor": {
+        "description": "Pagination cursor — unix timestamp of created_at from the previous page (advances backwards in time). Omit for the first page.",
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    }
+  }
+}

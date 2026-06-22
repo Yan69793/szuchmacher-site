@@ -1,0 +1,22 @@
+# YAN OS v2.0 — dependências Python
+# Instale com: pip install -r requirements.txt
+
+# ── Core ───────────────────────────────────────────────────────
+anthropic>=0.25.0       # Claude API — narrativa do briefing
+yfinance>=0.2.36        # dados de mercado (Yahoo Finance)
+python-pptx>=0.6.23     # geração do PPTX
+requests>=2.31.0        # HTTP geral
+lxml>=5.0.0             # parsing XML/HTML
+python-dotenv>=1.0.0    # leitura do .env
+comtypes>=1.2.0         # export PPTX→PDF via PowerPoint COM (Windows + MS PowerPoint)
+
+# ── Qwen / monitor / leads ─────────────────────────────────────
+openai>=1.30.0          # cliente OpenAI-compatible (usado com Qwen)
+schedule>=1.2.0         # agendamento do monitor de mercado
+flask>=3.0.0            # servidor webhook de leads
+
+# ── SSH (opcional — instale só se usar SITE_METHOD=ssh) ────────
+# paramiko>=3.4.0
+
+# ── Twilio (opcional — instale só se usar Twilio) ──────────────
+# twilio>=9.0.0

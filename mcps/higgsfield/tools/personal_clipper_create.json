@@ -1,0 +1,60 @@
+{
+  "name": "personal_clipper_create",
+  "description": "Turn YouTube videos into ready-to-share clips. Before starting, ask the user how many clips they want, which clip aspect ratio to use, and which subtitle font they prefer.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "urls": {
+        "minItems": 1,
+        "maxItems": 100,
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2083,
+          "format": "uri"
+        },
+        "description": "YouTube video URLs."
+      },
+      "clips_num": {
+        "description": "How many clips to create.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "clip_aspect": {
+        "description": "Clip aspect ratio.",
+        "type": "string",
+        "enum": [
+          "9:16",
+          "1:1",
+          "16:9"
+        ]
+      },
+      "subtitle_font": {
+        "description": "Subtitle font.",
+        "type": "string",
+        "enum": [
+          "Noto Sans",
+          "Noto Serif",
+          "Noto Sans Display",
+          "IBM Plex Sans",
+          "M PLUS Rounded 1c",
+          "Bebas Neue",
+          "Archivo Black",
+          "Unbounded",
+          "Inter",
+          "Montserrat",
+          "Bangers",
+          "Permanent Marker",
+          "Playfair Display",
+          "Caveat"
+        ]
+      }
+    },
+    "required": [
+      "urls"
+    ]
+  }
+}

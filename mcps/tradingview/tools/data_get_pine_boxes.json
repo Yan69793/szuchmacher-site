@@ -1,0 +1,18 @@
+{
+  "name": "data_get_pine_boxes",
+  "description": "Read box/zone boundaries drawn by Pine Script indicators (box.new). Returns deduplicated {high, low} price zones. Use study_filter to target a specific indicator.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "study_filter": {
+        "description": "Substring to match study name. Omit for all.",
+        "type": "string"
+      },
+      "verbose": {
+        "description": "Return all boxes with IDs and coordinates (default false — returns unique price zones)",
+        "type": "boolean"
+      }
+    }
+  }
+}

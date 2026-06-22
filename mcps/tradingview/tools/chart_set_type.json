@@ -1,0 +1,17 @@
+{
+  "name": "chart_set_type",
+  "description": "Change chart type",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "chart_type": {
+        "type": "string",
+        "description": "Chart type: Bars(0), Candles(1), Line(2), Area(3), Renko(4), Kagi(5), PointAndFigure(6), LineBreak(7), HeikinAshi(8), HollowCandles(9) — pass name or number"
+      }
+    },
+    "required": [
+      "chart_type"
+    ]
+  }
+}

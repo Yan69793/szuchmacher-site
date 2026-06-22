@@ -1,0 +1,43 @@
+{
+  "name": "publish_game",
+  "description": "Publish a deployed game to the Higgsfield marketplace. This does not deploy anything: the game must already be live — use deploy_game first, then pass the game id from its response. The catalog card image comes from the deploy by default; cover (16:9) and logo (1:1 square) optionally override it — when given they must be https image URLs from generate_image (a stable CDN link, never the game's own site URL). Publishing lists the game publicly on the marketplace (ownership-checked against the authenticated user); re-publish updates the same listing.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "game_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+        "description": "UUID of the deployed game to publish to the marketplace, as returned by the deploy flow."
+      },
+      "cover": {
+        "description": "Optional override: https URL of a 16:9 catalog cover from generate_image (CDN link, not the game's own site). Omit to keep the deploy-set cover.",
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https:\\/\\/.*"
+      },
+      "logo": {
+        "description": "Optional override: https URL of a 1:1 square catalog icon from generate_image (CDN link, not the game's own site). Omit to keep the deploy-set icon.",
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https:\\/\\/.*"
+      },
+      "name": {
+        "description": "Optional catalog name override; defaults to the deployed title.",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 120
+      },
+      "description": {
+        "description": "Optional catalog description override.",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "required": [
+      "game_id"
+    ]
+  }
+}

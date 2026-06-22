@@ -1,0 +1,17 @@
+{
+  "name": "ui_evaluate",
+  "description": "Execute JavaScript code in the TradingView page context for advanced automation",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "expression": {
+        "type": "string",
+        "description": "JavaScript expression to evaluate in the page context. Wrap in IIFE for complex logic."
+      }
+    },
+    "required": [
+      "expression"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "pane_list",
+  "description": "List all chart panes in the current layout with their symbols and active state",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

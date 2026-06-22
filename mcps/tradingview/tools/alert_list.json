@@ -1,0 +1,9 @@
+{
+  "name": "alert_list",
+  "description": "List active alerts",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

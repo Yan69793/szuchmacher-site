@@ -1,0 +1,59 @@
+{
+  "name": "models_explore",
+  "description": "Find generation models. Use recommend with goal + input context; use get for model constraints.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": [
+          "list",
+          "search",
+          "get",
+          "recommend"
+        ],
+        "description": "The action to perform"
+      },
+      "model_id": {
+        "description": "Model ID (required for get)",
+        "type": "string"
+      },
+      "query": {
+        "description": "Model/use-case query; include input context like text-only, reference image, image-to-video, or product URL.",
+        "type": "string"
+      },
+      "type": {
+        "description": "Filter by output type (omit to include all)",
+        "type": "string",
+        "enum": [
+          "image",
+          "video",
+          "audio",
+          "3d"
+        ]
+      },
+      "input": {
+        "description": "Input filter: image = accepts reference media; text = text-only.",
+        "type": "string",
+        "enum": [
+          "text",
+          "image"
+        ]
+      },
+      "limit": {
+        "description": "Max results, default 20 for list/search, 5 for recommend",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "after": {
+        "description": "Pagination cursor (next_page_token from a previous list/search result; not used by recommend)",
+        "type": "string"
+      }
+    },
+    "required": [
+      "action"
+    ]
+  }
+}

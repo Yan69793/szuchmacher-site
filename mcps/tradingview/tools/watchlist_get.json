@@ -1,0 +1,9 @@
+{
+  "name": "watchlist_get",
+  "description": "Get all symbols from the current TradingView watchlist with last price, change, and change%",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

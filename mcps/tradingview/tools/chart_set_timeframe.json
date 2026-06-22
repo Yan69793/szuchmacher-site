@@ -1,0 +1,17 @@
+{
+  "name": "chart_set_timeframe",
+  "description": "Change the chart timeframe/resolution",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "timeframe": {
+        "type": "string",
+        "description": "Timeframe (e.g., 1, 5, 15, 60, D, W, M)"
+      }
+    },
+    "required": [
+      "timeframe"
+    ]
+  }
+}

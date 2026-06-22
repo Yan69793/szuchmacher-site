@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>MultiAsset Pro — Análise Fundamentalista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8c96d;
+            --gold-dim: rgba(201,168,76,0.12);
+            --bg: #080808;
+            --surface: #0f0f0f;
+            --surface2: #161616;
+            --border: rgba(255,255,255,0.06);
+            --text: #e8e8e8;
+            --muted: #666;
+            --green: #4caf7d;
+            --red: #e05c5c;
+            --blue: #5b9cf6;
+            --orange: #f07a40;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; cursor: default; }
+        .mono { font-family: 'DM Mono', monospace; }
+        .display { font-family: 'Playfair Display', serif; }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 0 40px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(8,8,8,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold) 0%, #8b5e1a 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+        .logo-text span { color: var(--gold); }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; letter-spacing: 0.3px; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-time { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+
+        .hero {
+            min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+            align-items: center; padding: 80px 60px 60px;
+            max-width: 1400px; margin: 0 auto; gap: 60px;
+        }
+        .hero-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid rgba(201,168,76,0.3); border-radius: 100px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 32px; }
+        .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 68px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 24px; }
+        .hero h1 em { font-style: italic; color: var(--gold); }
+        .hero-sub { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 440px; margin-bottom: 40px; }
+        .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn-primary { padding: 14px 28px; background: var(--gold); color: #000; font-weight: 700; font-size: 13px; letter-spacing: 0.05em; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }
+        .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(201,168,76,0.25); }
+        .btn-ghost { padding: 14px 28px; background: transparent; color: var(--text); font-weight: 500; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }
+        .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+
+        .hero-right { display: flex; flex-direction: column; gap: 12px; }
+        .ticker-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s; position: relative; overflow: hidden; }
+        .ticker-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; border-radius: 0 2px 2px 0; }
+        .ticker-card.gold::before { background: var(--gold); }
+        .ticker-card.silver::before { background: #c0c0c0; }
+        .ticker-card.platinum::before { background: #8ecfdd; }
+        .ticker-card.btc::before { background: var(--orange); }
+        .ticker-card.usd::before { background: var(--green); }
+        .ticker-card:hover { border-color: rgba(255,255,255,0.12); transform: translateX(4px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+        .ticker-left { display: flex; align-items: center; gap: 14px; }
+        .ticker-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .ticker-icon.gold { background: rgba(201,168,76,0.15); color:#c9a84c; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+        .ticker-icon.silver { background: rgba(192,192,192,0.1); color:#c0c0c0; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+        .ticker-icon.platinum { background: rgba(142,207,221,0.1); color:#8ecfdd; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+        .ticker-icon.btc { background: rgba(240,122,64,0.15); }
+        .ticker-icon.usd { background: rgba(76,175,125,0.15); }
+        .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .ticker-sub { font-size: 11px; color: var(--muted); }
+        .ticker-right { text-align: right; }
+        .ticker-price { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 3px; }
+        .ticker-change { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 100px; }
+        .change-up { background: rgba(76,175,125,0.15); color: var(--green); }
+        .change-down { background: rgba(224,92,92,0.15); color: var(--red); }
+        .change-neutral { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+        /* MACRO STRIP — sem DXY */
+        .macro-strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 60px; }
+        .macro-strip-inner { max-width: 1400px; margin: 0 auto; display: flex; gap: 0; overflow-x: auto; }
+        .macro-item { flex: 1; min-width: 140px; padding: 0 24px; border-right: 1px solid var(--border); text-align: center; }
+        .macro-item:first-child { padding-left: 0; }
+        .macro-item:last-child { border-right: none; }
+        .macro-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+        .macro-value { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; color: var(--text); }
+        .macro-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+        .section { max-width: 1400px; margin: 0 auto; padding: 80px 60px; }
+        .section-header { margin-bottom: 48px; }
+        .section-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(30px, 3.5vw, 46px); font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
+        .section-line { width: 48px; height: 2px; background: var(--gold); margin-top: 20px; }
+
+        .tv-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .tv-inner { max-width: 1400px; margin: 0 auto; padding: 60px; }
+        .tv-tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+        .tv-tab { padding: 10px 20px; font-size: 13px; font-weight: 500; border-radius: 8px 8px 0 0; border: 1px solid transparent; border-bottom: none; cursor: pointer; background: transparent; color: var(--muted); transition: all 0.2s; margin-bottom: -1px; }
+        .tv-tab.active { background: var(--bg); border-color: var(--border); border-bottom-color: var(--bg); color: var(--text); }
+        .tv-panel { display: none; }
+        .tv-panel.active { display: block; }
+
+        /* SIMULADORES */
+        .sim-nav { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+        .sim-nav-btn { padding: 10px 20px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-family: 'DM Sans', sans-serif; }
+        .sim-nav-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); background: rgba(255,255,255,0.03); }
+        .sim-nav-btn.active { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.18); color: var(--text); }
+        .sim-nav-compare.active { background: var(--gold-dim); border-color: rgba(201,168,76,0.4); color: var(--gold); }
+        .sim-nav-icon { font-size: 16px; }
+        .sim-panel { display: none; }
+        .sim-panel.active { display: block; }
+        .sim-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+        .sim-panel-left { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
+        .sim-panel-right { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; height: 100%; min-height: 560px; display: flex; flex-direction: column; }
+        .sim-chart-label { padding: 16px 20px 12px; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .sim-tv-chart { flex: 1; min-height: 500px; }
+        .sim-ativo-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .sim-ativo-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .sim-ativo-nome { font-size: 22px; font-weight: 700; line-height: 1.1; }
+        .sim-ativo-ticker { font-size: 11px; color: var(--muted); margin-top: 3px; }
+        .sim-ativo-preco-live { margin-left: auto; text-align: right; }
+        .sim-preco-val { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; }
+        .sim-preco-change { font-family: 'DM Mono', monospace; font-size: 11px; padding: 2px 8px; border-radius: 100px; margin-top: 4px; display: inline-block; }
+        .sim-form-block { margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-label { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+        .form-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 15px; outline: none; transition: border-color 0.2s; width: 100%; }
+        .form-input:focus { border-color: var(--gold); }
+        .alert-box { background: rgba(240,122,64,0.08); border: 1px solid rgba(240,122,64,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; font-size: 12px; color: rgba(240,122,64,0.9); line-height: 1.5; }
+
+        /* SCENARIO CARDS */
+        .sc-selector { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+        .sc-card { border-radius: 14px; padding: 16px 18px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
+        .sc-card.pessimist { background: rgba(224,92,92,0.06); border-color: rgba(224,92,92,0.18); }
+        .sc-card.pessimist:hover, .sc-card.pessimist.active-sc { background: rgba(224,92,92,0.13); border-color: rgba(224,92,92,0.45); box-shadow: 0 0 0 1px rgba(224,92,92,0.2); }
+        .sc-card.base-sc { background: rgba(91,156,246,0.06); border-color: rgba(91,156,246,0.18); }
+        .sc-card.base-sc:hover, .sc-card.base-sc.active-sc { background: rgba(91,156,246,0.13); border-color: rgba(91,156,246,0.45); box-shadow: 0 0 0 1px rgba(91,156,246,0.2); }
+        .sc-card.optimist { background: rgba(76,175,125,0.06); border-color: rgba(76,175,125,0.18); }
+        .sc-card.optimist:hover, .sc-card.optimist.active-sc { background: rgba(76,175,125,0.13); border-color: rgba(76,175,125,0.45); box-shadow: 0 0 0 1px rgba(76,175,125,0.2); }
+        .sc-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; }
+        .sc-badge { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+        .sc-card.active-sc .sc-badge { color: var(--text); }
+        .sc-rate { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 700; margin: 4px 0 6px 0; }
+        .sc-desc { font-size: 11.5px; color: rgba(255,255,255,0.45); line-height: 1.65; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease; opacity: 0; margin-top: 0; }
+        .sc-card.active-sc .sc-desc { max-height: 200px; opacity: 1; margin-top: 8px; }
+        .sc-result-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #444;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .sc-result-wrap { display: flex; align-items: baseline; gap: 10px; margin-top: 3px; }
+        .sc-result-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 600; color: var(--text); }
+        .sc-result-ret { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+        .sc-card.pessimist .sc-result-val { color: var(--red); }
+        .sc-card.base-sc .sc-result-val { color: var(--blue); }
+        .sc-card.optimist .sc-result-val { color: var(--green); }
+        .sc-breakdown {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: #555;
+            margin-top: 4px;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+        }
+        .sc-proj-price {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: #4a6a50;
+            margin-top: 2px;
+        }
+
+        /* COMPARADOR */
+        .comparador-header { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .comp-inputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .comp-input-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+        .comp-input-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+        .comp-prazo-row { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 24px; }
+        .comp-chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; height: 360px; position: relative; }
+        .comp-chart-controls { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 20px; margin-bottom: 16px; }
+        .comp-ctrl-group { display: flex; align-items: center; gap: 10px; }
+        .comp-ctrl-label { font-size: 11px; color: var(--muted); white-space: nowrap; letter-spacing: 0.05em; }
+        .comp-ctrl-hint { font-size: 11px; color: #444; font-style: italic; }
+        .comp-toggle-group { display: flex; gap: 4px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+        .comp-toggle { padding: 5px 12px; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+        .comp-toggle:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+        .comp-toggle.active { background: rgba(255,255,255,0.1); color: var(--text); }
+        .comp-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 32px; }
+        .comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .comp-table th { padding: 14px 20px; text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+        .comp-table td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: 'DM Mono', monospace; }
+        .comp-table tr:last-child td { border-bottom: none; }
+        .comp-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .comp-mini-label { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+        .comp-mini-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .comp-mini-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .comp-mini-title { font-size: 11px; font-weight: 600; padding: 12px 14px 8px; letter-spacing: 0.05em; }
+        .comp-tv-mini { min-height: 180px; }
+
+        /* SLIDER */
+        .slider-wrap { margin-bottom: 24px; }
+        .slider-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .slider-label { font-size: 12px; color: var(--muted); }
+        .slider-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gold); font-weight: 500; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: var(--gold); cursor: pointer; margin-top: -7px; box-shadow: 0 2px 8px rgba(201,168,76,0.4); }
+        input[type=range]::-webkit-slider-runnable-track { height: 4px; background: var(--surface2); border-radius: 2px; }
+
+        /* ALOCAÇÃO */
+        .alloc-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 40px; }
+        .alloc-slider-row { display: flex; align-items: center; gap: 20px; margin-bottom: 36px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; }
+        .alloc-label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+        .alloc-display { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; white-space: nowrap; min-width: 160px; text-align: right; }
+        .alloc-grid { display: grid; gap: 10px; }
+        .alloc-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s; }
+        .alloc-item:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+        .alloc-left { display: flex; align-items: center; gap: 14px; }
+        .alloc-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .alloc-name { font-size: 14px; font-weight: 500; }
+        .alloc-pct { font-size: 12px; color: var(--muted); margin-left: 6px; }
+        .alloc-bar-wrap { flex: 1; margin: 0 20px; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+        .alloc-bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+        .alloc-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; min-width: 110px; text-align: right; }
+        .alloc-total { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .alloc-total-label { font-size: 13px; color: var(--muted); }
+        .alloc-total-value { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; }
+        .alloc-note { margin-top: 20px; background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.15); border-radius: 12px; padding: 16px 20px; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+        .alloc-note strong { color: var(--gold); }
+        .reserva-item { border-color: rgba(201,168,76,0.2); }
+        .reserva-inline-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+        .reserva-inline-tag { font-size: 10px; color: rgba(201,168,76,0.5); letter-spacing: 0.04em; }
+
+        /* ── ALOCAÇÃO NOVA ── */
+        .alloc-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 28px;
+            margin-bottom: 20px;
+            align-items: start;
+        }
+
+        .alloc-list { display: flex; flex-direction: column; gap: 6px; }
+
+        .alloc-group-label {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+            margin-top: 4px;
+            padding-left: 4px;
+        }
+
+        .alloc-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.2s;
+            gap: 12px;
+        }
+        .alloc-item:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+
+        .alloc-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex-shrink: 0;
+            width: 210px;
+        }
+
+        .alloc-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .alloc-name { font-size: 14px; font-weight: 500; display: block; }
+        .alloc-tag { font-size: 10px; color: var(--muted); display: block; margin-top: 1px; }
+
+        .alloc-right-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .alloc-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; min-width: 40px; }
+        .alloc-bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+        .alloc-nums { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .alloc-pct-val { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; min-width: 32px; text-align: right; }
+        .alloc-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; min-width: 100px; text-align: right; }
+
+        .alloc-total { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .alloc-total-label { font-size: 13px; color: var(--muted); }
+        .alloc-total-value { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; }
+
+        /* PERFIL SELECTOR */
+        .alloc-perfil-selector {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .alloc-perfil-label {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+        .alloc-perfil-btns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .alloc-perfil-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s;
+            color: var(--text);
+            text-align: center;
+        }
+        .alloc-perfil-btn:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+        .alloc-perfil-btn.active[data-perfil="conservador"] { border-color: rgba(91,156,246,0.6); background: rgba(91,156,246,0.08); }
+        .alloc-perfil-btn.active[data-perfil="moderado"]    { border-color: rgba(201,168,76,0.6); background: rgba(201,168,76,0.08); }
+        .alloc-perfil-btn.active[data-perfil="arrojado"]    { border-color: rgba(76,175,125,0.6); background: rgba(76,175,125,0.08); }
+        .perfil-icon  { font-size: 20px; line-height: 1; }
+        .perfil-nome  { font-size: 13px; font-weight: 600; }
+        .perfil-cenario { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+        .alloc-perfil-desc { font-size: 12px; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; }
+
+        /* DONUT */
+        .alloc-donut-wrap {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 80px;
+        }
+        .alloc-donut-title { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; align-self: flex-start; }
+        .alloc-donut-container { position: relative; width: 200px; height: 200px; flex-shrink: 0; }
+        .alloc-donut-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+        .alloc-donut-total-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .alloc-donut-total-val { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 600; color: var(--text); margin-top: 2px; }
+        .alloc-donut-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; width: 100%; }
+        .donut-leg-item { display: flex; align-items: center; gap: 6px; }
+        .donut-leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .donut-leg-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+        /* BENCHMARK SECTION */
+        .bench-wrap {
+            margin-top: 48px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+        }
+        .bench-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .bench-title { font-size: clamp(20px, 3vw, 28px); font-weight: 700; margin-bottom: 6px; }
+        .bench-sub { font-size: 13px; color: var(--muted); max-width: 500px; line-height: 1.6; }
+        .bench-controls { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+        .bench-prazo-group { display: flex; align-items: center; gap: 12px; }
+        .bench-assumptions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        .bench-assume-item { text-align: center; }
+        .bench-assume-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
+        .bench-assume-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; }
+        .bench-chart-wrap {
+            height: 380px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .bench-table-wrap { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; overflow-x: auto; }
+        .bench-note { font-size: 11px; color: #555; line-height: 1.7; padding-top: 12px; border-top: 1px solid var(--border); }
+        .bench-note strong { color: #666; }
+
+        /* ── PANORAMA MACRO ── */
+        .macro-alert-banner {
+            display: flex; align-items: flex-start; gap: 20px;
+            background: rgba(224,92,92,0.07); border: 1px solid rgba(224,92,92,0.25);
+            border-radius: 16px; padding: 22px 28px; margin-bottom: 40px;
+        }
+        .macro-alert-icon { font-size: 22px; color: var(--red); flex-shrink: 0; margin-top: 2px; }
+        .macro-alert-body { flex: 1; }
+        .macro-alert-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.2px; }
+        .macro-alert-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+        .macro-alert-badge {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--red); border: 1px solid rgba(224,92,92,0.4); border-radius: 100px;
+            padding: 5px 12px; white-space: nowrap; flex-shrink: 0;
+        }
+        .macro-analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+        .macro-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; padding: 28px;
+        }
+        .macro-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .macro-card-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .macro-card-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+        .macro-card-sub { font-size: 11px; color: var(--muted); }
+        .macro-table { width: 100%; border-collapse: collapse; }
+        .macro-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); padding: 0 0 10px 0; text-align: left; border-bottom: 1px solid var(--border); font-weight: 500; }
+        .macro-table th:nth-child(2), .macro-table td:nth-child(2) { text-align: center; width: 60px; }
+        .macro-table td { font-size: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); vertical-align: top; line-height: 1.5; }
+        .macro-table td:first-child { color: var(--text); min-width: 120px; padding-right: 8px; }
+        .macro-table tr:last-child td { border-bottom: none; }
+        .macro-dir { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; }
+        .macro-dir.up { color: var(--red); }
+        .macro-dir.down { color: var(--green); }
+        .macro-dir.neutral { color: var(--muted); }
+        .macro-brazil-item { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .macro-brazil-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .macro-brazil-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 6px; font-weight: 600; }
+        .macro-brazil-text { font-size: 12.5px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+        .macro-micro-section { margin-top: 8px; }
+        .macro-micro-title { font-size: clamp(22px, 2.5vw, 32px); font-weight: 700; margin-bottom: 24px; color: var(--text); }
+        .macro-micro-title em { font-style: italic; color: var(--gold); }
+        .macro-micro-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .macro-sector-card {
+            border-radius: 16px; padding: 22px; border: 1px solid;
+        }
+        .macro-sector-card.benefit { background: rgba(76,175,125,0.05); border-color: rgba(76,175,125,0.18); }
+        .macro-sector-card.penalty { background: rgba(224,92,92,0.05); border-color: rgba(224,92,92,0.18); }
+        .macro-sector-card.neutral-card { background: rgba(91,156,246,0.05); border-color: rgba(91,156,246,0.18); }
+        .macro-sector-header { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .macro-sector-list { list-style: none; padding: 0; }
+        .macro-sector-list li { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.6; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .macro-sector-list li:last-child { border-bottom: none; }
+        .macro-sector-list li strong { color: var(--text); }
+        .macro-update-stamp { font-size: 11px; color: #444; margin-top: 32px; display: flex; align-items: center; gap: 8px; }
+        .macro-update-stamp i { color: #555; }
+        @media (max-width: 900px) {
+            .macro-analysis-grid { grid-template-columns: 1fr; }
+            .macro-micro-grid { grid-template-columns: 1fr; }
+            .macro-alert-banner { flex-direction: column; gap: 14px; padding: 18px 20px; }
+            .macro-alert-badge { align-self: flex-start; }
+            .macro-alert-icon { display: none; }
+        }
+        @media (max-width: 600px) {
+            .macro-alert-title { font-size: 13px; }
+            .macro-alert-text { font-size: 12px; }
+            .macro-micro-title { font-size: 20px; }
+            .macro-sector-card { padding: 16px; }
+            .macro-card { padding: 20px; }
+            .macro-card-icon { width: 36px; height: 36px; font-size: 15px; }
+            .macro-table td, .macro-table th { font-size: 11px; }
+            .macro-dir { font-size: 12px; }
+        }
+
+        /* ── CTA ── */
+        .cta-section { background: linear-gradient(135deg, #0d0d0d 0%, #111008 50%, #0d0d0d 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 100px 60px; text-align: center; position: relative; overflow: hidden; }
+        .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%); pointer-events: none; }
+        .cta-eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+        .cta-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 400; font-style: italic; color: var(--gold-light); margin-bottom: 16px; line-height: 1.15; }
+        .cta-sub { font-size: 15px; color: var(--muted); margin-bottom: 44px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+        .cta-link { display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; border: 1px solid rgba(201,168,76,0.4); border-radius: 100px; color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.3s; position: relative; z-index: 1; }
+        .cta-link:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.15); }
+
+        /* FOOTER */
+        footer { background: #040404; border-top: 1px solid var(--border); }
+        .footer-inner { max-width: 1400px; margin: 0 auto; padding: 60px 60px 40px; display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.4fr; gap: 48px; }
+        .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+        .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; max-width: 300px; }
+        .footer-status { display: flex; align-items: center; gap: 8px; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+        .status-text { font-size: 12px; color: var(--green); }
+        .status-version { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+        .footer-col-title { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); margin-bottom: 18px; }
+        .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-site-link { display: inline-flex !important; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(201,168,76,0.3); border-radius: 100px; color: var(--gold) !important; font-size: 12px; font-weight: 600; transition: all 0.2s !important; }
+        .footer-site-link:hover { background: var(--gold-dim) !important; border-color: var(--gold) !important; }
+        .footer-bottom { max-width: 1400px; margin: 0 auto; padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .footer-bottom-left, .footer-bottom-right { font-size: 12px; color: var(--muted); }
+        .footer-dot { margin: 0 8px; }
+        .footer-disclaimer { max-width: 1400px; margin: 0 auto; padding: 16px 60px 32px; font-size: 11px; color: #444; line-height: 1.7; }
+        .footer-disclaimer strong { color: #555; }
+
+        /* ANIMATIONS */
+        @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+        .loading { background: linear-gradient(90deg, var(--surface) 25%, rgba(255,255,255,0.04) 50%, var(--surface) 75%); background-size: 400px; animation: shimmer 1.4s infinite; border-radius: 4px; display: inline-block; min-width: 80px; height: 1em; }
+        @keyframes flash { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 1; } }
+        .flash { animation: flash 0.5s ease; }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+        /* REVEAL */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .d1 { transition-delay: 0.1s; }
+        .d2 { transition-delay: 0.2s; }
+        .d3 { transition-delay: 0.3s; }
+        .d4 { transition-delay: 0.4s; }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE — MOBILE-FIRST COMPREHENSIVE
+        ═══════════════════════════════════════════ */
+
+        @media (max-width: 1200px) {
+            .alloc-main-grid { grid-template-columns: 1fr 280px; }
+            .alloc-donut-container { width: 170px; height: 170px; }
+            .bench-assumptions { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 1024px) {
+            .footer-inner { grid-template-columns: 1fr 1fr; padding: 48px 32px 32px; gap: 36px; }
+            .footer-bottom { padding: 16px 32px; }
+            .footer-disclaimer { padding: 12px 32px 28px; }
+            .hero { grid-template-columns: 1fr; padding: 100px 32px 48px; gap: 40px; }
+            .section { padding: 60px 32px; }
+            .macro-strip { padding: 20px 32px; }
+            .tv-inner { padding: 40px 32px; }
+            .cta-section { padding: 80px 32px; }
+            .sim-panel-grid { grid-template-columns: 1fr; }
+            .comp-inputs { grid-template-columns: 1fr 1fr; }
+            .comp-mini-grid { grid-template-columns: 1fr 1fr; }
+            /* Allocation */
+            .alloc-main-grid { grid-template-columns: 1fr; }
+            .alloc-donut-wrap { position: static; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 24px; }
+            .alloc-donut-container { width: 180px; height: 180px; }
+            .alloc-donut-legend { grid-template-columns: repeat(3, 1fr); width: auto; }
+            .alloc-perfil-btns { grid-template-columns: repeat(3, 1fr); }
+            .perfil-icon { font-size: 18px; }
+            .perfil-nome { font-size: 12px; }
+            /* Benchmark */
+            .bench-assumptions { grid-template-columns: repeat(2, 1fr); }
+            .bench-header { flex-direction: column; }
+            .bench-controls { align-items: flex-start; }
+            .bench-chart-wrap { height: 300px; }
+        }
+
+        @media (max-width: 768px) {
+            /* Nav */
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+            /* Sections */
+            .section { padding: 48px 16px; }
+            .macro-strip { padding: 16px 16px; }
+            .macro-item { min-width: 90px; }
+            .macro-value { font-size: 16px; }
+            .macro-label { font-size: 9px; }
+            /* Hero */
+            .hero { padding: 88px 16px 40px; }
+            .hero h1 { font-size: clamp(32px, 8vw, 42px); }
+            .hero-sub { font-size: 14px; }
+            .hero-ctas { flex-direction: column; }
+            .btn-primary, .btn-ghost { justify-content: center; width: 100%; }
+            .ticker-card { padding: 14px 16px; }
+            .ticker-price { font-size: 16px; }
+            /* TV tabs */
+            .tv-inner { padding: 32px 16px; }
+            .tv-tabs { overflow-x: auto; padding-bottom: 0; gap: 4px; }
+            .tv-tab { padding: 8px 14px; font-size: 12px; white-space: nowrap; }
+            /* Simuladores */
+            .sim-nav { gap: 6px; flex-wrap: wrap; }
+            .sim-nav-btn { padding: 8px 12px; font-size: 11px; }
+            .sim-panel-left { padding: 16px; }
+            .sim-panel-right { min-height: 360px; }
+            .sim-ativo-header { flex-wrap: wrap; gap: 10px; }
+            .sim-ativo-preco-live { margin-left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+            .sim-ativo-nome { font-size: 18px; }
+            .form-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .sc-card { padding: 12px 14px; }
+            .sc-rate { font-size: 13px; }
+            .sc-result-val { font-size: 16px; }
+            /* Comparador */
+            .comp-inputs { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .comp-input-card { padding: 14px; }
+            .comp-chart-wrap { height: 260px; }
+            .comp-table { font-size: 11px; }
+            .comp-table th, .comp-table td { padding: 9px 10px; }
+            .comp-mini-grid { grid-template-columns: 1fr 1fr; }
+            .comp-chart-controls { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .comp-ctrl-hint { display: none; }
+            /* Allocation */
+            .alloc-wrap { padding: 20px; }
+            .alloc-slider-row { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+            .alloc-label { width: 100%; }
+            .alloc-display { min-width: unset; font-size: 20px; text-align: right; flex: 1; }
+            .alloc-main-grid { grid-template-columns: 1fr; gap: 16px; }
+            .alloc-left { width: 160px; }
+            .alloc-name { font-size: 13px; }
+            .alloc-tag { display: none; }
+            .alloc-value { font-size: 13px; min-width: 85px; }
+            .alloc-bar-wrap { min-width: 30px; }
+            .alloc-donut-wrap { flex-direction: column; align-items: center; padding: 20px 16px; }
+            .alloc-donut-container { width: 200px; height: 200px; }
+            .alloc-donut-legend { grid-template-columns: repeat(3, 1fr); }
+            .alloc-total { flex-wrap: wrap; gap: 4px; }
+            .alloc-total-value { font-size: 18px; }
+            /* Benchmark */
+            .bench-wrap { padding: 20px 16px; margin-top: 28px; }
+            .bench-assumptions { grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+            .bench-assume-val { font-size: 11px; }
+            .bench-chart-wrap { height: 260px; }
+            .bench-table-wrap { font-size: 11px; }
+            .bench-controls { width: 100%; }
+            .bench-prazo-group { flex-wrap: wrap; gap: 8px; }
+            /* Footer */
+            .footer-inner { grid-template-columns: 1fr; padding: 36px 16px 24px; gap: 28px; }
+            .footer-desc { max-width: 100%; }
+            .footer-bottom { padding: 16px; flex-direction: column; align-items: flex-start; gap: 6px; }
+            .footer-disclaimer { padding: 12px 16px 28px; font-size: 10px; }
+            /* Section titles */
+            .section-title { font-size: clamp(24px, 6vw, 36px); }
+            .hero-tag { font-size: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 30px; }
+            .ticker-card { padding: 12px 14px; }
+            .ticker-name { font-size: 13px; }
+            .ticker-price { font-size: 15px; }
+            .ticker-icon { width: 34px; height: 34px; }
+            .macro-strip-inner { gap: 0; }
+            .macro-item { min-width: 80px; padding: 0 12px; }
+            .macro-value { font-size: 15px; }
+            /* Sim nav — scroll horizontal */
+            .sim-nav { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+            .sim-nav-btn { flex-shrink: 0; }
+            .form-row { grid-template-columns: 1fr; gap: 8px; }
+            .sc-result-val { font-size: 15px; }
+            /* Allocation extra small — layout comprimido mas sem overflow */
+            .alloc-item { padding: 10px 12px; gap: 6px; overflow: hidden; }
+            .alloc-left { width: auto; min-width: 0; flex: 0 0 auto; max-width: 135px; gap: 8px; }
+            .alloc-dot { width: 8px; height: 8px; }
+            .alloc-name { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+            .alloc-right-wrap { flex: 1; min-width: 0; gap: 6px; }
+            .alloc-bar-wrap { display: none; }
+            .alloc-nums { gap: 6px; }
+            .alloc-pct-val { min-width: 24px; font-size: 11px; }
+            .alloc-value { font-size: 12px; min-width: 0; white-space: nowrap; }
+            .alloc-donut-container { width: 180px; height: 180px; }
+            .alloc-donut-legend { grid-template-columns: 1fr 1fr; }
+            .alloc-perfil-btn { padding: 10px 6px; }
+            .alloc-perfil-icon { font-size: 16px; }
+            .perfil-nome { font-size: 11px; }
+            .perfil-cenario { font-size: 9px; }
+            /* Benchmark */
+            .bench-assumptions { grid-template-columns: 1fr; }
+            .bench-chart-wrap { height: 220px; }
+            .comp-inputs { grid-template-columns: 1fr; }
+            .comp-mini-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+    <a href="#" class="nav-logo">
+        <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+        <span class="logo-text">MultiAsset<span>Pro</span></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#mercado">Mercado</a></li>
+        <li><a href="#simuladores">Simuladores</a></li>
+        <li><a href="#alocacao">Alocação</a></li>
+        <li><a href="https://szuchmacher.com.br" target="_blank">Consultoria</a></li>
+    </ul>
+    <div class="nav-time mono" id="nav-clock">--:--:--</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-left">
+        <div class="hero-tag">Plataforma MultiAsset Ativa</div>
+        <h1 class="display">
+            Análise fundamentada<br>para <em>decisões</em><br>que importam
+        </h1>
+        <p class="hero-sub">
+            Renda fixa, metais preciosos e Bitcoin em um único painel.
+            Simulações avançadas, cenários macro e cotações em tempo real.
+        </p>
+        <div class="hero-ctas">
+            <a href="#simuladores" class="btn-primary"><i class="fas fa-calculator"></i> Simular investimento</a>
+            <a href="#mercado" class="btn-ghost"><i class="fas fa-chart-bar"></i> Ver cotações ao vivo</a>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <div class="ticker-card gold reveal">
+            <div class="ticker-left">
+                <div class="ticker-icon gold">Au</div>
+                <div><div class="ticker-name">Ouro (XAU/USD)</div><div class="ticker-sub">Spot Price</div></div>
+            </div>
+            <div class="ticker-right">
+                <div class="ticker-price" id="h-gold-price">$ 5.169,00</div>
+                <div class="ticker-change change-up" id="h-gold-change">+0,88%</div>
+            </div>
+        </div>
+        <div class="ticker-card silver reveal d1">
+            <div class="ticker-left">
+                <div class="ticker-icon silver">Ag</div>
+                <div><div class="ticker-name">Prata (XAG/USD)</div><div class="ticker-sub">Spot Price</div></div>
+            </div>
+            <div class="ticker-right">
+                <div class="ticker-price" id="h-silver-price">$ 84,10</div>
+                <div class="ticker-change change-up" id="h-silver-change">+0,75%</div>
+            </div>
+        </div>
+        <div class="ticker-card platinum reveal d2">
+            <div class="ticker-left">
+                <div class="ticker-icon platinum">Pt</div>
+                <div><div class="ticker-name">Platina (XPT/USD)</div><div class="ticker-sub">Spot Price</div></div>
+            </div>
+            <div class="ticker-right">
+                <div class="ticker-price" id="h-plat-price">$ 2.148,60</div>
+                <div class="ticker-change change-up" id="h-plat-change">+3,52%</div>
+            </div>
+        </div>
+        <div class="ticker-card btc reveal d3">
+            <div class="ticker-left">
+                <div class="ticker-icon btc">₿</div>
+                <div><div class="ticker-name">Bitcoin (BTC)</div><div class="ticker-sub">Spot Price</div></div>
+            </div>
+            <div class="ticker-right">
+                <div class="ticker-price" id="h-btc-price">$ 71.894,62</div>
+                <div class="ticker-change change-up" id="h-btc-change">+7,90%</div>
+            </div>
+        </div>
+        <div class="ticker-card usd reveal d4">
+            <div class="ticker-left">
+                <div class="ticker-icon usd">💵</div>
+                <div><div class="ticker-name">USD / BRL</div><div class="ticker-sub">Taxa de câmbio</div></div>
+            </div>
+            <div class="ticker-right">
+                <div class="ticker-price" id="h-usd-price">R$ 5,22</div>
+                <div class="ticker-change change-down" id="h-usd-change">-0,87%</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MACRO STRIP — sem DXY -->
+<div class="macro-strip">
+    <div class="macro-strip-inner">
+        <div class="macro-item">
+            <div class="macro-label">Taxa Selic</div>
+            <div class="macro-value mono">15,00%</div>
+            <div class="macro-sub">a.a.</div>
+        </div>
+        <div class="macro-item">
+            <div class="macro-label">IPCA 12M</div>
+            <div class="macro-value mono">5,48%</div>
+            <div class="macro-sub">acumulado</div>
+        </div>
+        <div class="macro-item">
+            <div class="macro-label">CDI</div>
+            <div class="macro-value mono">14,91%</div>
+            <div class="macro-sub">a.a.</div>
+        </div>
+        <div class="macro-item">
+            <div class="macro-label">USD / BRL</div>
+            <div class="macro-value mono" id="macro-usd">5,22</div>
+            <div class="macro-sub">comercial</div>
+        </div>
+        <div class="macro-item">
+            <div class="macro-label">PIB 2025</div>
+            <div class="macro-value mono">+2,3%</div>
+            <div class="macro-sub">projeção</div>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- MERCADO EM TEMPO REAL -->
+<section id="mercado" class="tv-section">
+    <div class="tv-inner">
+        <div class="section-header">
+            <div class="section-eyebrow">Cotações</div>
+            <h2 class="section-title display">Mercado em Tempo Real</h2>
+            <div class="section-line"></div>
+            <p style="font-size:13px; color:var(--muted); margin-top:14px;">Dados atualizados automaticamente via TradingView</p>
+        </div>
+        <div class="tv-tabs">
+            <button class="tv-tab active" onclick="switchTab(this,'tab-comm')">Commodities</button>
+            <button class="tv-tab" onclick="switchTab(this,'tab-crypto')">Cripto</button>
+            <button class="tv-tab" onclick="switchTab(this,'tab-forex')">Forex</button>
+        </div>
+        <div id="tab-comm" class="tv-panel active">
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"br","isTransparent":true,"showSymbolLogo":true,"showFloatingTooltip":false,"width":"100%","height":"340","tabs":[{"title":"Metais","symbols":[{"s":"TVC:GOLD","d":"Ouro (XAU)"},{"s":"TVC:SILVER","d":"Prata (XAG)"},{"s":"TVC:PLATINUM","d":"Platina (XPT)"},{"s":"TVC:PALLADIUM","d":"Paládio (XPD)"}],"originalTitle":"Metais"}]}
+                </script>
+            </div>
+        </div>
+        <div id="tab-crypto" class="tv-panel">
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"br","isTransparent":true,"showSymbolLogo":true,"width":"100%","height":"340","tabs":[{"title":"Cripto","symbols":[{"s":"BINANCE:BTCUSDT","d":"Bitcoin"},{"s":"BINANCE:ETHUSDT","d":"Ethereum"},{"s":"BINANCE:BTCBRL","d":"BTC/BRL"},{"s":"BINANCE:SOLUSDT","d":"Solana"}],"originalTitle":"Cripto"}]}
+                </script>
+            </div>
+        </div>
+        <div id="tab-forex" class="tv-panel">
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"br","isTransparent":true,"showSymbolLogo":true,"width":"100%","height":"340","tabs":[{"title":"Forex","symbols":[{"s":"FX_IDC:USDBRL","d":"USD/BRL"},{"s":"FX_IDC:EURBRL","d":"EUR/BRL"},{"s":"FX_IDC:GBPBRL","d":"GBP/BRL"},{"s":"FX_IDC:JPYBRL","d":"JPY/BRL"}],"originalTitle":"Forex"}]}
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- SIMULADORES -->
+<section id="simuladores" class="section">
+    <div class="section-header reveal">
+        <div class="section-eyebrow">Ferramentas</div>
+        <h2 class="section-title display">Simuladores de Investimento</h2>
+        <div class="section-line"></div>
+        <p style="color:var(--muted);font-size:14px;margin-top:16px;max-width:600px;">
+            Cada ativo simulado individualmente com gráfico técnico em tempo real e projeção por cenários.
+        </p>
+    </div>
+
+    <div class="sim-nav reveal">
+        <button class="sim-nav-btn active" onclick="activateSim('sim-ouro', this)">
+            <span class="sim-nav-icon" style="color:#c9a84c">Au</span> Ouro
+        </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-prata', this)">
+            <span class="sim-nav-icon" style="color:#c0c0c0">Ag</span> Prata
+        </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-platina', this)">
+            <span class="sim-nav-icon" style="color:#8ecfdd">Pt</span> Platina
+        </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-btc', this)">
+            <span class="sim-nav-icon" style="color:#f07a40">₿</span> Bitcoin
+        </button>
+        <button class="sim-nav-btn sim-nav-compare" onclick="activateSim('sim-comparador', this)">
+            <span class="sim-nav-icon">⚡</span> Comparador
+        </button>
+    </div>
+
+    <!-- OURO -->
+    <div id="sim-ouro" class="sim-panel active reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(201,168,76,0.15);color:#c9a84c;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">Au</div>
+                    <div>
+                        <div class="sim-ativo-nome display">Ouro</div>
+                        <div class="sim-ativo-ticker">GOLD / USD · oz troy</div>
+                    </div>
+                    <div class="sim-ativo-preco-live">
+                        <div class="sim-preco-val" id="sp-gold-price" style="color:var(--gold)">$ —</div>
+                        <div class="sim-preco-change change-neutral" id="sp-gold-change">—</div>
+                    </div>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="g-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('gold')"></div>
+                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="g-aporte" value="500" class="form-input" min="0" oninput="recalcSim('gold')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="g-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('gold')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-gold">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('gold','pess',this)">
+                        <div class="sc-badge">Pessimista</div>
+                        <div class="sc-rate" style="color:var(--red)">+4% a.a.</div>
+                        <div class="sc-desc">Apreciação limitada. Apesar do risco geopolítico (conflito Irã, Ormuz), uma resolução diplomática rápida ou cessação do bloqueio remove o prêmio de crise. Juros americanos acima de 4% sustentados e dólar forte comprimem o ouro. Retorno real modesto.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="g-pess">$ —</div><div class="sc-result-ret" id="g-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="g-pess-break"></div>
+                        <div class="sc-proj-price" id="g-pess-price"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('gold','base',this)">
+                        <div class="sc-badge">Base</div>
+                        <div class="sc-rate" style="color:var(--gold)">+9,3% a.a.</div>
+                        <div class="sc-desc">Conflito de duração média (4–6 semanas), seguido de normalização parcial. Cortes graduais do Fed, dólar em enfraquecimento moderado, compras de bancos centrais emergentes sustentadas e prêmio geopolítico residual mantêm o ouro em valorização consistente.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="g-base">$ —</div><div class="sc-result-ret" id="g-base-r">—</div></div>
+                        <div class="sc-breakdown" id="g-base-break"></div>
+                        <div class="sc-proj-price" id="g-base-price"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('gold','otim',this)">
+                        <div class="sc-badge">Otimista</div>
+                        <div class="sc-rate" style="color:var(--green)">+15% a.a.</div>
+                        <div class="sc-desc">Rali de refúgio. Crise sistêmica nos mercados de crédito, recessão americana, desconfiança no sistema bancário ou aceleração inflacionária global. Histórico: ouro subiu +32% em 2007, +25% em 2019, +13% em 2022.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="g-otim">$ —</div><div class="sc-result-ret" id="g-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="g-otim-break"></div>
+                        <div class="sc-proj-price" id="g-otim-price"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-gold" height="160"></canvas></div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">Gráfico Técnico — Ouro (XAU/USD)</div>
+                <div class="tradingview-widget-container sim-tv-chart">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                    {"autosize":true,"symbol":"TVC:GOLD","interval":"D","timezone":"America/Sao_Paulo","theme":"dark","style":"1","locale":"br","backgroundColor":"rgba(0,0,0,0)","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"save_image":false,"hide_volume":false,"support_host":"https://www.tradingview.com"}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRATA -->
+    <div id="sim-prata" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(192,192,192,0.1);color:#c0c0c0;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">Ag</div>
+                    <div>
+                        <div class="sim-ativo-nome display">Prata</div>
+                        <div class="sim-ativo-ticker">SILVER / USD · oz troy</div>
+                    </div>
+                    <div class="sim-ativo-preco-live">
+                        <div class="sim-preco-val" id="sp-silver-price" style="color:#c0c0c0">$ —</div>
+                        <div class="sim-preco-change change-neutral" id="sp-silver-change">—</div>
+                    </div>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="s-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('silver')"></div>
+                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="s-aporte" value="500" class="form-input" min="0" oninput="recalcSim('silver')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="s-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('silver')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-silver">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('silver','pess',this)">
+                        <div class="sc-badge">Pessimista</div>
+                        <div class="sc-rate" style="color:var(--red)">+3% a.a.</div>
+                        <div class="sc-desc">Demanda industrial fraca. Desaceleração da manufatura global reduz a componente industrial que representa 50% do consumo de prata. Juros altos nos EUA comprimem o prêmio sobre o ouro. Ratio ouro/prata mantido acima de 90x.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="s-pess">$ —</div><div class="sc-result-ret" id="s-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="s-pess-break"></div>
+                        <div class="sc-proj-price" id="s-pess-price"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('silver','base',this)">
+                        <div class="sc-badge">Base</div>
+                        <div class="sc-rate" style="color:#c0c0c0">+8,5% a.a.</div>
+                        <div class="sc-desc">Expansão sustentada de painéis fotovoltaicos e eletrônicos de precisão, com demanda industrial crescendo ~4% a.a. Alinhamento com o ciclo do ouro, que historicamente puxa a prata com defasagem. Ratio ouro/prata converge para a média histórica de 70–80x.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="s-base">$ —</div><div class="sc-result-ret" id="s-base-r">—</div></div>
+                        <div class="sc-breakdown" id="s-base-break"></div>
+                        <div class="sc-proj-price" id="s-base-price"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('silver','otim',this)">
+                        <div class="sc-badge">Otimista</div>
+                        <div class="sc-rate" style="color:var(--green)">+18% a.a.</div>
+                        <div class="sc-desc">Boom da transição energética. Explosão da demanda por painéis solares e baterias de estado sólido. Rali do ouro puxa a prata com múltiplo histórico. Janelas como 2010–2011 (+170%) mostram que a prata pode superar o ouro em momentos de euforia de commodities.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="s-otim">$ —</div><div class="sc-result-ret" id="s-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="s-otim-break"></div>
+                        <div class="sc-proj-price" id="s-otim-price"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-silver" height="160"></canvas></div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">Gráfico Técnico — Prata (XAG/USD)</div>
+                <div class="tradingview-widget-container sim-tv-chart">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                    {"autosize":true,"symbol":"TVC:SILVER","interval":"D","timezone":"America/Sao_Paulo","theme":"dark","style":"1","locale":"br","backgroundColor":"rgba(0,0,0,0)","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"save_image":false,"hide_volume":false,"support_host":"https://www.tradingview.com"}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLATINA -->
+    <div id="sim-platina" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(142,207,221,0.1);color:#8ecfdd;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">Pt</div>
+                    <div>
+                        <div class="sim-ativo-nome display">Platina</div>
+                        <div class="sim-ativo-ticker">PLATINUM / USD · oz troy</div>
+                    </div>
+                    <div class="sim-ativo-preco-live">
+                        <div class="sim-preco-val" id="sp-plat-price" style="color:#8ecfdd">$ —</div>
+                        <div class="sim-preco-change change-neutral" id="sp-plat-change">—</div>
+                    </div>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="p-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('platinum')"></div>
+                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="p-aporte" value="500" class="form-input" min="0" oninput="recalcSim('platinum')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="p-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('platinum')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-platinum">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('platinum','pess',this)">
+                        <div class="sc-badge">Pessimista</div>
+                        <div class="sc-rate" style="color:var(--red)">−5% a.a.</div>
+                        <div class="sc-desc">Colapso da demanda automotiva. A platina é usada em 40% dos catalisadores diesel, tecnologia em retração com a eletrificação europeia. Excesso de oferta da África do Sul (70% da produção global) sem contrapartida industrial suficiente.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="p-pess">$ —</div><div class="sc-result-ret" id="p-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="p-pess-break"></div>
+                        <div class="sc-proj-price" id="p-pess-price"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('platinum','base',this)">
+                        <div class="sc-badge">Base</div>
+                        <div class="sc-rate" style="color:#8ecfdd">+6% a.a.</div>
+                        <div class="sc-desc">Reposicionamento como metal do hidrogênio. Células de combustível utilizam platina como catalisador, com adoção crescente em caminhões pesados, trens e geração de energia. Déficits de oferta estruturais no médio prazo sustentam o preço.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="p-base">$ —</div><div class="sc-result-ret" id="p-base-r">—</div></div>
+                        <div class="sc-breakdown" id="p-base-break"></div>
+                        <div class="sc-proj-price" id="p-base-price"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('platinum','otim',this)">
+                        <div class="sc-badge">Otimista</div>
+                        <div class="sc-rate" style="color:var(--green)">+20% a.a.</div>
+                        <div class="sc-desc">Revolução do hidrogênio verde. A platina negocia hoje com desconto histórico de 50% frente ao ouro. A reversão para paridade histórica (ratio 1:1) representaria valorização de 200%+ partindo dos níveis atuais. Alta compressão de oferta sudafricana agrava o desequilíbrio.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="p-otim">$ —</div><div class="sc-result-ret" id="p-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="p-otim-break"></div>
+                        <div class="sc-proj-price" id="p-otim-price"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-platinum" height="160"></canvas></div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">Gráfico Técnico — Platina (XPT/USD)</div>
+                <div class="tradingview-widget-container sim-tv-chart">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                    {"autosize":true,"symbol":"TVC:PLATINUM","interval":"D","timezone":"America/Sao_Paulo","theme":"dark","style":"1","locale":"br","backgroundColor":"rgba(0,0,0,0)","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"save_image":false,"hide_volume":false,"support_host":"https://www.tradingview.com"}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BITCOIN -->
+    <div id="sim-btc" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(240,122,64,0.15);color:var(--orange);font-size:18px;">₿</div>
+                    <div>
+                        <div class="sim-ativo-nome display">Bitcoin</div>
+                        <div class="sim-ativo-ticker">BTC / USD · Spot Price</div>
+                    </div>
+                    <div class="sim-ativo-preco-live">
+                        <div class="sim-preco-val" id="sp-btc-price" style="color:var(--orange)">$ —</div>
+                        <div class="sim-preco-change change-neutral" id="sp-btc-change">—</div>
+                    </div>
+                </div>
+                <div class="alert-box">
+                    <strong>Alto risco:</strong> Bitcoin é o ativo mais volátil desta plataforma. Quedas de 50–80% já ocorreram em ciclos anteriores. Nunca invista mais do que está disposto a perder integralmente. Próximo halving: <strong>abril 2028</strong>.
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="b-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('btc')"></div>
+                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="b-aporte" value="500" class="form-input" min="0" oninput="recalcSim('btc')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="b-prazo" value="4" class="form-input" min="1" max="20" oninput="recalcSim('btc')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-btc">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('btc','pess',this)">
+                        <div class="sc-badge">Pessimista</div>
+                        <div class="sc-rate" style="color:var(--red)">−60% total</div>
+                        <div class="sc-desc">Capitulação de ciclo. Aperto regulatório severo, colapso de exchange sistêmica, ou surgimento de vulnerabilidade criptográfica. Histórico: drawdowns de 84% (2018), 77% (2022). Cenário assume perda de 60% do capital total investido.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="b-pess">$ —</div><div class="sc-result-ret" id="b-pess-r">—</div></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('btc','base',this)">
+                        <div class="sc-badge">Base</div>
+                        <div class="sc-rate" style="color:var(--orange)">+40% a.a.</div>
+                        <div class="sc-desc">Ciclo pós-halving clássico. Aprovação de ETFs spot globais, adoção por tesourarias corporativas e soberanas, redução programada da emissão a cada 4 anos. Média histórica dos ciclos pós-halving de 2013, 2017 e 2020.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="b-base">$ —</div><div class="sc-result-ret" id="b-base-r">—</div></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('btc','otim',this)">
+                        <div class="sc-badge">Otimista</div>
+                        <div class="sc-rate" style="color:var(--green)">+120% a.a.</div>
+                        <div class="sc-desc">Adoção institucional acelerada e reserva soberana. Bitcoin torna-se reserva de valor oficial de países, bancos centrais diversificam reservas para BTC. Supply shock pós-halving combinado com demanda institucional explosiva. Histórico: +305% em 2020.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="b-otim">$ —</div><div class="sc-result-ret" id="b-otim-r">—</div></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-btc" height="160"></canvas></div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">Gráfico Técnico — Bitcoin (BTC/USD)</div>
+                <div class="tradingview-widget-container sim-tv-chart">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                    {"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"D","timezone":"America/Sao_Paulo","theme":"dark","style":"1","locale":"br","backgroundColor":"rgba(0,0,0,0)","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"save_image":false,"hide_volume":false,"support_host":"https://www.tradingview.com"}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPARADOR -->
+    <div id="sim-comparador" class="sim-panel reveal">
+        <div class="comparador-header">
+            <div>
+                <div class="sim-ativo-nome display" style="font-size:22px;">Comparador de Ativos</div>
+                <p style="color:var(--muted);font-size:13px;margin-top:4px;">Configure os parâmetros de cada ativo e compare as projeções no mesmo gráfico</p>
+            </div>
+        </div>
+        <div class="comp-inputs">
+            <div class="comp-input-card" style="border-color:rgba(201,168,76,0.3)">
+                <div class="comp-input-title" style="color:var(--gold)">Au Ouro</div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-g-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-g-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-g-tx-d">9,3%</span></div><input type="range" id="c-g-tx" min="2" max="25" step="0.5" value="9.3" oninput="document.getElementById('c-g-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+            </div>
+            <div class="comp-input-card" style="border-color:rgba(192,192,192,0.25)">
+                <div class="comp-input-title" style="color:#c0c0c0">Ag Prata</div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-s-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-s-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-s-tx-d">8,5%</span></div><input type="range" id="c-s-tx" min="2" max="25" step="0.5" value="8.5" oninput="document.getElementById('c-s-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+            </div>
+            <div class="comp-input-card" style="border-color:rgba(142,207,221,0.25)">
+                <div class="comp-input-title" style="color:#8ecfdd">Pt Platina</div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-p-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-p-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-p-tx-d">6,0%</span></div><input type="range" id="c-p-tx" min="2" max="30" step="0.5" value="6" oninput="document.getElementById('c-p-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+            </div>
+            <div class="comp-input-card" style="border-color:rgba(240,122,64,0.3)">
+                <div class="comp-input-title" style="color:var(--orange)">₿ Bitcoin</div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-b-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-b-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-b-tx-d">40%</span></div><input type="range" id="c-b-tx" min="-50" max="150" step="5" value="40" oninput="document.getElementById('c-b-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+            </div>
+        </div>
+        <div class="comp-prazo-row">
+            <span class="slider-label">Prazo de comparação</span>
+            <input type="range" id="c-prazo" min="1" max="20" step="1" value="10" style="flex:1;" oninput="document.getElementById('c-prazo-d').textContent=this.value+' anos'; recalcComparador()">
+            <span class="slider-val mono" id="c-prazo-d" style="min-width:70px;text-align:right;">10 anos</span>
+        </div>
+        <div class="comp-chart-controls">
+            <div class="comp-ctrl-group">
+                <span class="comp-ctrl-label">Modo de exibição</span>
+                <div class="comp-toggle-group">
+                    <button class="comp-toggle active" id="btn-modo-abs" onclick="setModoComparador('absoluto', this)">Valor absoluto</button>
+                    <button class="comp-toggle" id="btn-modo-idx" onclick="setModoComparador('indice', this)">Índice base 100</button>
+                    <button class="comp-toggle" id="btn-modo-pct" onclick="setModoComparador('percentual', this)">Retorno acumulado %</button>
+                </div>
+            </div>
+            <div class="comp-ctrl-group">
+                <span class="comp-ctrl-label">Escala Y</span>
+                <div class="comp-toggle-group">
+                    <button class="comp-toggle active" id="btn-esc-lin" onclick="setEscalaComparador('linear', this)">Linear</button>
+                    <button class="comp-toggle" id="btn-esc-log" onclick="setEscalaComparador('logarithmic', this)">Logarítmica</button>
+                </div>
+            </div>
+            <div class="comp-ctrl-group" style="margin-left:auto;">
+                <span class="comp-ctrl-hint">💡 "Índice base 100" é ideal para comparar ativos com valores muito diferentes</span>
+            </div>
+        </div>
+        <div class="comp-chart-wrap"><canvas id="chart-comparador"></canvas></div>
+        <div class="comp-table-wrap">
+            <table class="comp-table">
+                <thead>
+                    <tr><th>Ativo</th><th>Investido Total</th><th>Valor Final</th><th>Retorno</th><th>CAGR</th></tr>
+                </thead>
+                <tbody id="comp-tbody">
+                    <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Ajuste os parâmetros acima para gerar a comparação</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="comp-mini-charts">
+            <div class="comp-mini-label">Gráficos Técnicos — Comparação Visual</div>
+            <div class="comp-mini-grid">
+                <div class="comp-mini-item">
+                    <div class="comp-mini-title" style="color:var(--gold)">Au Ouro — XAU/USD</div>
+                    <div class="tradingview-widget-container comp-tv-mini"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>{"symbol":"TVC:GOLD","width":"100%","height":"180","locale":"br","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":false}</script></div>
+                </div>
+                <div class="comp-mini-item">
+                    <div class="comp-mini-title" style="color:#c0c0c0">Ag Prata — XAG/USD</div>
+                    <div class="tradingview-widget-container comp-tv-mini"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>{"symbol":"TVC:SILVER","width":"100%","height":"180","locale":"br","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":false}</script></div>
+                </div>
+                <div class="comp-mini-item">
+                    <div class="comp-mini-title" style="color:#8ecfdd">Pt Platina — XPT/USD</div>
+                    <div class="tradingview-widget-container comp-tv-mini"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>{"symbol":"TVC:PLATINUM","width":"100%","height":"180","locale":"br","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":false}</script></div>
+                </div>
+                <div class="comp-mini-item">
+                    <div class="comp-mini-title" style="color:var(--orange)">₿ Bitcoin — BTC/USD</div>
+                    <div class="tradingview-widget-container comp-tv-mini"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>{"symbol":"BINANCE:BTCUSDT","width":"100%","height":"180","locale":"br","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":false}</script></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ALOCAÇÃO -->
+<section id="alocacao" class="section">
+    <div class="section-header reveal">
+        <div class="section-eyebrow">Portfolio</div>
+        <h2 class="section-title display">Alocação de Portfólio</h2>
+        <div class="section-line"></div>
+        <p style="color:var(--muted);font-size:14px;margin-top:16px;max-width:600px;">
+            Portfólio completo com distribuição entre renda fixa, metais, cripto e reserva estratégica.
+        </p>
+    </div>
+
+    <div class="alloc-wrap reveal">
+        <!-- SLIDER DE VALOR -->
+        <div class="alloc-slider-row">
+            <span class="alloc-label">Valor total do portfólio</span>
+            <input type="range" id="portfolio-slider" min="10000" max="5000000" step="10000" value="500000" style="flex:1;" oninput="atualizarAlocacao(this.value)">
+            <span class="alloc-display mono" id="portfolio-display">R$ 500.000</span>
+        </div>
+
+        <!-- LAYOUT PRINCIPAL: LISTA + DONUT -->
+        <div class="alloc-main-grid">
+            <!-- LISTA DE ATIVOS -->
+            <div class="alloc-list">
+                <!-- SELETOR DE PERFIL -->
+                <div class="alloc-perfil-selector">
+                    <div class="alloc-perfil-label">Perfil de investidor</div>
+                    <div class="alloc-perfil-btns" id="alloc-perfil-btns">
+                        <button class="alloc-perfil-btn" data-perfil="conservador" onclick="setPerfilAlocacao('conservador',this)">
+                            <span class="perfil-icon">🛡️</span>
+                            <span class="perfil-nome">Conservador</span>
+                            <span class="perfil-cenario">Pessimista</span>
+                        </button>
+                        <button class="alloc-perfil-btn active" data-perfil="moderado" onclick="setPerfilAlocacao('moderado',this)">
+                            <span class="perfil-icon">⚖️</span>
+                            <span class="perfil-nome">Moderado</span>
+                            <span class="perfil-cenario">Base</span>
+                        </button>
+                        <button class="alloc-perfil-btn" data-perfil="arrojado" onclick="setPerfilAlocacao('arrojado',this)">
+                            <span class="perfil-icon">🚀</span>
+                            <span class="perfil-nome">Arrojado</span>
+                            <span class="perfil-cenario">Otimista</span>
+                        </button>
+                    </div>
+                    <div class="alloc-perfil-desc" id="alloc-perfil-desc">
+                        Cenário base: mercado equilibrado com inflação sob controle. Portfólio balanceado entre proteção e crescimento.
+                    </div>
+                </div>
+
+                <div class="alloc-group-label">Renda Fixa</div>
+                <div class="alloc-item" data-key="ntnb">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:#4caf7d"></div>
+                        <div>
+                            <span class="alloc-name">NTN-B / IPCA+</span>
+                            <span class="alloc-tag">Tesouro IPCA+ curto</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-ntnb" style="background:#4caf7d;width:30%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-ntnb">30%</span>
+                            <span class="alloc-value mono" id="val-ntnb" style="color:#4caf7d">R$ 150.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alloc-item" data-key="cdi">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:#5b9cf6"></div>
+                        <div>
+                            <span class="alloc-name">CDI / Selic</span>
+                            <span class="alloc-tag">CDB 100–110% CDI · liquidez D+0</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-cdi" style="background:#5b9cf6;width:25%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-cdi">25%</span>
+                            <span class="alloc-value mono" id="val-cdi" style="color:#5b9cf6">R$ 125.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alloc-group-label" style="margin-top:16px;">Metais Preciosos</div>
+                <div class="alloc-item" data-key="gold">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:#c9a84c"></div>
+                        <div>
+                            <span class="alloc-name">Ouro (XAU)</span>
+                            <span class="alloc-tag">ETF · ouro físico internacional</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-gold" style="background:#c9a84c;width:15%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-gold">15%</span>
+                            <span class="alloc-value mono" id="val-gold" style="color:#c9a84c">R$ 75.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alloc-item" data-key="silver">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:#c0c0c0"></div>
+                        <div>
+                            <span class="alloc-name">Prata (XAG)</span>
+                            <span class="alloc-tag">ETF · prata spot internacional</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-silver" style="background:#c0c0c0;width:5%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-silver">5%</span>
+                            <span class="alloc-value mono" id="val-silver" style="color:#c0c0c0">R$ 25.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alloc-group-label" style="margin-top:16px;">Cripto &amp; Alternativo</div>
+                <div class="alloc-item" data-key="btc">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:#f07a40"></div>
+                        <div>
+                            <span class="alloc-name">Bitcoin (BTC)</span>
+                            <span class="alloc-tag">ETF spot ou custódia direta</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-btc" style="background:#f07a40;width:10%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-btc">10%</span>
+                            <span class="alloc-value mono" id="val-btc" style="color:#f07a40">R$ 50.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alloc-group-label" style="margin-top:16px;">Reserva Estratégica</div>
+                <div class="alloc-item reserva-item" data-key="reserva">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:rgba(201,168,76,0.6);border:1px solid rgba(201,168,76,0.5)"></div>
+                        <div>
+                            <span class="alloc-name">Reserva de Oportunidade</span>
+                            <span class="alloc-tag">CDB 100% CDI · D+0 · drawdown</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-reserva" style="background:rgba(201,168,76,0.4);width:15%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-reserva" style="color:var(--gold)">15%</span>
+                            <span class="alloc-value mono" id="val-reserva" style="color:var(--gold)">R$ 75.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOTAL -->
+                <div class="alloc-total">
+                    <div>
+                        <span class="alloc-total-label">Total alocado</span>
+                        <span style="font-size:11px;color:var(--muted);display:block;margin-top:2px;">100% do portfólio distribuído</span>
+                    </div>
+                    <span class="alloc-total-value mono" id="total-alocado">R$ 500.000</span>
+                </div>
+            </div>
+
+            <!-- GRÁFICO DONUT -->
+            <div class="alloc-donut-wrap">
+                <div class="alloc-donut-title">Distribuição do Portfólio</div>
+                <div class="alloc-donut-container">
+                    <canvas id="chart-donut"></canvas>
+                    <div class="alloc-donut-center">
+                        <div class="alloc-donut-total-label">Total</div>
+                        <div class="alloc-donut-total-val" id="donut-center-val">R$ 500K</div>
+                    </div>
+                </div>
+                <div class="alloc-donut-legend" id="donut-legend">
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#4caf7d"></span><span class="donut-leg-label">NTN-B 30%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#5b9cf6"></span><span class="donut-leg-label">CDI 25%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#c9a84c"></span><span class="donut-leg-label">Ouro 15%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#f07a40"></span><span class="donut-leg-label">Bitcoin 10%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#c0c0c0"></span><span class="donut-leg-label">Prata 5%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:rgba(201,168,76,0.55)"></span><span class="donut-leg-label">Reserva 15%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alloc-note">
+            <strong>Nota:</strong> Esta alocação é sugestão educacional baseada em perfis genéricos de risco. Os percentuais somam 100% do portfólio total. Cada investidor deve avaliar sua situação financeira, horizonte e tolerância a perdas com um assessor qualificado.
+        </div>
+    </div>
+
+    <!-- GRÁFICO PROJEÇÃO vs BENCHMARKS -->
+    <div class="bench-wrap reveal">
+        <div class="bench-header">
+            <div>
+                <div class="section-eyebrow" style="margin-bottom:8px;">Análise Comparativa</div>
+                <h3 class="bench-title display">Projeção do Portfólio vs Benchmarks</h3>
+                <p class="bench-sub">Portfólio MultiAsset (cenário base) comparado com NTN-B curta projetada e Selic projetada pelo mercado</p>
+            </div>
+            <div class="bench-controls">
+                <div class="bench-prazo-group">
+                    <span class="slider-label">Horizonte</span>
+                    <div class="comp-toggle-group">
+                        <button class="comp-toggle" onclick="setBenchPrazo(3,this)">3 anos</button>
+                        <button class="comp-toggle active" onclick="setBenchPrazo(5,this)">5 anos</button>
+                        <button class="comp-toggle" onclick="setBenchPrazo(10,this)">10 anos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bench-assumptions">
+            <div class="bench-assume-item">
+                <span class="bench-assume-label">Selic projetada</span>
+                <span class="bench-assume-val" style="color:var(--blue)">15% → 11% a.a.</span>
+            </div>
+            <div class="bench-assume-item">
+                <span class="bench-assume-label">NTN-B curta (IPCA+)</span>
+                <span class="bench-assume-val" style="color:var(--green)">IPCA + 6,5% a.a.</span>
+            </div>
+            <div class="bench-assume-item">
+                <span class="bench-assume-label">Portfólio MultiAsset</span>
+                <span class="bench-assume-val" style="color:var(--gold)">Ponderado cenário base</span>
+            </div>
+            <div class="bench-assume-item">
+                <span class="bench-assume-label">IPCA projetado</span>
+                <span class="bench-assume-val" style="color:var(--muted)">5,5% → 4% a.a.</span>
+            </div>
+        </div>
+
+        <div class="bench-chart-wrap">
+            <canvas id="chart-benchmark"></canvas>
+        </div>
+
+        <div class="bench-table-wrap">
+            <table class="comp-table">
+                <thead>
+                    <tr>
+                        <th>Estratégia</th>
+                        <th>Retorno Total</th>
+                        <th>Retorno Real (acima IPCA)</th>
+                        <th>CAGR</th>
+                        <th>R$ 500K vira</th>
+                    </tr>
+                </thead>
+                <tbody id="bench-tbody"></tbody>
+            </table>
+        </div>
+
+        <div class="bench-note">
+            <strong>Premissas:</strong> Selic parte de 15% a.a. e converge para 11% em 24 meses, refletindo o ciclo atual do BCB. NTN-B curta (vencimento 2027) projetada com spread IPCA+6,5% sobre inflação convergindo de 5,5% para 4% a.a. Portfólio MultiAsset usa taxas base de cada ativo ponderadas pela alocação (ouro 9,3% · prata 8,5% · BTC 40% · renda fixa média 13% em BRL convertido). Valores simulados não constituem garantia de retorno.
+        </div>
+    </div>
+</section>
+
+<!-- PANORAMA MACRO — Atualizado Mar/2026 -->
+<section id="panorama" class="section">
+    <div class="section-header reveal">
+        <div class="section-eyebrow">Cenário Global · Março 2026</div>
+        <h2 class="section-title display">Panorama <em style="color:var(--gold);font-style:italic">Macroeconômico</em></h2>
+        <div class="section-line"></div>
+    </div>
+
+    <!-- Geopolitical Alert Banner -->
+    <div class="macro-alert-banner reveal">
+        <div class="macro-alert-icon"><i class="fas fa-circle-exclamation"></i></div>
+        <div class="macro-alert-body">
+            <div class="macro-alert-title">Ruptura de Cenário — Conflito EUA-Israel x Irã (28 fev/2026)</div>
+            <div class="macro-alert-text">Em 28 de fevereiro de 2026, EUA e Israel lançaram ofensiva militar coordenada e massiva contra o Irã. A morte do aiatolá Khamenei e o fechamento anunciado do Estreito de Ormuz — por onde transita cerca de 20% da produção mundial de petróleo e gás — configuram o maior choque geopolítico em décadas. O Brent disparou 13% na abertura de 2 de março, ultrapassando US$ 82/barril. JPMorgan classifica o episódio como "ruptura de cenário" e projeta Brent a US$ 100–120 caso o bloqueio persista por mais de três semanas.</div>
+        </div>
+        <div class="macro-alert-badge">ALERTA ATIVO</div>
+    </div>
+
+    <!-- Two-column layout: Canais Macro + Brasil -->
+    <div class="macro-analysis-grid reveal">
+
+        <!-- Left: Macro Channels table -->
+        <div class="macro-card">
+            <div class="macro-card-header">
+                <div class="macro-card-icon" style="background:rgba(240,122,64,0.12);color:var(--orange);"><i class="fas fa-oil-well"></i></div>
+                <div>
+                    <div class="macro-card-title">Canais de Transmissão Macro</div>
+                    <div class="macro-card-sub">Impacto direto nas variáveis de mercado global</div>
+                </div>
+            </div>
+            <table class="macro-table">
+                <thead>
+                    <tr>
+                        <th>Variável</th>
+                        <th>Direção</th>
+                        <th>Mecanismo principal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Petróleo (Brent)</strong></td>
+                        <td><span class="macro-dir up">↑↑↑</span></td>
+                        <td>Bloqueio do Ormuz; risco de oferta; +13% na abertura 2/3/26</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inflação Global</strong></td>
+                        <td><span class="macro-dir up">↑</span></td>
+                        <td>Energia cara repassa para custos de produção e transporte</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Juros (Fed / BCB)</strong></td>
+                        <td><span class="macro-dir neutral">~</span></td>
+                        <td>Inflação pressiona alta; risco de recessão pressiona corte — ambíguo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PIB Global</strong></td>
+                        <td><span class="macro-dir down">↓</span></td>
+                        <td>Choque simultâneo de oferta e demanda; logística do Golfo Pérsico afetada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dólar (DXY)</strong></td>
+                        <td><span class="macro-dir up">↑</span></td>
+                        <td>Fuga para safe haven; Treasuries e dólar como porto seguro clássico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Real (BRL)</strong></td>
+                        <td><span class="macro-dir down">↓</span></td>
+                        <td>Aversão ao risco em emergentes amplifica depreciação pré-existente</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ouro / Prata</strong></td>
+                        <td><span class="macro-dir up">↑↑</span></td>
+                        <td>Prêmio de risco geopolítico; safe haven em conflito prolongado e incerto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bitcoin</strong></td>
+                        <td><span class="macro-dir neutral">~</span></td>
+                        <td>Correlação com risk-off no curto prazo; tese de reserva de valor no médio prazo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Right: Brazil-specific impact -->
+        <div class="macro-card">
+            <div class="macro-card-header">
+                <div class="macro-card-icon" style="background:rgba(76,175,125,0.12);color:var(--green);"><i class="fas fa-flag"></i></div>
+                <div>
+                    <div class="macro-card-title">Impacto Específico — Brasil</div>
+                    <div class="macro-card-sub">Reflexos sobre COPOM, IPCA e câmbio</div>
+                </div>
+            </div>
+            <div class="macro-brazil-item">
+                <div class="macro-brazil-label">SELIC e Ciclo de Cortes</div>
+                <div class="macro-brazil-text">A alta do petróleo se transmite via combustíveis ao IPCA, comprimindo o espaço do COPOM. O primeiro corte esperado para março/2026 pode ser adiado ou limitado a 0,25pp — abaixo do consenso anterior de 0,50pp. XP e JPMorgan já alertam para câmbio e inflação pressionados em toda a América Latina, com risco de revisão do ciclo de afrouxamento.</div>
+            </div>
+            <div class="macro-brazil-item">
+                <div class="macro-brazil-label">Câmbio e Contas Externas</div>
+                <div class="macro-brazil-text">O dólar forte pós-choque amplifica a depreciação do Real. O Brasil exporta petróleo bruto (positivo em USD) mas importa derivados refinados — o efeito líquido depende da paridade de importação da Petrobras. Pressão política sobre preços de combustíveis é um risco adicional para a empresa e para o fiscal.</div>
+            </div>
+            <div class="macro-brazil-item">
+                <div class="macro-brazil-label">Renda Fixa e NTN-B</div>
+                <div class="macro-brazil-text">Inflação mais alta por mais tempo favorece títulos IPCA+ (NTN-B), especialmente nos vencimentos intermediários. CDI e pós-fixados permanecem atraentes com Selic em 15%. O ciclo de afrouxamento será mais lento e gradual do que o precificado antes do conflito — o que reforça a tese de alocação em IPCA+ com duration controlada.</div>
+            </div>
+            <div class="macro-brazil-item">
+                <div class="macro-brazil-label">Petrobras e Energia</div>
+                <div class="macro-brazil-text">PETR3/4 apresenta dupla tração positiva: petróleo mais caro e dólar mais forte reforçam receitas em USD. O risco é político — pressão por congelamento de preços. No curto prazo, o mercado tende a priorizar os ganhos operacionais e o dividend yield elevado como atrativo defensivo no ambiente de alta volatilidade.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Micro / Setorial section -->
+    <div class="macro-micro-section reveal">
+        <div class="macro-micro-title display">Impacto Setorial <em>(Microeconômico)</em></div>
+        <div class="macro-micro-grid">
+            <div class="macro-sector-card benefit">
+                <div class="macro-sector-header">
+                    <i class="fas fa-arrow-trend-up" style="color:var(--green)"></i>
+                    <span>Setores Beneficiados</span>
+                </div>
+                <ul class="macro-sector-list">
+                    <li><strong>Petrolíferas</strong> — PETR3/4, Exxon, Shell: alta direta do Brent</li>
+                    <li><strong>Defesa e Aeroespacial</strong> — Embraer (seg. militar), Lockheed, Raytheon</li>
+                    <li><strong>Metais Preciosos</strong> — Ouro e prata como hedge de incerteza geopolítica</li>
+                    <li><strong>Seguradoras Marítimas</strong> — Prêmios explodem com bloqueio do Ormuz</li>
+                    <li><strong>Agronegócio Brasileiro</strong> — Commodities exportadas em USD valorizado</li>
+                </ul>
+            </div>
+            <div class="macro-sector-card penalty">
+                <div class="macro-sector-header">
+                    <i class="fas fa-arrow-trend-down" style="color:var(--red)"></i>
+                    <span>Setores Penalizados</span>
+                </div>
+                <ul class="macro-sector-list">
+                    <li><strong>Companhias Aéreas</strong> — Combustível de aviação sobe com o Brent</li>
+                    <li><strong>Varejo e Distribuição</strong> — Margens comprimidas pelo custo logístico</li>
+                    <li><strong>Petroquímica / Químicas</strong> — Insumos derivados de petróleo mais caros</li>
+                    <li><strong>Empresas com dívida em USD</strong> — Câmbio deteriora o passivo em BRL</li>
+                    <li><strong>Tecnologia (Nasdaq)</strong> — Risk-off penaliza múltiplos elevados; pressão de ROI em IA</li>
+                </ul>
+            </div>
+            <div class="macro-sector-card neutral-card">
+                <div class="macro-sector-header">
+                    <i class="fas fa-scale-balanced" style="color:var(--blue)"></i>
+                    <span>Cenários para o Brent</span>
+                </div>
+                <ul class="macro-sector-list">
+                    <li><strong>Bloqueio &lt; 3 semanas:</strong> Brent US$ 82–90 · impacto limitado</li>
+                    <li><strong>Bloqueio 3–6 semanas:</strong> Brent US$ 90–110 · risco de recessão cresce</li>
+                    <li><strong>Bloqueio &gt; 6 semanas:</strong> Brent US$ 110–120 (JPMorgan) · choque estrutural</li>
+                    <li><strong>Resolução diplomática:</strong> Reversão rápida; mercados normalizam em semanas</li>
+                    <li><strong>Colapso do regime iraniano:</strong> Incerteza prolongada; petróleo volátil por meses</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="macro-update-stamp reveal">
+        <i class="fas fa-clock"></i> Análise atualizada em 04 de março de 2026 &nbsp;|&nbsp; Fontes: G1 Globo, Infomoney, Agência Brasil, JPMorgan Research, XP Investimentos
+    </div>
+</section>
+
+<!-- CONSULTORIA -->
+<section class="cta-section">
+    <div class="cta-eyebrow">Assessoria de Alto Padrão</div>
+    <h2 class="cta-title display">Venha ter uma consultoria<br>completa</h2>
+    <p class="cta-sub">Discreta. Sofisticada. Sob medida para o seu patrimônio.</p>
+    <a href="https://szuchmacher.com.br" target="_blank" class="cta-link">Acessar szuchmacher.com.br <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <div class="logo-icon" style="width:28px;height:28px;font-size:12px;"><i class="fas fa-chart-line"></i></div>
+                <span class="logo-text" style="font-size:14px;">MultiAsset<span>Pro</span></span>
+            </div>
+            <p class="footer-desc">Plataforma profissional de análise multi-asset. Simulações avançadas, cenários macroeconômicos e indicadores técnicos para decisões de investimento fundamentadas.</p>
+            <div class="footer-status"><span class="status-dot"></span><span class="status-text">Sistema Online</span><span class="status-version">v2.2.0</span></div>
+        </div>
+        <div class="footer-col">
+            <div class="footer-col-title">Navegação</div>
+            <ul class="footer-links">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#mercado">Metais</a></li>
+                <li><a href="#mercado">Bitcoin</a></li>
+                <li><a href="#simuladores">Simuladores</a></li>
+                <li><a href="#alocacao">Alocação</a></li>
+                <li><a href="#panorama">Panorama Macro</a></li>
+                <li><a href="#panorama">Macro</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <div class="footer-col-title">Fontes de Dados</div>
+            <ul class="footer-links">
+                <li><a href="https://www.gold.org" target="_blank" rel="noopener">World Gold Council <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
+                <li><a href="https://www.silverinstitute.org" target="_blank" rel="noopener">Silver Institute <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
+                <li><a href="https://www.tradingview.com" target="_blank" rel="noopener">TradingView <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
+                <li><a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
+                <li><a href="https://economia.awesomeapi.com.br" target="_blank" rel="noopener">AwesomeAPI (BRL) <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
+                <li><a href="https://www.bcb.gov.br" target="_blank" rel="noopener">Banco Central do Brasil <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <div class="footer-col-title">Contato</div>
+            <ul class="footer-links">
+                <li><a href="/cdn-cgi/l/email-protection#8be8e4e5ffeaffe4cbf8f1fee8e3e6eae8e3eef9a5e8e4e6a5e9f9"><i class="fas fa-envelope" style="margin-right:7px;opacity:0.5;"></i><span class="__cf_email__" data-cfemail="35565a5b4154415a75464f40565d5854565d50471b565a581b5747">[email&#160;protected]</span></a></li>
+                <li><a href="tel:+552196875-6511"><i class="fas fa-phone" style="margin-right:7px;opacity:0.5;"></i>21-96875-6511</a></li>
+                <li style="margin-top:16px;"><a href="https://szuchmacher.com.br" target="_blank" class="footer-site-link">szuchmacher.com.br</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">© 2025 MultiAsset Pro. Todos os direitos reservados.</div>
+        <div class="footer-bottom-right"><span>Plataforma educacional</span><span class="footer-dot">·</span><span>Não constitui recomendação de investimento</span></div>
+    </div>
+    <div class="footer-disclaimer"><strong>Aviso de Risco:</strong> Investimentos em metais preciosos, criptomoedas e renda fixa envolvem riscos, incluindo possível perda de capital. As informações apresentadas nesta plataforma têm caráter exclusivamente informativo e educacional, não constituindo oferta, recomendação ou aconselhamento de investimento. Resultados passados não garantem retornos futuros. Consulte um assessor financeiro credenciado antes de tomar decisões de investimento.</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── CLOCK ──
+function updateClock() {
+    const t = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById('nav-clock').textContent = t + ' BRT';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── PRICE STATE — sem DXY ──
+const prices    = { gold: null, silver: null, platinum: null, btc: null, usd: null };
+const prevPrices= { gold: null, silver: null, platinum: null, btc: null, usd: null };
+// Track last successful fetch time per metal to detect stale data
+const lastFetch = { gold: 0, silver: 0, platinum: 0 };
+
+function fmt(n, decimals = 2) {
+    return n.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+function setPrice(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = value;
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+}
+
+function setChange(id, pct) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = (pct >= 0 ? '+' : '') + fmt(pct) + '%';
+    el.className = 'ticker-change ' + (pct > 0 ? 'change-up' : pct < 0 ? 'change-down' : 'change-neutral');
+}
+
+function applyMetal(key, value, pct) {
+    if (!value || isNaN(value) || value <= 0) return;
+    const map = {
+        gold:     { hero: 'h-gold-price',   heroChg: 'h-gold-change',   sim: 'sp-gold-price',   simChg: 'sp-gold-change' },
+        silver:   { hero: 'h-silver-price',  heroChg: 'h-silver-change',  sim: 'sp-silver-price',  simChg: 'sp-silver-change' },
+        platinum: { hero: 'h-plat-price',    heroChg: 'h-plat-change',    sim: 'sp-plat-price',    simChg: 'sp-plat-change' },
+    };
+    const m = map[key];
+    if (!m) return;
+    prevPrices[key] = prices[key];
+    prices[key] = value;
+    lastFetch[key] = Date.now();
+    const displayPct = (pct !== null && pct !== undefined) ? pct
+        : (prevPrices[key] ? ((value - prevPrices[key]) / prevPrices[key]) * 100 : 0);
+    setPrice(m.hero, '$ ' + fmt(value));
+    setPrice(m.sim,  '$ ' + fmt(value));
+    setChange(m.heroChg, displayPct);
+    const sc = document.getElementById(m.simChg);
+    if (sc) {
+        sc.textContent = (displayPct >= 0 ? '+' : '') + fmt(displayPct) + '%';
+        sc.className = 'sim-preco-change ' + (displayPct > 0 ? 'change-up' : displayPct < 0 ? 'change-down' : 'change-neutral');
+    }
+}
+
+// ─────────────────────────────────────────────────────────────
+// METALS — estratégia em 5 camadas com retry agressivo
+// Cada fonte tenta retornar os 3 metais; se uma falhar parcialmente,
+// a próxima camada cobre apenas os metais ainda ausentes.
+// ─────────────────────────────────────────────────────────────
+async function fetchMetals() {
+    const needed = () => ({
+        gold:     !prices.gold     || (Date.now() - lastFetch.gold)     > 180000,
+        silver:   !prices.silver   || (Date.now() - lastFetch.silver)   > 180000,
+        platinum: !prices.platinum || (Date.now() - lastFetch.platinum) > 180000,
+    });
+
+    // ── FONTE 1: metals.live — spot em tempo real, sem CORS, prioridade máxima ──
+    try {
+        const res = await fetch('https://api.metals.live/v1/spot/gold,silver,platinum', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            // API pode retornar array [{gold:2800,...}] ou objeto {gold:2800,...}
+            const merged = Array.isArray(data) ? Object.assign({}, ...data) : data;
+            const n = needed();
+            if (n.gold     && merged.gold     > 0) applyMetal('gold',     parseFloat(merged.gold),     null);
+            if (n.silver   && merged.silver   > 0) applyMetal('silver',   parseFloat(merged.silver),   null);
+            if (n.platinum && merged.platinum > 0) applyMetal('platinum', parseFloat(merged.platinum), null);
+            const n2 = needed();
+            if (!n2.gold && !n2.silver && !n2.platinum) { console.log('[metals.live] OK'); return; }
+        }
+    } catch(e) { console.warn('[metals.live]', e.message); }
+
+    // ── FONTE 2: CoinGecko — PAXG (ouro) + silver; inclui variação 24h real ──
+    // Usado como fonte secundária pois traz o delta de preço que alimenta os badges coloridos
+    try {
+        const n = needed();
+        const ids = [];
+        if (n.gold)   ids.push('pax-gold');
+        if (n.silver) ids.push('silver');
+        if (ids.length > 0) {
+            const res = await fetch(
+                `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd&include_24hr_change=true`,
+                { cache: 'no-store' }
+            );
+            if (res.ok) {
+                const data = await res.json();
+                if (n.gold   && data['pax-gold']?.usd > 0) applyMetal('gold',   data['pax-gold'].usd, data['pax-gold'].usd_24h_change ?? null);
+                if (n.silver && data['silver']?.usd   > 0) applyMetal('silver', data['silver'].usd,   data['silver'].usd_24h_change   ?? null);
+                console.log('[coingecko] 24h change OK');
+                const n2 = needed();
+                if (!n2.gold && !n2.silver && !n2.platinum) return;
+            }
+        }
+    } catch(e) { console.warn('[coingecko metals]', e.message); }
+
+    // ── FONTE 3: Coinbase — XAU e XAG ──
+    try {
+        const n = needed();
+        const pairs = [];
+        if (n.gold)   pairs.push(['gold',   'XAU-USD']);
+        if (n.silver) pairs.push(['silver', 'XAG-USD']);
+        if (pairs.length > 0) {
+            const results = await Promise.allSettled(
+                pairs.map(([, sym]) => fetch(`https://api.coinbase.com/v2/prices/${sym}/spot`, { cache: 'no-store' }))
+            );
+            for (let i = 0; i < pairs.length; i++) {
+                const r = results[i];
+                if (r.status === 'fulfilled' && r.value.ok) {
+                    const d = await r.value.json();
+                    const val = parseFloat(d.data?.amount);
+                    if (val > 0) applyMetal(pairs[i][0], val, null);
+                }
+            }
+        }
+        const n2 = needed();
+        if (!n2.gold && !n2.silver && !n2.platinum) { console.log('[coinbase] OK'); return; }
+    } catch(e) { console.warn('[coinbase metals]', e.message); }
+
+    // ── FONTE 4: goldprice.org (spot em USD) ──
+    try {
+        const res = await fetch('https://data-asg.goldprice.org/dbXRates/USD', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            const item = data.items?.[0];
+            if (item) {
+                const n = needed();
+                if (n.gold     && item.xauPrice) applyMetal('gold',     parseFloat(item.xauPrice), null);
+                if (n.silver   && item.xagPrice) applyMetal('silver',   parseFloat(item.xagPrice), null);
+                if (n.platinum && item.xptPrice) applyMetal('platinum', parseFloat(item.xptPrice), null);
+                const n2 = needed();
+                if (!n2.gold && !n2.silver && !n2.platinum) { console.log('[goldprice.org] OK'); return; }
+            }
+        }
+    } catch(e) { console.warn('[goldprice.org]', e.message); }
+
+    // ── FONTE 5: Frankfurter ECB API — fallback para ouro e prata ──
+    // Retorna taxas de câmbio via ECB; XAU e XAG disponíveis
+    try {
+        const n = needed();
+        if (n.gold || n.silver) {
+            const syms = [];
+            if (n.gold)   syms.push('XAU');
+            if (n.silver) syms.push('XAG');
+            const res = await fetch(`https://api.frankfurter.app/latest?from=USD&to=${syms.join(',')}`, { cache: 'no-store' });
+            if (res.ok) {
+                const data = await res.json();
+                // rates.XAU = quanto XAU compra 1 USD → preço em USD = 1/XAU
+                if (n.gold   && data.rates?.XAU && data.rates.XAU > 0) applyMetal('gold',   1 / data.rates.XAU,   null);
+                if (n.silver && data.rates?.XAG && data.rates.XAG > 0) applyMetal('silver', 1 / data.rates.XAG,   null);
+                console.log('[frankfurter] OK');
+            }
+        }
+    } catch(e) { console.warn('[frankfurter]', e.message); }
+
+    // ── FONTE 6: SwissQuote XPT/USD — platina ──
+    try {
+        const n = needed();
+        if (n.platinum) {
+            const res = await fetch('https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XPT/USD', { cache: 'no-store' });
+            if (res.ok) {
+                const data = await res.json();
+                const entry = Array.isArray(data) ? data[0] : data;
+                const price = entry?.spreadProfilePrices?.[0]?.ask
+                           || entry?.spreadProfilePrices?.[0]?.bid
+                           || entry?.ask || entry?.bid;
+                if (price && parseFloat(price) > 200) {
+                    applyMetal('platinum', parseFloat(price), null);
+                    console.log('[swissquote] platinum OK:', parseFloat(price));
+                }
+            }
+        }
+    } catch(e) { console.warn('[swissquote]', e.message); }
+
+    // ── FONTE 7: Yahoo Finance futures PL=F — platina fallback final ──
+    try {
+        const n = needed();
+        if (n.platinum) {
+            const res = await fetch(
+                'https://query1.finance.yahoo.com/v8/finance/chart/PL=F?interval=1d&range=1d',
+                { cache: 'no-store', headers: { 'Accept': 'application/json' } }
+            );
+            if (res.ok) {
+                const data = await res.json();
+                const price = data?.chart?.result?.[0]?.meta?.regularMarketPrice;
+                if (price && parseFloat(price) > 200) {
+                    applyMetal('platinum', parseFloat(price), null);
+                    console.log('[yahoo] platinum OK:', parseFloat(price));
+                }
+            }
+        }
+    } catch(e) { console.warn('[yahoo platinum]', e.message); }
+
+    // Log quais metais ainda ausentes após todas as fontes
+    const fin = needed();
+    if (fin.platinum) {
+        console.warn('[metals] platina indisponível — todas as fontes falharam ou bloquearam por CORS');
+    }
+    if (fin.gold || fin.silver) {
+        console.warn('[metals] ainda ausentes:', Object.keys(fin).filter(k => fin[k] && k !== 'platinum'));
+    }
+}
+
+// ── BITCOIN — 3 fontes com fallback ──
+async function fetchCrypto() {
+    // Fonte 1: CoinGecko
+    try {
+        const res = await fetch(
+            'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true',
+            { cache: 'no-store' }
+        );
+        if (res.ok) {
+            const data = await res.json();
+            const val  = data.bitcoin?.usd;
+            const pct  = data.bitcoin?.usd_24h_change || 0;
+            if (val > 0) {
+                prevPrices.btc = prices.btc; prices.btc = val;
+                setPrice('h-btc-price', '$ ' + fmt(val, 0));
+                setPrice('sp-btc-price', '$ ' + fmt(val, 0));
+                setChange('h-btc-change', pct);
+                const sc = document.getElementById('sp-btc-change');
+                if (sc) { sc.textContent = (pct >= 0 ? '+' : '') + fmt(pct) + '%'; sc.className = 'sim-preco-change ' + (pct > 0 ? 'change-up' : pct < 0 ? 'change-down' : 'change-neutral'); }
+                console.log('[coingecko] BTC=' + val);
+                return;
+            }
+        }
+    } catch(e) { console.warn('[coingecko btc]', e.message); }
+
+    // Fonte 2: Binance
+    try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            const val  = parseFloat(data.lastPrice);
+            const pct  = parseFloat(data.priceChangePercent) || 0;
+            if (val > 0) {
+                prevPrices.btc = prices.btc; prices.btc = val;
+                setPrice('h-btc-price', '$ ' + fmt(val, 0));
+                setPrice('sp-btc-price', '$ ' + fmt(val, 0));
+                setChange('h-btc-change', pct);
+                const sc = document.getElementById('sp-btc-change');
+                if (sc) { sc.textContent = (pct >= 0 ? '+' : '') + fmt(pct) + '%'; sc.className = 'sim-preco-change ' + (pct > 0 ? 'change-up' : pct < 0 ? 'change-down' : 'change-neutral'); }
+                console.log('[binance] BTC=' + val);
+                return;
+            }
+        }
+    } catch(e) { console.warn('[binance btc]', e.message); }
+
+    // Fonte 3: Coinbase BTC
+    try {
+        const res = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/spot', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            const val  = parseFloat(data.data?.amount);
+            if (val > 0) {
+                prevPrices.btc = prices.btc; prices.btc = val;
+                setPrice('h-btc-price', '$ ' + fmt(val, 0));
+                setPrice('sp-btc-price', '$ ' + fmt(val, 0));
+                console.log('[coinbase] BTC=' + val);
+            }
+        }
+    } catch(e) { console.warn('[coinbase btc]', e.message); }
+}
+
+// ── USD/BRL — sem DXY ──
+async function fetchUSD() {
+    // Fonte 0: fawazahmed0 CDN (sem CORS, confiável)
+    try {
+        const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            const rate = data?.usd?.brl;
+            if (rate && rate > 1) {
+                prevPrices.usd = prices.usd; prices.usd = rate;
+                setPrice('h-usd-price', 'R$ ' + fmt(rate));
+                setPrice('macro-usd', fmt(rate));
+                console.log('[fawazahmed0] USD/BRL=' + rate);
+                return;
+            }
+        }
+    } catch(e) { console.warn('[fawazahmed0 usd]', e.message); }
+
+    // Fonte 1: AwesomeAPI (apenas USD-BRL)
+    try {
+        const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.USDBRL) {
+                const rate = parseFloat(data.USDBRL.bid);
+                const pct  = parseFloat(data.USDBRL.pctChange) || 0;
+                prevPrices.usd = prices.usd; prices.usd = rate;
+                setPrice('h-usd-price', 'R$ ' + fmt(rate));
+                setPrice('macro-usd', fmt(rate));
+                setChange('h-usd-change', pct);
+                console.log('[awesomeapi] USD/BRL=' + rate);
+                return;
+            }
+        }
+    } catch(e) { console.warn('[awesomeapi]', e.message); }
+
+    // Fonte 2: open.er-api
+    try {
+        const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            const rate = data.rates?.BRL;
+            if (rate) {
+                prevPrices.usd = prices.usd; prices.usd = rate;
+                setPrice('h-usd-price', 'R$ ' + fmt(rate));
+                setPrice('macro-usd', fmt(rate));
+                console.log('[er-api] USD/BRL=' + rate);
+                return;
+            }
+        }
+    } catch(e) { console.warn('[er-api]', e.message); }
+
+    // Fonte 3: frankfurter ECB
+    try {
+        const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=BRL', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            const rate = data.rates?.BRL;
+            if (rate && rate > 1) {
+                prevPrices.usd = prices.usd; prices.usd = rate;
+                setPrice('h-usd-price', 'R$ ' + fmt(rate));
+                setPrice('macro-usd', fmt(rate));
+                console.log('[frankfurter] USD/BRL=' + rate);
+            }
+        }
+    } catch(e) { console.warn('[frankfurter usd]', e.message); }
+}
+
+// Fetch dedicado ao delta 24h — sempre atualiza badges de variação via CoinGecko
+async function fetchMetalsDelta() {
+    try {
+        const res = await fetch(
+            'https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,silver&vs_currencies=usd&include_24hr_change=true',
+            { cache: 'no-store' }
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data['pax-gold']?.usd > 0) applyMetal('gold',   data['pax-gold'].usd, data['pax-gold'].usd_24h_change ?? null);
+        if (data['silver']?.usd   > 0) applyMetal('silver', data['silver'].usd,   data['silver'].usd_24h_change   ?? null);
+        console.log('[coingecko delta] 24h atualizado');
+    } catch(e) { console.warn('[coingecko delta]', e.message); }
+}
+
+async function fetchAll() {
+    await Promise.allSettled([fetchMetals(), fetchCrypto(), fetchUSD()]);
+}
+
+// Primeira carga imediata; 8s depois garante delta 24h (CoinGecko pode ser lento);
+// ciclo de 60s mantém dados atualizados como TradingView
+fetchAll();
+setTimeout(() => { fetchMetalsDelta(); }, 8000);
+setInterval(fetchAll, 60000);
+setInterval(fetchMetalsDelta, 300000);
+
+// ── TABS ──
+function switchTab(btn, panelId) {
+    document.querySelectorAll('.tv-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tv-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+}
+
+// ── SIMULATOR NAV ──
+function activateSim(panelId, btn) {
+    document.querySelectorAll('.sim-nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sim-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+    if (panelId === 'sim-comparador') setTimeout(recalcComparador, 100);
+}
+
+// ── CALCULATION ENGINE — fórmula correta de juros compostos ──
+// Aportes mensais convertidos para taxa mensal equivalente
+// FV = PV*(1+r)^n + PMT * [((1+r)^n - 1) / r]
+// onde r = taxa mensal = (1 + taxa_anual)^(1/12) - 1
+function calcSerie(inicial, aporte, taxaAnual, prazo) {
+    const anos = parseInt(prazo) || 10;
+    const r    = Math.pow(1 + taxaAnual, 1 / 12) - 1; // taxa mensal equivalente
+    const serie = [];
+    for (let y = 0; y <= anos; y++) {
+        const n   = y * 12; // número de meses
+        const fv  = inicial * Math.pow(1 + r, n)
+                  + (r > 0
+                      ? aporte * (Math.pow(1 + r, n) - 1) / r
+                      : aporte * n);
+        serie.push(Math.max(fv, 0));
+    }
+    return serie;
+}
+
+function calcFinal(inicial, aporte, taxa, prazo) {
+    const s = calcSerie(inicial, aporte, taxa, prazo);
+    return s[s.length - 1];
+}
+
+function fmtUSD(v) {
+    if (v >= 1e6) return '$ ' + (v/1e6).toFixed(2).replace('.', ',') + ' M';
+    return '$ ' + fmt(v, 0);
+}
+
+function fmtRet(final, inicial, aporte, prazo) {
+    const total = inicial + aporte * 12 * prazo;
+    const ret = ((final - total) / total) * 100;
+    return (ret >= 0 ? '+' : '') + fmt(ret, 1) + '%';
+}
+
+const simConfigs = {
+    gold:     { ini: 'g-inicial', ap: 'g-aporte', prazo: 'g-prazo', pess: 0.04,  base: 0.093, otim: 0.15,  prefix: 'g', sel: 'pess' },
+    silver:   { ini: 's-inicial', ap: 's-aporte', prazo: 's-prazo', pess: 0.03,  base: 0.085, otim: 0.18,  prefix: 's', sel: 'pess' },
+    platinum: { ini: 'p-inicial', ap: 'p-aporte', prazo: 'p-prazo', pess: -0.05, base: 0.06,  otim: 0.20,  prefix: 'p', sel: 'pess' },
+    btc:      { ini: 'b-inicial', ap: 'b-aporte', prazo: 'b-prazo', pess: null,  base: 0.40,  otim: 1.20,  prefix: 'b', sel: 'pess' },
+};
+
+function selectScenario(asset, scenario, el) {
+    simConfigs[asset].sel = scenario;
+    const selector = document.getElementById('sc-' + asset);
+    if (selector) {
+        selector.querySelectorAll('.sc-card').forEach(c => c.classList.remove('active-sc'));
+        el.classList.add('active-sc');
+    }
+    recalcSim(asset);
+}
+
+function recalcSim(asset) {
+    const c = simConfigs[asset];
+    if (!c) return;
+    const ini  = parseFloat(document.getElementById(c.ini)?.value)   || 10000;
+    const ap   = parseFloat(document.getElementById(c.ap)?.value)    || 500;
+    const prz  = parseFloat(document.getElementById(c.prazo)?.value) || (asset === 'btc' ? 4 : 10);
+    const totalInv = ini + ap * 12 * prz;
+
+    const base = calcFinal(ini, ap, c.base, prz);
+    const otim = calcFinal(ini, ap, c.otim, prz);
+    const pess = asset === 'btc' ? totalInv * 0.40 : calcFinal(ini, ap, c.pess, prz);
+
+    const p = c.prefix;
+
+    // Valor final da carteira
+    document.getElementById(p + '-pess').textContent   = fmtUSD(pess);
+    document.getElementById(p + '-base').textContent   = fmtUSD(base);
+    document.getElementById(p + '-otim').textContent   = fmtUSD(otim);
+
+    // Retorno sobre total investido
+    document.getElementById(p + '-pess-r').textContent = fmtRet(pess, ini, ap, prz);
+    document.getElementById(p + '-base-r').textContent = fmtRet(base, ini, ap, prz);
+    document.getElementById(p + '-otim-r').textContent = fmtRet(otim, ini, ap, prz);
+
+    // Breakdown: total investido vs lucro
+    const breakdown = (fv) => {
+        const lucro = fv - totalInv;
+        const sign  = lucro >= 0 ? '+' : '';
+        return `Aportado: ${fmtUSD(totalInv)} · Retorno: ${sign}${fmtUSD(lucro)}`;
+    };
+    const setPessBreak = document.getElementById(p + '-pess-break');
+    const setBaseBreak = document.getElementById(p + '-base-break');
+    const setOtimBreak = document.getElementById(p + '-otim-break');
+    if (setPessBreak) setPessBreak.textContent = breakdown(pess);
+    if (setBaseBreak) setBaseBreak.textContent = breakdown(base);
+    if (setOtimBreak) setOtimBreak.textContent = breakdown(otim);
+
+    // Preço projetado do ativo (se disponível)
+    if (asset !== 'btc') {
+        const rates = { pess: c.pess, base: c.base, otim: c.otim };
+        const currentPrice = prices[asset === 'gold' ? 'gold' : asset === 'silver' ? 'silver' : 'platinum'];
+        if (currentPrice) {
+            const priceProjected = (key) => fmtUSD(currentPrice * Math.pow(1 + rates[key], prz));
+            const elPP = document.getElementById(p + '-pess-price');
+            const elBP = document.getElementById(p + '-base-price');
+            const elOP = document.getElementById(p + '-otim-price');
+            if (elPP) elPP.textContent = 'Preço projetado: ' + priceProjected('pess') + '/oz';
+            if (elBP) elBP.textContent = 'Preço projetado: ' + priceProjected('base') + '/oz';
+            if (elOP) elOP.textContent = 'Preço projetado: ' + priceProjected('otim') + '/oz';
+        }
+    }
+
+    drawSimChart(asset, ini, ap, prz, c, pess, base, otim);
+}
+
+const simCharts = {};
+
+function drawSimChart(asset, ini, ap, prazo, c, pessVal, baseVal, otimVal) {
+    const canvasId = { gold: 'chart-gold', silver: 'chart-silver', platinum: 'chart-platinum', btc: 'chart-btc' }[asset];
+    const canvas   = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    const colors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', btc: '#f07a40' };
+    const color  = colors[asset];
+    const sel    = simConfigs[asset].sel;
+
+    const labels = [];
+    for (let i = 0; i <= prazo; i++) labels.push('Ano ' + i);
+
+    const seriePess = asset === 'btc'
+        ? Array.from({ length: prazo + 1 }, (_, i) => { const tv = ini + ap * 12 * i; return tv * 0.4; })
+        : calcSerie(ini, ap, c.pess, prazo);
+    const serieBase = calcSerie(ini, ap, c.base, prazo);
+    const serieOtim = calcSerie(ini, ap, c.otim, prazo);
+
+    const opPess = sel === 'pess' ? 1 : 0.3;
+    const opBase = sel === 'base' ? 1 : 0.3;
+    const opOtim = sel === 'otim' ? 1 : 0.3;
+
+    if (simCharts[asset]) simCharts[asset].destroy();
+    simCharts[asset] = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Pessimista', data: seriePess, borderColor: `rgba(224,92,92,${opPess})`, backgroundColor: sel === 'pess' ? 'rgba(224,92,92,0.07)' : 'transparent', borderWidth: sel === 'pess' ? 2.5 : 1, pointRadius: sel === 'pess' ? 2 : 0, tension: 0.4, fill: sel === 'pess' },
+                { label: 'Base',       data: serieBase, borderColor: sel === 'base' ? color : `rgba(91,156,246,${opBase})`, backgroundColor: sel === 'base' ? color + '12' : 'transparent', borderWidth: sel === 'base' ? 2.5 : 1, pointRadius: sel === 'base' ? 2 : 0, tension: 0.4, fill: sel === 'base' },
+                { label: 'Otimista',   data: serieOtim, borderColor: `rgba(76,175,125,${opOtim})`, backgroundColor: sel === 'otim' ? 'rgba(76,175,125,0.07)' : 'transparent', borderWidth: sel === 'otim' ? 2.5 : 1, pointRadius: sel === 'otim' ? 2 : 0, tension: 0.4, fill: sel === 'otim' },
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: '#888', font: { size: 11, family: 'DM Mono' }, boxWidth: 12 } },
+                tooltip: { backgroundColor: '#111', borderColor: '#333', borderWidth: 1, titleColor: '#aaa', bodyColor: '#e8e8e8', callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtUSD(ctx.raw) } }
+            },
+            scales: {
+                x: { ticks: { color: '#555', font: { size: 10, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: '#555', font: { size: 10, family: 'DM Mono' }, callback: v => fmtUSD(v) }, grid: { color: 'rgba(255,255,255,0.04)' } }
+            }
+        }
+    });
+}
+
+// ── COMPARADOR ──
+let compModo   = 'indice';
+let compEscala = 'linear';
+let compChart  = null;
+
+function setModoComparador(modo, btn) {
+    compModo = modo;
+    document.querySelectorAll('#btn-modo-abs, #btn-modo-idx, #btn-modo-pct').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    recalcComparador();
+}
+
+function setEscalaComparador(escala, btn) {
+    compEscala = escala;
+    document.querySelectorAll('#btn-esc-lin, #btn-esc-log').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    recalcComparador();
+}
+
+function recalcComparador() {
+    const prazo = parseInt(document.getElementById('c-prazo')?.value) || 10;
+    const ativos = [
+        { key: 'gold',     ini: 'c-g-ini', ap: 'c-g-ap', tx: 'c-g-tx', label: 'Ouro',    color: '#c9a84c', dash: [] },
+        { key: 'silver',   ini: 'c-s-ini', ap: 'c-s-ap', tx: 'c-s-tx', label: 'Prata',   color: '#d0d0d0', dash: [6,3] },
+        { key: 'platinum', ini: 'c-p-ini', ap: 'c-p-ap', tx: 'c-p-tx', label: 'Platina', color: '#8ecfdd', dash: [3,3] },
+        { key: 'btc',      ini: 'c-b-ini', ap: 'c-b-ap', tx: 'c-b-tx', label: 'Bitcoin', color: '#f07a40', dash: [10,4] },
+    ];
+    const labels = [];
+    for (let i = 0; i <= prazo; i++) labels.push('Ano ' + i);
+
+    const rawSeries = ativos.map(a => {
+        const ini  = parseFloat(document.getElementById(a.ini)?.value) || 10000;
+        const ap   = parseFloat(document.getElementById(a.ap)?.value)  || 500;
+        const taxa = parseFloat(document.getElementById(a.tx)?.value)  || 8;
+        return { ...a, ini, ap, taxa, serie: calcSerie(ini, ap, taxa / 100, prazo) };
+    });
+
+    const datasets = rawSeries.map(a => {
+        let data;
+        if (compModo === 'absoluto') {
+            data = a.serie;
+        } else if (compModo === 'indice') {
+            const base = a.serie[0];
+            data = a.serie.map(v => (v / base) * 100);
+        } else {
+            data = a.serie.map((v, i) => {
+                const totalInv = a.ini + a.ap * 12 * i;
+                return ((v - totalInv) / totalInv) * 100;
+            });
+        }
+        if (compEscala === 'logarithmic') data = data.map(v => Math.max(v, 0.01));
+        return { label: a.label, data, borderColor: a.color, backgroundColor: a.color + '18', borderWidth: 2.5, pointRadius: prazo <= 10 ? 4 : 2, pointHoverRadius: 6, tension: 0.35, fill: false, borderDash: a.dash };
+    });
+
+    const canvas = document.getElementById('chart-comparador');
+    if (!canvas) return;
+    if (compChart) compChart.destroy();
+
+    const yLabel      = compModo === 'absoluto' ? v => fmtUSD(v) : compModo === 'indice' ? v => fmt(v, 1) + ' pts' : v => fmt(v, 1) + '%';
+    const tooltipLbl  = compModo === 'absoluto' ? ctx => ` ${ctx.dataset.label}: ${fmtUSD(ctx.raw)}` : compModo === 'indice' ? ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw, 1)} pts` : ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw, 1)}%`;
+
+    compChart = new Chart(canvas, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: '#aaa', font: { size: 12, family: 'DM Mono' }, boxWidth: 28, padding: 20 }, position: 'top' },
+                tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, titleColor: '#777', bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 12 }, padding: 12, callbacks: { label: tooltipLbl } }
+            },
+            scales: {
+                x: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { type: compEscala, ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: yLabel }, grid: { color: 'rgba(255,255,255,0.05)' }, ...(compModo === 'indice' ? { suggestedMin: 80 } : {}) }
+            }
+        }
+    });
+
+    const tbody = document.getElementById('comp-tbody');
+    tbody.innerHTML = rawSeries.map(a => {
+        const final = a.serie[a.serie.length - 1];
+        const totalInv = a.ini + a.ap * 12 * prazo;
+        const ret  = ((final - totalInv) / totalInv) * 100;
+        const cagr = (Math.pow(final / Math.max(a.ini, 1), 1 / prazo) - 1) * 100;
+        const retColor = ret >= 0 ? '#4caf7d' : '#e05c5c';
+        const rank  = rawSeries.slice().sort((x, y) => y.serie[y.serie.length - 1] - x.serie[x.serie.length - 1]).findIndex(x => x.key === a.key) + 1;
+        const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+        return `<tr>
+            <td><span style="color:${a.color};font-weight:700;">${a.label}</span> <span style="font-size:14px;">${medal}</span></td>
+            <td style="color:var(--muted);font-family:'DM Mono',monospace;">$ ${fmt(totalInv, 0)}</td>
+            <td style="color:${a.color};font-family:'DM Mono',monospace;">${fmtUSD(final)}</td>
+            <td style="color:${retColor};font-family:'DM Mono',monospace;">${ret >= 0 ? '+' : ''}${fmt(ret,1)}%</td>
+            <td style="color:${retColor};font-family:'DM Mono',monospace;">${cagr >= 0 ? '+' : ''}${fmt(cagr,1)}% a.a.</td>
+        </tr>`;
+    }).join('');
+}
+
+// ── INIT ──
+function initSimulators() {
+    Object.keys(simConfigs).forEach(asset => {
+        simConfigs[asset].sel = 'pess';
+        const sel = document.getElementById('sc-' + asset);
+        if (sel) sel.querySelectorAll('.sc-card').forEach((c, i) => c.classList.toggle('active-sc', i === 0));
+        recalcSim(asset);
+    });
+    compModo = 'indice';
+    const btnIdx = document.getElementById('btn-modo-idx');
+    if (btnIdx) {
+        document.querySelectorAll('#btn-modo-abs, #btn-modo-idx, #btn-modo-pct').forEach(b => b.classList.remove('active'));
+        btnIdx.classList.add('active');
+    }
+    recalcComparador();
+}
+setTimeout(initSimulators, 500);
+
+// ── ALOCAÇÃO — portfólio por perfil de investidor ──
+
+// Perfis: conservador (pessimista), moderado (base), arrojado (otimista)
+// Soma sempre 100%
+const PERFIS = {
+    conservador: {
+        desc: 'Cenário pessimista: juros altos por mais tempo, inflação resiliente. Maior proteção em renda fixa, mínima exposição a risco.',
+        items: [
+            { key: 'ntnb',   pct: 45, color: '#4caf7d', label: 'NTN-B' },
+            { key: 'cdi',    pct: 30, color: '#5b9cf6', label: 'CDI' },
+            { key: 'gold',   pct: 10, color: '#c9a84c', label: 'Ouro' },
+            { key: 'silver', pct:  2, color: '#c0c0c0', label: 'Prata' },
+            { key: 'btc',    pct:  3, color: '#f07a40', label: 'Bitcoin' },
+            { key: 'reserva',pct: 10, color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+        ]
+    },
+    moderado: {
+        desc: 'Cenário base: mercado equilibrado com inflação sob controle. Portfólio balanceado entre proteção e crescimento real.',
+        items: [
+            { key: 'ntnb',   pct: 30, color: '#4caf7d', label: 'NTN-B' },
+            { key: 'cdi',    pct: 25, color: '#5b9cf6', label: 'CDI' },
+            { key: 'gold',   pct: 15, color: '#c9a84c', label: 'Ouro' },
+            { key: 'silver', pct:  5, color: '#c0c0c0', label: 'Prata' },
+            { key: 'btc',    pct: 10, color: '#f07a40', label: 'Bitcoin' },
+            { key: 'reserva',pct: 15, color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+        ]
+    },
+    arrojado: {
+        desc: 'Cenário otimista: ambiente macro favorável, queda de juros, dólar em desinflação global. Maior exposição a ativos reais e cripto.',
+        items: [
+            { key: 'ntnb',   pct: 15, color: '#4caf7d', label: 'NTN-B' },
+            { key: 'cdi',    pct: 10, color: '#5b9cf6', label: 'CDI' },
+            { key: 'gold',   pct: 25, color: '#c9a84c', label: 'Ouro' },
+            { key: 'silver', pct: 10, color: '#c0c0c0', label: 'Prata' },
+            { key: 'btc',    pct: 25, color: '#f07a40', label: 'Bitcoin' },
+            { key: 'reserva',pct: 15, color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+        ]
+    },
+};
+
+let perfilAtivo = 'moderado';
+
+function setPerfilAlocacao(perfil, btn) {
+    perfilAtivo = perfil;
+    document.querySelectorAll('.alloc-perfil-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const descEl = document.getElementById('alloc-perfil-desc');
+    if (descEl) descEl.textContent = PERFIS[perfil].desc;
+    const val = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+    atualizarAlocacao(val);
+}
+
+function getAllocItems() { return PERFIS[perfilAtivo].items; }
+
+function fmtBRL(v) {
+    if (v >= 1e6) return 'R$ ' + (v/1e6).toFixed(2).replace('.',',') + ' M';
+    return 'R$ ' + fmt(v, 0);
+}
+
+function fmtBRLShort(v) {
+    if (v >= 1e6) return 'R$ ' + (v/1e6).toFixed(1).replace('.',',') + 'M';
+    if (v >= 1e3) return 'R$ ' + Math.round(v/1000) + 'K';
+    return 'R$ ' + Math.round(v);
+}
+
+function atualizarAlocacao(val) {
+    val = parseInt(val);
+    document.getElementById('portfolio-display').textContent = 'R$ ' + fmt(val, 0);
+    document.getElementById('total-alocado').textContent = 'R$ ' + fmt(val, 0);
+
+    const items = getAllocItems();
+    items.forEach(item => {
+        const v = (val * item.pct) / 100;
+        const elVal = document.getElementById('val-' + item.key);
+        const elPct = document.getElementById('pct-' + item.key);
+        const elBar = document.getElementById('bar-' + item.key);
+        if (elVal) elVal.textContent = 'R$ ' + fmt(v, 0);
+        if (elPct) elPct.textContent = item.pct + '%';
+        if (elBar) elBar.style.width = item.pct + '%';
+    });
+
+    const centerEl = document.getElementById('donut-center-val');
+    if (centerEl) centerEl.textContent = fmtBRLShort(val);
+
+    desenharDonut(val);
+    desenharBenchmark();
+}
+
+function desenharDonut(val) {
+    val = val || parseInt(document.getElementById('portfolio-slider').value);
+    const canvas = document.getElementById('chart-donut');
+    if (!canvas) return;
+
+    const items = getAllocItems();
+
+    if (donutChart) donutChart.destroy();
+    donutChart = new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: items.map(d => d.label + ' ' + d.pct + '%'),
+            datasets: [{
+                data: items.map(d => d.pct),
+                backgroundColor: items.map(d => d.color),
+                borderColor: '#0f0f0f',
+                borderWidth: 3,
+                hoverBorderWidth: 4,
+                hoverBorderColor: '#1a1a1a',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#111',
+                    borderColor: '#2a2a2a',
+                    borderWidth: 1,
+                    titleColor: '#aaa',
+                    bodyColor: '#e8e8e8',
+                    bodyFont: { family: 'DM Mono', size: 12 },
+                    callbacks: {
+                        label: ctx => {
+                            const v = (val * ctx.raw) / 100;
+                            return ' ' + ctx.raw + '% · R$ ' + fmt(v, 0);
+                        }
+                    }
+                }
+            },
+            animation: { animateRotate: true, duration: 600 }
+        }
+    });
+
+    // Atualiza legenda
+    const legEl = document.getElementById('donut-legend');
+    if (legEl) {
+        legEl.innerHTML = items.map(i =>
+            `<div class="donut-leg-item"><span class="donut-leg-dot" style="background:${i.color}"></span><span class="donut-leg-label">${i.label} ${i.pct}%</span></div>`
+        ).join('');
+    }
+}
+
+let donutChart = null;
+
+// ── BENCHMARK CHART ──
+let benchPrazo = 5;
+let benchChart = null;
+
+function setBenchPrazo(anos, btn) {
+    benchPrazo = anos;
+    document.querySelectorAll('.bench-prazo-group .comp-toggle').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    desenharBenchmark();
+}
+
+function desenharBenchmark() {
+    const val       = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+    const prazo     = benchPrazo;
+    const canvas    = document.getElementById('chart-benchmark');
+    const tbody     = document.getElementById('bench-tbody');
+    if (!canvas) return;
+
+    // ── PREMISSAS MACROECONÔMICAS ──
+    // Selic: parte 15% a.a., converge para 11% em 24 meses (ciclo BCB 2025-2026)
+    // IPCA: parte 5,5%, converge para 4% ao longo de 3 anos (meta BCB)
+    // NTN-B curta: IPCA + 6,5% (prêmio atual do Tesouro IPCA+ 2027)
+    // Taxa CDI ≈ Selic − 0,1%
+
+    const labels = [];
+    for (let y = 0; y <= prazo; y++) labels.push(y === 0 ? 'Hoje' : 'Ano ' + y);
+
+    // Selic anual projetada ano a ano
+    function selicAno(y) {
+        if (y === 0) return 0.150;
+        if (y === 1) return 0.132; // queda de ~1.8pp no ano 1
+        if (y === 2) return 0.115; // queda de ~1.7pp no ano 2
+        return 0.110;              // estabiliza em 11%
+    }
+
+    // IPCA anual projetado
+    function ipcaAno(y) {
+        if (y === 0) return 0.055;
+        if (y === 1) return 0.048;
+        if (y === 2) return 0.042;
+        return 0.040;
+    }
+
+    // NTN-B = IPCA + 6,5%
+    function ntnbAno(y) { return ipcaAno(y) + 0.065; }
+
+    // Portfólio MultiAsset ponderado (BRL, cenário base)
+    // Renda fixa: NTN-B 30% + CDI 25% — já em BRL, não precisa converter
+    // Metais em USD: ouro 9,3%, prata 8,5%, btc 40% — ponderados pelos pesos
+    // Simplificação: soma ponderada das taxas base convertidas para BRL com câmbio estável
+    // (não projetamos variação cambial — investidor considera exposição USD como hedge)
+    const pesoRF   = 0.55;  // NTN-B 30% + CDI 25%
+    const pesoMet  = 0.20;  // Ouro 15% + Prata 5%
+    const pesoBTC  = 0.10;
+    const pesoRes  = 0.15;  // Reserva CDI
+
+    function portfolioAno(y) {
+        const selic  = selicAno(y);
+        const ntnb   = ntnbAno(y);
+        // taxa ponderada da renda fixa (NTN-B: 30/55 do bloco RF; CDI: 25/55)
+        const rfRate = (ntnb * 30 + selic * 25) / 55;
+        const rfTotal= rfRate * pesoRF;
+        // metais: média ponderada ouro 9.3%, prata 8.5% — convertendo para BRL assume câmbio flat
+        const metRate= (0.093 * 15 + 0.085 * 5) / 20;
+        const metTotal = metRate * pesoMet;
+        // btc cenário base 40% aa
+        const btcTotal = 0.40 * pesoBTC;
+        // reserva ≈ CDI
+        const resTotal = selic * pesoRes;
+        return rfTotal + metTotal + btcTotal + resTotal;
+    }
+
+    // Séries acumuladas
+    const seriePort  = [val];
+    const serieSelic = [val];
+    const serieNtnb  = [val];
+
+    for (let y = 1; y <= prazo; y++) {
+        seriePort.push( seriePort[y-1]  * (1 + portfolioAno(y)));
+        serieSelic.push(serieSelic[y-1] * (1 + selicAno(y)));
+        serieNtnb.push( serieNtnb[y-1]  * (1 + ntnbAno(y)));
+    }
+
+    if (benchChart) benchChart.destroy();
+    benchChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Portfólio MultiAsset',
+                    data: seriePort,
+                    borderColor: '#c9a84c',
+                    backgroundColor: 'rgba(201,168,76,0.08)',
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.35,
+                    fill: true,
+                    pointBackgroundColor: '#c9a84c',
+                },
+                {
+                    label: 'NTN-B curta (IPCA+6,5%)',
+                    data: serieNtnb,
+                    borderColor: '#4caf7d',
+                    backgroundColor: 'rgba(76,175,125,0.05)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
+                    fill: false,
+                    borderDash: [6, 3],
+                    pointBackgroundColor: '#4caf7d',
+                },
+                {
+                    label: 'Selic projetada',
+                    data: serieSelic,
+                    borderColor: '#5b9cf6',
+                    backgroundColor: 'rgba(91,156,246,0.04)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
+                    fill: false,
+                    borderDash: [3, 3],
+                    pointBackgroundColor: '#5b9cf6',
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#aaa',
+                        font: { size: 12, family: 'DM Mono' },
+                        boxWidth: 28,
+                        padding: 16,
+                        usePointStyle: false,
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#0d0d0d',
+                    borderColor: '#2a2a2a',
+                    borderWidth: 1,
+                    titleColor: '#777',
+                    bodyColor: '#e8e8e8',
+                    bodyFont: { family: 'DM Mono', size: 12 },
+                    padding: 12,
+                    callbacks: {
+                        label: ctx => ` ${ctx.dataset.label}: R$ ${fmt(ctx.raw, 0)}`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#555', font: { size: 11, family: 'DM Mono' } },
+                    grid: { color: 'rgba(255,255,255,0.04)' }
+                },
+                y: {
+                    ticks: {
+                        color: '#555',
+                        font: { size: 11, family: 'DM Mono' },
+                        callback: v => fmtBRLShort(v)
+                    },
+                    grid: { color: 'rgba(255,255,255,0.04)' }
+                }
+            }
+        }
+    });
+
+    // Tabela comparativa
+    const final = {
+        port:  seriePort[prazo],
+        ntnb:  serieNtnb[prazo],
+        selic: serieSelic[prazo],
+    };
+
+    // IPCA acumulado no período para calcular retorno real
+    let ipcaAcum = 1;
+    for (let y = 1; y <= prazo; y++) ipcaAcum *= (1 + ipcaAno(y));
+
+    function rowData(label, finalVal, color) {
+        const ret    = ((finalVal - val) / val) * 100;
+        const cagr   = (Math.pow(finalVal / val, 1 / prazo) - 1) * 100;
+        const real   = ((finalVal / val) / ipcaAcum - 1) * 100;
+        const sign   = ret  >= 0 ? '+' : '';
+        const rSign  = real >= 0 ? '+' : '';
+        const cSign  = cagr >= 0 ? '+' : '';
+        const rColor = ret  >= 0 ? '#4caf7d' : '#e05c5c';
+        return `<tr>
+            <td><span style="color:${color};font-weight:700;">${label}</span></td>
+            <td style="color:${rColor};font-family:'DM Mono',monospace;">${sign}${fmt(ret,1)}%</td>
+            <td style="color:${rColor};font-family:'DM Mono',monospace;">${rSign}${fmt(real,1)}%</td>
+            <td style="color:${rColor};font-family:'DM Mono',monospace;">${cSign}${fmt(cagr,1)}% a.a.</td>
+            <td style="color:${color};font-family:'DM Mono',monospace;">R$ ${fmt(finalVal,0)}</td>
+        </tr>`;
+    }
+
+    if (tbody) {
+        tbody.innerHTML =
+            rowData('Portfólio MultiAsset', final.port,  '#c9a84c') +
+            rowData('NTN-B curta (IPCA+6,5%)', final.ntnb, '#4caf7d') +
+            rowData('Selic projetada',      final.selic, '#5b9cf6');
+    }
+}
+
+atualizarAlocacao(500000);
+setTimeout(() => { desenharDonut(500000); desenharBenchmark(); }, 300);
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── ESC CLOSE ──
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        // close any open modals
+    }
+});
+</script>
+</body>
+</html>

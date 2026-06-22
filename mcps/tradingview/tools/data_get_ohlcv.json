@@ -1,0 +1,18 @@
+{
+  "name": "data_get_ohlcv",
+  "description": "Get OHLCV bar data from the chart. Use summary=true for compact stats instead of all bars (saves context).",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "count": {
+        "description": "Number of bars to retrieve (max 500, default 100)",
+        "type": "number"
+      },
+      "summary": {
+        "description": "Return summary stats (high, low, open, close, avg volume, range) instead of all bars — much smaller output",
+        "type": "boolean"
+      }
+    }
+  }
+}

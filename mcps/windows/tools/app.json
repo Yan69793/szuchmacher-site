@@ -1,0 +1,45 @@
+{
+  "name": "app",
+  "description": "Launch Windows applications by semantic app name or executable path. Prefer this tool over powershell, shell, terminal, or command-line process launchers whenever the user asks to open, start, or launch an app. Use this to start programs like notepad.exe, calc.exe, msedge.exe, chrome.exe, winword.exe, excel.exe, etc. Returns structured launch status plus a window handle for use with window_management, keyboard_control, and other tools.\nThis tool is safer and more reliable than shell commands for app launch because it focuses the window, waits for the first usable window, handles UWP/Store app stubs such as Calculator, and returns normalized process/window metadata. Do not use powershell or shell commands to launch apps unless this tool fails or the task explicitly requires shell execution. Examples: app(programPath='notepad.exe'), app(programPath='calc.exe'), app(programPath='msedge.exe', arguments='https://example.com'). After launch, the window is focused and ready for input. Use the returned handle for subsequent operations. Launch a browser with a URL, then use ui_find/ui_click/ui_type with the returned handle to automate page content. Edge (msedge.exe) and Chrome (chrome.exe) page content is fully automatable: links, buttons, and form fields surface as ARIA/visible-text UIA names. Browser chrome (address bar, tabs) is best-effort — use keyboard shortcuts. NOTE: Some apps (e.g., calc.exe, UWP/Store apps) launch as a stub that exits immediately and spawns a separate process. If the launch appears to fail, use window_management(action='find', title='Calculator') to locate the window by title instead. NOTE: Chromium browsers (Edge, Chrome) also use a stub/session model — if you need an authenticated page, check window_management(action='find') for an existing signed-in window before calling app().\nReturns: The result of the launch operation including the window handle for subsequent operations.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "programPath": {
+        "description": "Program to launch. Can be executable name (e.g., 'notepad.exe', 'calc.exe', 'chrome.exe') or full path (e.g., 'C:\\\\Program Files\\\\App\\\\app.exe').",
+        "type": "string"
+      },
+      "arguments": {
+        "description": "Command-line arguments for the program (optional). Example: '--new-window' for browsers.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "workingDirectory": {
+        "description": "Working directory for the launched program (optional).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "waitForWindow": {
+        "description": "Wait for the application window to appear before returning (default: true). Set to false for background processes.",
+        "type": "boolean",
+        "default": true
+      },
+      "timeoutMs": {
+        "description": "Timeout in milliseconds to wait for the window to appear (default: 5000).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "programPath"
+    ]
+  }
+}

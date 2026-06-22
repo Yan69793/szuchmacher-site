@@ -1,0 +1,17 @@
+{
+  "name": "pane_focus",
+  "description": "Focus a specific chart pane by index (0-based)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "index": {
+        "type": "number",
+        "description": "Pane index (0-based, from pane_list)"
+      }
+    },
+    "required": [
+      "index"
+    ]
+  }
+}

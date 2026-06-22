@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Radar ROIC — Amostra | Carta Szuchmacher</title>
+    <meta name="description" content="Amostra ilustrativa do Radar ROIC: watchlist autoral ranqueada por retorno sobre o capital investido, carteira-modelo e teses. Research impessoal (CNPI)." />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#080808" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root{
+            --gold:#c9a84c; --gold-light:#e8c96d; --gold-dim:rgba(201,168,76,0.12);
+            --bg:#080808; --surface:#0f0f0f; --surface2:#161616; --border:rgba(255,255,255,0.06);
+            --text:#e8e8e8; --muted:#666; --green:#4caf7d; --red:#e05c5c; --blue:#5b9cf6;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+        .mono{font-family:'DM Mono',monospace;} .display{font-family:'Playfair Display',serif;}
+        a{color:inherit;} em{color:var(--gold-light);font-style:italic;}
+        body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.6;}
+        @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+        nav{position:fixed;top:0;width:100%;z-index:100;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+        .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+        .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--gold) 0%,#8b5e1a 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#000;}
+        .logo-text{font-size:14px;font-weight:700;line-height:1.15;}
+        .logo-text .logo-main{display:block;color:var(--text);font-size:15px;font-weight:700;letter-spacing:-0.2px;}
+        .logo-text .logo-sub{display:block;color:var(--gold);font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;opacity:0.85;}
+        .nav-links{display:flex;gap:32px;list-style:none;align-items:center;}
+        .nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s;}
+        .nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--gold);}
+        .nav-cta{padding:9px 20px;border:1px solid rgba(201,168,76,0.4);border-radius:100px;color:var(--gold) !important;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.25s;}
+        .nav-cta:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+
+        .section{max-width:1080px;margin:0 auto;padding:40px 60px;}
+        .sec-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+        .sec-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.4vw,38px);font-weight:400;color:var(--text);line-height:1.2;}
+        .sec-line{width:48px;height:2px;background:var(--gold);margin-top:18px;}
+
+        .report-head{max-width:1080px;margin:0 auto;padding:120px 60px 16px;}
+        .sample-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid rgba(224,92,92,0.45);background:rgba(224,92,92,0.08);border-radius:100px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#e08a8a;margin-bottom:20px;}
+        .report-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:18px;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+        .report-meta b{color:var(--gold);font-weight:500;}
+
+        .letter{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:12px;padding:30px 34px;}
+        .letter p{font-size:15px;color:#c4c4c4;line-height:1.8;margin-bottom:14px;}
+        .letter .sign{font-family:'Playfair Display',serif;font-style:italic;color:var(--gold-light);font-size:17px;margin-top:6px;}
+
+        .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+        .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;text-align:center;}
+        .metric .m-label{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);display:block;margin-bottom:8px;}
+        .metric .m-value{font-family:'DM Mono',monospace;font-size:24px;font-weight:600;color:var(--gold-light);}
+        .metric .m-sub{font-size:11px;color:var(--muted);margin-top:4px;display:block;}
+
+        .rtable{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+        .rtable th,.rtable td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:top;}
+        .rtable th{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);background:rgba(255,255,255,0.02);}
+        .rtable .rank{font-family:'DM Mono',monospace;color:var(--gold);width:32px;}
+        .rtable .roic{font-family:'DM Mono',monospace;color:var(--gold-light);font-weight:600;white-space:nowrap;}
+        .rtable .ativo b{display:block;color:var(--text);} .rtable .ativo span{font-size:12px;color:var(--muted);}
+        .rtable .tese{color:var(--muted);font-size:13px;line-height:1.5;}
+        .rtable tr:last-child td{border-bottom:none;}
+
+        .alloc{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px 28px;}
+        .alloc-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);}
+        .alloc-item:last-child{border-bottom:none;}
+        .alloc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+        .alloc-name{font-size:14px;font-weight:500;min-width:150px;}
+        .alloc-name span{display:block;font-size:11px;color:var(--muted);font-weight:400;}
+        .alloc-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:4px;min-width:40px;}
+        .alloc-bar{height:100%;border-radius:4px;}
+        .alloc-pct{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);min-width:46px;text-align:right;}
+
+        .thesis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+        .thesis{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;}
+        .thesis .t-tag{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--gold);margin-bottom:10px;}
+        .thesis h4{font-size:16px;margin-bottom:8px;color:var(--text);}
+        .thesis p{font-size:13px;color:var(--muted);line-height:1.65;}
+
+        /* PAYWALL SOFT-GATE */
+        .locked-wrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(201,168,76,0.2);}
+        .locked-content{filter:blur(7px);pointer-events:none;user-select:none;opacity:0.5;padding:6px;}
+        .locked-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(8,8,8,0.25) 0%,rgba(8,8,8,0.88) 100%);}
+        .locked-card{text-align:center;background:rgba(15,15,15,0.94);border:1px solid rgba(201,168,76,0.45);border-radius:16px;padding:38px 40px;max-width:440px;box-shadow:0 24px 60px rgba(0,0,0,0.5);}
+        .locked-card .lock-ico{width:54px;height:54px;border-radius:50%;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:22px;color:var(--gold);}
+        .locked-card h3{font-family:'Playfair Display',serif;font-size:24px;color:var(--text);margin-bottom:10px;}
+        .locked-card p{font-size:14px;color:var(--muted);margin-bottom:22px;line-height:1.65;}
+        .btn-primary{padding:14px 28px;background:var(--gold);color:#000;font-weight:700;font-size:13px;letter-spacing:0.05em;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.25s;}
+        .btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,0.25);}
+        .btn-ghost{padding:14px 28px;background:transparent;color:var(--gold);font-weight:600;font-size:13px;border:1px solid rgba(201,168,76,0.4);border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.25s;}
+        .btn-ghost:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);transform:translateY(-2px);}
+
+        .disclaimer{max-width:1080px;margin:0 auto;padding:24px 60px 60px;font-size:11px;color:#444;line-height:1.7;}
+        .disclaimer strong{color:#666;}
+
+        footer{background:#040404;border-top:1px solid var(--border);}
+        .footer-mini{max-width:1080px;margin:0 auto;padding:34px 60px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);}
+        .footer-mini a{color:var(--gold);text-decoration:none;}
+
+        @media (max-width:900px){
+            nav{padding:0 20px;} .nav-links li:not(.nav-cta-li){display:none;}
+            .section{padding:32px 22px;} .report-head{padding:104px 22px 12px;} .disclaimer{padding:20px 22px 48px;} .footer-mini{padding:28px 22px;}
+            .metrics{grid-template-columns:repeat(2,1fr);} .thesis-grid{grid-template-columns:1fr;}
+        }
+        @media (max-width:560px){
+            .rtable .tese{display:none;}
+            .metrics{grid-template-columns:1fr;}
+            .alloc-name{min-width:110px;}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo">
+        <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+        <span class="logo-text"><span class="logo-main">Szuchmacher</span><span class="logo-sub">Consultoria</span></span>
+    </a>
+    <ul class="nav-links">
+
+        <li><a href="assinatura.html">Assinatura</a></li>
+        <li><a href="honorarios.html">Honorários</a></li>
+        <li class="nav-cta-li"><a href="assinatura.html" class="nav-cta">Assinar</a></li>
+    </ul>
+</nav>
+
+<!-- CABEÇALHO DO RELATÓRIO -->
+<header class="report-head">
+    <div class="sample-badge"><i class="fas fa-flask"></i> Amostra · dados ilustrativos · não é recomendação</div>
+    <div class="sec-eyebrow">Research · Carta Szuchmacher</div>
+    <h1 class="sec-title display">Radar ROIC</h1>
+    <div class="sec-line"></div>
+    <div class="report-meta">
+        <span>Edição <b>amostra</b></span>
+        <span>Atualizado em <b>—</b></span>
+        <span>Lente <b>retorno sobre o capital investido</b></span>
+        <span>Por <b>Yan Szuchmacher, CNPI</b></span>
+    </div>
+</header>
+
+<!-- CARTA DO ANALISTA -->
+<section class="section">
+    <div class="letter">
+        <p>Esta é uma <strong>amostra ilustrativa</strong> da estrutura do Radar ROIC — os nomes, percentuais e teses abaixo são genéricos e existem apenas para mostrar o formato. Na edição real, cada linha traz um ativo analisado por mim, ranqueado pelo retorno que ele gera sobre o capital que consome.</p>
+        <p>A tese é sempre a mesma disciplina: <em>qualidade antes de narrativa</em>. Prefiro um negócio que remunera bem o capital a uma história bonita que destrói valor. O Radar organiza os candidatos por essa régua.</p>
+        <p class="sign">— Yan Szuchmacher</p>
+    </div>
+</section>
+
+<!-- MÉTRICAS -->
+<section class="section" style="padding-top:8px;">
+    <div class="metrics">
+        <div class="metric"><span class="m-label">ROIC médio</span><span class="m-value">—%</span><span class="m-sub">carteira-modelo (ilustrativo)</span></div>
+        <div class="metric"><span class="m-label">Nomes no radar</span><span class="m-value">12</span><span class="m-sub">exemplo</span></div>
+        <div class="metric"><span class="m-label">Corte mínimo</span><span class="m-value">ROIC &gt; custo de capital</span><span class="m-sub">critério</span></div>
+        <div class="metric"><span class="m-label">Cadência</span><span class="m-value">Mensal</span><span class="m-sub">+ alertas (Pro)</span></div>
+    </div>
+</section>
+
+<!-- TABELA RADAR ROIC -->
+<section class="section" style="padding-top:24px;">
+    <div class="sec-eyebrow">Watchlist ranqueada (ilustrativa)</div>
+    <h2 class="sec-title display" style="font-size:24px;margin-bottom:18px;">O radar do mês</h2>
+    <table class="rtable">
+        <thead>
+            <tr><th>#</th><th>Ativo</th><th>ROIC*</th><th class="tese">Tese curta</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="rank">01</td><td class="ativo"><b>Companhia A</b><span>Energia / utilities</span></td><td class="roic">— %</td><td class="tese">Base regulada, capital remunerado acima do custo, reinvestimento disciplinado.</td></tr>
+            <tr><td class="rank">02</td><td class="ativo"><b>Companhia B</b><span>Serviços financeiros</span></td><td class="roic">— %</td><td class="tese">Retorno sobre capital consistente ao longo do ciclo, baixo consumo de capital incremental.</td></tr>
+            <tr><td class="rank">03</td><td class="ativo"><b>Companhia C</b><span>Consumo / varejo</span></td><td class="roic">— %</td><td class="tese">Marca com poder de preço; expansão só onde o retorno marginal se sustenta.</td></tr>
+            <tr><td class="rank">04</td><td class="ativo"><b>Companhia D</b><span>Saúde</span></td><td class="roic">— %</td><td class="tese">Ativo escasso, demanda inelástica, geração de caixa previsível.</td></tr>
+            <tr><td class="rank">05</td><td class="ativo"><b>Companhia E</b><span>Infraestrutura</span></td><td class="roic">— %</td><td class="tese">Contratos longos indexados; previsibilidade que protege o capital empregado.</td></tr>
+        </tbody>
+    </table>
+    <p style="font-size:11px;color:#555;margin-top:12px;">*Valores omitidos nesta amostra. Na edição real, cada nome traz ROIC, custo de capital e spread. Dados ilustrativos — não constituem recomendação.</p>
+</section>
+
+<!-- CARTEIRA MODELO -->
+<section class="section" style="padding-top:24px;">
+    <div class="sec-eyebrow">Carteira-modelo (ilustrativa)</div>
+    <h2 class="sec-title display" style="font-size:24px;margin-bottom:18px;">Como eu pesaria</h2>
+    <div class="alloc">
+        <div class="alloc-item"><span class="alloc-dot" style="background:var(--gold);"></span><span class="alloc-name">Ações de alto ROIC<span>quality, Brasil + global</span></span><span class="alloc-bar-wrap"><span class="alloc-bar" style="width:42%;background:var(--gold);"></span></span><span class="alloc-pct">42%</span></div>
+        <div class="alloc-item"><span class="alloc-dot" style="background:var(--blue);"></span><span class="alloc-name">Renda fixa / crédito<span>carrego e proteção</span></span><span class="alloc-bar-wrap"><span class="alloc-bar" style="width:30%;background:var(--blue);"></span></span><span class="alloc-pct">30%</span></div>
+        <div class="alloc-item"><span class="alloc-dot" style="background:var(--green);"></span><span class="alloc-name">Reais / metais<span>reserva de valor</span></span><span class="alloc-bar-wrap"><span class="alloc-bar" style="width:18%;background:var(--green);"></span></span><span class="alloc-pct">18%</span></div>
+        <div class="alloc-item"><span class="alloc-dot" style="background:#f07a40;"></span><span class="alloc-name">Alternativos<span>descorrelação</span></span><span class="alloc-bar-wrap"><span class="alloc-bar" style="width:10%;background:#f07a40;"></span></span><span class="alloc-pct">10%</span></div>
+    </div>
+    <p style="font-size:11px;color:#555;margin-top:12px;">Pesos ilustrativos para demonstrar o formato. Não é alocação recomendada nem individualizada.</p>
+</section>
+
+<!-- TESES -->
+<section class="section" style="padding-top:24px;">
+    <div class="sec-eyebrow">Destaques do mês (ilustrativo)</div>
+    <h2 class="sec-title display" style="font-size:24px;margin-bottom:18px;">Três teses em uma linha</h2>
+    <div class="thesis-grid">
+        <div class="thesis"><div class="t-tag">Entrou no radar</div><h4>Companhia A</h4><p>Spread de ROIC sobre o custo de capital se ampliou após o último ciclo de capex. Reinvestimento ainda cria valor.</p></div>
+        <div class="thesis"><div class="t-tag">Mantém</div><h4>Companhia B</h4><p>Retorno sobre capital estável; preço não exige crescimento heroico para fazer sentido.</p></div>
+        <div class="thesis"><div class="t-tag">Observação</div><h4>Companhia C</h4><p>ROIC ainda alto, mas a expansão recente começa a consumir mais capital do que remunera. No radar de atenção.</p></div>
+    </div>
+</section>
+
+<!-- PAYWALL SOFT-GATE -->
+<section class="section" style="padding-top:24px;">
+    <div class="sec-eyebrow">Conteúdo de assinante</div>
+    <h2 class="sec-title display" style="font-size:24px;margin-bottom:18px;">Tabela completa, números e alertas</h2>
+    <div class="locked-wrap">
+        <div class="locked-content" aria-hidden="true">
+            <table class="rtable">
+                <thead><tr><th>#</th><th>Ativo</th><th>ROIC</th><th>Custo capital</th><th>Spread</th><th class="tese">Gatilho</th></tr></thead>
+                <tbody>
+                    <tr><td class="rank">06</td><td class="ativo"><b>Companhia F</b><span>Industrial</span></td><td class="roic">21,4%</td><td class="roic">11,0%</td><td class="roic">+10,4 pp</td><td class="tese">Reprecificação de contratos no 2º semestre.</td></tr>
+                    <tr><td class="rank">07</td><td class="ativo"><b>Companhia G</b><span>Tecnologia</span></td><td class="roic">28,9%</td><td class="roic">13,5%</td><td class="roic">+15,4 pp</td><td class="tese">Alavancagem operacional acelerando.</td></tr>
+                    <tr><td class="rank">08</td><td class="ativo"><b>Companhia H</b><span>Energia</span></td><td class="roic">17,2%</td><td class="roic">10,2%</td><td class="roic">+7,0 pp</td><td class="tese">Novo ciclo de outorgas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="locked-overlay">
+            <div class="locked-card">
+                <div class="lock-ico"><i class="fas fa-lock"></i></div>
+                <h3>Conteúdo exclusivo de assinante</h3>
+                <p>A tabela completa com ROIC, custo de capital, spread e gatilhos — além dos alertas — fica liberada para assinantes da Carta e do MultiAsset Pro.</p>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                    <a href="assinatura.html#tiers" class="btn-primary">Assinar para ver</a>
+                    <a href="assinatura.html" class="btn-ghost">Ver os planos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="disclaimer">
+    <strong>Amostra ilustrativa.</strong> Esta página é um modelo de demonstração do formato do Radar ROIC. Nomes de empresas, percentuais, ROICs, pesos e teses são fictícios/genéricos e não representam análise real, recomendação de compra ou venda, nem oferta de valores mobiliários. O produto real é elaborado por analista credenciado (CNPI) nos termos da Resolução CVM nº 20/2021, com caráter informativo e impessoal. Rentabilidade passada não garante resultados futuros.
+</div>
+
+<footer>
+    <div class="footer-mini">
+        <span>© 2026 Szuchmacher Consultoria · Research impessoal (CNPI) · CVM 20/2021</span>
+        <span><a href="assinatura.html">Assinar a Carta</a> · <a href="honorarios.html">Consultoria</a></span>
+    </div>
+</footer>
+
+</body>
+</html>

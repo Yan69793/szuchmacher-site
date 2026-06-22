@@ -1,0 +1,20 @@
+{
+  "name": "html's",
+  "version": "1.0.0",
+  "description": "",
+  "main": "atualizar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "basic-ftp": "^5.2.0",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.3.1",
+    "pdf-parse": "^2.4.5"
+  }
+}

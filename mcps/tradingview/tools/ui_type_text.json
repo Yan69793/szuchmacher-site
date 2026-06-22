@@ -1,0 +1,17 @@
+{
+  "name": "ui_type_text",
+  "description": "Type text into the currently focused input/textarea element",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "description": "Text to type into the focused element"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  }
+}

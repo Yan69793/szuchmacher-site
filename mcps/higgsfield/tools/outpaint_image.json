@@ -1,0 +1,63 @@
+{
+  "name": "outpaint_image",
+  "description": "Expand or uncrop an existing image by outpainting beyond the original frame while preserving the source content. Use this when the user asks to extend the background, make an image wider or taller, change the canvas shape, or fill new edges around an image. Pass image_id for the source image and aspect_ratio for the target canvas. Optional width and height can be provided together; otherwise they default from aspect_ratio. This tool does not use prompt or count. Set params.get_cost=true to estimate credits without submitting a job.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "image_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Source image UUID — a confirmed uploaded image media_id or a completed image generation job_id."
+          },
+          "aspect_ratio": {
+            "default": "21:9",
+            "description": "Target expanded canvas aspect ratio. Use auto to let FNF infer the closest supported ratio from the source image.",
+            "type": "string",
+            "enum": [
+              "auto",
+              "1:1",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "4:5",
+              "5:4",
+              "9:16",
+              "16:9",
+              "21:9"
+            ]
+          },
+          "width": {
+            "description": "Optional target width. If set, set height too.",
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "height": {
+            "description": "Optional target height. If set, set width too.",
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "get_cost": {
+            "description": "If true, return the cost in credits without submitting an outpaint job.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "image_id"
+        ],
+        "additionalProperties": false,
+        "description": "Image outpaint parameters. prompt and count are not supported."
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

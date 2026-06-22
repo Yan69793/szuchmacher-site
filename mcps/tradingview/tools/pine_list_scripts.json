@@ -1,0 +1,9 @@
+{
+  "name": "pine_list_scripts",
+  "description": "List saved Pine Scripts",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

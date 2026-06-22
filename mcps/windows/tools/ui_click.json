@@ -1,0 +1,74 @@
+{
+  "name": "ui_click",
+  "description": "Click a UI element. REQUIRED for all click operations - you must call this tool to click anything. Auto-activates window.\nClicks a UI element. Automatically activates the target window before clicking. You MUST use this tool for every click operation - each click requires a separate tool call. Works for Electron/Chromium elements: links, buttons, tabs, menu items exposed through UIA names or ARIA labels.\nReturns: The result of the click operation including success status and element information.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "windowHandle": {
+        "description": "Window handle as decimal string (from window_management 'find' or 'list'). REQUIRED.",
+        "type": "string"
+      },
+      "name": {
+        "description": "Element name (exact match, case-insensitive). For Electron apps and Chromium browsers, this is often the visible label or ARIA label.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "nameContains": {
+        "description": "Substring in element name (case-insensitive). Preferred for dialog buttons like 'Don\\\\'t save'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "namePattern": {
+        "description": "Regex pattern for element name matching.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "controlType": {
+        "description": "Control type (Button, MenuItem, Hyperlink, ListItem, etc.)",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "automationId": {
+        "description": "AutomationId for precise matching.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "className": {
+        "description": "Element class name (e.g., 'Chrome_WidgetWin_1' for Chromium).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "foundIndex": {
+        "description": "Return Nth match (1-based, default: 1).",
+        "type": "integer",
+        "default": 1
+      },
+      "includeDiagnostics": {
+        "description": "Include diagnostics (timing, query, elements scanned) in response. Default: false.",
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": [
+      "windowHandle"
+    ]
+  }
+}

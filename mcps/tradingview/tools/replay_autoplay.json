@@ -1,0 +1,14 @@
+{
+  "name": "replay_autoplay",
+  "description": "Toggle autoplay in replay mode, optionally set speed",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "speed": {
+        "description": "Autoplay delay in ms (lower = faster). Valid values: 100, 143, 200, 300, 1000, 2000, 3000, 5000, 10000. Leave empty to just toggle.",
+        "type": "number"
+      }
+    }
+  }
+}

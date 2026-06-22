@@ -1,0 +1,229 @@
+{
+  "generated_at": "2026-06-18T05:59:13.186495",
+  "base": "https://szuchmacher.com.br",
+  "endpoints": [
+    {
+      "url": "https://szuchmacher.com.br/prices.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ok\":true,\"gold\":4267.9,\"silver\":68.18,\"platinum\":1728,\"bitcoin\":64351.58,\"sources\":[\"gold-api.com\"],\"stale\":false,\"generated_at\":\"18/06/2026, 06:01 BRT\",\"ts\":1781773269,\"_raw\":{\"gold\":4267.9,\"silver\":68.18,\"platinum\":1728,\"bitcoin\":64351.58}}"
+    },
+    {
+      "url": "https://szuchmacher.com.br/market-data.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ok\":true,\"ibov\":{\"value\":168453.94,\"change_pct\":-0.7},\"sp500\":{\"value\":7420.1,\"change_pct\":-1.21},\"wti\":{\"value\":73.88,\"change_pct\":-2.8},\"treasury10y\":{\"value\":4.46,\"change_pct\":0.79},\"ntnb11\":{\"value\":95,\"change_pct\":0},\"updated_at\":\"18/06/2026, 06:01 BRT\",\"source\":\"Yahoo Finance · ao vivo\",\"ts\""
+    },
+    {
+      "url": "https://szuchmacher.com.br/macro_api.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ok\":true,\"generated_at\":\"18/06/2026 às 05:58 BRT\",\"cache\":true,\"data\":{\"eyebrow\":\"Cenário Global · Junho 2026 · Pós-COPOM\",\"alert_title\":\"Selic reduzida a 14,25% · Divergência Fed vs BCB acentua-se\",\"alert_text\":\"COPOM cortou 25 bps em ambiente de inflação persistente, enquanto Treasury 10Y perman"
+    },
+    {
+      "url": "https://szuchmacher.com.br/agenda-data.json",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json",
+      "snippet": "{\r\n  \"meta\": {\r\n    \"version\": \"2026-06-18\",\n    \"curator\": \"Szuchmacher Consultoria\",\r\n    \"fontes_primarias\": [\r\n      \"BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)\",\r\n      \"BLS — US economic release schedule (bls.gov/schedule)\",\r\n      \"Fed — FOMC calendar (federalreserve.go"
+    },
+    {
+      "url": "https://szuchmacher.com.br/assets/agenda.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\r\n  \"meta\": {\r\n    \"version\": \"2026-06-18\",\n    \"curator\": \"Szuchmacher Consultoria\",\r\n    \"fontes_primarias\": [\r\n      \"BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)\",\r\n      \"BLS — US economic release schedule (bls.gov/schedule)\",\r\n      \"Fed — FOMC calendar (federalreserve.go"
+    },
+    {
+      "url": "https://szuchmacher.com.br/assets/macro.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ts\":1781773272,\"source\":\"BCB (SGS + Olinda Focus)\",\"disclaimer\":\"Dados agregados do mercado. Medianas, mínimos e máximos do Relatório Focus refletem expectativas de analistas, não previsão própria nem recomendação.\",\"selic_meta\":{\"data\":\"05/08/2026\",\"valor\":14.25},\"cambio_ptax\":{\"data\":\"17/06/2026"
+    }
+  ],
+  "pages": [
+    {
+      "viewport": "desktop",
+      "load_ms": 3298,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-home-desktop-20260618_055913.png",
+      "checks": {
+        "macro_ready": true,
+        "eventos": 6,
+        "has_sexta": false
+      },
+      "console": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile390",
+      "load_ms": 435,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-home-mobile390-20260618_055913.png",
+      "checks": {
+        "macro_ready": true,
+        "eventos": 6,
+        "has_sexta": false
+      },
+      "console": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile320",
+      "load_ms": 420,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-home-mobile320-20260618_055913.png",
+      "checks": {
+        "macro_ready": true,
+        "eventos": 6,
+        "has_sexta": false
+      },
+      "console": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "desktop",
+      "load_ms": 4652,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-multiasset-app-desktop-20260618_055913.png",
+      "checks": {
+        "ibov_strip": "168.454",
+        "bench_selic": "14,25% → 12% a.a.",
+        "sim_gold": "$ 88.150"
+      },
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        }
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile390",
+      "load_ms": 4576,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-multiasset-app-mobile390-20260618_055913.png",
+      "checks": {
+        "ibov_strip": "168.454",
+        "bench_selic": "14,25% → 12% a.a.",
+        "sim_gold": "$ 88.150"
+      },
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        }
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile320",
+      "load_ms": 4567,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-multiasset-app-mobile320-20260618_055913.png",
+      "checks": {
+        "ibov_strip": "168.454",
+        "bench_selic": "14,25% → 12% a.a.",
+        "sim_gold": "$ 88.150"
+      },
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        }
+      ],
+      "errors": [],
+      "warnings": [
+        "horizontal_overflow_elements=12"
+      ]
+    }
+  ],
+  "html_pages": [
+    {
+      "url": "https://szuchmacher.com.br/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://szuchmacher.com.br/multiasset-app.html",
+      "status": 200,
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "ui_scroll",
+  "description": "Scroll the chart or page up/down/left/right",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "direction": {
+        "type": "string",
+        "enum": [
+          "up",
+          "down",
+          "left",
+          "right"
+        ],
+        "description": "Scroll direction"
+      },
+      "amount": {
+        "description": "Scroll amount in pixels (default 300)",
+        "type": "number"
+      }
+    },
+    "required": [
+      "direction"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "generate_audio",
+  "description": "Generate audio. Use `sonilo_music` for music, `mirelo_text_to_audio` for sound effects, and `inworld_text_to_speech` for spoken text. Pass top-level model, prompt, voice for inworld_text_to_speech, and duration only when the selected model declares duration. Do not pass provider-specific keys such as text, text_prompt, upload_audio_format, num_samples, seed, double_output, or ambience. Audio generation is single-sample. get_cost:true preflights credits.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Audio model ID from the model catalog (required). Use models_explore(type:'audio') to discover."
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Text prompt for the generated audio."
+          },
+          "count": {
+            "default": 1,
+            "description": "Audio generation is single-sample; use 1.",
+            "type": "number",
+            "const": 1
+          },
+          "voice": {
+            "description": "Voice for inworld_text_to_speech. Use models_explore(type:'audio') to inspect allowed values.",
+            "type": "string"
+          },
+          "duration": {
+            "description": "Duration in seconds. Required for sonilo_music and mirelo_text_to_audio; omit for inworld_text_to_speech.",
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "get_cost": {
+            "description": "If true, return the cost in credits for this generation without submitting any job. Use to preflight cost before generating.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

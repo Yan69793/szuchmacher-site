@@ -1,0 +1,79 @@
+{
+  "name": "generate_video",
+  "description": "Generate a video. Apps UI local file: call `media_upload_widget`; do not ask for Claude chat attachments; remote tools cannot read them. Web media URL: call `media_import_url`, pass returned `media_id`; `medias[].value` must be media_id/job_id, not URL. Defaults: `marketing_studio_video` for ads/product; `seedance_2_0` for identity, then `kling3_0` for multi-shot/audio/motion transfer, or `kling3_0_turbo` for fast text-to-video / single start-frame animation. URL Marketing Studio: call `show_marketing_studio(action='fetch')`, use returned `url`. Uploaded-image products: call `show_marketing_studio(type='product', medias[])`/`action='create'`, use `next_step`. Hooks/settings only for presets UGC, Tutorial, Unboxing, Product Review, UGC Virtual Try On; if ids missing, list hooks/settings first. Use declared roles: start_image/end_image/image. Pass generate_audio only if declared; Seedance audio via medias. Use models_explore for durations/params. Apply adjustments. If recovery_tool returned, call it immediately; do not explain/ask first. get_cost:true preflights credits.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from the model catalog (required)."
+          },
+          "prompt": {
+            "description": "Text description of what to generate. Optional for Marketing Studio workflows.",
+            "type": "string"
+          },
+          "count": {
+            "default": 1,
+            "description": "Number of results (1-4).",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4
+          },
+          "aspect_ratio": {
+            "type": "string"
+          },
+          "medias": {
+            "description": "Reference media inputs.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "UUID from media_upload/media_import_url or job_id from a prior generation. Do not pass https:// URLs here."
+                },
+                "role": {
+                  "type": "string",
+                  "description": "Role — varies by model; inspect the selected model's medias[].roles. Server may auto-coerce when unambiguous."
+                }
+              },
+              "required": [
+                "value",
+                "role"
+              ]
+            }
+          },
+          "get_cost": {
+            "description": "If true, return the cost in credits for this generation without submitting any job. Use to preflight cost before generating.",
+            "type": "boolean"
+          },
+          "preset_id": {
+            "description": "Preset id from presets_show. Use only with model: higgsfield_preset.",
+            "type": "string"
+          },
+          "declined_preset_id": {
+            "description": "Preset id declined by the user. Suppresses only that exact preset recommendation for this literal generation retry.",
+            "type": "string"
+          },
+          "duration": {
+            "description": "Duration in seconds. Missing → model default. Unsupported → nearest allowed value or clamped to range.",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

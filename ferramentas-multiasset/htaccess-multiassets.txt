@@ -1,0 +1,17 @@
+# MultiAsset Pro — HostGator (Apache)
+
+# ── Bloqueia acesso direto ao cron e arquivos sensíveis ──────────────
+<FilesMatch "^(macro_cron\.php|validate_multiasset\.py|macro_cron\.log|\.env)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── Bloqueia listagem de diretório ───────────────────────────────────
+Options -Indexes
+
+# ── Cabeçalhos de segurança ──────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

@@ -1,0 +1,22 @@
+{
+  "name": "indicator_set_inputs",
+  "description": "Change indicator/study input values (e.g., length, source, period)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "entity_id": {
+        "type": "string",
+        "description": "Entity ID of the study (from chart_get_state)"
+      },
+      "inputs": {
+        "type": "string",
+        "description": "JSON string of input overrides, e.g. '{\"length\": 50, \"source\": \"close\"}'. Keys are input IDs, values are the new values."
+      }
+    },
+    "required": [
+      "entity_id",
+      "inputs"
+    ]
+  }
+}

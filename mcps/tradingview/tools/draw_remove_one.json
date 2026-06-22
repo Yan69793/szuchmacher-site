@@ -1,0 +1,17 @@
+{
+  "name": "draw_remove_one",
+  "description": "Remove a specific drawing by entity ID",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "entity_id": {
+        "type": "string",
+        "description": "Entity ID of the drawing to remove (from draw_list)"
+      }
+    },
+    "required": [
+      "entity_id"
+    ]
+  }
+}

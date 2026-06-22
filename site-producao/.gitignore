@@ -1,0 +1,5 @@
+.env
+.wrangler/
+_arquivo/
+*.log
+config.php

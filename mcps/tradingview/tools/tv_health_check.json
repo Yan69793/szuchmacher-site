@@ -1,0 +1,9 @@
+{
+  "name": "tv_health_check",
+  "description": "Check CDP connection to TradingView and return current chart state",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

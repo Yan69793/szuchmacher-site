@@ -1,0 +1,9 @@
+{
+  "name": "get_game_creation_instructions",
+  "description": "REQUIRED before creating or editing any browser game. Reads the game-generation SKILL.md resource and returns the current list of files available through get_game_creation_bundle_file.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "get_game_creation_bundle_file",
+  "description": "Read a safe text file or directory from the game-generation resource folder. Use this after get_game_creation_instructions when the instructions require any resource file.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Whitelisted bundle file or directory path, for example 'references/build-game.md' or 'scaffold/web/package.json'."
+      },
+      "include_contents": {
+        "description": "For directory paths, include the content of every allowed file under that directory. Defaults to false.",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "path"
+    ]
+  }
+}

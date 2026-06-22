@@ -1,0 +1,32 @@
+{
+  "name": "job_status",
+  "description": "Check the status and results of an async job. Returns instantly. For non-terminal jobs the response includes poll_after_seconds — wait that many seconds before calling again. Typical total times: image ~10-20s, video ~60-180s.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "jobId": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+        "description": "Job ID from a previous operation"
+      },
+      "sync": {
+        "description": "If true, server polls internally for up to ~25s and returns on terminal state. Defaults to false.",
+        "type": "boolean"
+      },
+      "raw_data": {
+        "description": "If true, return the raw FNF job payload instead of the normalized generation shape.",
+        "type": "boolean"
+      },
+      "source": {
+        "description": "Set by the generation widget when it polls automatically.",
+        "type": "string",
+        "const": "widget"
+      }
+    },
+    "required": [
+      "jobId"
+    ]
+  }
+}

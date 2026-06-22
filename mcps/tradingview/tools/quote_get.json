@@ -1,0 +1,14 @@
+{
+  "name": "quote_get",
+  "description": "Get real-time quote data for a symbol (price, OHLC, volume)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "symbol": {
+        "description": "Symbol to quote (blank = current chart symbol)",
+        "type": "string"
+      }
+    }
+  }
+}

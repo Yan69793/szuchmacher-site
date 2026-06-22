@@ -1,0 +1,9 @@
+{
+  "name": "list_workspaces",
+  "description": "List every workspace the user can access (their private workspace plus any shared/team workspaces). The `is_selected` field marks which workspace MCP operations currently target. Use when the user asks which workspaces they have, or wants to switch workspace.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

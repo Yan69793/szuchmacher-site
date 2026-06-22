@@ -1,0 +1,80 @@
+{
+  "name": "show_characters",
+  "description": "Soul Characters widget — reusable trained identity models. Actions: `list` (browse), `train` (needs `name` + 5-20 ref images, ~10 min, non-blocking — widget polls), `status` (inspect by `soul_id`). Presence of `name`/`images`/`medias` ⇒ train mode. Call `train` only on explicit ask for a reusable Soul / digital twin / identity, or when 5+ ref photos are supplied.\nRef images accept: media_id UUIDs from media_confirm, completed image-job IDs, or https URLs. Never local paths — upload via media_upload → PUT bytes → media_confirm first.\n\nCONSTRAINTS:\n- Trained Soul is usable ONLY with `text2image_soul_v2` (Soul V2) and `soul_cinema_studio` (Soul Cinema). For any other model, the user needs `show_reference_elements`.\n- ONE soul_id per generation. Multi-character shots ('me + friend', 'two people') must use `show_reference_elements` (supports multiple `<<<UUID>>>` placeholders).\n\nAMBIGUITY GUARD — character/avatar/digital-twin/'use my face' requests without a chosen path: do NOT call this tool yet; ask the user to pick:\n  1. Train Soul (this tool) — identity-faithful, ONE person, 5-20 photos, ~10 min, Soul V2 / Cinema only.\n  2. Save as Element (`show_reference_elements` action=create) — instant, single image, multiple subjects allowed, works with Nano Banana Pro / 2, GPT Image 2, Seedream 4.5 / 5 lite, Cinema Studio Image 2.5, Cinema Studio Video 2 / 3.0, Seedance 2.0, Kling 3.0.\n→ Soul signals: 'train' / 'digital twin' / 'identity' / 5+ photos of same person. → Force Elements: >1 character in shot, non-person subject, single image, mention of a non-Soul model, instant result wanted.\n\nAfter ready: `generate_image` with `model: 'soul_2'` (or `soul_cinema_studio`) + the returned `soul_id`.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "description": "Mode selector: list, train/create, or status/get.",
+        "type": "string"
+      },
+      "type": {
+        "default": "soul_2",
+        "description": "Character type. Use soul_2 for model='soul_2'; use soul_cinematic for model='soul_cinematic'; use soul for legacy Soul references.",
+        "type": "string",
+        "enum": [
+          "soul",
+          "soul_2",
+          "soul_cinematic"
+        ]
+      },
+      "name": {
+        "description": "Character name, required for action=train.",
+        "type": "string"
+      },
+      "images": {
+        "description": "For Soul training: returned media_id UUIDs from media_confirm, completed image generation job IDs, or https image URLs. Required with medias to total 5-20 images for action=train. Do not pass local file paths.",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "medias": {
+        "description": "Chat media references to resolve as training images for action=train. Values may be media_id UUIDs, completed image generation job IDs, or https image URLs.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "For Soul training: returned media_id UUID from media_confirm, a completed image generation job ID, or an https image URL. Do not pass local file paths like /mnt/user-data/uploads/...; upload/confirm first and use the media_id UUID."
+            },
+            "role": {
+              "default": "image",
+              "type": "string",
+              "const": "image"
+            }
+          },
+          "required": [
+            "value"
+          ]
+        }
+      },
+      "soul_id": {
+        "description": "Character id for action=status.",
+        "type": "string"
+      },
+      "status": {
+        "description": "List filter. Use ready to find characters available for generation.",
+        "type": "string",
+        "enum": [
+          "ready",
+          "training",
+          "failed"
+        ]
+      },
+      "cursor": {
+        "description": "Pagination cursor from previous response's next_cursor.",
+        "type": "number"
+      },
+      "size": {
+        "description": "Number of characters per page.",
+        "default": 20,
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
+    }
+  }
+}

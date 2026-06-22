@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <title>Relatórios | Yan Szuchmacher</title>
+  <meta name="description" content="Fechamento de mercado diário em dias úteis, às 19h BRT. Posicionamento e implicações para portfólios qualificados." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://szuchmacher.com.br/relatorios.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Relatórios | Yan Szuchmacher" />
+  <meta property="og:description" content="Receba o fechamento de mercado diário às 19h BRT com implicações para portfólios qualificados." />
+  <meta property="og:url" content="https://szuchmacher.com.br/relatorios.html" />
+  <meta property="og:site_name" content="Yan Szuchmacher" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:image" content="https://szuchmacher.com.br/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Relatórios | Yan Szuchmacher" />
+  <meta name="twitter:description" content="Receba o fechamento de mercado diário às 19h BRT com implicações para portfólios qualificados." />
+  <meta name="twitter:image" content="https://szuchmacher.com.br/og-cover.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" as="style" />
+  <link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://szuchmacher.com.br/relatorios.html#webpage",
+        "url": "https://szuchmacher.com.br/relatorios.html",
+        "name": "Relatórios | Yan Szuchmacher",
+        "description": "Fechamento de mercado diário em dias úteis, às 19h BRT. Posicionamento e implicações para portfólios qualificados.",
+        "inLanguage": "pt-BR",
+        "isPartOf": { "@id": "https://szuchmacher.com.br#website" }
+      },
+      {
+        "@type": "NewsletterService",
+        "name": "Fechamento de Mercado Szuchmacher",
+        "provider": { "@id": "https://szuchmacher.com.br#org" },
+        "description": "Fechamento de mercado diário às 19h BRT com implicações para portfólios qualificados.",
+        "areaServed": "BR",
+        "audience": { "@type": "Audience", "audienceType": "Investidores qualificados" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Configuração central (Clarity + Formspree). Editar IDs em /assets/sz-config.js -->
+  <script src="/assets/sz-config.js?v=20260617"></script>
+
+  <style>
+    :root{
+      --bg:#eef0f4;
+      --surface:#e4e8ef;
+      --navy:#0a1428;
+      --navy-soft:#152238;
+      --gold:#92703a;
+      --text:#1a2030;
+      --muted:#5a6272;
+      --line:rgba(10,20,40,0.10);
+      --line-strong:rgba(10,20,40,0.16);
+      --max:1160px;
+      --radius:2px;
+      --font-serif:'Prata', serif;
+      --font-sans:'Public Sans', sans-serif;
+      --font-mono:'JetBrains Mono', monospace;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    p{color:var(--muted);margin:0 0 18px 0;font-weight:400}
+    h1,h2,h3{font-family:var(--font-serif);color:var(--navy);line-height:1.12;font-weight:600}
+    .container{max-width:var(--max);margin:0 auto;padding:0 28px}
+    .section{padding:96px 0}
+    .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:18px}
+    [id]{scroll-margin-top:88px}
+    h1,h2,h3{text-wrap:balance}
+
+    header{position:sticky;top:0;z-index:1000;background:rgba(247,244,238,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .header-row{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative}
+    .brand-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit;flex-shrink:0}
+    .brand-lockup:hover .brand-lockup__firm{color:var(--navy-soft)}
+    .brand-lockup__mark{display:flex;flex-direction:column;gap:2px;line-height:1.05}
+    .brand-lockup__firm{font-family:var(--font-serif);font-size:1.08rem;font-weight:400;letter-spacing:0.02em;color:var(--navy);transition:color .2s}
+    .brand-lockup__descriptor{font-family:var(--font-mono);font-size:0.58rem;font-weight:500;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold)}
+    .brand-lockup__rule{width:1px;height:30px;flex-shrink:0;background:linear-gradient(to bottom,transparent,rgba(146,112,58,.42) 18%,rgba(146,112,58,.42) 82%,transparent)}
+    .brand-lockup__founder{font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.06em;color:var(--muted);white-space:nowrap;padding-top:1px}
+    .nav{display:flex;align-items:center;gap:26px}
+    .nav a{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;color:rgba(11,22,48,0.78);padding:4px 0;border-bottom:1px solid transparent;transition:all .2s ease}
+    .nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+    .nav-cta{padding:11px 18px;border:1px solid var(--navy);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;color:var(--navy);transition:all .2s ease}
+    .nav-cta:hover{background:var(--navy);color:#fff}
+    .mobile-menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line-strong);background:transparent;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer}
+    .mobile-menu-toggle span{width:18px;height:2px;background:var(--navy);display:block}
+
+    .hero{padding:124px 0 92px 0;background:linear-gradient(180deg,#f3efe8 0%,#f1ede6 100%)}
+    .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center}
+    .hero h1{font-size:3rem;letter-spacing:-0.035em;max-width:760px;margin-bottom:20px}
+    .hero p{max-width:590px;font-size:1.02rem}
+    .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:48px;border:1px solid var(--navy);background:var(--navy);color:#fff;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;transition:all .2s ease}
+    .btn:hover{background:#111c34}
+    .btn-outline{background:transparent;color:var(--navy)}
+    .btn-outline:hover{background:transparent;border-color:var(--gold);color:var(--gold)}
+    .hero-visual{background:#e5ddd0;border:1px solid var(--line-strong);padding:18px}
+    .hero-visual img{aspect-ratio:4/5;object-fit:cover;width:100%;filter:saturate(0.85) contrast(1.02)}
+
+    .pillars{padding:26px 0 0 0}
+    .pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+    .pillar{padding:30px 26px;border-right:1px solid var(--line)}
+    .pillar:last-child{border-right:none}
+    .pillar strong{display:block;color:var(--navy);font-size:0.88rem;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:10px}
+    .pillar span{color:var(--muted);font-size:0.95rem}
+
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:30px;padding-bottom:18px;border-bottom:1px solid var(--line-strong)}
+    .section-head h2{font-size:2.3rem;margin-bottom:8px}
+    .section-head p{margin-bottom:0;max-width:560px}
+    .section-date{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--gold);font-weight:800;white-space:nowrap}
+
+    .market-wrap{background:linear-gradient(180deg,#091327 0%,#0b1630 100%);color:#fff}
+    .market-wrap h2{color:#fff}
+    .market-wrap p{color:rgba(255,255,255,0.74)}
+    .market-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,0.8fr);gap:28px;align-items:start}
+    .market-main{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);padding:38px;margin-bottom:28px}
+    .market-main h3{color:#fff;font-size:1.8rem;margin-bottom:14px}
+    .market-main p{font-size:0.98rem}
+    .market-subnote{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.12);font-size:0.88rem;color:rgba(255,255,255,0.64)}
+    .market-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
+    .market-card{background:linear-gradient(180deg,#f2ece1 0%,#ece3d5 100%);color:var(--text);border:1px solid rgba(143,107,52,0.22);border-left:2px solid var(--gold);padding:24px 22px;min-height:148px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.35)}
+    .market-card small{display:block;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;color:#6d7280;margin-bottom:10px;font-size:0.68rem}
+    .market-card strong{display:block;font-size:2.1rem;line-height:1;color:var(--navy);margin-bottom:10px;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
+    .market-card span{font-size:0.9rem;color:var(--muted);line-height:1.45;max-width:240px}
+
+    .signup-section{background:var(--surface);border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+    .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+    .signup-info h2{margin-bottom:14px;font-size:2rem}
+    .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+    .pill{padding:7px 13px;border:1px solid var(--line-strong);background:#fff;color:var(--text);font-weight:800;font-size:0.80rem;text-transform:uppercase;letter-spacing:0.10em}
+    .signup-form{background:#f3efe8;border:1px solid var(--line);padding:34px}
+    .signup-form h3{margin-bottom:10px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    input,select,textarea{width:100%;background:#fff;border:1px solid var(--line-strong);min-height:48px;padding:13px 14px;font:inherit;color:var(--text);margin-bottom:12px;outline:none;border-radius:0}
+    textarea{min-height:100px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+    .consent{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:0.92rem;margin:6px 0 16px 0}
+    .consent input{width:auto;min-height:auto;margin:4px 0 0 0}
+    .form-note{color:var(--muted);font-size:0.88rem;margin-top:10px}
+    .form-success{display:none;text-align:center;padding:20px 0}
+    .form-success.show{display:block}
+    .form-success h3{margin-bottom:10px;color:var(--navy)}
+
+    .capabilities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .capability{background:#efe8dc;border:1px solid var(--line);padding:32px;min-height:220px}
+    .capability h3{font-size:1.35rem;margin-bottom:12px}
+
+    .contact-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:24px;align-items:start}
+    .contact-box,.contact-form-box{background:#f3efe8;border:1px solid var(--line);padding:34px}
+    .contact-box h2,.contact-form-box h3{margin-bottom:12px}
+    .contact-meta-label{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.14em;font-weight:800;color:var(--navy);margin-top:18px;margin-bottom:6px}
+    .contact-box a{color:var(--gold);font-weight:700}
+
+    footer{padding:30px 0 38px;border-top:1px solid var(--line-strong);background:var(--bg)}
+    .footer-grid{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+    .footer-brand{font-family:var(--font-serif);color:var(--navy);font-size:1rem;margin-bottom:8px}
+    .footer-note{max-width:760px;font-size:0.82rem;color:var(--muted)}
+    .footer-links{display:flex;gap:16px;flex-wrap:wrap;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.12em;font-weight:800;color:rgba(11,22,48,0.76)}
+
+    @media (max-width:980px){
+      .hero-grid,.market-grid,.signup-grid,.contact-grid,.capabilities-grid,.pillars-grid{grid-template-columns:1fr}
+      .market-side{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero h1{font-size:2.35rem}
+      .section-head{align-items:start;flex-direction:column}
+      .nav{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line-strong);padding:14px 20px 18px;flex-direction:column;align-items:flex-start;gap:14px;z-index:1001}
+      .nav.nav-open{display:flex}
+      .nav a{font-size:0.78rem;padding:6px 0}
+      .mobile-menu-toggle{display:flex}
+    }
+    @media (max-width:640px){
+      .hero{padding:92px 0 72px}
+      .section{padding:74px 0}
+      .container{padding:0 20px}
+      .form-row,.market-side{grid-template-columns:1fr}
+      .market-card{min-height:132px;padding:22px 20px}
+      .market-card strong{font-size:1.9rem}
+      .hero h1{font-size:1.95rem}
+      .nav-cta{display:none}
+      .brand-lockup{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:10px;row-gap:1px;align-items:end}
+      .brand-lockup__mark{display:contents}
+      .brand-lockup__firm{grid-column:1;grid-row:1;font-size:0.95rem}
+      .brand-lockup__descriptor{grid-column:1;grid-row:2;font-size:0.5rem;letter-spacing:0.18em}
+      .brand-lockup__rule{display:none}
+      .brand-lockup__founder{grid-column:2;grid-row:1/3;align-self:center;font-size:0.58rem;letter-spacing:0.04em;line-height:1.25;padding-top:0;max-width:92px}
+    }
+    @media (max-width:380px){
+      .brand-lockup{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:2px}
+      .brand-lockup__founder{grid-column:1;grid-row:3;align-self:start;font-size:0.56rem;max-width:none;padding-top:1px}
+    }
+  </style>
+</head>
+<body data-page="relatorios">
+  <header>
+    <div class="container header-row">
+      <a class="brand-lockup" href="/" translate="no" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+        <span class="brand-lockup__mark">
+          <span class="brand-lockup__firm">Szuchmacher</span>
+          <span class="brand-lockup__descriptor">Consultoria</span>
+        </span>
+        <span class="brand-lockup__rule" aria-hidden="true"></span>
+        <span class="brand-lockup__founder">Yan Szuchmacher</span>
+      </a>
+      <button class="mobile-menu-toggle" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="siteNav" aria-label="Principal">
+        <a href="/">Home</a>
+        <a href="#fechamento">Fechamento</a>
+        <a href="#assinar">Assinar</a>
+
+        <a href="/#contato">Contato</a>
+      </nav>
+      <!-- ALTERADO 2026-06-01: paywall direto, deixou de ser gratuito -->
+      <a href="#assinar" class="nav-cta">Assinar</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Fechamento de mercado • Diário 19h BRT</span>
+            <h1>Fechamento de mercado.</h1>
+            <p>Leitura executiva dos principais movimentos de mercado, com drivers, posicionamento e implicações diretas para risco, liquidez e alocação em portfólios qualificados.</p>
+            <div class="hero-actions">
+              <a href="#assinar" class="btn" data-ga="cta_report_subscribe" data-ga-location="hero">Assinar</a>
+              <a href="/#contato" class="btn btn-outline" data-ga="cta_diagnostico" data-ga-location="hero_relatorios">Agendar análise</a>
+            </div>
+          </div>
+          <aside class="hero-visual" aria-label="Formato do relatório" style="background:var(--navy);color:#fff;padding:32px;border:1px solid rgba(255,255,255,0.08)">
+            <p style="font-family:var(--font-serif);font-size:1.2rem;margin-bottom:6px;color:#fff">Fechamento de Mercado</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#d4b87a;margin-bottom:18px">Edição semanal · assinantes</p>
+            <hr style="border:none;height:1px;background:rgba(212,184,122,0.35);margin-bottom:18px" />
+            <ul style="list-style:none;padding:0;margin:0;font-size:0.9rem;color:rgba(255,255,255,0.82);line-height:1.7">
+              <li style="margin-bottom:10px"><span style="font-family:var(--font-mono);font-size:0.58rem;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px">CAMADA 1</span>Registro objetivo do que se moveu</li>
+              <li style="margin-bottom:10px"><span style="font-family:var(--font-mono);font-size:0.58rem;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px">CAMADA 2</span>Leitura de causa e contexto</li>
+              <li><span style="font-family:var(--font-mono);font-size:0.58rem;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px">CAMADA 3</span>Implicação para alocação</li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="pillars">
+          <div class="pillars-grid">
+            <div class="pillar">
+              <strong>Brasil e exterior</strong>
+              <span>Juros, câmbio, equities e commodities com leitura integrada de fluxo global.</span>
+            </div>
+            <div class="pillar">
+              <strong>Drivers e contexto</strong>
+              <span>Análise dos vetores que moveram preços e o que monitorar no pregão seguinte.</span>
+            </div>
+            <div class="pillar">
+              <strong>Implicações práticas</strong>
+              <span>Leitura orientada a decisões de risco, liquidez e posicionamento patrimonial.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fechamento" class="section market-wrap">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow" id="relEyebrow">Fechamento da semana</span>
+            <h2 id="relH2">Leitura semanal dos vetores que movem preços</h2>
+            <p>Recorte executivo com drivers, posicionamento e implicações para risco, liquidez e portfólios qualificados.</p>
+          </div>
+          <div class="section-date" id="relDateMain">Fechamento · semana encerrada em 19 jun 2026</div>
+        </div>
+
+        <div class="market-grid">
+          <article class="market-main">
+            <h3 id="relHeadline">COPOM mantém Selic em 14,25% e FOMC surpreende com dot plot hawkish; real recua a R$ 5,16 pressionado pelo Fed — Ibovespa fecha semana com baixa de 1,56% e petróleo cede para US$ 77</h3>
+            <p id="relPara1">O Ibovespa encerrou a sexta-feira, 19 de junho, em 168.334 pontos, com recuo de 1,56% na semana — período dominado pelas decisões simultâneas do COPOM e do FOMC, ambas em 17 de junho. O Banco Central do Brasil manteve a Selic em 14,25% a.a., em linha com o consenso de mercado, com comunicado que reafirmou vigilância sobre o IPCA projetado acima do teto da meta (5,3% para 2026). A ausência de surpresa doméstica, porém, não blindou o real: o dólar fechou em R$ 5,1643, depreciação de 2,0% em relação ao fechamento da semana anterior (R$ 5,0626 em 12/jun), pressionado pela postura hawkish do Fed e pela aversão generalizada a emergentes no pós-FOMC. Os mercados americanos permaneceram fechados na sexta-feira pelo feriado de Juneteenth, encerrando a semana americana em quatro pregões.</p>
+            <p id="relPara2">Nos Estados Unidos, o FOMC manteve os Fed Funds inalterados em 17 de junho, mas o dot plot frustrou as expectativas do mercado: o comitê projetou apenas um corte de 25 bps até o fim de 2026, contra dois cortes precificados antes da reunião. O resultado fortaleceu o dólar globalmente e penalizou moedas de mercados emergentes, incluindo o real. O S&P 500 avançou 0,93% na semana truncada pelo Juneteenth, para 7.500 pontos, sustentado por rotação para setores defensivos e de valor. No petróleo, o WTI recuou para a faixa de US$ 77/barril — queda de aproximadamente 4,6% na semana — à medida que o acordo de paz interino entre EUA e Irã avançou para implementação, eliminando o prêmio geopolítico que havia sustentado os preços de energia nas semanas anteriores.</p>
+            <p id="relPara3"><strong>Highlights da semana.</strong> A dinâmica foi de dupla compressão para ativos brasileiros: o FOMC reafirmou que os juros americanos permanecem elevados por mais tempo (dot plot hawkish), apertando o diferencial de juros e pressionando o real de R$ 5,06 para R$ 5,16 em apenas dois dias; e a queda do petróleo para US$ 77 impactou negativamente o segmento de óleo e gás, que pesou sobre o Ibovespa. O COPOM foi neutro — em linha com o esperado — sem reverter a pressão externa. Para ativos domésticos, a semana encerrou o ciclo de decisões de bancos centrais de junho sem nenhum catalisador positivo: o foco agora migra integralmente para o IPCA-15 de junho (25/jun) e o PCE americano de maio (26/jun) como calibradores do regime de juros para julho.</p>
+
+            <div class="market-subnote" id="relSubnoteErrar">
+              <strong>O que poderia nos fazer errar.</strong> IPCA-15 de junho (25/jun) acima do consenso consolidaria a narrativa de pausa longa do COPOM e poderia pressionar ainda mais o real além de R$ 5,20. PCE americano de maio (26/jun) abaixo do esperado reabriria o trade de afrouxamento do Fed e beneficiaria emergentes, aliviando o câmbio. Reescalonamento das tensões entre EUA e Irã reverteria a queda do petróleo abruptamente e reintroduziria prêmio inflacionário global, complicando a trajetória de ambos os bancos centrais.
+            </div>
+
+            <div class="market-subnote" id="relSubnoteProxSemana">
+              <strong>Na próxima semana.</strong> Segunda (22/jun), Boletim Focus — primeira leitura de mercado pós-COPOM e pós-FOMC, com atualização das medianas de Selic, IPCA 2026, câmbio e PIB. Quarta (24/jun), Confiança do Consumidor dos EUA (Conference Board). Quinta (25/jun), IPCA-15 de junho pelo IBGE — dado doméstico mais aguardado da semana — além do GDP Q1 final e dos pedidos semanais de desemprego nos EUA. Sexta (26/jun), PCE de maio nos EUA — o indicador de inflação preferido do Fed e o dado mais importante da semana para o pricing do FOMC de julho.
+            </div>
+
+            <div class="hero-actions">
+              <a href="#assinar" class="btn" data-ga="cta_report_subscribe" data-ga-location="fechamento">Assinar para receber</a>
+              <a href="./Fechamento de Mercado 01.04.26.pdf" target="_blank" rel="noopener" class="btn btn-outline" data-ga="report_download" data-ga-file="fechamento_amostra">Baixar PDF de amostra</a>
+            </div>
+
+            <div class="market-subnote" id="relSubnoteFonte">Fontes operacionais e de referência. Relatório interno Szuchmacher Consultoria com dados consolidados de Reuters, Bloomberg, Banco Central do Brasil, B3, Federal Reserve, BLS, InfoMoney e CNBC, semana encerrada em 19 de junho de 2026. Onde a fonte primária não confirmou a variação semanal com precisão suficiente, o dado foi suprimido na peça pública.</div>
+          </article>
+
+          <aside class="market-side">
+            <div class="market-card" id="cardIbovespa">
+              <small>Ibovespa</small>
+              <strong>168.334</strong>
+              <span>Semana · -1,56%</span>
+            </div>
+            <div class="market-card" id="cardDolar">
+              <small>Dólar (PTAX)</small>
+              <strong>R$ 5,1643</strong>
+              <span>Semana · +2,0% · dot plot hawkish</span>
+            </div>
+            <div class="market-card" id="cardSP500">
+              <small>S&P 500</small>
+              <strong>7.500</strong>
+              <span>Semana · +0,93% (4 pregões · Juneteenth)</span>
+            </div>
+            <div class="market-card" id="cardWTI">
+              <small>WTI</small>
+              <strong>US$ 77,00</strong>
+              <span>Semana · -4,6% · acordo EUA-Irã</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="assinar" class="section signup-section">
+      <div class="container">
+        <div class="signup-grid">
+          <div class="signup-info">
+            <span class="eyebrow">Assinatura</span>
+            <h2>Receba o relatório de fechamento diretamente.</h2>
+            <p>20 anos de experiência em gestão patrimonial e advisory internacional. Acompanhamento macro com leitura de tesouraria e risco de portfólios multimercado.</p>
+            <div class="pill-row">
+              <span class="pill">Brasil e exterior</span>
+              <span class="pill">Juros e FX</span>
+              <span class="pill">Risco e liquidez</span>
+              <span class="pill">Governança</span>
+            </div>
+            <p>Publicação semanal. Não constitui recomendação de investimento.</p>
+          </div>
+
+          <!-- ALTERADO 2026-06-01: paywall direto. Form gratuito (Formspree) removido;
+               CTA agora leva aos planos pagos em assinatura.html (checkout Stripe). -->
+          <div class="signup-form">
+            <h3>Assine a Carta Szuchmacher</h3>
+            <p>Research autoral por assinatura. Cobrança anual, no cartão, cancele quando quiser.</p>
+            <ul style="list-style:none;padding:0;margin:18px 0;">
+              <li style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0;border-bottom:1px solid rgba(11,22,48,0.12);">
+                <span>Carta — research por e-mail</span><strong style="white-space:nowrap;color:var(--gold);">A consultar</strong>
+              </li>
+              <li style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0;">
+                <span>MultiAsset Pro — research + plataforma</span><strong style="white-space:nowrap;color:var(--gold);">A consultar</strong>
+              </li>
+            </ul>
+            <a href="assinatura.html" class="btn" style="width:100%" data-ga="cta_report_subscribe" data-ga-location="planos">Ver planos e assinar</a>
+            <div class="form-note">Análise impessoal (CNPI · CVM 20/2021). Não constitui recomendação individualizada.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Capacidades</span>
+            <h2>Estrutura para patrimônio de maior complexidade</h2>
+            <p>Uma abordagem menos orientada a produto e mais a desenho patrimonial, processo decisório e preservação de opcionalidade.</p>
+          </div>
+        </div>
+        <div class="capabilities-grid">
+          <div class="capability">
+            <h3>Diagnóstico patrimonial</h3>
+            <p>Mapeamento consolidado de ativos, passivos, liquidez, concentração, risco cambial e estrutura de custódia para reduzir pontos cegos de portfólio.</p>
+          </div>
+          <div class="capability">
+            <h3>Arquitetura de alocação</h3>
+            <p>Construção de política patrimonial alinhada a horizonte de capital, regime macro, jurisdição, fluxo de caixa e tolerância real a drawdown.</p>
+          </div>
+          <div class="capability">
+            <h3>Monitoramento executivo</h3>
+            <p>Leitura contínua de mercados, revisão de risco e comunicação objetiva para apoiar decisões com disciplina e contexto global.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-box">
+            <span class="eyebrow">Contato</span>
+            <h2>Uma conversa objetiva sobre risco, liquidez e estrutura patrimonial</h2>
+            <p>Contato inicial para entender contexto, grau de complexidade e prioridades patrimoniais, com foco em clareza e encaminhamento executivo.</p>
+            <span class="contact-meta-label">WhatsApp</span>
+            <p><a href="https://wa.me/5521981088992" target="_blank" rel="noopener" data-ga="whatsapp_click" data-ga-location="contato_relatorios">+55 21 98108 8992</a></p>
+            <span class="contact-meta-label">E-mail</span>
+            <p><a id="contact-email-link" style="color:var(--gold);font-weight:700;"></a></p>
+          </div>
+
+          <form id="contactForm" class="contact-form-box" method="POST" action="" data-formspree="1" data-form="contato">
+            <h3>Solicitar contato</h3>
+            <p>Preencha os dados abaixo para qualificação inicial.</p>
+            <div class="form-row">
+              <input type="text" name="nome" placeholder="Nome completo" required />
+              <input type="email" name="email" placeholder="E-mail" required />
+            </div>
+            <div class="form-row">
+              <input type="tel" name="telefone" placeholder="WhatsApp" required />
+              <select name="perfil" required>
+                <option value="" disabled selected>Perfil</option>
+                <option value="empresario">Empresário</option>
+                <option value="executivo">Executivo</option>
+                <option value="familia">Família ou holding</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <select name="patrimonio" required>
+                <option value="" disabled selected>Faixa patrimonial</option>
+                <option value="1-3">R$ 1M a R$ 3M</option>
+                <option value="3-10">R$ 3M a R$ 10M</option>
+                <option value="10-30">R$ 10M a R$ 30M</option>
+                <option value="30+">Acima de R$ 30M</option>
+              </select>
+              <select name="objetivo" required>
+                <option value="" disabled selected>Objetivo principal</option>
+                <option value="governanca">Governança patrimonial</option>
+                <option value="liquidez">Liquidez e estrutura</option>
+                <option value="alocacao">Alocação global</option>
+                <option value="risco">Revisão de risco</option>
+              </select>
+            </div>
+            <textarea name="mensagem" placeholder="Breve contexto patrimonial, estruturas atuais e objetivo principal." required></textarea>
+            <label class="consent">
+              <input type="checkbox" name="consentimento" required />
+              <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">política de privacidade</a>.</span>
+            </label>
+            <input type="hidden" name="_subject" value="Nova solicitação — Contato via relatorios.html" />
+            <input type="hidden" name="_origem" value="relatorios.html#contato" />
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+            <button type="submit" class="btn" style="width:100%" data-ga="cta_contato" data-ga-location="form_contato_relatorios">Solicitar contato</button>
+            <div class="form-note">Retorno em até 24 horas úteis.</div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <a class="brand-lockup" href="/" translate="no" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+              <span class="brand-lockup__mark">
+                <span class="brand-lockup__firm">Szuchmacher</span>
+                <span class="brand-lockup__descriptor">Consultoria</span>
+              </span>
+              <span class="brand-lockup__rule" aria-hidden="true"></span>
+              <span class="brand-lockup__founder">Yan Szuchmacher</span>
+            </a>
+          </div>
+          <div class="footer-note">Advisory patrimonial independente. Este material possui caráter meramente informativo e institucional. Não constitui oferta, solicitação ou recomendação de investimento nos termos da Resolução CVM nº 20/2021. Rentabilidade passada não representa garantia de resultados futuros.</div>
+        </div>
+        <div class="footer-links">
+          <a href="/">Home</a>
+
+          <a href="/privacidade.html">Privacidade</a>
+          <a href="/#contato">Contato</a>
+        </div>
+      </div>
+      <p style="margin-top:18px;font-size:0.76rem;color:var(--muted);">© 2026 Szuchmacher Consultoria. Todos os direitos reservados. Rio de Janeiro, Brasil · CVM nº 20/2021</p>
+    </div>
+  </footer>
+
+  <script>
+  /* ── Carregamento dinâmico do relatório ──────────────────────────────────────
+   * Busca /relatorio_cache.json (gerado pelo cron_relatorio.php às 19:00 BRT)
+   * e popula os elementos marcados com id="rel*" e id="card*".
+   * Em caso de falha, o conteúdo estático do HTML permanece visível.
+   * ────────────────────────────────────────────────────────────────────────── */
+  (function () {
+    'use strict';
+
+    function setText(id, value) {
+      if (!value) return;
+      var el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function setHTML(id, html) {
+      if (!html) return;
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    }
+
+    function setCard(id, value, label) {
+      var card = document.getElementById(id);
+      if (!card) return;
+      var strong = card.querySelector('strong');
+      var span   = card.querySelector('span');
+      if (strong && value) strong.textContent = value;
+      if (span   && label) span.textContent   = label;
+    }
+
+    function applyReport(data) {
+      setText('relDateMain', data.date_label);
+      setText('relEyebrow',  data.eyebrow);
+      setText('relH2',       data.h2);
+
+      var r = data.report || {};
+      setText('relHeadline', r.headline);
+      setText('relPara1',    r.paragraph1);
+      setText('relPara2',    r.paragraph2);
+      setText('relPara3',    r.paragraph3);
+
+      if (r.what_could_go_wrong) {
+        setHTML('relSubnoteErrar',
+          '<strong>O que poderia nos fazer errar.</strong> ' + r.what_could_go_wrong);
+      }
+      if (r.next_week) {
+        setHTML('relSubnoteProxSemana',
+          '<strong>Na próxima semana.</strong> ' + r.next_week);
+      }
+      setText('relSubnoteFonte', r.source_note);
+
+      var p = data.prices || {};
+      if (p.ibovespa && p.ibovespa.value)
+        setCard('cardIbovespa', p.ibovespa.value, p.ibovespa.label);
+      if (p.usd_brl && p.usd_brl.value)
+        setCard('cardDolar', 'R$ ' + p.usd_brl.value, p.usd_brl.label);
+      if (p.sp500 && p.sp500.value)
+        setCard('cardSP500', p.sp500.value, p.sp500.label);
+      if (p.wti && p.wti.value)
+        setCard('cardWTI', 'US$ ' + p.wti.value, p.wti.label);
+    }
+
+    function fmtBR(num, dec) {
+      return num.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    }
+
+    function fetchLiveMarketPrices() {
+      fetch('/relatorio-prices.php', { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function (d) {
+          if (!d.ok) return;
+          if (d.ibovespa) setCard('cardIbovespa', fmtBR(d.ibovespa, 0),          'Cotação atual');
+          if (d.usd_brl)  setCard('cardDolar',    'R$ '  + fmtBR(d.usd_brl, 4), 'Cotação atual');
+          if (d.sp500)    setCard('cardSP500',     fmtBR(d.sp500, 2),             'Cotação atual');
+          if (d.wti)      setCard('cardWTI',       'US$ ' + fmtBR(d.wti, 2),     'Cotação atual');
+        })
+        .catch(function () { /* silencioso — fallback JSON permanece */ });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('/relatorio_cache.json?v=' + Date.now(), { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(applyReport)
+        .then(function () { fetchLiveMarketPrices(); })
+        .catch(function (err) {
+          console.warn('[Relatorio] Usando conteudo estatico:', err.message);
+        });
+    });
+  }());
+  </script>
+
+  <script src="/assets/sz-site.js?v=20260617" defer></script>
+  <script>
+    var el = document.getElementById('contact-email-link');
+    if (el) {
+      var e = 'yan' + '@' + 'szuchmacher.com.br';
+      el.href = 'mailto:' + e;
+      el.textContent = e;
+    }
+  </script>
+</body>
+</html>

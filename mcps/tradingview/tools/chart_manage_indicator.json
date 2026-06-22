@@ -1,0 +1,34 @@
+{
+  "name": "chart_manage_indicator",
+  "description": "Add or remove an indicator/study on the chart",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": [
+          "add",
+          "remove"
+        ],
+        "description": "Action: add or remove"
+      },
+      "indicator": {
+        "type": "string",
+        "description": "Full indicator name: \"Relative Strength Index\", \"MACD\", \"Volume\", \"Moving Average\", \"Bollinger Bands\", \"Moving Average Exponential\". Short names like RSI/EMA do NOT work."
+      },
+      "entity_id": {
+        "description": "Entity ID to remove (from chart_get_state). Required for remove.",
+        "type": "string"
+      },
+      "inputs": {
+        "description": "JSON string of input overrides for the indicator (e.g., '{\"length\": 20}')",
+        "type": "string"
+      }
+    },
+    "required": [
+      "action",
+      "indicator"
+    ]
+  }
+}

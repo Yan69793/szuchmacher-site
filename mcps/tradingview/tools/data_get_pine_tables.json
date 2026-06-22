@@ -1,0 +1,14 @@
+{
+  "name": "data_get_pine_tables",
+  "description": "Read table data drawn by Pine Script indicators (table.new). Returns formatted text rows per table. Use study_filter to target a specific indicator.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "study_filter": {
+        "description": "Substring to match study name. Omit for all.",
+        "type": "string"
+      }
+    }
+  }
+}

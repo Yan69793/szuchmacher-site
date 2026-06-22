@@ -1,0 +1,9 @@
+{
+  "name": "layout_list",
+  "description": "List saved chart layouts",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

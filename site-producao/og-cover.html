@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Prata&family=Public+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      font-family: 'Public Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .canvas {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse 55% 80% at 8% 50%, rgba(212, 184, 122, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 42% 60% at 92% 18%, rgba(146, 112, 58, 0.11) 0%, transparent 62%),
+        linear-gradient(148deg, #070f1f 0%, #0a1428 38%, #101c32 72%, #0a1428 100%);
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      align-items: center;
+      padding: 72px 88px 72px 96px;
+      gap: 48px;
+    }
+
+    /* grain sutil */
+    .canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+    }
+
+    .rule-v {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, transparent 0%, #c9a96a 18%, #92703a 50%, #c9a96a 82%, transparent 100%);
+    }
+
+    .rule-h {
+      position: absolute;
+      left: 96px;
+      right: 88px;
+      bottom: 56px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(201, 169, 106, 0.55) 0%, rgba(201, 169, 106, 0.12) 42%, transparent 100%);
+    }
+
+    .corner {
+      position: absolute;
+      top: 48px;
+      right: 72px;
+      width: 88px;
+      height: 88px;
+      border-top: 1px solid rgba(201, 169, 106, 0.35);
+      border-right: 1px solid rgba(201, 169, 106, 0.35);
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    .eyebrow span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #c9a96a;
+      white-space: nowrap;
+    }
+
+    .eyebrow::after {
+      content: '';
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(201, 169, 106, 0.7), transparent);
+    }
+
+    h1 {
+      font-family: 'Prata', 'Cormorant Garamond', Georgia, serif;
+      font-size: 62px;
+      font-weight: 400;
+      line-height: 1.04;
+      letter-spacing: -0.01em;
+      color: #faf8f4;
+      margin-bottom: 10px;
+    }
+
+    h1 em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #e8dcc8;
+      font-size: 0.92em;
+    }
+
+    .founder {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      color: rgba(250, 248, 244, 0.82);
+      margin-bottom: 28px;
+    }
+
+    .sub {
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      color: rgba(250, 248, 244, 0.48);
+      max-width: 520px;
+    }
+
+    .footer {
+      position: absolute;
+      left: 96px;
+      bottom: 36px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer .mark {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c9a96a;
+      box-shadow: 0 0 12px rgba(201, 169, 106, 0.45);
+    }
+
+    .footer .url {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(201, 169, 106, 0.88);
+    }
+
+    .emblem {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .emblem-ring {
+      position: relative;
+      width: 248px;
+      height: 248px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .emblem-ring::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 169, 106, 0.22);
+    }
+
+    .emblem-ring::after {
+      content: '';
+      position: absolute;
+      inset: -28px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 169, 106, 0.08);
+    }
+
+    .emblem img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.45));
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="rule-v" aria-hidden="true"></div>
+    <div class="rule-h" aria-hidden="true"></div>
+    <div class="corner" aria-hidden="true"></div>
+
+    <div class="content">
+      <div class="eyebrow">
+        <span>Wealth Advisory</span>
+      </div>
+      <h1>Szuchmacher<br /><em>Consultoria</em></h1>
+      <p class="founder">Yan Szuchmacher</p>
+      <p class="sub">Advisory patrimonial independente para famílias e executivos de alta renda.</p>
+    </div>
+
+    <div class="emblem">
+      <div class="emblem-ring">
+        <img src="logo.png" alt="" width="200" height="200" />
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="url">szuchmacher.com.br</span>
+    </div>
+  </div>
+</body>
+</html>

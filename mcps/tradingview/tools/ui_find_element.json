@@ -1,0 +1,26 @@
+{
+  "name": "ui_find_element",
+  "description": "Find UI elements by text, aria-label, or CSS selector and return their positions",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Text content, aria-label value, or CSS selector to search for"
+      },
+      "strategy": {
+        "description": "Search strategy (default: text)",
+        "type": "string",
+        "enum": [
+          "text",
+          "aria-label",
+          "css"
+        ]
+      }
+    },
+    "required": [
+      "query"
+    ]
+  }
+}

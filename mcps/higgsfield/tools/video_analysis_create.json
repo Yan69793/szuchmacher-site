@@ -1,0 +1,21 @@
+{
+  "name": "video_analysis_create",
+  "description": "Start a scene-by-scene analysis of a video. Provide EXACTLY ONE of: (a) video_input_id — UUID of a video the user has uploaded via media_upload/media_confirm, or (b) youtube_url — a YouTube link (youtube.com / youtu.be hosts only). Returns immediately with status='queued'; poll video_analysis_status until status='completed'. Processing typically takes 3-5 minutes on average. IMPORTANT: warn the user up front that the longer the video, the less accurate the scene-by-scene analysis becomes — short clips give the most reliable results.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "video_input_id": {
+        "description": "UUID of the uploaded source video (the media_id returned by media_upload/media_confirm). Use this when the user has uploaded a local video. Mutually exclusive with youtube_url.",
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      "youtube_url": {
+        "description": "YouTube video URL (youtube.com, www.youtube.com, m.youtube.com, or youtu.be). Use this when the user provides a YouTube link instead of uploading a file. Mutually exclusive with video_input_id.",
+        "type": "string",
+        "format": "uri"
+      }
+    }
+  }
+}

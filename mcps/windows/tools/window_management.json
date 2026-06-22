@@ -1,0 +1,154 @@
+{
+  "name": "window_management",
+  "description": "Manage existing Windows app windows. Prefer this tool over powershell or shell commands when the user asks to find windows, check which window is foreground, activate or bring a window to front, move/resize/minimize/restore, or close application windows. Supports: list, find, activate, minimize, maximize, restore, close, move, resize, and more.\nTo launch apps, use the app tool. This tool manages windows AFTER they exist. For \"close all\" requests, first use find/list to get every matching window handle, then call close once per handle. Some apps, including modern Notepad, can have multiple tabs/windows in one process; closing one handle may leave another visible window behind. CLOSE WITHOUT SAVING: Use close action with discardChanges=true to automatically dismiss 'Save?' dialogs. NOTE: discardChanges only works on English Windows (looks for 'Don't Save' button text). Example: window_management(action='close', handle='123', discardChanges=true) Use move_to_monitor to move a window to a specific monitor: - Use target='primary_screen' or target='secondary_screen' for easy targeting - Use monitorIndex for 3+ monitor setups (use screenshot_control action='list_monitors' to find indices)\nReturns: The result of the window operation including success status and window information.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "description": "The window action to perform: list, find, activate, get_foreground, get_state, wait_for_state, minimize, maximize, restore, close, move, resize, set_bounds, wait_for, move_to_monitor, move_and_activate, or ensure_visible.",
+        "type": "string",
+        "enum": [
+          "list",
+          "find",
+          "activate",
+          "get_foreground",
+          "minimize",
+          "maximize",
+          "restore",
+          "close",
+          "move",
+          "resize",
+          "set_bounds",
+          "wait_for",
+          "move_to_monitor",
+          "get_state",
+          "wait_for_state",
+          "move_and_activate",
+          "ensure_visible"
+        ]
+      },
+      "handle": {
+        "description": "Window handle for actions that target a specific window. Get the handle from the list or find action.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "title": {
+        "description": "Window title to search for (for find and wait_for). Uses substring match unless regex=true.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "processName": {
+        "description": "Process name to search for (for find action). More reliable than title - matches 'Notepad', 'chrome', etc. Case-insensitive.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "filter": {
+        "description": "Filter windows by title or process name (for list action).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "regex": {
+        "description": "Use regex matching for title/filter (default: false).",
+        "type": "boolean",
+        "default": false
+      },
+      "includeAllDesktops": {
+        "description": "Include windows on other virtual desktops (default: false).",
+        "type": "boolean",
+        "default": false
+      },
+      "x": {
+        "description": "X-coordinate for move or set_bounds action.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "y": {
+        "description": "Y-coordinate for move or set_bounds action.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "width": {
+        "description": "Width for resize or set_bounds action.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "height": {
+        "description": "Height for resize or set_bounds action.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "timeoutMs": {
+        "description": "Timeout in milliseconds for wait_for and wait_for_state actions (default: 5000).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "target": {
+        "description": "Monitor target for move_to_monitor action: 'primary_screen' (main display), 'secondary_screen' (other monitor in 2-monitor setups).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "monitorIndex": {
+        "description": "Target monitor index for move_to_monitor action (0-based). Alternative to target for 3+ monitor setups.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "state": {
+        "description": "Target window state for wait_for_state action: 'normal', 'minimized', 'maximized', or 'hidden'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "excludeTitle": {
+        "description": "Window title to exclude from list results (for list action).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "discardChanges": {
+        "description": "For close action: if true, automatically dismisses 'Save?' dialogs by clicking 'Don't Save'. Only works on English Windows. Default: false.",
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": [
+      "action"
+    ]
+  }
+}

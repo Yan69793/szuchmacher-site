@@ -1,0 +1,9 @@
+{
+  "name": "chart_get_state",
+  "description": "Get current chart state (symbol, timeframe, chart type, indicators)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

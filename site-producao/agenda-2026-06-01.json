@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "version": "2026-05-30",
+    "curator": "Szuchmacher Consultoria",
+    "fontes_primarias": [
+      "BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)",
+      "IBGE — Calendário de divulgações (ibge.gov.br/calendario/mensal.html)",
+      "BLS — US economic release schedule (bls.gov/schedule)",
+      "ISM — Report On Business calendar (ismworld.org)",
+      "S&P Global PMI — Release calendar (pmi.spglobal.com)",
+      "Census Bureau / DoL — official release schedules"
+    ],
+    "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado. Cada item traz fonte primária.",
+    "disciplina_en": "Scheduled releases from official sources. No result anticipation. Each item cites its primary source.",
+    "idiomas": ["pt-BR", "en"]
+  },
+  "gerado": "2026-05-30T09:00:00-03:00",
+  "janela": { "inicio": "2026-05-30", "fim": "2026-06-06" },
+  "eventos": [
+    {
+      "data": "2026-06-01",
+      "hora_brt": "08:25",
+      "regiao": "BR",
+      "evento": "Boletim Focus",
+      "evento_en": "Focus Market Report",
+      "descricao": "Mediana e dispersão das expectativas de mercado para Selic, IPCA, câmbio e PIB. Primeira leitura semanal após a desescalada no Oriente Médio e o recuo do Brent.",
+      "descricao_en": "Median and dispersion of market expectations for the Selic rate, IPCA, FX and GDP. First weekly read following the Middle East de-escalation and the pullback in Brent.",
+      "fonte": "BCB",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-06-01",
+      "hora_brt": "10:00",
+      "regiao": "BR",
+      "evento": "PMI Indústria — S&P Global (maio)",
+      "evento_en": "S&P Global Manufacturing PMI (May)",
+      "descricao": "Atividade da indústria de transformação brasileira. Leitura antecipada de produção, novos pedidos e pressão de custos antes dos dados oficiais do IBGE.",
+      "descricao_en": "Brazilian manufacturing activity. Early read on output, new orders and cost pressures ahead of official IBGE data.",
+      "fonte": "S&P Global",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-01",
+      "hora_brt": "11:00",
+      "regiao": "US",
+      "evento": "ISM Manufacturing PMI (maio)",
+      "evento_en": "ISM Manufacturing PMI (May)",
+      "descricao": "Atividade industrial dos EUA. Componentes de preços pagos e emprego acompanhados pelo Fed na função de reação antes da reunião de 16–17/jun.",
+      "descricao_en": "US factory activity. Prices-paid and employment components watched by the Fed in its reaction function ahead of the June 16–17 meeting.",
+      "fonte": "ISM",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-02",
+      "hora_brt": "11:00",
+      "regiao": "US",
+      "evento": "JOLTS — Vagas de emprego (abril)",
+      "evento_en": "JOLTS — Job Openings (April)",
+      "descricao": "Pesquisa de abertura e rotatividade de vagas. Defasagem de dois meses; leitura do grau de aperto do mercado de trabalho americano.",
+      "descricao_en": "Job Openings and Labor Turnover Survey. Two-month lag; gauge of how tight the US labor market remains.",
+      "fonte": "BLS",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-03",
+      "hora_brt": "09:15",
+      "regiao": "US",
+      "evento": "ADP — Emprego privado (maio)",
+      "evento_en": "ADP — Private Employment (May)",
+      "descricao": "Variação do emprego privado não-agrícola. Prévia não-oficial do payroll de sexta-feira, com correlação imperfeita.",
+      "descricao_en": "Change in private nonfarm payrolls. Unofficial preview of Friday's jobs report, with imperfect correlation.",
+      "fonte": "ADP",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-03",
+      "hora_brt": "10:00",
+      "regiao": "BR",
+      "evento": "PMI Serviços e Composto — S&P Global (maio)",
+      "evento_en": "S&P Global Services & Composite PMI (May)",
+      "descricao": "Setor de serviços e índice composto do Brasil. Termômetro de demanda interna em ambiente de Selic ainda restritiva (14,50%).",
+      "descricao_en": "Brazil services and composite index. Gauge of domestic demand with the Selic rate still restrictive (14.50%).",
+      "fonte": "S&P Global",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-03",
+      "hora_brt": "11:00",
+      "regiao": "US",
+      "evento": "ISM Services PMI (maio)",
+      "evento_en": "ISM Services PMI (May)",
+      "descricao": "Setor de serviços, cerca de 70% do PIB dos EUA. O componente de preços é foco central no debate sobre inflação persistente.",
+      "descricao_en": "Services sector, roughly 70% of US GDP. The prices component is central to the sticky-inflation debate.",
+      "fonte": "ISM",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-06-04",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Initial Jobless Claims",
+      "evento_en": "Initial Jobless Claims",
+      "descricao": "Pedidos semanais de seguro-desemprego. Indicador de alta frequência para o estado do mercado de trabalho americano.",
+      "descricao_en": "Weekly initial unemployment insurance claims. High-frequency indicator of the state of the US labor market.",
+      "fonte": "DoL",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-06-05",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Nonfarm Payrolls — Employment Situation (maio)",
+      "evento_en": "Nonfarm Payrolls — Employment Situation (May)",
+      "descricao": "Relatório de emprego dos EUA. Driver dominante de Treasuries, dólar e do pricing de cortes do Fed antes da reunião de 16–17 de junho. Cabeçalho, taxa de desemprego e ganhos por hora divulgados simultaneamente.",
+      "descricao_en": "US jobs report. Dominant driver of Treasuries, the dollar and Fed cut pricing ahead of the June 16–17 meeting. Headline, unemployment rate and average hourly earnings released simultaneously.",
+      "fonte": "BLS",
+      "relevancia": "alta"
+    }
+  ]
+}

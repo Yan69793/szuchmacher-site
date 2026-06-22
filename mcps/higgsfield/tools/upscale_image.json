@@ -1,0 +1,64 @@
+{
+  "name": "upscale_image",
+  "description": "Upscale and enhance an existing image. Use this when the user asks to upscale, enhance, or increase the resolution of an image to 2K/4K. This tool does not use prompt or count. Provider selects the upscale backend; currently only 'bytedance' is supported (the default). You MUST pass the source image's width and height in pixels (the caller supplies them; the server does not infer them). Set params.get_cost=true to preflight credits (flat cost) without submitting a job.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "default": "bytedance",
+            "description": "Upscale provider. Currently only 'bytedance' is supported.",
+            "type": "string",
+            "enum": [
+              "bytedance"
+            ]
+          },
+          "image_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Source image UUID. Confirmed uploaded image media_id or completed image job_id."
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Source image width in pixels."
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Source image height in pixels."
+          },
+          "resolution": {
+            "default": "4k",
+            "description": "Target output resolution. Use 4k for the largest upscale.",
+            "type": "string",
+            "enum": [
+              "2k",
+              "4k"
+            ]
+          },
+          "get_cost": {
+            "description": "If true, return the cost in credits for this upscale without submitting any job.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "image_id",
+          "width",
+          "height"
+        ],
+        "additionalProperties": false,
+        "description": "Image upscale parameters. prompt and count are not supported."
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

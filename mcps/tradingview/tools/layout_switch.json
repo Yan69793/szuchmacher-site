@@ -1,0 +1,17 @@
+{
+  "name": "layout_switch",
+  "description": "Switch to a saved chart layout by name or ID",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Name or ID of the layout to switch to"
+      }
+    },
+    "required": [
+      "name"
+    ]
+  }
+}

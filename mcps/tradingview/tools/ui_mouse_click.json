@@ -1,0 +1,35 @@
+{
+  "name": "ui_mouse_click",
+  "description": "Click at specific x,y coordinates on the TradingView window",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "x": {
+        "type": "number",
+        "description": "X coordinate (pixels from left)"
+      },
+      "y": {
+        "type": "number",
+        "description": "Y coordinate (pixels from top)"
+      },
+      "button": {
+        "description": "Mouse button (default left)",
+        "type": "string",
+        "enum": [
+          "left",
+          "right",
+          "middle"
+        ]
+      },
+      "double_click": {
+        "description": "Double click (default false)",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "x",
+      "y"
+    ]
+  }
+}

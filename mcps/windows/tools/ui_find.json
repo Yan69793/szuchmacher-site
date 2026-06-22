@@ -1,0 +1,113 @@
+{
+  "name": "ui_find",
+  "description": "Find UI elements. REQUIRED before clicking elements you haven't located yet. Returns element IDs for use with ui_click.\nFinds UI elements by name, type, ID, or other criteria. Returns element IDs for clicking, typing, etc. You MUST call this tool or ui_click for every UI operation - never skip tool calls. REQUIRED: windowHandle (from window_management tool). For Electron/Chromium, visible text and ARIA labels usually show up here as element names.\nReturns: The result containing list of found elements with their properties and element IDs.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "windowHandle": {
+        "description": "Window handle as decimal string (from window_management 'find' or 'list'). REQUIRED.",
+        "type": "string"
+      },
+      "name": {
+        "description": "Element name (exact match, case-insensitive). For Electron apps and Chromium browsers, this is often the visible label or ARIA label.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "nameContains": {
+        "description": "Substring to search in element names (case-insensitive). Preferred for dialog buttons - e.g., 'Don\\\\'t save'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "namePattern": {
+        "description": "Regex pattern to match element names. Use for complex matching like 'Button [0-9]+' or 'Save|Cancel'.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "controlType": {
+        "description": "Control type filter (Button, Edit, Text, CheckBox, ComboBox, Menu, MenuItem, etc.)",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "automationId": {
+        "description": "AutomationId for precise matching (exact match, most reliable).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "className": {
+        "description": "Element class name (e.g., 'Chrome_WidgetWin_1' for Chromium, 'Button' for Win32).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "exactDepth": {
+        "description": "Exact depth to search (1=immediate children). Skips other depths, improves performance.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "foundIndex": {
+        "description": "Return the Nth match (1-based, default: 1). Use 2 for second match, etc.",
+        "type": "integer",
+        "default": 1
+      },
+      "includeChildren": {
+        "description": "Include child elements in response (default: false).",
+        "type": "boolean",
+        "default": false
+      },
+      "sortByProminence": {
+        "description": "Sort results by size (largest first). Useful for disambiguation.",
+        "type": "boolean",
+        "default": false
+      },
+      "inRegion": {
+        "description": "Filter to region: 'x,y,width,height' in screen coordinates.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "nearElement": {
+        "description": "Find elements near this elementId (results sorted by distance).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "timeoutMs": {
+        "description": "Timeout in milliseconds (default: 5000).",
+        "type": "integer",
+        "default": 5000
+      },
+      "includeDiagnostics": {
+        "description": "Include diagnostics (timing, query, elements scanned) in response. Default: false.",
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": [
+      "windowHandle"
+    ]
+  }
+}

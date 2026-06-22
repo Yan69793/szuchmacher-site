@@ -1,0 +1,14 @@
+{
+  "name": "replay_start",
+  "description": "Start bar replay mode, optionally at a specific date",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "date": {
+        "description": "Date to start replay from (YYYY-MM-DD format). If omitted, selects first available date.",
+        "type": "string"
+      }
+    }
+  }
+}

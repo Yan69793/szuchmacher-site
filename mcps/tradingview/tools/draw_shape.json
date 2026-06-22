@@ -1,0 +1,58 @@
+{
+  "name": "draw_shape",
+  "description": "Draw a shape/line on the chart",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "shape": {
+        "type": "string",
+        "description": "Shape type: horizontal_line, vertical_line, trend_line, rectangle, text"
+      },
+      "point": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "time",
+          "price"
+        ],
+        "description": "{ time: unix_timestamp, price: number }"
+      },
+      "point2": {
+        "description": "Second point for two-point shapes (trend_line, rectangle)",
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "time",
+          "price"
+        ]
+      },
+      "overrides": {
+        "description": "JSON string of style overrides (e.g., '{\"linecolor\": \"#ff0000\", \"linewidth\": 2}')",
+        "type": "string"
+      },
+      "text": {
+        "description": "Text content for text shapes",
+        "type": "string"
+      }
+    },
+    "required": [
+      "shape",
+      "point"
+    ]
+  }
+}

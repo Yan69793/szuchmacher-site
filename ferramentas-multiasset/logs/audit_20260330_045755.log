@@ -1,0 +1,64 @@
+2026-03-30T01:57:55-0300 | INFO | multiasset_audit | ============================================================
+2026-03-30T01:57:55-0300 | INFO | multiasset_audit | MultiAsset Pro — Auditoria de Validação Iniciada
+2026-03-30T01:57:55-0300 | INFO | multiasset_audit | Timestamp: 2026-03-30T04:57:55.412152+00:00
+2026-03-30T01:57:55-0300 | INFO | multiasset_audit | ============================================================
+2026-03-30T01:57:55-0300 | INFO | multiasset_audit | 
+[1/3] Validando preços e indicadores macro...
+2026-03-30T01:57:55-0300 | INFO | multiasset_audit | AwesomeAPI USD/BRL: 5.2447
+2026-03-30T01:57:56-0300 | INFO | multiasset_audit | Bacen SGS 432: 14.75 (data: 29/04/2026)
+2026-03-30T01:57:56-0300 | INFO | multiasset_audit | Bacen SGS 433: 0.7 (data: 01/02/2026)
+2026-03-30T01:57:56-0300 | INFO | multiasset_audit |   USD/BRL spot: plat=0 ref=5.2447 dev=0% [OK]
+2026-03-30T01:57:56-0300 | INFO | multiasset_audit |   Selic Meta: plat=14.75 ref=14.75 dev=0.0% [OK]
+2026-03-30T01:57:56-0300 | INFO | multiasset_audit |   IPCA mensal (último): plat=4.1 ref=0.7 dev=0% [OK]
+2026-03-30T01:57:56-0300 | INFO | multiasset_audit | 
+[2/3] Validando cenários vs dados históricos...
+2026-03-30T01:57:57-0300 | INFO | multiasset_audit | Yahoo Finance GC=F: 3771 registros (2011-03-30 a 2026-03-30)
+2026-03-30T01:57:57-0300 | INFO | multiasset_audit | Histórico 5y: CAGR=21.83%, Vol=18.04%
+2026-03-30T01:57:57-0300 | INFO | multiasset_audit | Histórico 10y: CAGR=13.93%, Vol=16.39%
+2026-03-30T01:57:57-0300 | INFO | multiasset_audit | Histórico 15y: CAGR=8.00%, Vol=17.09%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Yahoo Finance SI=F: 3771 registros (2011-03-30 a 2026-03-30)
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 5y: CAGR=23.72%, Vol=38.65%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 10y: CAGR=16.48%, Vol=34.19%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 15y: CAGR=4.24%, Vol=34.05%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Yahoo Finance PL=F: 3770 registros (2011-03-30 a 2026-03-30)
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 5y: CAGR=10.51%, Vol=35.69%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 10y: CAGR=7.06%, Vol=31.69%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 15y: CAGR=0.50%, Vol=28.37%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Yahoo Finance BTC-USD: 4212 registros (2014-09-17 a 2026-03-30)
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 5y: CAGR=2.78%, Vol=46.80%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 10y: CAGR=66.42%, Vol=56.19%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | Histórico 15y: CAGR=54.22%, Vol=56.10%
+2026-03-30T01:57:58-0300 | INFO | multiasset_audit | 
+[3/3] Executando validação Monte Carlo...
+2026-03-30T01:57:59-0300 | INFO | multiasset_audit |   MC gold/conservador: determinístico=$88,150 | P50=$84,273 | P10-P90=[$57,454 — $125,544]
+2026-03-30T01:57:59-0300 | INFO | multiasset_audit |   MC gold/moderado: determinístico=$120,685 | P50=$114,371 | P10-P90=[$76,994 — $175,302]
+2026-03-30T01:57:59-0300 | INFO | multiasset_audit |   MC gold/agressivo: determinístico=$170,442 | P50=$161,044 | P10-P90=[$106,843 — $252,781]
+2026-03-30T01:57:59-0300 | INFO | multiasset_audit |   MC silver/conservador: determinístico=$83,163 | P50=$70,304 | P10-P90=[$36,618 — $145,084]
+2026-03-30T01:57:59-0300 | INFO | multiasset_audit |   MC silver/moderado: determinístico=$115,037 | P50=$95,574 | P10-P90=[$47,330 — $206,576]
+2026-03-30T01:57:59-0300 | INFO | multiasset_audit |   MC silver/agressivo: determinístico=$204,761 | P50=$164,430 | P10-P90=[$76,892 — $382,479]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit |   MC platinum/conservador: determinístico=$53,025 | P50=$48,713 | P10-P90=[$30,429 — $81,415]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit |   MC platinum/moderado: determinístico=$99,145 | P50=$88,996 | P10-P90=[$50,953 — $161,077]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit |   MC platinum/agressivo: determinístico=$231,477 | P50=$203,395 | P10-P90=[$109,436 — $399,055]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit |   MC btc/conservador: determinístico=$6,802 | P50=$5,718 | P10-P90=[$3,150 — $13,263]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit |   MC btc/moderado: determinístico=$780,275 | P50=$95,536 | P10-P90=[$16,681 — $962,530]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit |   MC btc/agressivo: determinístico=$46,107,394 | P50=$2,813,340 | P10-P90=[$185,415 — $56,534,630]
+2026-03-30T01:58:00-0300 | INFO | multiasset_audit | 
+--- Exportando resultados ---
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | PDF exportado: output\auditoria_local.pdf
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | CSV exportado: output\auditoria_local.csv
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | JSON exportado: output\auditoria_local.json
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | 
+--- 8 ALERTAS ---
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | [SMTP] 8 alertas gerados (envio desabilitado — configure SMTP).
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [WARNING] gold/conservador: Cenário 'conservador' para gold: desvio moderado (9.9pp) entre retorno esperado e histórico.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [WARNING] silver/conservador: Cenário 'conservador' para silver: desvio moderado (13.5pp) entre retorno esperado e histórico.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [WARNING] silver/moderado: Cenário 'moderado' para silver: desvio moderado (8.0pp) entre retorno esperado e histórico.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [WARNING] platinum/conservador: Cenário 'conservador' para platinum: desvio moderado (12.1pp) entre retorno esperado e histórico.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [WARNING] platinum/agressivo: Cenário 'agressivo' para platinum: desvio moderado (12.9pp) entre retorno esperado e histórico.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [CRITICAL] btc/conservador: Cenário 'conservador' para btc: retorno esperado (-60.0%) diverge significativamente do CAGR histórico 10y (66.4%). Desvio: 126.4pp.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [CRITICAL] btc/moderado: Cenário 'moderado' para btc: retorno esperado (40.0%) diverge significativamente do CAGR histórico 10y (66.4%). Desvio: 26.4pp.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit |   [CRITICAL] btc/agressivo: Cenário 'agressivo' para btc: retorno esperado (120.0%) diverge significativamente do CAGR histórico 10y (66.4%). Desvio: 53.6pp.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | 
+============================================================
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | Auditoria concluída.
+2026-03-30T01:58:01-0300 | INFO | multiasset_audit | ============================================================

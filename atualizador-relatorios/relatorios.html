@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <title>Relatórios | Yan Szuchmacher</title>
+  <meta name="description" content="Relatório diário de fechamento de mercado. Drivers, posicionamento e implicações para portfólios qualificados." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://szuchmacher.com.br/relatorios.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Relatórios | Yan Szuchmacher" />
+  <meta property="og:description" content="Receba o relatório diário de fechamento de mercado com drivers e implicações para portfólios qualificados." />
+  <meta property="og:url" content="https://szuchmacher.com.br/relatorios.html" />
+  <meta property="og:site_name" content="Yan Szuchmacher" />
+  <meta property="og:locale" content="pt_BR" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#f1ede6;
+      --surface:#ebe4d8;
+      --navy:#0b1630;
+      --navy-soft:#16233f;
+      --gold:#8f6b34;
+      --text:#1e2430;
+      --muted:#5f6673;
+      --line:rgba(11,22,48,0.10);
+      --line-strong:rgba(11,22,48,0.16);
+      --max:1160px;
+      --radius:2px;
+      --font-serif:'Playfair Display', serif;
+      --font-sans:'Manrope', sans-serif;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    p{color:var(--muted);margin:0 0 18px 0;font-weight:400}
+    h1,h2,h3{font-family:var(--font-serif);color:var(--navy);line-height:1.12;font-weight:600}
+    .container{max-width:var(--max);margin:0 auto;padding:0 28px}
+    .section{padding:96px 0}
+    .eyebrow{display:inline-block;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:800;color:var(--gold);margin-bottom:18px}
+
+    header{position:sticky;top:0;z-index:1000;background:rgba(247,244,238,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .header-row{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative}
+    .logo{font-family:var(--font-serif);font-size:1.05rem;letter-spacing:0.02em;color:var(--navy);white-space:nowrap}
+    .nav{display:flex;align-items:center;gap:26px}
+    .nav a{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;color:rgba(11,22,48,0.78);padding:4px 0;border-bottom:1px solid transparent;transition:all .2s ease}
+    .nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+    .nav-cta{padding:11px 18px;border:1px solid var(--navy);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;color:var(--navy);transition:all .2s ease}
+    .nav-cta:hover{background:var(--navy);color:#fff}
+    .mobile-menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line-strong);background:transparent;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer}
+    .mobile-menu-toggle span{width:18px;height:2px;background:var(--navy);display:block}
+
+    .hero{padding:124px 0 92px 0;background:linear-gradient(180deg,#f3efe8 0%,#f1ede6 100%)}
+    .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center}
+    .hero h1{font-size:3rem;letter-spacing:-0.035em;max-width:760px;margin-bottom:20px}
+    .hero p{max-width:590px;font-size:1.02rem}
+    .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:48px;border:1px solid var(--navy);background:var(--navy);color:#fff;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;transition:all .2s ease}
+    .btn:hover{background:#111c34}
+    .btn-outline{background:transparent;color:var(--navy)}
+    .btn-outline:hover{background:transparent;border-color:var(--gold);color:var(--gold)}
+    .hero-visual{background:#e5ddd0;border:1px solid var(--line-strong);padding:18px}
+    .hero-visual img{aspect-ratio:4/5;object-fit:cover;width:100%;filter:saturate(0.85) contrast(1.02)}
+
+    .pillars{padding:26px 0 0 0}
+    .pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+    .pillar{padding:30px 26px;border-right:1px solid var(--line)}
+    .pillar:last-child{border-right:none}
+    .pillar strong{display:block;color:var(--navy);font-size:0.88rem;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:10px}
+    .pillar span{color:var(--muted);font-size:0.95rem}
+
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:30px;padding-bottom:18px;border-bottom:1px solid var(--line-strong)}
+    .section-head h2{font-size:2.3rem;margin-bottom:8px}
+    .section-head p{margin-bottom:0;max-width:560px}
+    .section-date{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--gold);font-weight:800;white-space:nowrap}
+
+    .market-wrap{background:linear-gradient(180deg,#091327 0%,#0b1630 100%);color:#fff}
+    .market-wrap h2{color:#fff}
+    .market-wrap p{color:rgba(255,255,255,0.74)}
+    .market-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,0.8fr);gap:28px;align-items:start}
+    .market-main{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);padding:38px;margin-bottom:28px}
+    .market-main h3{color:#fff;font-size:1.8rem;margin-bottom:14px}
+    .market-main p{font-size:0.98rem}
+    .market-subnote{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.12);font-size:0.88rem;color:rgba(255,255,255,0.64)}
+    .market-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
+    .market-card{background:linear-gradient(180deg,#f2ece1 0%,#ece3d5 100%);color:var(--text);border:1px solid rgba(143,107,52,0.22);border-left:2px solid var(--gold);padding:24px 22px;min-height:148px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.35)}
+    .market-card small{display:block;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;color:#6d7280;margin-bottom:10px;font-size:0.68rem}
+    .market-card strong{display:block;font-size:2.1rem;line-height:1;color:var(--navy);margin-bottom:10px;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
+    .market-card span{font-size:0.9rem;color:var(--muted);line-height:1.45;max-width:240px}
+
+    .signup-section{background:var(--surface);border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+    .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+    .signup-info h2{margin-bottom:14px;font-size:2rem}
+    .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+    .pill{padding:7px 13px;border:1px solid var(--line-strong);background:#fff;color:var(--text);font-weight:800;font-size:0.80rem;text-transform:uppercase;letter-spacing:0.10em}
+    .signup-form{background:#f3efe8;border:1px solid var(--line);padding:34px}
+    .signup-form h3{margin-bottom:10px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    input,select,textarea{width:100%;background:#fff;border:1px solid var(--line-strong);min-height:48px;padding:13px 14px;font:inherit;color:var(--text);margin-bottom:12px;outline:none;border-radius:0}
+    textarea{min-height:100px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+    .consent{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:0.92rem;margin:6px 0 16px 0}
+    .consent input{width:auto;min-height:auto;margin:4px 0 0 0}
+    .form-note{color:var(--muted);font-size:0.88rem;margin-top:10px}
+    .form-success{display:none;text-align:center;padding:20px 0}
+    .form-success.show{display:block}
+    .form-success h3{margin-bottom:10px;color:var(--navy)}
+
+    .capabilities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .capability{background:#efe8dc;border:1px solid var(--line);padding:32px;min-height:220px}
+    .capability h3{font-size:1.35rem;margin-bottom:12px}
+
+    .contact-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:24px;align-items:start}
+    .contact-box,.contact-form-box{background:#f3efe8;border:1px solid var(--line);padding:34px}
+    .contact-box h2,.contact-form-box h3{margin-bottom:12px}
+    .contact-meta-label{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.14em;font-weight:800;color:var(--navy);margin-top:18px;margin-bottom:6px}
+    .contact-box a{color:var(--gold);font-weight:700}
+
+    footer{padding:30px 0 38px;border-top:1px solid var(--line-strong);background:var(--bg)}
+    .footer-grid{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+    .footer-brand{font-family:var(--font-serif);color:var(--navy);font-size:1rem;margin-bottom:8px}
+    .footer-note{max-width:760px;font-size:0.82rem;color:var(--muted)}
+    .footer-links{display:flex;gap:16px;flex-wrap:wrap;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.12em;font-weight:800;color:rgba(11,22,48,0.76)}
+
+    @media (max-width:980px){
+      .hero-grid,.market-grid,.signup-grid,.contact-grid,.capabilities-grid,.pillars-grid{grid-template-columns:1fr}
+      .market-side{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero h1{font-size:2.35rem}
+      .section-head{align-items:start;flex-direction:column}
+      .nav{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line-strong);padding:14px 20px 18px;flex-direction:column;align-items:flex-start;gap:14px;z-index:1001}
+      .nav.nav-open{display:flex}
+      .nav a{font-size:0.78rem;padding:6px 0}
+      .mobile-menu-toggle{display:flex}
+    }
+    @media (max-width:640px){
+      .hero{padding:92px 0 72px}
+      .section{padding:74px 0}
+      .container{padding:0 20px}
+      .form-row,.market-side{grid-template-columns:1fr}
+      .market-card{min-height:132px;padding:22px 20px}
+      .market-card strong{font-size:1.9rem}
+      .hero h1{font-size:1.95rem}
+      .nav-cta{display:none}
+      .logo{font-size:0.98rem}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-row">
+      <a class="logo" href="/">Yan Szuchmacher</a>
+      <button class="mobile-menu-toggle" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="siteNav" aria-label="Principal">
+        <a href="/">Home</a>
+        <a href="#fechamento">Fechamento</a>
+        <a href="#assinar">Assinar</a>
+        <a href="multiasset.html" target="_blank" rel="noopener">Plataforma MultiAsset</a>
+        <a href="/#contact">Contato</a>
+      </nav>
+      <a href="#assinar" class="nav-cta">Assinar grátis</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Fechamento de mercado • Todos os dias úteis</span>
+            <h1>Relatório diário gratuito por e-mail e WhatsApp.</h1>
+            <p>Leitura executiva dos principais movimentos de mercado, com drivers, posicionamento e implicações diretas para risco, liquidez e alocação em portfólios qualificados.</p>
+            <div class="hero-actions">
+              <a href="#assinar" class="btn">Assinar grátis</a>
+              <a href="/#contact" class="btn btn-outline">Agendar análise</a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80" alt="Arquitetura corporativa" loading="eager" fetchpriority="high" />
+          </div>
+        </div>
+
+        <div class="pillars">
+          <div class="pillars-grid">
+            <div class="pillar">
+              <strong>Brasil e exterior</strong>
+              <span>Juros, câmbio, equities e commodities com leitura integrada de fluxo global.</span>
+            </div>
+            <div class="pillar">
+              <strong>Drivers e contexto</strong>
+              <span>Análise dos vetores que moveram preços e o que monitorar no pregão seguinte.</span>
+            </div>
+            <div class="pillar">
+              <strong>Implicações práticas</strong>
+              <span>Leitura orientada a decisões de risco, liquidez e posicionamento patrimonial.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fechamento" class="section market-wrap">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Fechamento de hoje</span>
+            <h2>Leitura diária dos vetores que movem preços</h2>
+            <p>Recorte executivo com drivers, posicionamento e implicações para risco, liquidez e portfólios qualificados.</p>
+          </div>
+          <div class="section-date" id="relDateMain"></div>
+        </div>
+
+        <div class="market-grid">
+          <article class="market-main">
+            <h3>Alívio geopolítico move mercados; Trump anuncia saída do Irã. Ibovespa sustenta dissociação relativa com pressão de petróleo.</h3>
+            <p>A escalada do petróleo dominou a semana, com o WTI oscilando entre pressão da deescalada no Irã e oferta global limitada. O choque reintroduziu prêmio de risco energético, mas a declaração de Trump sobre retirada iminente das forças americanas do Irã detonouralista coordenada nas praças globais, com Nikkei (+5,24%), DAX (+2,67%) e índices europeus liderando os ganhos. No Brasil, o Ibovespa mostrou resiliência relativa, sustentado pelo peso de Petrobras e exportadoras, enquanto o dólar permaneceu essencialmente estável.</p>
+
+            <div class="hero-actions">
+              <a href="/#assinar" class="btn">Receber relatório</a>
+              <a href="./Fechamento de Mercado 01.04.26.pdf" target="_blank" rel="noopener" class="btn btn-outline">Baixar PDF</a>
+            </div>
+
+            <div class="market-subnote">Fontes operacionais e de referência. Relatório interno e dados de mercado de 01 de abril de 2026.</div>
+          </article>
+
+          <aside class="market-side">
+            <div class="market-card">
+              <small>Ibovespa</small>
+              <strong>187.952</strong>
+              <span>Variação • +0,26%</span>
+            </div>
+            <div class="market-card">
+              <small>Dólar</small>
+              <strong>R$ 5,15</strong>
+              <span>Fechamento • 0,00%</span>
+            </div>
+            <div class="market-card">
+              <small>S&P 500</small>
+              <strong>6.575</strong>
+              <span>Fechamento • +0,72%</span>
+            </div>
+            <div class="market-card">
+              <small>WTI — Petróleo</small>
+              <strong>US$ 98,91</strong>
+              <span>Oscilação entre Irã e dinâmica global de oferta.</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="assinar" class="section signup-section">
+      <div class="container">
+        <div class="signup-grid">
+          <div class="signup-info">
+            <span class="eyebrow">Gratuito • E-mail e WhatsApp</span>
+            <h2>Receba o fechamento diário diretamente na sua caixa de entrada.</h2>
+            <p>20 anos de experiência em gestão patrimonial no Mirabaud, banco suíço com mais de 200 anos de tradição. Acompanhamento macro com leitura de tesouraria e risco de portfólios multimercado.</p>
+            <div class="pill-row">
+              <span class="pill">Brasil e exterior</span>
+              <span class="pill">Juros e FX</span>
+              <span class="pill">Risco e liquidez</span>
+              <span class="pill">Governança</span>
+            </div>
+            <p>Envio informativo em dias úteis. Não constitui recomendação de investimento. Após a assinatura, você pode informar WhatsApp para receber também por lá.</p>
+          </div>
+
+          <div class="signup-form">
+            <h3>Assinar em 30 segundos</h3>
+            <p>Apenas 3 campos obrigatórios.</p>
+            <form id="leadForm" method="POST" action="#">
+              <div id="leadFormFields">
+                <input type="text" name="nome" placeholder="Nome completo" autocomplete="name" required />
+                <input type="email" name="email" placeholder="E-mail" autocomplete="email" required />
+                <select name="patrimonio" required>
+                  <option value="" disabled selected>Faixa de patrimônio investível</option>
+                  <option value="1-3">R$ 1M a R$ 3M</option>
+                  <option value="3-10">R$ 3M a R$ 10M</option>
+                  <option value="10-30">R$ 10M a R$ 30M</option>
+                  <option value="30+">Acima de R$ 30M</option>
+                </select>
+                <label class="consent">
+                  <input type="checkbox" name="consentimento" required />
+                  <span>Autorizo o envio do relatório conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">política de privacidade</a>.</span>
+                </label>
+                <button type="submit" class="btn" style="width:100%">Assinar grátis</button>
+                <div class="form-note">Retorno em até 24 horas úteis.</div>
+              </div>
+              <div class="form-success" id="leadSuccess">
+                <h3>Assinatura confirmada</h3>
+                <p>Você receberá o próximo fechamento de mercado por e-mail. Para receber também via WhatsApp, responda ao primeiro e-mail com seu número.</p>
+                <a href="/#contact" class="btn" style="margin-top:14px;display:inline-flex">Agendar análise inicial de 30 min</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Capacidades</span>
+            <h2>Estrutura para patrimônio de maior complexidade</h2>
+            <p>Uma abordagem menos orientada a produto e mais a desenho patrimonial, processo decisório e preservação de opcionalidade.</p>
+          </div>
+        </div>
+        <div class="capabilities-grid">
+          <div class="capability">
+            <h3>Diagnóstico patrimonial</h3>
+            <p>Mapeamento consolidado de ativos, passivos, liquidez, concentração, risco cambial e estrutura de custódia para reduzir pontos cegos de portfólio.</p>
+          </div>
+          <div class="capability">
+            <h3>Arquitetura de alocação</h3>
+            <p>Construção de política patrimonial alinhada a horizonte de capital, regime macro, jurisdição, fluxo de caixa e tolerância real a drawdown.</p>
+          </div>
+          <div class="capability">
+            <h3>Monitoramento executivo</h3>
+            <p>Leitura contínua de mercados, revisão de risco e comunicação objetiva para apoiar decisões com disciplina e contexto global.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-box">
+            <span class="eyebrow">Contato</span>
+            <h2>Uma conversa objetiva sobre risco, liquidez e estrutura patrimonial</h2>
+            <p>Contato inicial para entender contexto, grau de complexidade e prioridades patrimoniais, com foco em clareza e encaminhamento executivo.</p>
+            <span class="contact-meta-label">WhatsApp</span>
+            <p><a href="https://wa.me/5521981088992" target="_blank" rel="noopener">+55 21 98108 8992</a></p>
+            <span class="contact-meta-label">E-mail</span>
+            <p><a id="contact-email-link" style="color:var(--gold);font-weight:700;"></a></p>
+          </div>
+
+          <form class="contact-form-box" method="POST" action="#">
+            <h3>Solicitar contato</h3>
+            <p>Preencha os dados abaixo para qualificação inicial.</p>
+            <div class="form-row">
+              <input type="text" name="nome" placeholder="Nome completo" required />
+              <input type="email" name="email" placeholder="E-mail" required />
+            </div>
+            <div class="form-row">
+              <input type="tel" name="telefone" placeholder="WhatsApp" required />
+              <select name="perfil" required>
+                <option value="" disabled selected>Perfil</option>
+                <option value="empresario">Empresário</option>
+                <option value="executivo">Executivo</option>
+                <option value="familia">Família ou holding</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <select name="patrimonio" required>
+                <option value="" disabled selected>Faixa patrimonial</option>
+                <option value="1-3">R$ 1M a R$ 3M</option>
+                <option value="3-10">R$ 3M a R$ 10M</option>
+                <option value="10-30">R$ 10M a R$ 30M</option>
+                <option value="30+">Acima de R$ 30M</option>
+              </select>
+              <select name="objetivo" required>
+                <option value="" disabled selected>Objetivo principal</option>
+                <option value="governanca">Governança patrimonial</option>
+                <option value="liquidez">Liquidez e estrutura</option>
+                <option value="alocacao">Alocação global</option>
+                <option value="risco">Revisão de risco</option>
+              </select>
+            </div>
+            <textarea name="mensagem" placeholder="Breve contexto patrimonial, estruturas atuais e objetivo principal." required></textarea>
+            <label class="consent">
+              <input type="checkbox" required />
+              <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">política de privacidade</a>.</span>
+            </label>
+            <button type="submit" class="btn" style="width:100%">Solicitar contato</button>
+            <div class="form-note">Retorno em até 24 horas úteis.</div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Yan Szuchmacher</div>
+        <div class="footer-note">Este material possui caráter meramente informativo e institucional. Não constitui oferta, solicitação ou recomendação de investimento. Rentabilidade passada não representa garantia de resultados futuros.</div>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="multiasset.html" target="_blank" rel="noopener">Plataforma MultiAsset</a>
+        <a href="privacidade.html">Privacidade</a>
+        <a href="/#contact">Contato</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      var btn = document.getElementById('menuBtn');
+      var nav = document.getElementById('siteNav');
+
+      function openMenu()  { nav.classList.add('nav-open');    btn.setAttribute('aria-expanded', 'true');  }
+      function closeMenu() { nav.classList.remove('nav-open'); btn.setAttribute('aria-expanded', 'false'); }
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        nav.classList.contains('nav-open') ? closeMenu() : openMenu();
+      });
+      nav.querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
+      document.addEventListener('click', function (e) {
+        if (nav.classList.contains('nav-open') && !nav.contains(e.target) && e.target !== btn) closeMenu();
+      });
+
+      var em = 'contato' + String.fromCharCode(64) + 'szuchmacher.com.br';
+      var el = document.getElementById('contact-email-link');
+      if (el) { el.href = 'mailto:' + em; el.textContent = em; }
+
+      /* ── Data dinâmica do Fechamento ── */
+      var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+      var hoje = new Date();
+      var dia = String(hoje.getDate()).padStart(2, '0');
+      var relDateEl = document.getElementById('relDateMain');
+      if (relDateEl) relDateEl.textContent = dia + ' ' + meses[hoje.getMonth()] + ' ' + hoje.getFullYear();
+
+      var leadForm = document.getElementById('leadForm');
+      if (leadForm) {
+        leadForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          document.getElementById('leadFormFields').style.display = 'none';
+          document.getElementById('leadSuccess').classList.add('show');
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>

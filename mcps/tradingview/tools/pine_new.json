@@ -1,0 +1,22 @@
+{
+  "name": "pine_new",
+  "description": "Create a new blank Pine Script",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "indicator",
+          "strategy",
+          "library"
+        ],
+        "description": "Type of script to create"
+      }
+    },
+    "required": [
+      "type"
+    ]
+  }
+}

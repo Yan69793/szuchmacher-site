@@ -1,0 +1,9 @@
+{
+  "name": "replay_stop",
+  "description": "Stop replay and return to realtime",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "replay_step",
+  "description": "Advance one bar in replay mode",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

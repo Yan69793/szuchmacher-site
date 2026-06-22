@@ -1,0 +1,21 @@
+{
+  "name": "show_marketing_studio_generations",
+  "description": "Browse past completed Marketing Studio generations only. Returns Marketing Studio video and ad/image generations with {id, type, status, model, params, results}. Use show_generations for non-Marketing Studio image/video history.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "cursor": {
+        "description": "Pass next_cursor from previous response to get the next page",
+        "type": "number"
+      },
+      "size": {
+        "default": 24,
+        "description": "Number of results per page",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
+    }
+  }
+}

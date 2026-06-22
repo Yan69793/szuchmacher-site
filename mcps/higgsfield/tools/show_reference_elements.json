@@ -1,0 +1,83 @@
+{
+  "name": "show_reference_elements",
+  "description": "Elements widget — reusable characters / environments / props per workspace. Actions:\n- `list` (default; paginated by `created_at` DESC, use `cursor` from prev `next_cursor`).\n- `get` (default when `element_id` is set).\n- `create`: pass `medias[]` as `{ id, url, type: 'media_input' | 'image_job' }`. Upload first via media_upload → PUT bytes → media_confirm. `category='auto'` lets the server classify (use explicit only on user ask). Omit `name` to auto-derive (per-workspace unique, collisions get a numeric suffix). Returns synchronously.\n\nAMBIGUITY GUARD vs Soul — user wants a reusable face of one specific person (digital twin / 'my avatar' / identity) without a chosen path: do NOT silently create; ask:\n  1. Element (this tool action=create) — instant, single image, MULTIPLE references per generation, works with Nano Banana Pro / 2, GPT Image 2, Seedream 4.5 / 5 lite, Cinema Studio Image 2.5, Cinema Studio Video 2 / 3.0, Seedance 2.0, Kling 3.0. NOT for Soul V2 / Cinema.\n  2. Soul (`show_characters` action=train) — 5-20 photos, ~10 min, ONE person, Soul V2 / Cinema only.\nSkip the question → Elements on: >1 character/subject in one shot (Soul can't), non-person subject, single image, mention of Nano Banana / Seedream / Kling / Cinema Studio, instant result. Skip → Soul on: 'train' / 'digital twin' / 'identity', or 5+ photos of one person for solo outputs.\n\nUSAGE IN GENERATION (internal — never explain to user):\nEmbed `<<<element_id>>>` inside `params.prompt` of `generate_image` / `generate_video`. Backend auto-injects the image and rewrites to `@element_name`. Multiple placeholders per prompt OK.\nExample: `\"Cinematic portrait of <<<UUID>>> on a rooftop\"`, `\"<<<A>>> handing coffee to <<<B>>> in a Paris cafe\"`.\n\nSUPPORTED MODELS (`params.model` = machine name, friendly in parens):\n- Image: `nano_banana_2` (Nano Banana Pro), `nano_banana_flash` (Nano Banana 2), `gpt_image_2` (GPT Image 2), `seedream_v4_5` (Seedream 4.5), `seedream_v5_lite` (Seedream 5.0 lite), `cinematic_studio_2_5` (Cinema Studio Image 2.5).\n- Video: `cinematic_studio_video_v2` (Cinema Studio Video 2), `cinematic_studio_3_0` (Cinema Studio Video 3.0), `seedance_2_0` (Seedance 2.0), `kling3_0` (Kling 3.0 — REQUIRES a `start_image` in `params.medias`; element placeholder alone won't trigger reference usage).\nMap friendly→machine silently. Other models silently ignore the placeholder.\n\nUSER-FACING STYLE: use friendly model names only; never expose machine names, `<<<UUID>>>` syntax, `params.model` / `params.prompt`, `generate_image` / `generate_video`, or 'job_set_type'. Reference elements by `name`, never id.\n\nGUARDS:\n- `@name` form does NOT work in tool calls — only `<<<UUID>>>` in `params.prompt`.\n- Do NOT put element ids in `params.medias` / `params.input_images` — placeholder handles injection.\n- `kling3_0` only honors reference elements when an explicit `start_image` is provided in `params.medias`. If the user wants Kling 3.0 with an element but hasn't supplied a start frame, ask for one (upload via media_upload + media_confirm, or pick a prior generation) before calling `generate_video`. Without a start_image, pick another video model from the list.\n- Only `status: completed` elements are usable; skip `processing` / `ip_checking` / `failed` / `kling_failed` / `nsfw`.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "description": "Operation mode. Defaults to `get` if `element_id` is set, otherwise `list`.",
+        "type": "string",
+        "enum": [
+          "list",
+          "get",
+          "create"
+        ]
+      },
+      "cursor": {
+        "description": "[action=list] Pass `next_cursor` from a previous response to get the next page.",
+        "type": "number"
+      },
+      "size": {
+        "default": 27,
+        "description": "[action=list] Number of elements per page (1-100).",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "element_id": {
+        "description": "[action=get] Fetch a single reference element by id.",
+        "type": "string"
+      },
+      "name": {
+        "description": "[action=create] Element name, max 32 chars. Spaces are normalised to '-'. If omitted, the server derives a name from the media.",
+        "type": "string",
+        "maxLength": 32
+      },
+      "category": {
+        "description": "[action=create] `auto` lets the server classify from the first images. Use a specific category only if the user is explicit. Defaults to `auto`.",
+        "type": "string",
+        "enum": [
+          "auto",
+          "character",
+          "environment",
+          "prop"
+        ]
+      },
+      "description": {
+        "description": "[action=create] Optional free-form description, stored as-is.",
+        "type": "string"
+      },
+      "medias": {
+        "description": "[action=create] Image references. Required. URLs must live on a Higgsfield media origin.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "media_input UUID returned by media_confirm, or completed image_job UUID."
+            },
+            "url": {
+              "type": "string",
+              "description": "Public Higgsfield media URL of the asset (e.g. https://upload.higgsfield.ai/user_<id>/<uuid>.png or https://upload-dev.higgsfield.ai/user_<id>/<uuid>.png). External URLs are rejected."
+            },
+            "type": {
+              "default": "media_input",
+              "description": "Source kind for `id`. Defaults to `media_input`.",
+              "type": "string",
+              "enum": [
+                "media_input",
+                "image_job"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "url"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "animation_actions",
+  "description": "Read-only catalog of the 3D rig animation library (678 actions: locomotion, gestures, dancing, combat, daily actions). Search by name or browse by group/category to find the animation_action_id for 3D generation with enable_animation=true. Each result has a preview_url GIF — when several candidates fit (e.g. many Idle or Walk variants), show the user the previews as markdown images and let them pick instead of choosing blindly. Does not create jobs.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "query": {
+        "description": "Search term matched against action name and category, e.g. 'walk', 'backflip', 'sword attack'. Omit to browse.",
+        "type": "string"
+      },
+      "group": {
+        "description": "Filter by top-level group: WalkAndRun, BodyMovements, DailyActions, Dancing, Fighting.",
+        "type": "string"
+      },
+      "category": {
+        "description": "Filter by category, e.g. Walking, Running, Jumping, Idle, Dancing, Punching (see `categories` in the result).",
+        "type": "string"
+      },
+      "limit": {
+        "description": "Max results, default 20.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "after": {
+        "description": "Pagination cursor (next_page_token from a previous result).",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+import { fetchJson, jsonResponse, brtNow } from '../utils/http.js';
+import { readCache, writeCache } from '../utils/cache.js';
+
+const CACHE_KEY = 'market-data';
+const CACHE_TTL = 600;
+const SEED = {
+  ibov: { value: 137000.0, change_pct: 0.0 },
+  sp500: { value: 5420.0, change_pct: 0.0 },
+  wti: { value: 74.0, change_pct: 0.0 },
+  treasury10y: { value: 4.45, change_pct: 0.0 },
+  ntnb11: { value: 95.0, change_pct: 0.0 },
+};
+
+async function fetchYahoo(encodedSymbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodedSymbol}?interval=1d&range=1d`;
+  const j = await fetchJson(url, {
+    timeout: 10000,
+    headers: {
+      Accept: 'application/json',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'User-Agent': 'Mozilla/5.0 (compatible; MultiAssetBot/1.0)',
+    },
+  });
+  const meta = j?.chart?.result?.[0]?.meta;
+  if (!meta) return null;
+  const price = meta.regularMarketPrice != null ? Number(meta.regularMarketPrice) : null;
+  const prev = meta.chartPreviousClose != null ? Number(meta.chartPreviousClose) : null;
+  if (price == null) return null;
+  const change_pct = prev && prev > 0 ? Math.round(((price - prev) / prev) * 10000) / 100 : 0;
+  return { value: Math.round(price * 100) / 100, change_pct };
+}
+
+function fallbackVal(live, key, prevData) {
+  if (live) return live;
+  if (prevData?.[key]) return prevData[key];
+  return SEED[key];
+}
+
+export async function handleMarketData(env) {
+  const cache = await readCache(env.CACHE, CACHE_KEY);
+  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
+    return jsonResponse({ ...cache, source: 'Yahoo Finance · cache' }, {
+      headers: { 'Cache-Control': 'public, max-age=300' },
+    });
+  }
+
+  const prevData = cache?.ibov ? cache : null;
+  const [ibovLive, sp500Live, wtiLive, treasuryLive, ntnbLive] = await Promise.all([
+    fetchYahoo('%5EBVSP'),
+    fetchYahoo('%5EGSPC'),
+    fetchYahoo('CL%3DF'),
+    fetchYahoo('%5ETNX'),
+    fetchYahoo('NTNB11.SA'),
+  ]);
+
+  const ibov = fallbackVal(ibovLive, 'ibov', prevData);
+  const sp500 = fallbackVal(sp500Live, 'sp500', prevData);
+  const wti = fallbackVal(wtiLive, 'wti', prevData);
+  const treasury10y = fallbackVal(treasuryLive, 'treasury10y', prevData);
+  const ntnb11 = fallbackVal(ntnbLive, 'ntnb11', prevData);
+
+  const payload = {
+    ok: true,
+    ibov,
+    sp500,
+    wti,
+    treasury10y,
+    ntnb11,
+    updated_at: brtNow(),
+    source: 'Yahoo Finance · ao vivo',
+    ts: Math.floor(Date.now() / 1000),
+  };
+
+  await writeCache(env.CACHE, CACHE_KEY, payload, CACHE_TTL * 2);
+  return jsonResponse(payload, { headers: { 'Cache-Control': 'public, max-age=300' } });
+}

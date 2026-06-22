@@ -1,0 +1,38 @@
+{
+  "name": "remove_background",
+  "description": "Remove or cut out the background from an existing image or video. Use this when the user asks for background removal, a transparent background, an isolated subject, a clean cutout, or a subject-only asset. Pass media_id for the source media and media_type as image or video; the matching background remover is selected automatically. This tool does not use prompt, count, or style parameters.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "media_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Source media UUID — a confirmed uploaded media_id or a completed generation job_id."
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video"
+            ],
+            "description": "Whether media_id is an 'image' or a 'video'. Selects the matching background remover."
+          }
+        },
+        "required": [
+          "media_id",
+          "media_type"
+        ],
+        "additionalProperties": false,
+        "description": "Background removal parameters."
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

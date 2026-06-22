@@ -1,0 +1,9 @@
+{
+  "name": "tab_list",
+  "description": "List all open TradingView chart tabs",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

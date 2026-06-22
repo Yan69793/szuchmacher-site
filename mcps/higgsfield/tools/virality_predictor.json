@@ -1,0 +1,67 @@
+{
+  "name": "virality_predictor",
+  "description": "Virality Predictor predicts a video's virality potential, engagement, attention, audience response, retention risk, hook strength, and creative performance with an interactive dashboard. Use when the user asks whether a video can go viral or wants creative-performance analysis. Create starts analysis from a confirmed uploaded video or completed generated video; preview re-opens an existing dashboard.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": [
+          "create",
+          "preview"
+        ],
+        "description": "create starts Virality Predictor analysis; preview re-opens an existing dashboard."
+      },
+      "params": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "const": "virality_predictor",
+            "description": "Required fixed model identifier for Virality Predictor."
+          },
+          "job_id": {
+            "description": "Existing Virality Predictor job ID for action=\"preview\".",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "medias": {
+            "description": "Source video inputs for action=\"create\".",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "const": "video",
+                  "description": "Video input role."
+                },
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                  "description": "Confirmed video media_id or completed generated video job_id."
+                }
+              },
+              "required": [
+                "role",
+                "id"
+              ]
+            }
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": {},
+        "description": "Virality Predictor parameters. create uses medias; preview uses job_id."
+      }
+    },
+    "required": [
+      "action",
+      "params"
+    ]
+  }
+}

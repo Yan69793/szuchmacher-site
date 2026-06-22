@@ -1,0 +1,9 @@
+{
+  "name": "tv_discover",
+  "description": "Report which known TradingView API paths are available and their methods",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

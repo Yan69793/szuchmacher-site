@@ -1,0 +1,17 @@
+{
+  "name": "chart_set_symbol",
+  "description": "Change the chart symbol",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "symbol": {
+        "type": "string",
+        "description": "Symbol to set (e.g., BTCUSD, AAPL, ES1!, NYMEX:CL1!)"
+      }
+    },
+    "required": [
+      "symbol"
+    ]
+  }
+}

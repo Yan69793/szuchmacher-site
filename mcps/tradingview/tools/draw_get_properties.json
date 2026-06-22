@@ -1,0 +1,17 @@
+{
+  "name": "draw_get_properties",
+  "description": "Get properties and points of a specific drawing",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "entity_id": {
+        "type": "string",
+        "description": "Entity ID of the drawing (from draw_list)"
+      }
+    },
+    "required": [
+      "entity_id"
+    ]
+  }
+}

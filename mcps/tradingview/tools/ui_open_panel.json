@@ -1,0 +1,34 @@
+{
+  "name": "ui_open_panel",
+  "description": "Open, close, or toggle TradingView panels (pine-editor, strategy-tester, watchlist, alerts, trading)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "panel": {
+        "type": "string",
+        "enum": [
+          "pine-editor",
+          "strategy-tester",
+          "watchlist",
+          "alerts",
+          "trading"
+        ],
+        "description": "Panel name"
+      },
+      "action": {
+        "type": "string",
+        "enum": [
+          "open",
+          "close",
+          "toggle"
+        ],
+        "description": "Action to perform"
+      }
+    },
+    "required": [
+      "panel",
+      "action"
+    ]
+  }
+}

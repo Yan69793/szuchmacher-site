@@ -1,0 +1,17 @@
+{
+  "name": "watchlist_add",
+  "description": "Add a symbol to the TradingView watchlist",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "symbol": {
+        "type": "string",
+        "description": "Symbol to add (e.g., AAPL, BTCUSD, ES1!, NYMEX:CL1!)"
+      }
+    },
+    "required": [
+      "symbol"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "batch_run",
+  "description": "Run an action across multiple symbols and/or timeframes",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "symbols": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Array of symbols to iterate (e.g., [\"BTCUSD\", \"ETHUSD\", \"AAPL\"])"
+      },
+      "timeframes": {
+        "description": "Array of timeframes (e.g., [\"D\", \"60\", \"15\"])",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "action": {
+        "type": "string",
+        "description": "Action to run: screenshot, get_ohlcv, get_strategy_results"
+      },
+      "delay_ms": {
+        "description": "Delay between iterations in ms (default 2000)",
+        "type": "number"
+      },
+      "ohlcv_count": {
+        "description": "Bar count for get_ohlcv action (default 100)",
+        "type": "number"
+      }
+    },
+    "required": [
+      "symbols",
+      "action"
+    ]
+  }
+}

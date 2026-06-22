@@ -1,0 +1,127 @@
+{
+  "name": "mouse_control",
+  "description": "Low-level mouse input for canvas/drawing. AVOID for buttons/controls - use ui_automation(click) instead. BEFORE USING: Get coordinates from ui_automation(find) bounding rects OR screenshot_control(annotate=true). Never guess positions. USE FOR: drag operations, canvas drawing, custom controls without UIA. DRAG: Use x,y for START and endX,endY for END position (NOT startX/startY). Actions: move, click, double_click, right_click, middle_click, drag, scroll, get_position.\nMONITOR TARGETING:'primary_screen': Target the main display (with taskbar). Most common choice.'secondary_screen': Target the other monitor. Only works with exactly 2 monitors.monitorIndex: For 3+ monitors, use screenshot_control action='list_monitors' first to find the index.COORDINATES: All x/y coordinates are relative to the specified monitor.MONITOR CONTEXT: Successful operations with explicit coordinates return monitor_index, monitor_width, and monitor_height in the response.QUERY POSITION: Use action='get_position' to query current cursor position with monitor context.\nReturns: The result includes success status, cursor position, monitor context, and 'target_window' for click actions.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "description": "The mouse action to perform: move, click, double_click, right_click, middle_click, drag, scroll, or get_position.",
+        "type": "string",
+        "enum": [
+          "move",
+          "click",
+          "double_click",
+          "right_click",
+          "middle_click",
+          "drag",
+          "scroll",
+          "get_position"
+        ]
+      },
+      "target": {
+        "description": "Monitor target: 'primary_screen' (main display with taskbar), 'secondary_screen' (other monitor in 2-monitor setups). For 3+ monitors, use monitorIndex instead.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "x": {
+        "description": "X-coordinate relative to the monitor's left edge (required for move, optional for clicks).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "y": {
+        "description": "Y-coordinate relative to the monitor's top edge (required for move, optional for clicks).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "endX": {
+        "description": "End x-coordinate relative to the monitor (required for drag action).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "endY": {
+        "description": "End y-coordinate relative to the monitor (required for drag action).",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "direction": {
+        "description": "Scroll direction: up, down, left, or right (required for scroll action).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "amount": {
+        "description": "Number of scroll clicks (default: 1).",
+        "type": "integer",
+        "default": 1
+      },
+      "modifiers": {
+        "description": "Modifier keys to hold during action: ctrl, shift, alt (comma-separated).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "button": {
+        "description": "Mouse button for drag: left, right, or middle (default: left).",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "monitorIndex": {
+        "description": "Monitor index (0-based). Alternative to target for 3+ monitor setups. Use screenshot_control action='list_monitors' to find indices.",
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null
+      },
+      "expectedWindowTitle": {
+        "description": "Expected window title (partial match). If specified, operation fails if foreground window title doesn't match.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "expectedProcessName": {
+        "description": "Expected process name. If specified, operation fails if foreground window's process doesn't match.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      },
+      "windowHandle": {
+        "description": "Window handle for window-relative coordinates. When provided, x/y are relative to the window's top-left corner.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "action"
+    ]
+  }
+}

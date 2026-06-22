@@ -1,0 +1,611 @@
+{
+  "name": "show_marketing_studio",
+  "description": "When replying to the user, do not say `ms_image` — refer to it as \"DTC Ads\".\n\nOpen the Marketing Studio widget with the user's product/webproduct/avatar library. `type` is one of: `avatar`, `product`, `webproduct`. Marketing Studio video presets are ALWAYS included in the response. Use `action='list'` for library, `action='presets'` for presets only, `action='fetch'` for URL fetch flow, or `action='create'` for manual creation of product / webproduct / avatar from uploaded media.\n\nDIFFERENCE BETWEEN `product` AND `webproduct` (this drives how the resulting video is framed):\n- `product` — a SPECIFIC physical/sellable item the video should advertise. Pick this when the user wants the ad to feature the item itself (e.g. an Amazon SKU page for a t-shirt, a BMW M model page, a single SKU on a brand site, a direct image of a product). The video showcases the item, not the website.\n- `webproduct` — a WEBSITE / APP / SERVICE the user wants to advertise as a whole. Pick this when there is no single physical item to feature and the ad should promote the site/app itself (e.g. App Store / Google Play listings, a SaaS landing page, a company homepage with no specific SKU). The video promotes the site.\nWhen in doubt, default to `product` (most users advertise a specific item, not a site). If the URL is an App Store / Google Play page, prefer `webproduct`. If unsure, omit `type` entirely and let the server infer from the URL.\n\nPass `url` with `type=product`/`webproduct` (or omit `type` to infer it from the URL) to trigger a fetch and IMMEDIATELY render the widget with the in-progress entity + the user's full library. The widget shows a top-right progress pill and polls server-side until fetching finishes — no waiting on this tool call.\n\nMANUAL CREATION (`action='create'`):\n- `type='product'`: provide uploaded media in `medias[]`. If `title` is omitted, server derives one from media URL filename (fallback `Uploaded Product`).\n- `type='webproduct'`: provide chat media in `medias[]` (and optionally `webproduct_medias[]` for direct URL medias). `title`, `subtitle`, `description`, `favicon_url`, and `webproduct_url` are all optional.\n- `type='avatar'`: provide `avatars[]` (1-4 items), each with `name` plus a single image media. Avatar media must be an image. Pick the right `medias[0]` shape based on what you have:\n  · UPLOADED FILE (media_input UUID from media_upload) — REQUIRED to include url: `{value: <uuid>, url: <https://upload.higgsfield.ai/...|https://upload-dev.higgsfield.ai/...|https://cdn.higgsfield.ai/...>, type: 'media_input', role: 'image'}`. Server cannot fetch the URL for a media_input UUID itself.\n  · COMPLETED IMAGE-GENERATION JOB (image_job UUID) — url optional: `{value: <job_uuid>, role: 'image'}` works (server pulls result_url from the job). Pass `url` + `type: 'image_job'` to skip the extra lookup.\n  · DIRECT HTTPS URL — pass it as `value`: `{value: <https://...>, role: 'image'}`. Server ingests it via media-upload.\nEquivalent pre-resolved shape: `media: {id, url, type}` (skip `medias[]`). Backend rejects any avatar URL outside cloudfront.net / cdn.higgsfield.ai / upload.higgsfield.ai / upload-dev.higgsfield.ai.\n- `type='ad_reference'`: a tool for analyzing an existing reference video and recreating its scenario/structure in a new marketing video. The user gives you a video they want to 'copy the vibe of' (scene composition, pacing, hook, narration style) and ad_reference extracts that concept so the new marketing video follows the same blueprint with the user's own avatar/product. Use it when the user says things like 'make a video like this', 'recreate this ad', 'copy the style of this clip', 'use this as a reference'.\n  · To create: provide `video_input_id` (UUID of a video already uploaded in chat). URL ingestion is NOT supported — TikTok/Instagram/YouTube/HTTPS links cannot be passed directly. If the user only has a file, ask them to attach it in chat first (the chat-uploaded video's media id IS the `video_input_id`). If they only have a URL, tell them to download the file locally and re-upload it as an attachment.\n  · Optionally link a single avatar via `avatars: [{id: <uuid>, type: 'custom'|'preset'}]` (max 1 item) and/or a single product via `product_ids: ['<uuid>']` (max 1 item). These links are saved on the ad_reference for organizational/reference purposes — they DO NOT auto-apply at generation time. When you later call `generate_video` with this `ad_reference_id`, you MUST also pass the same `avatars` and `product_ids` explicitly there if you want the new video to feature them (or pass different ones if the user wants the same scenario with a different avatar/product).\n  · After creation, the response includes a `next_step` to call `generate_video` with `params.ad_reference_id` set — this is what tells the marketing video to follow the reference's scenario instead of inventing one from the prompt alone. IMPORTANT: the returned `next_step` does NOT include `avatars` or `product_ids` — when you act on it, ADD them to the params yourself (use the same ids you just linked here, or whatever the user requested). Skipping this step means the generated video will have no avatar/product even though they're 'linked' to the ad_reference.\n  · To edit the extracted concept (e.g. tweak a scene description) call `action='update', type='ad_reference', ad_reference_id, edited_concept_text` and/or `edited_concept_json`.\n  · ad_reference is mutually exclusive with `hook_id`/`setting_id` on `generate_video` — pick ONE approach: either follow a reference video's scenario (ad_reference) OR compose with explicit hook+setting building blocks, never both.\n\nAFTER calling this tool with `url`, you MUST immediately call `generate_video` with `params.model='marketing_studio_video'` and `params.url` set to the same URL to generate the marketing video in its OWN widget. That call blocks until fetching is ready (up to ~45s) and then submits the video — no manual media handling needed.\n\nDedupes by URL: repeated calls for the same URL reuse any existing non-failed entity instead of re-fetching.\n\nMS IMAGE INPUTS (`generate_image` with `model='ms_image'`):\n- `type='brand_kit'` (alias `brand_kits`): manage Marketing Studio brand kits — name, logo, hero/product images, colours, fonts, tone of voice, products. Two creation flows:\n  · `action='fetch'` with `scrap_url='<brand site URL>'` — server scrapes the site asynchronously. Status starts as `queued`/`in_progress`; the widget shows live progress and updates when done. DO NOT poll manually or call `generate_image` with the new id until the user confirms the kit is ready.\n  · `action='create'` with `brand_kit={...}` — manual create when the user describes their brand directly (brand name, logo, images, colors, etc.) instead of giving a website URL. Returns `status='completed'` immediately — no polling. All fields in `brand_kit` are optional; aim for at least `brand_name`, `business_overview`, `logo`, and `images`. Recommended two-step flow: (1) ask one open question, research/draft the body yourself (web search, uploaded files via media_upload → CDN URLs); (2) show the user a readable summary, accept edits, THEN call `action='create'`. Do not interrogate the user for 17 fields. `logo` and `images[].url` must be CDN URLs (`upload.higgsfield.ai/...`, `upload-dev.higgsfield.ai/...`, or `cdn.higgsfield.ai/...`) — upload local/external files via the media_upload flow first.\n  · Other actions: `action='list'`, `action='get'`/`'update'`/`'delete'` (each requires `brand_kit_id`). PUT update REPLACES `data` wholesale — call `action='get'` first, modify, send the full picture.\n- `type='ad_format'` (aliases: `ad_formats`, `image_style`, `image_styles`): list curated DTC Ads ad-format presets for `ms_image`. Read-only. The user picks one as `style_id` for ad image generation. If the user doesn't pick one, the server resolves to a sensible default — but you SHOULD list and let them pick.\n\nMARKETING STUDIO SETUP (hooks + settings):\n- `type='hook'` (alias `hooks`): list available Marketing Studio Setup hooks — the 'what' (attention-grabbing mechanic, e.g. \"Object flies into frame\"). Returns user-owned + CMS preset items.\n- `type='setting'` (alias `settings`): list available Marketing Studio Setup settings — the 'where' (location/vibe, e.g. \"Sunlit kitchen, morning light\"). Returns user-owned + CMS preset items.\n- Some Marketing Studio video presets can include built-in hook/setting behavior. If the user picks such a preset, `hook_id`/`setting_id` are optional overrides rather than required fields.\n- Hooks/settings are supported only for these presets: `UGC`, `Tutorial`, `Unboxing`, `Product Review`, `UGC Virtual Try On`.\n- `hook_id` and `setting_id` are INDEPENDENT — pass either, both, or neither. They are MUTUALLY EXCLUSIVE with `ad_reference_id` (different approaches: explicit composition vs reference scenario).\nUse `size`, `user_cursor` (cursor pagination), and `search` for these listings. Pass any returned `id` to `generate_video` as `params.hook_id` and/or `params.setting_id` to apply the hook/setting to the marketing video. This tool is read-only for setup items — creation/pinning/preview generation are not exposed via MCP.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "description": "Explicit mode selector. list=library by type, presets=presets only, fetch=URL fetch flow (product/webproduct/brand_kit), create=manual creation (type chooses entity), update=edit existing entity, get=fetch one by id (brand_kit), delete=remove by id (brand_kit).",
+        "type": "string"
+      },
+      "type": {
+        "description": "Entity kind to list. Use `avatar`/`product`/`webproduct`/`ad_reference`/`brand_kit` for libraries, `hook`/`setting` for Marketing Studio Setup items (read-only — listing only, no creation), `ad_format` (alias of `image_style`) for the curated DTC Ads ad-format catalogue (read-only). `preset`/`presets` are accepted as a no-op alias for omitting `type` — returns video presets only. Plural aliases (`avatars`, `products`, `webproducts`, `hooks`, `settings`, `ad_references`, `brand_kits`, `ad_formats`, `image_styles`) are accepted. Optional when `url` is set (inferred from URL).",
+        "type": "string",
+        "enum": [
+          "avatar",
+          "avatars",
+          "product",
+          "products",
+          "webproduct",
+          "webproducts",
+          "preset",
+          "presets",
+          "hook",
+          "hooks",
+          "setting",
+          "settings",
+          "ad_reference",
+          "ad_references",
+          "brand_kit",
+          "brand_kits",
+          "image_style",
+          "image_styles",
+          "ad_format",
+          "ad_formats"
+        ]
+      },
+      "url": {
+        "description": "URL to fetch. When set, only product/webproduct are valid. https:// is added automatically if missing.",
+        "type": "string"
+      },
+      "scrape_url": {
+        "description": "Deprecated alias of `url` for product/webproduct fetch. Prefer `url`.",
+        "type": "string"
+      },
+      "folder_id": {
+        "description": "Optional folder for product fetch.",
+        "type": "string"
+      },
+      "size": {
+        "description": "Page size for avatar / hook / setting / ad_reference listings",
+        "default": 20,
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "user_cursor": {
+        "description": "Cursor pagination (created_at timestamp from the previous page's last item). Applies to avatars, hooks, settings, and ad_references. Pass `null`/omit for first page.",
+        "type": "number"
+      },
+      "preset_cursor": {
+        "description": "Avatars only: cursor over presets",
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "search": {
+        "description": "Search query — applies to avatar / hook / setting listings (case-insensitive substring match against name)",
+        "type": "string"
+      },
+      "limit": {
+        "description": "Page size for product/webproduct (offset/limit pagination).",
+        "default": 20,
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "offset": {
+        "description": "Used for product/webproduct",
+        "default": 0,
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "title": {
+        "description": "Used by action=create with type=product/webproduct. For product, optional and auto-derived from media when omitted; for webproduct optional.",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "description": {
+        "description": "Used by action=create with type=product/webproduct.",
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "media_input_ids": {
+        "description": "Legacy media IDs for action=create,type=product.",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "medias": {
+        "description": "Chat media for action=create with type=product/webproduct.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "media_id, job_id, or https URL from chat"
+            },
+            "role": {
+              "default": "image",
+              "type": "string",
+              "enum": [
+                "image",
+                "video"
+              ]
+            },
+            "url": {
+              "description": "Public https URL for the media. Required vs optional depends on what `value` is:\n• `value` is a media_input UUID (uploaded file from media_upload) — `url` is REQUIRED. Server CANNOT resolve a media_input UUID to its URL.\n• `value` is an image_job UUID (completed image-generation job) — `url` is OPTIONAL. Server fetches result_url from jobs.get automatically. Pass url to skip the lookup.\n• `value` is an https URL — leave `url` empty (the URL is already in `value`).\nAllowed hosts for avatar media: cloudfront.net, cdn.higgsfield.ai, upload.higgsfield.ai, upload-dev.higgsfield.ai. Optional for type=product/webproduct.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Explicit backend media type. `media_input` = uploaded file (always pair with `url`). `image_job` = completed image-generation job (url optional — server resolves from job).",
+              "type": "string",
+              "enum": [
+                "image_job",
+                "media_input"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ]
+        }
+      },
+      "avatars": {
+        "description": "Plural array. Two contexts:\n1) `action=create,type=avatar` — avatars to CREATE. Each item: { name, medias|media, is_pinned? }. Max 4. `name` is required.\n2) `action=create,type=ad_reference` — REFERENCE to a single existing avatar. Pass `avatars: [{id: <avatar uuid>, type: 'custom'|'preset'}]` (max 1 item).",
+        "maxItems": 4,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "medias": {
+              "maxItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "media_id, job_id, or https URL from chat"
+                  },
+                  "role": {
+                    "default": "image",
+                    "type": "string",
+                    "enum": [
+                      "image",
+                      "video"
+                    ]
+                  },
+                  "url": {
+                    "description": "Public https URL for the media. Required vs optional depends on what `value` is:\n• `value` is a media_input UUID (uploaded file from media_upload) — `url` is REQUIRED. Server CANNOT resolve a media_input UUID to its URL.\n• `value` is an image_job UUID (completed image-generation job) — `url` is OPTIONAL. Server fetches result_url from jobs.get automatically. Pass url to skip the lookup.\n• `value` is an https URL — leave `url` empty (the URL is already in `value`).\nAllowed hosts for avatar media: cloudfront.net, cdn.higgsfield.ai, upload.higgsfield.ai, upload-dev.higgsfield.ai. Optional for type=product/webproduct.",
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "Explicit backend media type. `media_input` = uploaded file (always pair with `url`). `image_job` = completed image-generation job (url optional — server resolves from job).",
+                    "type": "string",
+                    "enum": [
+                      "image_job",
+                      "media_input"
+                    ]
+                  }
+                },
+                "required": [
+                  "value"
+                ]
+              }
+            },
+            "media": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "image",
+                        "video",
+                        "image_job",
+                        "media_input"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "is_pinned": {
+              "type": "boolean"
+            },
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "custom",
+                "preset"
+              ]
+            }
+          }
+        }
+      },
+      "webproduct_url": {
+        "description": "Used by action=create,type=webproduct. URL stored on the webproduct (not fetched).",
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "subtitle": {
+        "description": "Used by action=create,type=webproduct.",
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "favicon_url": {
+        "description": "Used by action=create,type=webproduct.",
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "webproduct_medias": {
+        "description": "Used by action=create,type=webproduct. Direct webproduct medias with url/type.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "media_id, job_id, or https URL from chat",
+              "type": "string"
+            },
+            "url": {
+              "description": "Direct media URL",
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "role": {
+              "default": "image",
+              "type": "string",
+              "enum": [
+                "image",
+                "video"
+              ]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "video_input_id": {
+        "description": "Used by action=create,type=ad_reference. UUID of a video already uploaded in chat (the chat-attachment's media id IS the video_input_id). URL ingestion is NOT supported — do NOT ask the user for TikTok/Instagram/YouTube/HTTPS links. If the user has only a URL, tell them to download the file and upload it as a chat attachment first.",
+        "type": "string"
+      },
+      "product_ids": {
+        "description": "Plural array (max 1 item). Used by action=create,type=ad_reference to link an existing product. Pass `product_ids: ['<product uuid>']`. Do NOT use `product_id` (singular) — only the plural form is accepted.",
+        "maxItems": 1,
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "ad_reference_id": {
+        "description": "UUID of the ad reference to update. Required for action=update,type=ad_reference.",
+        "type": "string"
+      },
+      "edited_concept_text": {
+        "description": "User-edited concept as plain text. Used by action=update,type=ad_reference. Only allowed once the ad reference's status is `completed` or `failed`.",
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "edited_concept_json": {
+        "description": "User-edited concept as structured JSON. Used by action=update,type=ad_reference. Only allowed once the ad reference's status is `completed` or `failed`.",
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {}
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "mode": {
+        "description": "Optional Marketing Studio preset label/slug for next_step video generation.",
+        "type": "string"
+      },
+      "brand_kit_id": {
+        "description": "UUID of the brand kit to GET / UPDATE / DELETE. Used by `action='get'`, `action='update'`, `action='delete'` with `type='brand_kit'`.",
+        "type": "string"
+      },
+      "brand_kit": {
+        "description": "Brand kit data payload for `action='create'` or `action='update'` with `type='brand_kit'`. All fields optional; for create aim for at least `brand_name`, `business_overview`, `logo`, `images`. `logo` and `images[].url` must be CDN URLs (`upload.higgsfield.ai/...` / `upload-dev.higgsfield.ai/...` / `cdn.higgsfield.ai/...`) — upload local files via the media_upload flow first. PUT update REPLACES the data wholesale — `action='get'` first, modify the fields you want to change, send the full picture back.",
+        "type": "object",
+        "properties": {
+          "brand_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "website_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "logo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "business_overview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "short_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tagline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fonts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "usage": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "colors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "hex": {
+                  "type": "string"
+                },
+                "rgb": {
+                  "type": "string"
+                },
+                "usage": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "brand_values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "brand_aesthetics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tone_of_voice": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "products_or_services": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "social_links": {
+            "type": "object",
+            "properties": {
+              "instagram": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tiktok": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "youtube": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "twitter": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "linkedin": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "facebook": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pinterest": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "company_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "scrap_url": {
+        "description": "Required by `action='fetch'` with `type='brand_kit'`. Pass the brand's website URL — the server fetches it asynchronously and populates the brand kit.",
+        "type": "string"
+      }
+    }
+  }
+}

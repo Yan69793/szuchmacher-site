@@ -1,0 +1,9 @@
+{
+  "name": "balance",
+  "description": "Get the user's available credits and current subscription plan. For transaction history, call `transactions` instead.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

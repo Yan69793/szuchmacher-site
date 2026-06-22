@@ -1,0 +1,9 @@
+{
+  "name": "pine_smart_compile",
+  "description": "Intelligent compile: detects button, compiles, checks errors, reports study changes",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

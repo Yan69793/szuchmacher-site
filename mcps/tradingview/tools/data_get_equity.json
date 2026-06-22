@@ -1,0 +1,9 @@
+{
+  "name": "data_get_equity",
+  "description": "Get equity curve data from Strategy Tester",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {}
+  }
+}

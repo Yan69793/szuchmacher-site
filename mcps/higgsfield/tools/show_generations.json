@@ -1,0 +1,31 @@
+{
+  "name": "show_generations",
+  "description": "Browse past completed non-Marketing Studio generations and render them directly in the widget. Returns generations with {id, type, status, model, params, results}. Use show_marketing_studio_generations for Marketing Studio video/image/ad history. Use this tool when the user explicitly asks to browse regular history/results; do not call it repeatedly as a post-generation poll step. Pass a prior generation's id as value in the medias array of a new generation to reuse it. To re-display a specific result, call job_display with its id (one id per call). Paginated: if next_cursor is not null, pass it as cursor to get the next page.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "type": {
+        "description": "Filter by media type",
+        "type": "string",
+        "enum": [
+          "image",
+          "video",
+          "audio",
+          "3d"
+        ]
+      },
+      "cursor": {
+        "description": "Pass next_cursor from previous response to get next page",
+        "type": "number"
+      },
+      "size": {
+        "default": 24,
+        "description": "Number of results per page",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
+    }
+  }
+}

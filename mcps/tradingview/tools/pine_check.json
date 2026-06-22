@@ -1,0 +1,17 @@
+{
+  "name": "pine_check",
+  "description": "Compile Pine Script via TradingView's server API without needing the chart open. Returns compilation errors/warnings. Useful for validating code before injecting into the chart.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "Pine Script source code to compile/validate"
+      }
+    },
+    "required": [
+      "source"
+    ]
+  }
+}

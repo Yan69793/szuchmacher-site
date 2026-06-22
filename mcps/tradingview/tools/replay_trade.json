@@ -1,0 +1,17 @@
+{
+  "name": "replay_trade",
+  "description": "Execute a trade action in replay mode (buy, sell, or close position)",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "description": "Trade action: buy, sell, or close"
+      }
+    },
+    "required": [
+      "action"
+    ]
+  }
+}

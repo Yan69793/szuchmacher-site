@@ -1,0 +1,99 @@
+{
+  "name": "reframe",
+  "description": "Expand or reframe an existing video to a new aspect ratio while preserving the source content. Use this when the user asks to make a video vertical, horizontal, square, wider, taller, or fill new edges around a video. Pass medias with exactly one source video and aspect_ratio for the target canvas. Optional image references can guide the filled area; optional start_image can pin the first frame when the user provides a first-frame anchor. For source videos over 15 seconds, pass duration_seconds and resolution and use only the source video. This tool does not use prompt or count. Set params.get_cost=true to estimate credits without submitting a job.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "params": {
+        "type": "object",
+        "properties": {
+          "aspect_ratio": {
+            "description": "Target aspect ratio. Required unless get_cost is true.",
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "1:1",
+              "21:9"
+            ]
+          },
+          "duration_seconds": {
+            "description": "Source video duration in seconds. Required with resolution when the source video is over 15 seconds. Maximum supported duration is 60 seconds.",
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 60
+          },
+          "resolution": {
+            "description": "Required when get_cost is true or duration_seconds is over 15 seconds. Allowed values: 480p, 720p, 1080p.",
+            "type": "string",
+            "enum": [
+              "480p",
+              "720p",
+              "1080p"
+            ]
+          },
+          "medias": {
+            "description": "Required unless get_cost is true. Exactly one source video, optional one start_image, and optional 1-2 image references. For videos over 15 seconds, pass only the source video.",
+            "minItems": 1,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "description": "Source video. Confirmed uploaded video media_id or completed video job_id."
+                    },
+                    "role": {
+                      "type": "string",
+                      "const": "video",
+                      "description": "Must be 'video'."
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "role"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "description": "Optional image. Confirmed uploaded image media_id or https:// image URL."
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "start_image",
+                        "image"
+                      ],
+                      "description": "Use image for references that guide filled edges. Use start_image only when the user provides a first-frame anchor."
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "role"
+                  ]
+                }
+              ]
+            }
+          },
+          "get_cost": {
+            "description": "If true, return the cost in credits for this reframe without submitting any job. Requires duration_seconds and resolution; medias and aspect_ratio are not needed.",
+            "type": "boolean"
+          }
+        },
+        "description": "Video reframe parameters. prompt and count are not supported."
+      }
+    },
+    "required": [
+      "params"
+    ]
+  }
+}

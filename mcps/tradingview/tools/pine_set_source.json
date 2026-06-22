@@ -1,0 +1,17 @@
+{
+  "name": "pine_set_source",
+  "description": "Set Pine Script source code in the editor",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "Pine Script source code to inject"
+      }
+    },
+    "required": [
+      "source"
+    ]
+  }
+}

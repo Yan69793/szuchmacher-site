@@ -1,0 +1,17 @@
+{
+  "name": "data_get_indicator",
+  "description": "Get indicator/study info and input values",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "entity_id": {
+        "type": "string",
+        "description": "Study entity ID (from chart_get_state)"
+      }
+    },
+    "required": [
+      "entity_id"
+    ]
+  }
+}

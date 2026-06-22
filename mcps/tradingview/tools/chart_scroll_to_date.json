@@ -1,0 +1,17 @@
+{
+  "name": "chart_scroll_to_date",
+  "description": "Jump the chart view to center on a specific date",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "date": {
+        "type": "string",
+        "description": "ISO date string (e.g., \"2024-01-15\") or unix timestamp as a string"
+      }
+    },
+    "required": [
+      "date"
+    ]
+  }
+}
