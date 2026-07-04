@@ -8,6 +8,9 @@
     <meta name="description" content="Plataforma executiva de análise fundamentalista, leitura macro e simulação de portfólio multimercado. Juros, câmbio, equities, crédito e commodities integrados para decisões de alocação qualificadas." />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://multi-assets.com/" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="MultiAsset | Plataforma de análise macro e portfólio" />
@@ -282,8 +285,8 @@
         .sim-panel { display: none; }
         .sim-panel.active { display: block; }
         .sim-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
-        .sim-panel-left { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
-        .sim-panel-right { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; height: 100%; min-height: 560px; display: flex; flex-direction: column; }
+        .sim-panel-left { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; min-width: 0; overflow: hidden; }
+        .sim-panel-right { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; height: 100%; min-height: 560px; display: flex; flex-direction: column; min-width: 0; }
         .sim-chart-label { padding: 16px 20px 12px; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; border-bottom: 1px solid var(--border); flex-shrink: 0; }
         .sim-tv-chart { flex: 1; min-height: 500px; }
         .sim-ativo-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
@@ -743,6 +746,9 @@
         }
 
         @media (max-width: 1024px) {
+            /* rede de seguranca contra scroll horizontal em telas estreitas;
+               seguro aqui pois .alloc-donut-wrap ja e position:static neste breakpoint */
+            html { overflow-x: hidden; }
             .footer-inner { grid-template-columns: 1fr 1fr; padding: 48px 32px 32px; gap: 36px; }
             .footer-bottom { padding: 16px 32px; }
             .footer-disclaimer { padding: 12px 32px 28px; }
@@ -1763,11 +1769,11 @@
                 </div>
                 <div class="sim-form-block">
                     <div class="form-row">
-                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="g-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('gold')"></div>
-                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="g-aporte" value="500" class="form-input" min="0" oninput="recalcSim('gold')"></div>
+                        <div class="form-group"><label class="form-label" for="g-inicial">Valor inicial (USD)</label><input type="number" id="g-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('gold')"></div>
+                        <div class="form-group"><label class="form-label" for="g-aporte">Aporte mensal (USD)</label><input type="number" id="g-aporte" value="500" class="form-input" min="0" oninput="recalcSim('gold')"></div>
                     </div>
                     <div class="form-row" style="grid-template-columns:1fr;">
-                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="g-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('gold')"></div>
+                        <div class="form-group"><label class="form-label" for="g-prazo">Prazo (anos)</label><input type="number" id="g-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('gold')"></div>
                     </div>
                 </div>
                 <div class="sc-selector" id="sc-gold">
@@ -1856,11 +1862,11 @@
                 </div>
                 <div class="sim-form-block">
                     <div class="form-row">
-                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="s-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('silver')"></div>
-                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="s-aporte" value="500" class="form-input" min="0" oninput="recalcSim('silver')"></div>
+                        <div class="form-group"><label class="form-label" for="s-inicial">Valor inicial (USD)</label><input type="number" id="s-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('silver')"></div>
+                        <div class="form-group"><label class="form-label" for="s-aporte">Aporte mensal (USD)</label><input type="number" id="s-aporte" value="500" class="form-input" min="0" oninput="recalcSim('silver')"></div>
                     </div>
                     <div class="form-row" style="grid-template-columns:1fr;">
-                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="s-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('silver')"></div>
+                        <div class="form-group"><label class="form-label" for="s-prazo">Prazo (anos)</label><input type="number" id="s-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('silver')"></div>
                     </div>
                 </div>
                 <div class="sc-selector" id="sc-silver">
@@ -1949,11 +1955,11 @@
                 </div>
                 <div class="sim-form-block">
                     <div class="form-row">
-                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="p-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('platinum')"></div>
-                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="p-aporte" value="500" class="form-input" min="0" oninput="recalcSim('platinum')"></div>
+                        <div class="form-group"><label class="form-label" for="p-inicial">Valor inicial (USD)</label><input type="number" id="p-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('platinum')"></div>
+                        <div class="form-group"><label class="form-label" for="p-aporte">Aporte mensal (USD)</label><input type="number" id="p-aporte" value="500" class="form-input" min="0" oninput="recalcSim('platinum')"></div>
                     </div>
                     <div class="form-row" style="grid-template-columns:1fr;">
-                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="p-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('platinum')"></div>
+                        <div class="form-group"><label class="form-label" for="p-prazo">Prazo (anos)</label><input type="number" id="p-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('platinum')"></div>
                     </div>
                 </div>
                 <div class="sc-selector" id="sc-platinum">
@@ -2045,11 +2051,11 @@
                 </div>
                 <div class="sim-form-block">
                     <div class="form-row">
-                        <div class="form-group"><label class="form-label">Valor inicial (USD)</label><input type="number" id="b-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('btc')"></div>
-                        <div class="form-group"><label class="form-label">Aporte mensal (USD)</label><input type="number" id="b-aporte" value="500" class="form-input" min="0" oninput="recalcSim('btc')"></div>
+                        <div class="form-group"><label class="form-label" for="b-inicial">Valor inicial (USD)</label><input type="number" id="b-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('btc')"></div>
+                        <div class="form-group"><label class="form-label" for="b-aporte">Aporte mensal (USD)</label><input type="number" id="b-aporte" value="500" class="form-input" min="0" oninput="recalcSim('btc')"></div>
                     </div>
                     <div class="form-row" style="grid-template-columns:1fr;">
-                        <div class="form-group"><label class="form-label">Prazo (anos)</label><input type="number" id="b-prazo" value="4" class="form-input" min="1" max="20" oninput="recalcSim('btc')"></div>
+                        <div class="form-group"><label class="form-label" for="b-prazo">Prazo (anos)</label><input type="number" id="b-prazo" value="4" class="form-input" min="1" max="20" oninput="recalcSim('btc')"></div>
                     </div>
                 </div>
                 <div class="sc-selector" id="sc-btc">
@@ -2129,32 +2135,32 @@
         <div class="comp-inputs">
             <div class="comp-input-card" style="border-color:rgba(201,168,76,0.3)">
                 <div class="comp-input-title" style="color:var(--gold)">Au Ouro</div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-g-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-g-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-g-tx-d">9,3%</span></div><input type="range" id="c-g-tx" min="2" max="25" step="0.5" value="9.3" oninput="document.getElementById('c-g-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-g-ini">Inicial (USD)</label><input type="number" id="c-g-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-g-ap">Mensal (USD)</label><input type="number" id="c-g-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-g-tx-d">9,3%</span></div><input type="range" id="c-g-tx" aria-label="Taxa de retorno anual — Ouro" min="2" max="25" step="0.5" value="9.3" oninput="document.getElementById('c-g-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
             </div>
             <div class="comp-input-card" style="border-color:rgba(192,192,192,0.25)">
                 <div class="comp-input-title" style="color:#c0c0c0">Ag Prata</div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-s-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-s-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-s-tx-d">8,5%</span></div><input type="range" id="c-s-tx" min="2" max="25" step="0.5" value="8.5" oninput="document.getElementById('c-s-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-s-ini">Inicial (USD)</label><input type="number" id="c-s-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-s-ap">Mensal (USD)</label><input type="number" id="c-s-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-s-tx-d">8,5%</span></div><input type="range" id="c-s-tx" aria-label="Taxa de retorno anual — Prata" min="2" max="25" step="0.5" value="8.5" oninput="document.getElementById('c-s-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
             </div>
             <div class="comp-input-card" style="border-color:rgba(142,207,221,0.25)">
                 <div class="comp-input-title" style="color:#8ecfdd">Pt Platina</div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-p-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-p-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-p-tx-d">6,0%</span></div><input type="range" id="c-p-tx" min="2" max="30" step="0.5" value="6" oninput="document.getElementById('c-p-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-p-ini">Inicial (USD)</label><input type="number" id="c-p-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-p-ap">Mensal (USD)</label><input type="number" id="c-p-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-p-tx-d">6,0%</span></div><input type="range" id="c-p-tx" aria-label="Taxa de retorno anual — Platina" min="2" max="30" step="0.5" value="6" oninput="document.getElementById('c-p-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
             </div>
             <div class="comp-input-card" style="border-color:rgba(240,122,64,0.3)">
                 <div class="comp-input-title" style="color:var(--orange)">₿ Bitcoin</div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Inicial (USD)</label><input type="number" id="c-b-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Mensal (USD)</label><input type="number" id="c-b-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
-                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-b-tx-d">40%</span></div><input type="range" id="c-b-tx" min="-50" max="150" step="5" value="40" oninput="document.getElementById('c-b-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-b-ini">Inicial (USD)</label><input type="number" id="c-b-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-b-ap">Mensal (USD)</label><input type="number" id="c-b-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-b-tx-d">40%</span></div><input type="range" id="c-b-tx" aria-label="Taxa de retorno anual — Bitcoin" min="-50" max="150" step="5" value="40" oninput="document.getElementById('c-b-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
             </div>
         </div>
         <div class="comp-prazo-row">
             <span class="slider-label">Prazo de comparação</span>
-            <input type="range" id="c-prazo" min="1" max="20" step="1" value="10" style="flex:1;" oninput="document.getElementById('c-prazo-d').textContent=this.value+' anos'; recalcComparador()">
+            <input type="range" id="c-prazo" aria-label="Prazo de comparação" min="1" max="20" step="1" value="10" style="flex:1;" oninput="document.getElementById('c-prazo-d').textContent=this.value+' anos'; recalcComparador()">
             <span class="slider-val mono" id="c-prazo-d" style="min-width:70px;text-align:right;">10 anos</span>
         </div>
         <div class="comp-chart-controls">
@@ -2229,7 +2235,7 @@
         <!-- SLIDER DE VALOR -->
         <div class="alloc-slider-row">
             <span class="alloc-label">Valor total do portfólio</span>
-            <input type="range" id="portfolio-slider" min="10000" max="5000000" step="10000" value="500000" style="flex:1;" oninput="atualizarAlocacao(this.value)">
+            <input type="range" id="portfolio-slider" aria-label="Valor total do portfólio" min="10000" max="5000000" step="10000" value="500000" style="flex:1;" oninput="atualizarAlocacao(this.value)">
             <span class="alloc-display mono" id="portfolio-display">R$ 500.000</span>
         </div>
 
@@ -2567,7 +2573,7 @@
                     <span id="macro-stamp-text">—</span>
                 </div>
             </div>
-            <button id="btn-atualizar-macro" style="display:none"></button>
+            <button id="btn-atualizar-macro" aria-label="Atualizar dados macro" style="display:none"></button>
         </div>
     </div>
 
@@ -2726,7 +2732,7 @@
 <!-- CTA PLATAFORMA -->
 <section class="cta-section">
     <div class="cta-eyebrow">Simulação · Cenários · Macro</div>
-    <h2 class="cta-title display">Teste alocações, compare benchmarks<br>e exporte o relatório em PDF</h2>
+    <h2 class="cta-title display">Os loucos abrem caminhos que mais tarde serão percorridos pelos sábios.</h2>
     <p class="cta-sub">
         Use os simuladores para explorar cenários antes de decidir.<br>
         Dados de mercado e macro atualizados na própria plataforma.
@@ -4473,7 +4479,7 @@ async function fetchMacroIndicators() {
 
     let selicOk = false, cdiOk = false;
     try {
-        const res = await fetch('https://brasilapi.com.br/api/taxa/v1', { signal: AbortSignal.timeout(10000) });
+        const res = await fetch('https://brasilapi.com.br/api/taxas/v1', { signal: AbortSignal.timeout(10000) });
         if (res.ok) {
             const taxas = await res.json();
             const selic = taxas.find(t => /selic/i.test(t.nome));
@@ -4735,7 +4741,7 @@ async function fetchRFDiario() {
 
     // CDI/Selic: BrasilAPI → BCB série 432
     try {
-        const res = await fetch('https://brasilapi.com.br/api/taxa/v1', { signal: AbortSignal.timeout(10000) });
+        const res = await fetch('https://brasilapi.com.br/api/taxas/v1', { signal: AbortSignal.timeout(10000) });
         if (res.ok) { const taxas = await res.json(); const s = taxas.find(t => /selic/i.test(t.nome)); if (s?.valor > 0) selicRate = parseFloat(s.valor); }
     } catch(e) {}
     if (!selicRate) {
@@ -5195,6 +5201,7 @@ if (document.readyState === 'loading') {
                     id="popup-email-input"
                     class="popup-input"
                     placeholder="seu@email.com"
+                    aria-label="Seu e-mail"
                     autocomplete="email"
                     onkeydown="if(event.key==='Enter') submitExitPopup()"
                 />

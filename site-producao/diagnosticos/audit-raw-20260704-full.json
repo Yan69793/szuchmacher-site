@@ -1,0 +1,38 @@
+{
+  "target": "https://szuchmacher.com.br",
+  "timestamp": "2026-07-04T01:30:00-03:00",
+  "mode": "--full",
+  "playwright_raw": "diagnosticos/audit-raw-20260704_012406.json",
+  "lighthouse": {
+    "home": { "performance": 0.97, "accessibility": 0.96, "best_practices": 0.73, "seo": 1.0, "lcp_ms": 1096, "cls": 0.0016, "tbt_ms": 0 },
+    "multiasset_app": { "performance": 0.75, "accessibility": 0.84, "best_practices": 0.73, "seo": 1.0, "lcp_ms": 2444, "cls": 0.0, "tbt_ms": 0 }
+  },
+  "pa11y": {
+    "home_wcag2aa_errors": 14,
+    "multiasset_app_wcag2aa_errors": 113,
+    "multiasset_app_breakdown": { "contrast": 85, "numberinput_no_name": 20, "rangeinput_no_name": 6, "emailinput_no_name": 1, "button_no_name": 1 }
+  },
+  "linkinator_broken": [
+    { "url": "https://szuchmacher.com.br/ebook.html", "parent": "index.html", "status": 404, "same_origin": true },
+    { "url": "https://szuchmacher.com.br/Fechamento de Mercado 01.04.26.pdf", "parent": "relatorios.html", "status": 404, "same_origin": true },
+    { "url": "https://szuchmacher.com.br/favicon.ico", "parent": "privacidade.html", "status": 404, "same_origin": true },
+    { "url": "https://szuchmacher.com.br/favicon.svg", "parent": "privacidade.html", "status": 404, "same_origin": true },
+    { "url": "https://szuchmacher.com.br/apple-touch-icon.png", "parent": "privacidade.html", "status": 404, "same_origin": true }
+  ],
+  "cloudflare": {
+    "latest_deployment": "2026-07-03T10:16:16Z",
+    "secrets": ["BRIEFING_FETCH_TOKEN", "OPENROUTER_KEY"],
+    "zone_status": "active",
+    "ns_ok": true
+  },
+  "findings": [
+    { "id": "P1-001", "severity": "P1", "title": "ebook.html existe no repo (fe1702f) mas 404 em producao", "evidence": "curl GET -> 404; git log mostra arquivo commitado 22/06; linkinator confirma link interno quebrado a partir de index.html" },
+    { "id": "P2-001", "severity": "P2", "title": "multiasset-app.html accessibility 0.84 (Lighthouse) + 28 inputs sem nome acessivel (Pa11y)", "evidence": "lh-multiasset.json categories.accessibility.score=0.84; pa11y json com 27 numberinput/rangeinput/emailinput + 1 button sem label" },
+    { "id": "P2-002", "severity": "P2", "title": "horizontal_overflow_elements=12 em multiasset-app.html no viewport 320px", "evidence": "audit-raw-20260704_012406.json, pages[5].warnings" },
+    { "id": "P2-003", "severity": "P2", "title": "radar-roic.html sem link rel=canonical", "evidence": "grep rel=\"canonical\" radar-roic.html -> 0 matches" },
+    { "id": "P3-001", "severity": "P3", "title": "Contraste insuficiente --gold em home (14 instancias) e multiasset-app (85 instancias)", "evidence": "pa11y WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail" },
+    { "id": "P3-002", "severity": "P3", "title": "privacidade.html e radar-roic.html sem OG tags", "evidence": "grep property=\"og: -> 0 matches nas duas paginas" },
+    { "id": "P3-003", "severity": "P3", "title": "PDF de amostra e 3 assets de favicon quebrados", "evidence": "linkinator_broken acima" },
+    { "id": "P3-004", "severity": "P3", "title": "sitemap.xml estava ausente, corrigido nesta rodada (G.1)", "evidence": "curl GET sitemap.xml -> 404 antes do fix; site-producao/sitemap.xml criado" }
+  ]
+}

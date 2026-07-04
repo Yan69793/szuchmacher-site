@@ -1,0 +1,253 @@
+{
+  "generated_at": "2026-07-04T01:24:06.527990",
+  "base": "https://szuchmacher.com.br",
+  "endpoints": [
+    {
+      "url": "https://szuchmacher.com.br/prices.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ok\":true,\"gold\":4176.1,\"silver\":62.52,\"platinum\":1648,\"bitcoin\":62587,\"sources\":[\"gold-api.com\"],\"stale\":false,\"generated_at\":\"04/07/2026, 01:17 BRT\",\"ts\":1783138666,\"_raw\":{\"gold\":4176.1,\"silver\":62.52,\"platinum\":1648,\"bitcoin\":62587},\"source_state\":\"cache\"}"
+    },
+    {
+      "url": "https://szuchmacher.com.br/market-data.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ok\":true,\"ibov\":{\"value\":174070.27,\"change_pct\":0.74},\"sp500\":{\"value\":7483.24,\"change_pct\":0},\"wti\":{\"value\":68.78,\"change_pct\":0.13},\"treasury10y\":{\"value\":4.48,\"change_pct\":0},\"ntnb11\":{\"value\":95,\"change_pct\":0},\"updated_at\":\"04/07/2026, 01:17 BRT\",\"source\":\"Yahoo Finance · cache\",\"ts\":1783138"
+    },
+    {
+      "url": "https://szuchmacher.com.br/macro_api.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ok\":true,\"generated_at\":\"03/07/2026, 07:16 BRT\",\"cache\":true,\"data\":{\"eyebrow\":\"Cenário Macro Brasil · Julho 2026\",\"alert_title\":\"Selic em 14.25% a.a., câmbio em R$ 5.19 e inflação acima da meta: pressões persistem\",\"alert_text\":\"O Banco Central mantém juros elevados em contexto de inflação resili"
+    },
+    {
+      "url": "https://szuchmacher.com.br/agenda-data.json",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json",
+      "snippet": "{\n  \"meta\": {\n    \"version\": \"2026-07-03\",\n    \"curator\": \"Szuchmacher Consultoria\",\n    \"fontes_primarias\": [\n      \"BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)\",\n      \"IBGE — Calendário de divulgações (ibge.gov.br/calendario/mensal.html)\",\n      \"BLS — US economic release sc"
+    },
+    {
+      "url": "https://szuchmacher.com.br/assets/agenda.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\n  \"meta\": {\n    \"version\": \"2026-07-03\",\n    \"curator\": \"Szuchmacher Consultoria\",\n    \"fontes_primarias\": [\n      \"BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)\",\n      \"IBGE — Calendário de divulgações (ibge.gov.br/calendario/mensal.html)\",\n      \"BLS — US economic release sc"
+    },
+    {
+      "url": "https://szuchmacher.com.br/assets/macro.php",
+      "status": 200,
+      "ok": true,
+      "content_type": "application/json; charset=utf-8",
+      "snippet": "{\"ts\":1783138670,\"source\":\"BCB (SGS + Olinda Focus)\",\"disclaimer\":\"Dados agregados do mercado. Medianas, mínimos e máximos do Relatório Focus refletem expectativas de analistas, não previsão própria nem recomendação.\",\"selic_meta\":{\"data\":\"05/08/2026\",\"valor\":14.25},\"cambio_ptax\":{\"data\":\"03/07/2026"
+    }
+  ],
+  "pages": [
+    {
+      "viewport": "desktop",
+      "load_ms": 3593,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-home-desktop-20260704_012406.png",
+      "checks": {
+        "macro_ready": true,
+        "eventos": 8,
+        "has_sexta": false
+      },
+      "console": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile390",
+      "load_ms": 531,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-home-mobile390-20260704_012406.png",
+      "checks": {
+        "macro_ready": true,
+        "eventos": 8,
+        "has_sexta": false
+      },
+      "console": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile320",
+      "load_ms": 423,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-home-mobile320-20260704_012406.png",
+      "checks": {
+        "macro_ready": true,
+        "eventos": 8,
+        "has_sexta": false
+      },
+      "console": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "desktop",
+      "load_ms": 4843,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-multiasset-app-desktop-20260704_012406.png",
+      "checks": {
+        "ibov_strip": "174.070",
+        "bench_selic": "14,25% → 12% a.a.",
+        "sim_gold": "$ 64.344"
+      },
+      "console": [
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 403 ()"
+        },
+        {
+          "type": "error",
+          "text": "2026-07-04T04:25:25.646Z:Fetch:/support/support-portal-problems/?language=br. Status 403"
+        },
+        {
+          "type": "warning",
+          "text": "2026-07-04T04:25:25.646Z:Support.IncidentsModel:Couldn't load support portal problems"
+        }
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile390",
+      "load_ms": 4575,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-multiasset-app-mobile390-20260704_012406.png",
+      "checks": {
+        "ibov_strip": "174.070",
+        "bench_selic": "14,25% → 12% a.a.",
+        "sim_gold": "$ 64.344"
+      },
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        }
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "viewport": "mobile320",
+      "load_ms": 4563,
+      "screenshot": "E:\\Diretorio\\Claude\\Site\\site-producao\\diagnosticos\\audit-multiasset-app-mobile320-20260704_012406.png",
+      "checks": {
+        "ibov_strip": "174.070",
+        "bench_selic": "14,25% → 12% a.a.",
+        "sim_gold": "$ 64.344"
+      },
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "warning",
+          "text": "Invalid environment undefined"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 403 ()"
+        },
+        {
+          "type": "error",
+          "text": "2026-07-04T04:25:35.939Z:Fetch:/support/support-portal-problems/?language=br. Status 403"
+        },
+        {
+          "type": "warning",
+          "text": "2026-07-04T04:25:35.939Z:Support.IncidentsModel:Couldn't load support portal problems"
+        }
+      ],
+      "errors": [],
+      "warnings": [
+        "horizontal_overflow_elements=12"
+      ]
+    }
+  ],
+  "html_pages": [
+    {
+      "url": "https://szuchmacher.com.br/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://szuchmacher.com.br/multiasset-app.html",
+      "status": 200,
+      "ok": true
+    }
+  ]
+}

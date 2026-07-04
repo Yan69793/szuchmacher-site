@@ -36,8 +36,9 @@ New-Item -ItemType Directory -Path (Join-Path $MULTI 'assets') -Force | Out-Null
 Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
-    'privacidade.html', 'radar-roic.html', 'agenda-data.json', 'macro_data.json',
-    'relatorio_cache.json', 'og-cover.jpg', 'logo.png'
+    'privacidade.html', 'radar-roic.html', 'ebook.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
+    'relatorio_cache.json', 'og-cover.jpg', 'logo.png',
+    'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
@@ -53,5 +54,8 @@ Copy-IfExists (Join-Path $ROOT 'consultoria.html') (Join-Path $MULTI 'consultori
 Copy-IfExists (Join-Path $ROOT 'macro_data.json') (Join-Path $MULTI 'macro_data.json') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'og-cover.jpg') (Join-Path $MULTI 'og-cover.jpg') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\sz-config.js') | Out-Null
+foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
+    Copy-IfExists (Join-Path $ROOT $f) (Join-Path $MULTI $f) | Out-Null
+}
 
 Write-Host "`nBuild concluido: $OUT" -ForegroundColor Green

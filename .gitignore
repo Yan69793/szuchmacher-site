@@ -1,0 +1,8 @@
+# Artefatos de ferramentas de teste/automação (não são conteúdo do projeto)
+.playwright-mcp/
+
+# Backups temporários gerados por rotinas (agenda, etc.) — nunca fonte de verdade
+backups/
+
+# Node
+node_modules/

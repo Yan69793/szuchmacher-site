@@ -3,3 +3,4 @@
 _arquivo/
 *.log
 config.php
+backups/

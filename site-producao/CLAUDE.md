@@ -131,8 +131,9 @@ curl.exe -sI "https://multi-assets.com/prices.php"
 | CSP — Formspree em `connect-src` e `form-action` | ✅ | — |
 | logo.png (HTTP 200) | ✅ | — |
 | Formspree `mojrayrl` | ✅ | — |
-| GA4 | ❌ `GA_ID_PENDING` | Configurar em `assets/sz-config.js` |
-| Microsoft Clarity | ❌ `CLARITY_ID_PENDING` | Configurar em `assets/sz-config.js` |
+| GA4 | ➖ removido por decisão de arquitetura | Tracking roteado para Clarity (`window.ga`→Clarity, `sz-config.js`) |
+| Microsoft Clarity | ✅ ativo (`SZ_CLARITY_ID = x89me5cgm8`) | — |
+| Favicons (`favicon.ico`/`.svg`/`apple-touch-icon.png`) | ✅ gerados do logo, servidos em sz + multi | — |
 | Hosting Cloudflare Workers | ✅ | `sz-sites` serve szuchmacher + multi-assets |
 | `macro_api.php` | ✅ | Cache 7d + BCB + OpenRouter no Worker |
 | `/fechamento/:slug` | ✅ | Proxy para Worker briefing; GET direto em workers.dev bloqueado |
@@ -173,6 +174,9 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API ainda sem permissão)
-2. **GA4 + Clarity** — substituir `_PENDING` em `assets/sz-config.js`
-3. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
+1. **Kiwify ebook / Cal.com / Stripe live** — `_PENDING`/`test_` em `assets/sz-config.js` (decisão de produto/billing)
+2. **PDF de amostra** — botão em `relatorios.html` aponta para `/Fechamento de Mercado 01.04.26.pdf` (404, nunca existiu) — subir PDF real ou remover botão
+3. **Contraste `--gold`** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1) — decisão de design (design system)
+4. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
+5. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
+6. **HEAD → 500** em rotas HTML do Worker (navegador usa GET/200; sem impacto de usuário)
