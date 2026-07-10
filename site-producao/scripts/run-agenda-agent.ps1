@@ -1,4 +1,4 @@
-# run-agenda-agent.ps1 — Gera agenda-data.json e publica via deploy-all.ps1
+# run-agenda-agent.ps1 — Gera agenda-data.json e publica via deploy-cloudflare.ps1
 # Usado pelo Task Scheduler (Szuchmacher-AgendaAgent)
 
 Set-StrictMode -Version Latest
@@ -8,7 +8,8 @@ $ROOT   = Split-Path -Parent $PSScriptRoot
 $YAN    = Join-Path (Split-Path -Parent $ROOT) 'automacao-yan-os'
 $PY     = Join-Path $YAN 'venv\Scripts\python.exe'
 $AGENT  = Join-Path $YAN 'agents\agenda_agent.py'
-$DEPLOY = Join-Path $PSScriptRoot 'deploy-all.ps1'
+$DEPLOY = Join-Path $PSScriptRoot 'deploy-cloudflare.ps1'
+$ALERT  = Join-Path $PSScriptRoot 'send-alert-email.ps1'
 $LOGDIR = Join-Path $YAN 'logs'
 $LOG    = Join-Path $LOGDIR ("agenda_scheduled_{0:yyyyMMdd}.log" -f (Get-Date))
 
@@ -36,12 +37,13 @@ try {
     Write-Log "JSON OK: $json"
 
     & $DEPLOY
-    if ($LASTEXITCODE -ne 0) { throw "deploy-all.ps1 falhou (exit $LASTEXITCODE)" }
+    if ($LASTEXITCODE -ne 0) { throw "deploy-cloudflare.ps1 falhou (exit $LASTEXITCODE)" }
 
     Write-Log '=== FIM OK ==='
     exit 0
 } catch {
     Write-Log "ERRO: $($_.Exception.Message)"
+    & $ALERT -Subject "[Szuchmacher] Falha na automação de agenda" -Body "run-agenda-agent.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nErro: $($_.Exception.Message)`n`nLog: $LOG"
     exit 1
 } finally {
     if ((Get-Location).Path -eq $YAN) { Pop-Location }

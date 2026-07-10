@@ -1,4 +1,4 @@
-# deploy-all.ps1 — szuchmacher.com.br
+﻿# deploy-all.ps1 — szuchmacher.com.br
 # Lê credenciais do .env (nunca expõe no output)
 # Uso: .\scripts\deploy-all.ps1 [-ListOnly] [-DryRun]
 

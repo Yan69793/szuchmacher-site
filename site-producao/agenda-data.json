@@ -1,25 +1,23 @@
 {
   "meta": {
-    "version": "2026-07-03",
+    "version": "2026-07-10",
     "curator": "Szuchmacher Consultoria",
     "fontes_primarias": [
       "BCB — Calendário de divulgações (bcb.gov.br/calendariodivulgacao)",
-      "IBGE — Calendário de divulgações (ibge.gov.br/calendario/mensal.html)",
       "BLS — US economic release schedule (bls.gov/schedule)",
-      "ISM — Report release calendar (ismworld.org)",
-      "DoL — UI Weekly Claims (dol.gov)",
-      "Fed/FOMC — Meeting calendar (federalreserve.gov/monetarypolicy/fomccalendars.htm)"
+      "Fed — FOMC calendar (federalreserve.gov)",
+      "IBGE — Calendário de divulgações (ibge.gov.br)"
     ],
-    "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado. Cada item traz fonte primária.",
-    "disciplina_en": "Scheduled releases from official sources. No result anticipation. Each item cites its primary source.",
+    "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado.",
+    "disciplina_en": "Scheduled releases from official sources. No result anticipation.",
     "idiomas": [
       "pt-BR",
       "en"
     ]
   },
-  "gerado": "2026-07-03T07:07:00-03:00",
+  "gerado": "2026-07-10T15:53:53-03:00",
   "janela": {
-    "inicio": "2026-07-04",
+    "inicio": "2026-07-06",
     "fim": "2026-07-10"
   },
   "eventos": [
@@ -27,67 +25,12 @@
       "data": "2026-07-06",
       "hora_brt": "08:25",
       "regiao": "BR",
-      "evento": "Boletim Focus — BCB",
-      "evento_en": "Focus Market Report — BCB",
-      "descricao": "Relatório semanal de expectativas de mercado do Banco Central, publicado toda segunda-feira às 08:25 BRT. Apresenta medianas para Selic, IPCA 2026/2027, câmbio (PTAX) e PIB. Primeira leitura do consenso após o feriado americano — relevante para calibrar posicionamento antes da divulgação do IPCA de junho (sexta-feira).",
-      "descricao_en": "BCB weekly market expectations report, published every Monday at 08:25 BRT. Presents median forecasts for Selic, IPCA 2026/2027, FX (PTAX) and GDP. First consensus read after the US holiday — relevant for calibrating positioning ahead of June IPCA (Friday).",
+      "evento": "Boletim Focus",
+      "evento_en": "Focus Market Report",
+      "descricao": "Medianas semanais do mercado para Selic, IPCA, câmbio e PIB — principais referências de expectativas para a curva de juros e decisão do COPOM.",
+      "descricao_en": "Weekly market medians for Selic, CPI, FX and GDP — key forward-guidance inputs for the rate curve and COPOM decisions.",
       "fonte": "BCB",
       "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-06",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "PMI de Serviços ISM — junho 2026",
-      "evento_en": "ISM Services PMI — June 2026",
-      "descricao": "Índice de gerentes de compras do setor de serviços dos EUA para junho de 2026, divulgado pelo Institute for Supply Management. Acima de 50 indica expansão. Divulgação deslocada para a terceira data útil do mês por ajuste do feriado de 4 de julho (observado em 03/jul). Impacto imediato em dólar, Treasuries e ativos de mercados emergentes.",
-      "descricao_en": "US services sector purchasing managers index for June 2026, released by the Institute for Supply Management. Above 50 signals expansion. Release moved to the third business day due to July 4th holiday observed on Jul 3rd. Immediate impact on USD, Treasuries and emerging market assets.",
-      "fonte": "ISM",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-08",
-      "hora_brt": "15:00",
-      "regiao": "US",
-      "evento": "Atas do FOMC — Reunião de junho de 2026",
-      "evento_en": "FOMC Minutes — June 2026 Meeting",
-      "descricao": "Publicação pelo Federal Reserve das atas detalhadas da reunião do FOMC de 16–17 de junho de 2026. Revelam o debate interno sobre a trajetória dos juros, tolerância com a inflação corrente e condições para o início do ciclo de cortes. Leitura obrigatória para gestão de duration, posicionamento em Treasuries e estratégias de renda fixa global.",
-      "descricao_en": "Federal Reserve release of the detailed minutes from the June 16–17, 2026 FOMC meeting. Reveal internal debate on the rate path, tolerance for current inflation and conditions for starting the easing cycle. Essential reading for duration management, Treasury positioning and global fixed income strategies.",
-      "fonte": "Fed/FOMC",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-09",
-      "hora_brt": "09:30",
-      "regiao": "US",
-      "evento": "Pedidos Iniciais de Seguro-Desemprego",
-      "evento_en": "Initial Jobless Claims",
-      "descricao": "Número de pedidos iniciais de seguro-desemprego depositados na semana encerrada em 05 de julho de 2026, divulgado pelo Departamento do Trabalho dos EUA. Indicador de alta frequência sobre a saúde do mercado de trabalho americano. Leituras recentes: ~215 mil pedidos semanais — lida em conjunto com as atas do FOMC do dia anterior.",
-      "descricao_en": "Number of initial unemployment insurance claims filed in the week ending July 5, 2026, released by the US Department of Labor. High-frequency indicator of US labor market health. Recent readings: ~215k weekly claims — read alongside prior day FOMC minutes.",
-      "fonte": "DoL",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-07-10",
-      "hora_brt": "09:00",
-      "regiao": "BR",
-      "evento": "IPCA — junho 2026 (IBGE)",
-      "evento_en": "IPCA — June 2026 (IBGE)",
-      "descricao": "Índice Nacional de Preços ao Consumidor Amplo referente a junho de 2026, divulgado pelo IBGE. Principal métrica de inflação do Brasil e referência oficial para o sistema de metas do BCB. Decisivo para a trajetória da Selic nas próximas reuniões do COPOM: surpresa altista consolida a pausa; surpresa baixista reabre o debate sobre início do ciclo de afrouxamento. Impacta diretamente NTN-B, Ibovespa e câmbio.",
-      "descricao_en": "National Consumer Price Index (Broad) for June 2026, released by IBGE. Brazil's main inflation metric and official benchmark for the BCB inflation targeting system. Decisive for the Selic path at upcoming COPOM meetings: upside surprise cements the pause; downside surprise reopens debate on the easing cycle start. Direct impact on inflation-linked bonds, Ibovespa and BRL.",
-      "fonte": "IBGE",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-10",
-      "hora_brt": "09:00",
-      "regiao": "BR",
-      "evento": "PIM-PF Brasil — maio 2026 (IBGE)",
-      "evento_en": "PIM-PF Brazil — May 2026 (IBGE)",
-      "descricao": "Pesquisa Industrial Mensal — Produção Física (nível Brasil) referente a maio de 2026, divulgada pelo IBGE. Mede a variação da produção industrial por setor, servindo como referência para avaliar o ritmo de atividade do setor secundário. Insumo relevante para revisão de estimativas de PIB e monitoramento do ciclo industrial.",
-      "descricao_en": "Monthly Industrial Survey — Physical Production (Brazil level) for May 2026, released by IBGE. Measures industrial output variation by sector, benchmarking secondary sector activity pace. Relevant input for GDP estimate revisions and industrial cycle monitoring.",
-      "fonte": "IBGE",
-      "relevancia": "media"
     }
   ]
 }

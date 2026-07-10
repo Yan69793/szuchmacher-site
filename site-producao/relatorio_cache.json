@@ -1,36 +1,36 @@
 {
-    "generated_at": "2026-07-04 04:15:26",
-    "date_label": "Fechamento · semana encerrada em 03 jul 2026",
+    "generated_at": "2026-07-06 19:12:55",
+    "date_label": "Fechamento · semana encerrada em 06 jul 2026",
     "eyebrow": "Fechamento da semana",
     "h2": "Leitura semanal dos vetores que movem preços",
     "prices": {
         "ibovespa": {
-            "value": "174.070",
-            "change_pct": "+0,45%",
-            "label": "Semana · +0,45%"
+            "value": "172.448",
+            "change_pct": "-0,93%",
+            "label": "Sexta · -0,93%"
         },
         "usd_brl": {
-            "value": "5,1689",
-            "change_pct": "-0,80%",
-            "label": "Sexta · -0,80%"
+            "value": "5,1282",
+            "change_pct": "-0,79%",
+            "label": "Sexta · -0,79%"
         },
         "sp500": {
-            "value": "7.483,24",
-            "change_pct": "+0,00%",
-            "label": "Sexta · +0,00%"
+            "value": "7.537,43",
+            "change_pct": "+0,72%",
+            "label": "Sexta · +0,72%"
         },
         "wti": {
-            "value": "68,78",
-            "change_pct": "+0,13%",
-            "label": "Sexta · +0,13%"
+            "value": "68,68",
+            "change_pct": "+0,19%",
+            "label": "Sexta · +0,19%"
         }
     },
     "report": {
-        "headline": "Ibovespa fecha semana em alta de 0,45%, aos 174.070 pontos; dólar recua a R$ 5,17 e petróleo (WTI) sobe a US$ 68,78",
-        "paragraph1": "Sessão de liquidez reduzida no Brasil, com Wall Street fechada pelo feriado de Independência. O Ibovespa avançou 0,74%, aos 174.070 pontos, e encerrou a semana com ganho acumulado de 0,45%.",
-        "paragraph2": "O dólar recuou 0,76%, cotado a R$ 5,168, pressionado pela aposta majoritária em corte de 0,25 ponto percentual na próxima reunião do Copom.",
-        "paragraph3": "A leitura mais fraca da produção industrial de maio reforçou o cenário de afrouxamento monetário adiante, favorecendo bolsa e juros locais.",
-        "next_week": "07/07, 08h25 Brasil, Boletim Focus do Banco Central. 07/07, 11h00 Estados Unidos, ISM de Serviços de junho. 08/07, 15h00 Estados Unidos, Atas do FOMC da reunião de junho",
-        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes à semana encerrada em 03 jul 2026."
+        "headline": "Ibovespa fecha sexta em baixa de 0,93%, aos 172.448 pontos; dólar recua a R$ 5,13 e petróleo (WTI) sobe a US$ 68,68",
+        "paragraph1": "Ibovespa em queda no primeiro pregão da semana, na contramão dos recordes renovados em Wall Street. O índice recuou 0,93%, aos 172.448 pontos, pressionado por Petrobras e Vale.",
+        "paragraph2": "O dólar cedeu 0,79%, cotado a R$ 5,13, de volta abaixo dos R$ 5,15, no compasso do enfraquecimento da moeda americana no exterior.",
+        "paragraph3": "Liquidez reduzida e sinais de atividade industrial morna mantiveram o foco local na expectativa de corte de juros pelo Copom.",
+        "next_week": "07/07, 08h00 Brasil, IGP-DI de junho pela FGV. 07/07, 09h30 Estados Unidos, Balança comercial de maio. 07/07, 11h00 Brasil, Produção e vendas de veículos pela Anfavea",
+        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes à semana encerrada em 06 jul 2026."
     }
 }

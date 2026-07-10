@@ -9,6 +9,7 @@ $YAN    = Join-Path (Split-Path -Parent $ROOT) 'automacao-yan-os'
 $LOGDIR = Join-Path $YAN 'logs'
 $LOG    = Join-Path $LOGDIR ("macro_cron_{0:yyyyMMdd}.log" -f (Get-Date))
 $URL    = 'https://szuchmacher.com.br/macro_api.php?cron=1'
+$ALERT  = Join-Path $PSScriptRoot 'send-alert-email.ps1'
 
 function Write-Log([string]$Msg) {
     $line = "[{0}] {1}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Msg
@@ -35,5 +36,6 @@ try {
     exit 0
 } catch {
     Write-Log "ERRO: $($_.Exception.Message)"
+    & $ALERT -Subject "[Szuchmacher] Falha na automação de macro cron" -Body "run-macro-cron.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nErro: $($_.Exception.Message)`n`nLog: $LOG"
     exit 1
 }
