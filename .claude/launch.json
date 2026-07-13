@@ -14,6 +14,13 @@
       "runtimeArgs": ["qualificador_leads.py"],
       "cwd": "automacao-yan-os",
       "port": 8765
+    },
+    {
+      "name": "static-preview (site-producao)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8090"],
+      "cwd": "site-producao",
+      "port": 8090
     }
   ]
 }

@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Szuchmacher Consultoria">
-  <circle cx="256" cy="256" r="248" fill="#0b1630" stroke="#8f6b34" stroke-width="14"/>
-  <text x="256" y="256" fill="#ffffff" font-family="'Playfair Display', Georgia, 'Times New Roman', serif"
-        font-size="215" font-weight="700" text-anchor="middle" dominant-baseline="central"
-        letter-spacing="2">YSZ</text>
+  <rect x="0" y="0" width="512" height="512" fill="#0b1630"/>
+  <rect x="44" y="44" width="424" height="424" fill="none" stroke="#c9a565" stroke-width="9"/>
+  <text x="256" y="256" fill="#f1ede6" font-family="'Playfair Display', Georgia, 'Times New Roman', serif"
+        font-size="250" font-weight="600" text-anchor="middle" dominant-baseline="central"
+        letter-spacing="2">YS</text>
 </svg>

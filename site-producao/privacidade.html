@@ -81,19 +81,37 @@
       .brand-lockup__founder{grid-column:1;grid-row:3;align-self:start;font-size:0.56rem;max-width:none;padding-top:1px}
     }
     @media(max-width:640px){h1{font-size:1.75rem}h2{font-size:1.25rem}}
+    .ysz-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
+    .ysz-lockup__icon{width:40px;height:40px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;
+      justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;
+      font-size:0.95rem;color:#0b1630;letter-spacing:0.01em}
+    .ysz-lockup__type{display:flex;flex-direction:column;gap:2px;line-height:1.15}
+    .ysz-lockup__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.05rem;
+      color:#0b1630}
+    .ysz-lockup__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.22em;
+      text-transform:uppercase;color:#8f6b34;margin-top:1px}
+    .ysz-lockup:hover .ysz-lockup__firm{color:#16233f}
+    .ysz-lockup--dark .ysz-lockup__icon{border-color:#c9a565;color:#f1ede6}
+    .ysz-lockup--dark .ysz-lockup__firm{color:#f1ede6}
+    .ysz-lockup--dark .ysz-lockup__descriptor{color:#c9a565}
+    .ysz-lockup--dark:hover .ysz-lockup__firm{color:#e4ded2}
+    @media (max-width:640px){
+      .ysz-lockup__icon{width:34px;height:34px;font-size:0.8rem}
+      .ysz-lockup__firm{font-size:0.92rem}
+      .ysz-lockup__descriptor{font-size:0.54rem}
+    }
   </style>
 </head>
 <body data-page="privacidade">
 
 <header>
   <div class="container">
-    <a class="brand-lockup" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
-      <span class="brand-lockup__mark">
-        <span class="brand-lockup__firm">Szuchmacher</span>
-        <span class="brand-lockup__descriptor">Consultoria</span>
+    <a class="ysz-lockup" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+      <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
+      <span class="ysz-lockup__type">
+        <span class="ysz-lockup__firm">Szuchmacher</span>
+        <span class="ysz-lockup__descriptor">Consultoria</span>
       </span>
-      <span class="brand-lockup__rule" aria-hidden="true"></span>
-      <span class="brand-lockup__founder">Yan Szuchmacher</span>
     </a>
   </div>
 </header>

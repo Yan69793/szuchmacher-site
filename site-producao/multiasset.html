@@ -8,6 +8,9 @@
   <meta name="description" content="Plataforma executiva de análise fundamentalista e leitura macro integrada. Juros, câmbio, equities, crédito e commodities em um único painel para decisões de alocação qualificadas." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://szuchmacher.com.br/multiasset.html" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="MultiAsset | Plataforma Szuchmacher Consultoria" />
@@ -306,18 +309,45 @@
       .hero h1{font-size:1.9rem}
       .nav-cta{display:none}
     }
+    .ysz-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
+    .ysz-lockup__icon{width:40px;height:40px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;
+      justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;
+      font-size:0.95rem;color:#0b1630;letter-spacing:0.01em}
+    .ysz-lockup__type{display:flex;flex-direction:column;gap:2px;line-height:1.15}
+    .ysz-lockup__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.05rem;
+      color:#0b1630}
+    .ysz-lockup__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.22em;
+      text-transform:uppercase;color:#8f6b34;margin-top:1px}
+    .ysz-lockup:hover .ysz-lockup__firm{color:#16233f}
+    .ysz-lockup--dark .ysz-lockup__icon{border-color:#c9a565;color:#f1ede6}
+    .ysz-lockup--dark .ysz-lockup__firm{color:#f1ede6}
+    .ysz-lockup--dark .ysz-lockup__descriptor{color:#c9a565}
+    .ysz-lockup--dark:hover .ysz-lockup__firm{color:#e4ded2}
+    @media (max-width:640px){
+      .ysz-lockup__icon{width:34px;height:34px;font-size:0.8rem}
+      .ysz-lockup__firm{font-size:0.92rem}
+      .ysz-lockup__descriptor{font-size:0.54rem}
+    }
+    .ysz-stack{display:inline-flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;color:inherit;text-align:center}
+    .ysz-stack__icon{width:64px;height:64px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.5rem;color:#0b1630;letter-spacing:0.01em}
+    .ysz-stack__type{display:flex;flex-direction:column;align-items:center}
+    .ysz-stack__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.2rem;color:#0b1630;line-height:1.1}
+    .ysz-stack__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#8f6b34;margin-top:5px}
+    .ysz-stack:hover .ysz-stack__firm{color:#16233f}
+    .ysz-stack--dark .ysz-stack__icon{border-color:#c9a565;color:#f1ede6}
+    .ysz-stack--dark .ysz-stack__firm{color:#f1ede6}
+    .ysz-stack--dark .ysz-stack__descriptor{color:#c9a565}
   </style>
 </head>
 <body data-page="multiasset">
   <header>
     <div class="container header-row">
-      <a class="brand-lockup" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
-        <span class="brand-lockup__mark">
-          <span class="brand-lockup__firm">Szuchmacher</span>
-          <span class="brand-lockup__descriptor">Consultoria</span>
+      <a class="ysz-lockup" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+        <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
+        <span class="ysz-lockup__type">
+          <span class="ysz-lockup__firm">Szuchmacher</span>
+          <span class="ysz-lockup__descriptor">Consultoria</span>
         </span>
-        <span class="brand-lockup__rule" aria-hidden="true"></span>
-        <span class="brand-lockup__founder">Yan Szuchmacher</span>
       </a>
       <button class="mobile-menu-toggle" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -661,7 +691,7 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand">Szuchmacher Consultoria</div>
+          <div class="footer-brand"><a class="ysz-stack" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher"><span class="ysz-stack__icon" aria-hidden="true">YS</span><span class="ysz-stack__type"><span class="ysz-stack__firm">Szuchmacher</span><span class="ysz-stack__descriptor">Consultoria</span></span></a></div>
           <div class="footer-note">Consultoria de valores mobiliários independente, com foco em arquitetura patrimonial sob complexidade. Atividade regulada pela Resolução CVM 20/2021.</div>
         </div>
         <div class="footer-col">

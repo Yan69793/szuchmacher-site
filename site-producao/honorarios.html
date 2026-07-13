@@ -24,8 +24,12 @@
     <!-- Configuração central (Clarity + Formspree). Editar IDs em /assets/sz-config.js -->
     <script src="/assets/sz-config.js?v=20260617"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <script type="application/ld+json">
     {
@@ -329,20 +333,47 @@
             .fee-fixo { flex-direction: column; align-items: flex-start; gap: 18px; padding: 26px 24px; }
             .plan { padding: 30px 24px; }
         }
+
+        .ysz-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
+        .ysz-lockup__icon{width:40px;height:40px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;
+          justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;
+          font-size:0.95rem;color:#0b1630;letter-spacing:0.01em}
+        .ysz-lockup__type{display:flex;flex-direction:column;gap:2px;line-height:1.15}
+        .ysz-lockup__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.05rem;
+          color:#0b1630}
+        .ysz-lockup__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.22em;
+          text-transform:uppercase;color:#8f6b34;margin-top:1px}
+        .ysz-lockup:hover .ysz-lockup__firm{color:#16233f}
+        .ysz-lockup--dark .ysz-lockup__icon{border-color:#c9a565;color:#f1ede6}
+        .ysz-lockup--dark .ysz-lockup__firm{color:#f1ede6}
+        .ysz-lockup--dark .ysz-lockup__descriptor{color:#c9a565}
+        .ysz-lockup--dark:hover .ysz-lockup__firm{color:#e4ded2}
+        @media (max-width:640px){
+          .ysz-lockup__icon{width:34px;height:34px;font-size:0.8rem}
+          .ysz-lockup__firm{font-size:0.92rem}
+          .ysz-lockup__descriptor{font-size:0.54rem}
+        }
+        .ysz-stack{display:inline-flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;color:inherit;text-align:center}
+        .ysz-stack__icon{width:64px;height:64px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.5rem;color:#0b1630;letter-spacing:0.01em}
+        .ysz-stack__type{display:flex;flex-direction:column;align-items:center}
+        .ysz-stack__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.2rem;color:#0b1630;line-height:1.1}
+        .ysz-stack__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#8f6b34;margin-top:5px}
+        .ysz-stack:hover .ysz-stack__firm{color:#16233f}
+        .ysz-stack--dark .ysz-stack__icon{border-color:#c9a565;color:#f1ede6}
+        .ysz-stack--dark .ysz-stack__firm{color:#f1ede6}
+        .ysz-stack--dark .ysz-stack__descriptor{color:#c9a565}
     </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-    <a href="index.html" class="nav-logo" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
-        <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
-        <span class="logo-text">
-            <span class="logo-main">Szuchmacher</span>
-            <span class="logo-sub">Consultoria</span>
-        </span>
-        <span class="logo-rule" aria-hidden="true"></span>
-        <span class="logo-founder">Yan Szuchmacher</span>
+    <a href="index.html" class="ysz-lockup ysz-lockup--dark" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+      <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
+      <span class="ysz-lockup__type">
+        <span class="ysz-lockup__firm">Szuchmacher</span>
+        <span class="ysz-lockup__descriptor">Consultoria</span>
+      </span>
     </a>
     <ul class="nav-links">
 
@@ -532,13 +563,13 @@
 <footer>
     <div class="footer-inner">
         <div class="footer-brand">
-            <div class="footer-logo">
-                <div class="logo-icon" style="width:28px;height:28px;font-size:12px;"><i class="fas fa-chart-line"></i></div>
-                <span class="logo-text" style="font-size:13px;">
-                    <span class="logo-main" style="font-size:14px;">Szuchmacher</span>
-                    <span class="logo-sub">Consultoria</span>
+            <a href="index.html" class="ysz-stack ysz-stack--dark" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+                <span class="ysz-stack__icon" aria-hidden="true">YS</span>
+                <span class="ysz-stack__type">
+                    <span class="ysz-stack__firm">Szuchmacher</span>
+                    <span class="ysz-stack__descriptor">Consultoria</span>
                 </span>
-            </div>
+            </a>
             <p class="footer-desc">Consultoria patrimonial independente no modelo fee fixo. Honorário profissional, sem comissão de produto e sem conflito de interesse.</p>
             <div class="footer-status"><span class="status-dot"></span><span class="status-text">Aceitando novos mandatos</span></div>
         </div>
