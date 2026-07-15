@@ -115,10 +115,18 @@ def audit_page(page, name: str, vp: dict) -> dict:
     overflow = page.evaluate(
         """() => {
           const w = document.documentElement.clientWidth;
+          const isScrollContained = (el) => {
+            let node = el;
+            while (node && node !== document.body) {
+              const st = getComputedStyle(node);
+              if (st.overflowX === 'auto' || st.overflowX === 'scroll') return true;
+              node = node.parentElement;
+            }
+            return false;
+          };
           let bad = 0;
           document.querySelectorAll('*').forEach(el => {
-            const st = getComputedStyle(el);
-            if (st.overflowX === 'auto' || st.overflowX === 'scroll') return;
+            if (isScrollContained(el)) return;
             const r = el.getBoundingClientRect();
             if (r.width > w + 2 && r.right > w + 2) bad++;
           });
