@@ -46,42 +46,48 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 
 ## Design system
 
-### Paleta (CSS custom properties — definidas em cada página)
+### Craft (sofisticação institucional — 2026-07-18)
+
+Não copiar a paleta de outros produtos. Copiar o **nível de craft**:
+espaço generoso, hairline, peso tipográfico contido (serif 400), mono em
+labels, hover sem bounce, grids com gap 1px, `border-radius: 0`.
+
+### Paleta institucional (szuchmacher.com.br — `assets/sz-design.css`)
 
 | Variável | Valor | Uso |
 |----------|-------|-----|
-| `--bg` | `#f1ede6` | Fundo geral (areia clara) |
-| `--surface` | `#ebe4d8` | Superfície alternada |
-| `--surface-soft` | `#f3efe8` | Cards e superfícies suaves |
-| `--navy` | `#0b1630` | Azul primário — textos, CTAs, fundo do header |
-| `--navy-soft` | `#16233f` | Navy secundário |
-| `--gold` | `#8f6b34` | Ouro — acento, eyebrows, marcadores |
-| `--gold-soft` | `#a8834a` | Ouro suave |
-| `--text` | `#1e2430` | Texto principal |
-| `--muted` | `#5f6673` | Texto secundário / captions |
-| `--line` | `rgba(11,22,48,0.10)` | Divisórias suaves |
-| `--line-strong` | `rgba(11,22,48,0.16)` | Divisórias em destaque |
+| `--bg` | `#f3f1ec` | Fundo geral (papel quente) |
+| `--surface` | `#ebe7e0` | Superfície alternada |
+| `--surface-soft` | `#f8f6f2` | Cards e superfícies suaves |
+| `--navy` | `#0c1524` | Primário — textos, CTAs, header dark |
+| `--navy-soft` | `#172338` | Navy secundário |
+| `--gold` | `#8c6b3a` | Acento, eyebrows |
+| `--gold-soft` / `--gold-bright` | `#a88850` / `#c4a46a` | Acento suave / dark sections |
+| `--text` | `#161c28` | Texto principal |
+| `--muted` | `#5c6574` | Secundário |
+| `--line` / `--line-strong` | rgba navy 0.09 / 0.14 | Hairlines |
 
-**Seção macro (fundo escuro `#091327` / `#0b1630`):**
-- Ouro nesta seção: `#d4a85c` (mais claro para contraste no escuro)
+**multi-assets.com** (`multiasset-app.html`): shell **dark** próprio
+(`--bg #0a0c10`, ouro `#c4a46a`, texto `#e8e4d9`). Mesmo craft, paleta distinta.
 
 ### Tipografia
 
 | Variável | Família | Pesos | Uso |
 |----------|---------|-------|-----|
-| `--font-serif` | Playfair Display | 500, 600, 700 | H1–H4, números grandes, logo, títulos de eventos |
-| `--font-sans` | Manrope | 300–800 | Corpo, UI, labels, navigation |
+| `--font-serif` | Prata (site) / Playfair (multi) | **400** display | H1–H4, métricas |
+| `--font-sans` | Public Sans (site) / DM Sans (multi) | 400–500 | Corpo |
+| `--font-mono` | JetBrains Mono / DM Mono | 400–500 | Nav, labels, CTA |
 
 ### Convenções de layout
 
-- `--max`: `1160px` (max-width do container)
-- `--radius`: `2px` (border-radius mínimo — identidade austero-editorial)
-- `.section`: `padding: 96px 0`
-- `.section-tight`: `padding: 72px 0`
-- `.eyebrow`: `0.72rem`, `uppercase`, `letter-spacing: 0.18em`, `font-weight: 800`, cor `--gold`
-- Botões: sem border-radius arredondado, `min-height: 48px`
+- `--max`: `1120px` (site) / `1280px` (multi app)
+- `--radius`: `0`
+- `.section`: `padding: 112px 0` (site)
+- `.eyebrow`: mono, `0.64rem`, `letter-spacing: 0.14–0.16em`, weight 500, ouro
+- Botões: mono uppercase, min-height 48px, sem shadow/lift
+- Cards/offers: preferir grid `gap: 1px` sobre caixas com sombra
 
-**Qualquer desvio de cor, fonte ou espaçamento é erro crítico — requer correção antes de entregar.**
+**Desvio de craft (peso 800/900, pill, glow, bounce) é regressão — corrigir antes de entregar.**
 
 ---
 
