@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MultiAsset | Plataforma de análise macro e portfólio — Szuchmacher Consultoria</title>
+  <meta name="description" content="Plataforma executiva de análise fundamentalista e leitura macro integrada. Juros, câmbio, equities, crédito e commodities em um único painel para decisões de alocação qualificadas." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://szuchmacher.com.br/multiasset.html" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MultiAsset | Plataforma Szuchmacher Consultoria" />
+  <meta property="og:description" content="Análise fundamentalista multi-ativo com leitura macro integrada e simulação de portfólio." />
+  <meta property="og:url" content="https://szuchmacher.com.br/multiasset.html" />
+  <meta property="og:site_name" content="Szuchmacher Consultoria" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:image" content="https://szuchmacher.com.br/og-cover.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MultiAsset | Plataforma Szuchmacher Consultoria" />
+  <meta name="twitter:description" content="Análise fundamentalista multi-ativo com leitura macro integrada e simulação de portfólio." />
+  <meta name="twitter:image" content="https://szuchmacher.com.br/og-cover.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://szuchmacher.com.br#org",
+        "name": "Szuchmacher Consultoria",
+        "url": "https://szuchmacher.com.br",
+        "founder": { "@id": "https://szuchmacher.com.br#yan" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://szuchmacher.com.br#yan",
+        "name": "Yan Szuchmacher",
+        "jobTitle": "Consultor patrimonial",
+        "worksFor": { "@id": "https://szuchmacher.com.br#org" }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://szuchmacher.com.br/multiasset.html#app",
+        "name": "MultiAsset",
+        "url": "https://szuchmacher.com.br/multiasset.html",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "pt-BR",
+        "description": "Plataforma de análise fundamentalista e leitura macro integrada, com simulação de portfólio multimercado para investidores qualificados.",
+        "provider": { "@id": "https://szuchmacher.com.br#org" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL", "availability": "https://schema.org/InStock" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://szuchmacher.com.br/multiasset.html#webpage",
+        "url": "https://szuchmacher.com.br/multiasset.html",
+        "name": "MultiAsset | Szuchmacher Consultoria",
+        "inLanguage": "pt-BR",
+        "mainEntity": { "@id": "https://szuchmacher.com.br/multiasset.html#app" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "O que eu recebo na versão completa?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Acesso ao painel MultiAsset com leitura diária de juros, câmbio, equities, crédito e commodities, simulador de portfólio e relatório macro semanal integrado." }
+          },
+          {
+            "@type": "Question",
+            "name": "A plataforma é um robô de recomendação?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Não. MultiAsset é uma ferramenta de análise fundamentalista e leitura macro. Não emite ordens nem recomendações personalizadas." }
+          },
+          {
+            "@type": "Question",
+            "name": "Qual a frequência de atualização dos dados?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Dados de mercado em tempo quase real via TradingView. Leitura fundamentalista atualizada diariamente após o fechamento dos pregões." }
+          },
+          {
+            "@type": "Question",
+            "name": "Preciso ser cliente para acessar?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Há versão gratuita de amostra e versão completa concedida a clientes do serviço de consultoria patrimonial." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Configuração central (Clarity + Formspree). Editar IDs em /assets/sz-config.js -->
+  <script src="/assets/sz-config.js?v=20260617"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#f3f1ec;
+      --surface:#ebe7e0;
+      --surface-2:#f0ebe4;
+      --navy:#0c1524;
+      --navy-soft:#172338;
+      --gold:#8c6b3a;
+      --gold-soft:#a88850;
+      --text:#161c28;
+      --muted:#5c6574;
+      --line:rgba(12,21,36,0.09);
+      --line-strong:rgba(12,21,36,0.14);
+      --max:1120px;
+      --radius:0px;
+      --font-serif:'Playfair Display', Georgia, serif;
+      --font-sans:'Manrope', system-ui, sans-serif;
+      --font-mono:'JetBrains Mono', ui-monospace, monospace;
+      --tracking-display:-0.028em;
+      --tracking-label:0.14em;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    p{color:var(--muted);margin:0 0 18px 0}
+    h1,h2,h3,h4{font-family:var(--font-serif);color:var(--navy);line-height:1.08;font-weight:400;letter-spacing:var(--tracking-display)}
+    .container{max-width:var(--max);margin:0 auto;padding:0 32px}
+    .section{padding:112px 0}
+    .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:0.64rem;letter-spacing:var(--tracking-label);text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:20px}
+
+    header{position:sticky;top:0;z-index:1000;background:rgba(247,244,238,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .header-row{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative}
+    .brand-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit;flex-shrink:0}
+    .brand-lockup:hover .brand-lockup__firm{color:var(--navy-soft)}
+    .brand-lockup__mark{display:flex;flex-direction:column;gap:2px;line-height:1.05}
+    .brand-lockup__firm{font-family:var(--font-serif);font-size:1.08rem;font-weight:400;letter-spacing:0.02em;color:var(--navy);transition:color .2s}
+    .brand-lockup__descriptor{font-family:var(--font-mono);font-size:0.58rem;font-weight:500;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold)}
+    .brand-lockup__rule{width:1px;height:30px;flex-shrink:0;background:linear-gradient(to bottom,transparent,rgba(146,112,58,.42) 18%,rgba(146,112,58,.42) 82%,transparent)}
+    .brand-lockup__founder{font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.06em;color:var(--muted);white-space:nowrap;padding-top:1px}
+    .nav{display:flex;align-items:center;gap:26px}
+    .nav a{font-family:var(--font-mono);font-size:0.64rem;text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:500;color:rgba(12,21,36,0.72);padding:4px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+    .nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+    .nav-cta{padding:11px 18px;border:1px solid var(--navy);font-family:var(--font-mono);font-size:0.64rem;text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:500;color:var(--navy);transition:background .2s,color .2s}
+    .nav-cta:hover{background:var(--navy);color:#fff}
+    .nav-login{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:600;color:var(--muted);text-decoration:none;padding:11px 12px;transition:color .2s ease;white-space:nowrap}
+    .nav-login:hover{color:var(--navy)}
+    .mobile-menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line-strong);background:transparent;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer}
+    .mobile-menu-toggle span{width:18px;height:2px;background:var(--navy);display:block}
+
+    .hero{padding:108px 0 96px;background:var(--bg)}
+    .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:64px;align-items:center}
+    .hero h1{font-size:clamp(2.4rem,4.6vw,3.4rem);letter-spacing:var(--tracking-display);max-width:14ch;margin-bottom:22px;font-weight:400;line-height:1.05}
+    .hero .sub{font-size:1.02rem;max-width:38ch;color:var(--muted);line-height:1.72}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;min-height:48px;border:1px solid var(--navy);background:var(--navy);color:#fff;font-family:var(--font-mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:500;transition:background .2s,border-color .2s,color .2s;cursor:pointer;border-radius:var(--radius)}
+    .btn:hover{background:var(--navy-soft)}
+    .btn-outline{background:transparent;color:var(--navy)}
+    .btn-outline:hover{background:transparent;border-color:var(--gold);color:var(--gold)}
+    .btn-gold{background:var(--gold);border-color:var(--gold);color:#fff}
+    .btn-gold:hover{background:var(--gold-soft);border-color:var(--gold-soft)}
+
+    .hero-visual{background:var(--navy);color:#fff;border:1px solid rgba(255,255,255,0.08);padding:22px;box-shadow:none}
+    .hero-visual h4{color:rgba(255,255,255,0.55);font-family:var(--font-mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:500;margin-bottom:16px}
+    .hv-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
+    .hv-stat{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);padding:16px 18px}
+    .hv-stat small{font-family:var(--font-sans);text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.55);font-size:0.64rem;font-weight:800;display:block;margin-bottom:8px}
+    .hv-stat strong{display:block;font-family:var(--font-serif);font-size:1.6rem;color:#fff;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+    .hv-stat span.neg{color:#f48a7a}
+    .hv-stat span.pos{color:#6dd39a}
+    .hv-stat span{font-size:0.82rem;color:rgba(255,255,255,0.65)}
+    .hv-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.86rem}
+    .hv-row:last-child{border-bottom:none}
+    .hv-row em{font-style:normal;color:rgba(255,255,255,0.6)}
+    .hv-row b{color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+
+    /* ── FASE 2: metadados de rastreabilidade hero-visual ── */
+    .hv-stat span.hv-loading{font-style:italic;color:rgba(255,255,255,0.4);font-size:0.68rem}
+    .hv-stat span.hv-live{color:#6dd39a;font-size:0.68rem}
+    .hv-stat span.hv-cache{color:rgba(255,255,255,0.5);font-size:0.68rem}
+    .hv-stat span.hv-unavailable{color:#f4a27a;font-size:0.68rem}
+    .hv-meta-row{display:block;font-size:0.60rem;color:rgba(255,255,255,0.4);margin-top:2px;font-style:italic}
+
+    .trust-strip{background:var(--navy);color:rgba(255,255,255,0.88);padding:22px 0}
+    .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+    .trust-item{padding:6px 28px;border-right:1px solid rgba(255,255,255,0.12);font-size:0.84rem;text-align:center}
+    .trust-item:last-child{border-right:none}
+    .trust-item strong{display:block;color:var(--gold-soft);font-size:0.74rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;margin-bottom:4px}
+
+    .section-head{margin-bottom:44px;max-width:760px}
+    .section-head h2{font-size:2.3rem;margin-bottom:14px;letter-spacing:-0.02em}
+    .section-head p{font-size:1rem}
+
+    .problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .problem{background:#efe8dc;border:1px solid var(--line);padding:28px;min-height:220px;position:relative}
+    .problem .num{font-family:var(--font-serif);color:var(--gold);font-size:0.82rem;letter-spacing:0.22em;font-weight:700;margin-bottom:12px;display:block}
+    .problem h3{font-size:1.2rem;margin-bottom:10px}
+    .problem p{font-size:0.94rem;margin:0}
+
+    .how-wrap{background:var(--surface);border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+    .how-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 28px}
+    .how-item{display:flex;gap:18px;align-items:flex-start}
+    .how-num{flex:0 0 52px;height:52px;border:1px solid var(--navy);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:1.25rem;color:var(--navy);font-weight:700}
+    .how-body h3{font-size:1.15rem;margin-bottom:8px}
+    .how-body p{margin:0;font-size:0.96rem}
+
+    .audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .audience{background:#fff;border:1px solid var(--line);padding:30px;min-height:260px}
+    .audience h3{font-size:1.18rem;margin-bottom:10px}
+    .audience ul{list-style:none;padding:0;margin:12px 0 0 0}
+    .audience li{font-size:0.92rem;color:var(--muted);padding:8px 0;border-top:1px solid var(--line)}
+    .audience li:first-child{border-top:none}
+
+    .method-wrap{background:linear-gradient(180deg,#091327 0%,#0b1630 100%);color:#fff}
+    .method-wrap h2{color:#fff}
+    .method-wrap p{color:rgba(255,255,255,0.74)}
+    .method-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid rgba(255,255,255,0.14);border-bottom:1px solid rgba(255,255,255,0.14)}
+    .method-step{padding:30px 24px;border-right:1px solid rgba(255,255,255,0.08)}
+    .method-step:last-child{border-right:none}
+    .method-step strong{display:block;font-family:var(--font-serif);font-size:1.4rem;color:var(--gold-soft);margin-bottom:10px;letter-spacing:-0.01em}
+    .method-step small{text-transform:uppercase;letter-spacing:0.16em;font-size:0.66rem;color:rgba(255,255,255,0.5);font-weight:800;display:block;margin-bottom:8px}
+    .method-step p{font-size:0.9rem;margin:0;color:rgba(255,255,255,0.74)}
+
+    .preview-wrap{background:var(--surface-2)}
+    .preview-grid{display:grid;grid-template-columns:0.95fr 1.05fr;gap:44px;align-items:center}
+    .preview-mock{background:linear-gradient(180deg,#0b1630 0%,#091327 100%);color:#fff;padding:28px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 30px 60px rgba(11,22,48,0.24)}
+    .preview-mock h4{color:#fff;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;margin-bottom:14px}
+    .pm-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+    .pm-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);padding:14px}
+    .pm-card small{font-family:var(--font-sans);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(255,255,255,0.5);font-weight:800;display:block;margin-bottom:6px}
+    .pm-card strong{font-family:var(--font-serif);font-size:1.4rem;color:#fff;display:block;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+    .pm-card span{font-size:0.78rem;color:rgba(255,255,255,0.68)}
+    .pm-card span.pos{color:#6dd39a}
+    .pm-card span.neg{color:#f48a7a}
+    .pm-chart{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);padding:18px;display:flex;gap:6px;align-items:flex-end;height:120px}
+    .pm-bar{flex:1;background:linear-gradient(180deg,var(--gold) 0%,rgba(143,107,52,0.3) 100%);border-radius:1px}
+
+    .cta-strip{background:var(--navy);color:#fff;padding:64px 0}
+    .cta-strip h2{color:#fff;font-size:2rem;max-width:640px;margin-bottom:14px}
+    .cta-strip p{color:rgba(255,255,255,0.78);max-width:620px;margin-bottom:24px}
+    .cta-strip .hero-actions{margin-top:0}
+    .cta-strip .btn{border-color:#fff;background:#fff;color:var(--navy)}
+    .cta-strip .btn:hover{background:var(--gold);border-color:var(--gold);color:#fff}
+    .cta-strip .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,0.7)}
+    .cta-strip .btn-outline:hover{background:transparent;border-color:var(--gold);color:var(--gold-soft)}
+
+    .access-wrap{background:var(--bg)}
+    .access-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+    .access-info h2{margin-bottom:12px;font-size:2rem}
+    .access-info ul{list-style:none;padding:0;margin:18px 0}
+    .access-info li{padding:12px 0;border-top:1px solid var(--line);font-size:0.96rem;display:flex;gap:12px}
+    .access-info li::before{content:'';flex:0 0 6px;width:6px;height:6px;margin-top:10px;background:var(--gold);border-radius:50%}
+    .access-form{background:#f3efe8;border:1px solid var(--line);padding:34px}
+    .access-form h3{margin-bottom:8px;font-size:1.35rem}
+    .access-form .sub{color:var(--muted);margin-bottom:18px;font-size:0.92rem}
+    input,select,textarea{width:100%;background:#fff;border:1px solid var(--line-strong);min-height:48px;padding:13px 14px;font:inherit;color:var(--text);margin-bottom:12px;outline:none;border-radius:0}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+    .consent{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:0.9rem;margin:6px 0 14px 0}
+    .consent input{width:auto;min-height:auto;margin:4px 0 0 0}
+    .form-note{color:var(--muted);font-size:0.86rem;margin-top:10px}
+    .form-success{display:none;text-align:center;padding:10px 0}
+    .form-success.show{display:block}
+
+    .faq-item{border-top:1px solid var(--line-strong);padding:24px 0}
+    .faq-item:last-child{border-bottom:1px solid var(--line-strong)}
+    .faq-item summary{cursor:pointer;list-style:none;font-family:var(--font-serif);font-size:1.12rem;color:var(--navy);font-weight:600;display:flex;justify-content:space-between;gap:16px;align-items:center}
+    .faq-item summary::-webkit-details-marker{display:none}
+    .faq-item summary::after{content:'+';color:var(--gold);font-size:1.4rem;font-family:var(--font-sans);font-weight:400;transition:transform .2s}
+    .faq-item[open] summary::after{content:'−'}
+    .faq-item p{margin:14px 0 0 0;font-size:0.96rem}
+
+    .compliance-note{background:var(--surface);border-left:3px solid var(--gold);padding:20px 26px;margin-top:30px;font-size:0.88rem;color:var(--muted)}
+
+    footer{padding:40px 0 48px;border-top:1px solid var(--line-strong);background:var(--bg)}
+    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;align-items:start}
+    .footer-brand{font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin-bottom:10px}
+    .footer-note{font-size:0.82rem;color:var(--muted);max-width:440px}
+    .footer-col h5{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.16em;font-weight:800;color:var(--navy);margin-bottom:12px}
+    .footer-col a{display:block;padding:5px 0;font-size:0.88rem;color:rgba(11,22,48,0.76)}
+    .footer-col a:hover{color:var(--gold)}
+    .footer-legal{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);font-size:0.78rem;color:var(--muted)}
+
+    @media (max-width:980px){
+      .hero-grid,.problem-grid,.how-grid,.audience-grid,.method-grid,.preview-grid,.access-grid,.footer-grid,.trust-grid{grid-template-columns:1fr}
+      .trust-item{border-right:none;border-bottom:1px solid rgba(255,255,255,0.12);padding:14px 18px}
+      .trust-item:last-child{border-bottom:none}
+      .method-step{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+      .method-step:last-child{border-bottom:none}
+      .hero h1{font-size:2.25rem}
+      .nav{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line-strong);padding:14px 20px 18px;flex-direction:column;align-items:flex-start;gap:14px;z-index:1001}
+      .nav.nav-open{display:flex}
+      .mobile-menu-toggle{display:flex}
+    }
+    @media (max-width:720px){
+      .brand-lockup{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:10px;row-gap:1px;align-items:end}
+      .brand-lockup__mark{display:contents}
+      .brand-lockup__firm{grid-column:1;grid-row:1;font-size:0.95rem}
+      .brand-lockup__descriptor{grid-column:1;grid-row:2;font-size:0.5rem;letter-spacing:0.18em}
+      .brand-lockup__rule{display:none}
+      .brand-lockup__founder{grid-column:2;grid-row:1/3;align-self:center;font-size:0.58rem;letter-spacing:0.04em;line-height:1.25;padding-top:0;max-width:92px}
+    }
+    @media (max-width:380px){
+      .brand-lockup{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:2px}
+      .brand-lockup__founder{grid-column:1;grid-row:3;align-self:start;font-size:0.56rem;max-width:none;padding-top:1px}
+    }
+    @media (max-width:640px){
+      .hero{padding:92px 0 72px}
+      .section{padding:70px 0}
+      .container{padding:0 20px}
+      .hv-stats,.pm-cards{grid-template-columns:1fr}
+      .hero h1{font-size:1.9rem}
+      .nav-cta{display:none}
+    }
+    .ysz-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
+    .ysz-lockup__icon{width:40px;height:40px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;
+      justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;
+      font-size:0.95rem;color:#0b1630;letter-spacing:0.01em}
+    .ysz-lockup__type{display:flex;flex-direction:column;gap:2px;line-height:1.15}
+    .ysz-lockup__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.05rem;
+      color:#0b1630}
+    .ysz-lockup__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.22em;
+      text-transform:uppercase;color:#8f6b34;margin-top:1px}
+    .ysz-lockup:hover .ysz-lockup__firm{color:#16233f}
+    .ysz-lockup--dark .ysz-lockup__icon{border-color:#c9a565;color:#f1ede6}
+    .ysz-lockup--dark .ysz-lockup__firm{color:#f1ede6}
+    .ysz-lockup--dark .ysz-lockup__descriptor{color:#c9a565}
+    .ysz-lockup--dark:hover .ysz-lockup__firm{color:#e4ded2}
+    @media (max-width:640px){
+      .ysz-lockup__icon{width:34px;height:34px;font-size:0.8rem}
+      .ysz-lockup__firm{font-size:0.92rem}
+      .ysz-lockup__descriptor{font-size:0.54rem}
+    }
+    .ysz-stack{display:inline-flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;color:inherit;text-align:center}
+    .ysz-stack__icon{width:64px;height:64px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.5rem;color:#0b1630;letter-spacing:0.01em}
+    .ysz-stack__type{display:flex;flex-direction:column;align-items:center}
+    .ysz-stack__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.2rem;color:#0b1630;line-height:1.1}
+    .ysz-stack__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#8f6b34;margin-top:5px}
+    .ysz-stack:hover .ysz-stack__firm{color:#16233f}
+    .ysz-stack--dark .ysz-stack__icon{border-color:#c9a565;color:#f1ede6}
+    .ysz-stack--dark .ysz-stack__firm{color:#f1ede6}
+    .ysz-stack--dark .ysz-stack__descriptor{color:#c9a565}
+  </style>
+</head>
+<body data-page="multiasset">
+  <header>
+    <div class="container header-row">
+      <a class="ysz-lockup" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+        <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
+        <span class="ysz-lockup__type">
+          <span class="ysz-lockup__firm">Szuchmacher</span>
+          <span class="ysz-lockup__descriptor">Consultoria</span>
+        </span>
+      </a>
+      <button class="mobile-menu-toggle" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="siteNav" aria-label="Principal">
+        <a href="#problema">Problema</a>
+        <a href="#como">Como funciona</a>
+        <a href="#publico">Para quem</a>
+        <a href="#metodologia">Metodologia</a>
+        <a href="#preview">Amostra</a>
+        <a href="#acesso">Acesso</a>
+        <a href="/#contato">Contato</a>
+      </nav>
+      <a href="/multiasset-app.html" class="nav-login" data-ga="cta_login" data-ga-location="nav_multiasset">Entrar</a>
+      <a href="#acesso" class="nav-cta" data-ga="cta_multiasset" data-ga-location="nav">Receber acesso</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Plataforma MultiAsset · versão 2026</span>
+            <h1>Leitura macro integrada em um único painel executivo.</h1>
+            <p class="sub">Juros, câmbio, equities, crédito e commodities consolidados com contexto de tesouraria privada para decisões de alocação qualificadas. Uma ferramenta de análise, não de recomendação.</p>
+            <div class="hero-actions">
+              <a href="#acesso" class="btn" data-ga="cta_multiasset" data-ga-location="hero">Receber acesso completo</a>
+              <a href="/#contato" class="btn btn-outline" data-ga="cta_diagnostico" data-ga-location="hero_multiasset">Agendar conversa</a>
+            </div>
+          </div>
+          <!-- FASE 2 Correção A: IDs adicionados para atualização dinâmica via JS -->
+          <aside class="hero-visual" aria-label="Preview do painel MultiAsset">
+            <h4>MultiAsset · Preview</h4>
+            <div class="hv-stats">
+              <div class="hv-stat" data-hv="ibov"><small>Ibovespa</small><strong id="hv-ibov-val">—</strong><span id="hv-ibov-meta" class="hv-loading">carregando…</span></div>
+              <div class="hv-stat" data-hv="usdbrl"><small>USD/BRL</small><strong id="hv-usdbrl-val">—</strong><span id="hv-usdbrl-meta" class="hv-loading">carregando…</span></div>
+              <div class="hv-stat" data-hv="sp500"><small>S&amp;P 500</small><strong id="hv-sp500-val">—</strong><span id="hv-sp500-meta" class="hv-loading">carregando…</span></div>
+              <div class="hv-stat" data-hv="wti"><small>WTI</small><strong id="hv-wti-val">—</strong><span id="hv-wti-meta" class="hv-loading">carregando…</span></div>
+            </div>
+            <div>
+              <div class="hv-row"><em>DI jan/27</em><b id="hv-di-val">—</b><small id="hv-di-meta" class="hv-meta-row">carregando…</small></div>
+              <div class="hv-row"><em>Treasury 10y</em><b id="hv-treasury-val">—</b><small id="hv-treasury-meta" class="hv-meta-row">carregando…</small></div>
+              <div class="hv-row"><em>Crédito IG 5y</em><b id="hv-credito-val">spread +98 bps</b></div>
+              <div class="hv-row"><em>Ouro</em><b id="hv-ouro-val">—</b><small id="hv-ouro-meta" class="hv-meta-row">carregando…</small></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Credenciais">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item"><strong>20 anos</strong>gestão patrimonial</div>
+          <div class="trust-item"><strong>Private banking</strong>formação internacional</div>
+          <div class="trust-item"><strong>Independente</strong>sem conflito de produto</div>
+          <div class="trust-item"><strong>Multi jurisdição</strong>Brasil · EUA · Europa</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="problema" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">O problema que resolve</span>
+          <h2>Decisão de alocação está fragmentada em ferramentas que não conversam.</h2>
+          <p>Investidores qualificados operam sobre terminais separados de renda fixa, câmbio, equities e crédito, sem leitura integrada do regime macro nem repertório de tesouraria privada. O resultado é um viés de produto que compromete a arquitetura patrimonial.</p>
+        </div>
+        <div class="problem-grid">
+          <article class="problem">
+            <span class="num">01</span>
+            <h3>Dispersão de dados</h3>
+            <p>Terminais separados, planilhas desatualizadas e relatórios conflitantes geram viés de confirmação e atrasam decisão sob volatilidade.</p>
+          </article>
+          <article class="problem">
+            <span class="num">02</span>
+            <h3>Leitura fragmentada</h3>
+            <p>Análise por classe isolada não captura correlações cruzadas entre juros, câmbio, crédito e commodities em regime macro em transição.</p>
+          </article>
+          <article class="problem">
+            <span class="num">03</span>
+            <h3>Conflito de produto</h3>
+            <p>Plataformas proprietárias de broker misturam análise com comissionamento. O investidor decide com informação enviesada.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="como" class="section how-wrap">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Como funciona</span>
+          <h2>Um único painel que integra tesouraria, macro e portfólio.</h2>
+          <p>MultiAsset consolida dados em tempo quase real, acrescenta leitura fundamentalista atualizada diariamente e entrega simulação de portfólio multimercado pronta para decisão executiva.</p>
+        </div>
+        <div class="how-grid">
+          <div class="how-item">
+            <div class="how-num">I</div>
+            <div class="how-body">
+              <h3>Dados consolidados</h3>
+              <p>Preços e spreads em tempo quase real via TradingView, integrados com fundamentos de tesouraria e leitura de regime macro.</p>
+            </div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">II</div>
+            <div class="how-body">
+              <h3>Leitura diária</h3>
+              <p>Drivers, posicionamento técnico e implicações práticas para risco, liquidez e alocação, atualizados após fechamento dos pregões.</p>
+            </div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">III</div>
+            <div class="how-body">
+              <h3>Simulação de portfólio</h3>
+              <p>Montagem de carteira com restrições reais, Monte Carlo de cenários, sensibilidade a juros e choques cambiais.</p>
+            </div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">IV</div>
+            <div class="how-body">
+              <h3>Relatório integrado</h3>
+              <p>Síntese semanal com correlações cruzadas, visão de tesouraria privada e implicações para portfólios qualificados.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="publico" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Para quem serve</span>
+          <h2>Construída para quem decide sob complexidade.</h2>
+          <p>Três perfis que se beneficiam do painel integrado como substrato decisório.</p>
+        </div>
+        <div class="audience-grid">
+          <div class="audience">
+            <h3>Empresários e sócios</h3>
+            <p>Patrimônio concentrado com evento de liquidez próximo ou recente, exigindo arquitetura de alocação sob contexto macro.</p>
+            <ul>
+              <li>Liquidez pós-venda</li>
+              <li>Diversificação internacional</li>
+              <li>Governança familiar</li>
+            </ul>
+          </div>
+          <div class="audience">
+            <h3>Executivos C-level</h3>
+            <p>Exposição relevante a ações, opções e vesting corporativo, com necessidade de hedge e leitura integrada de risco.</p>
+            <ul>
+              <li>Concentração em ações próprias</li>
+              <li>Hedge cambial e de taxa</li>
+              <li>Planejamento sucessório</li>
+            </ul>
+          </div>
+          <div class="audience">
+            <h3>Famílias e holdings</h3>
+            <p>Estruturas multijurisdicionais com múltiplos beneficiários e horizonte de preservação intergeracional.</p>
+            <ul>
+              <li>Jurisdição Brasil · EUA · Europa</li>
+              <li>Política patrimonial formal</li>
+              <li>Comitê de investimento</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodologia" class="section method-wrap">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Metodologia</span>
+          <h2>Quatro camadas que sustentam cada leitura da plataforma.</h2>
+          <p>Cada número na tela é reconstituível. Nenhuma métrica sem contexto, nenhum gráfico sem fonte.</p>
+        </div>
+        <div class="method-grid">
+          <div class="method-step">
+            <small>Camada 01</small>
+            <strong>Dados</strong>
+            <p>Preços, spreads e volumes via TradingView, BCB, Treasury, CME e provedores institucionais.</p>
+          </div>
+          <div class="method-step">
+            <small>Camada 02</small>
+            <strong>Contexto</strong>
+            <p>Regime macro, política monetária, fluxo de capitais e posicionamento técnico consolidados diariamente.</p>
+          </div>
+          <div class="method-step">
+            <small>Camada 03</small>
+            <strong>Portfólio</strong>
+            <p>Simulação com restrições reais, sensibilidade a fatores e Monte Carlo de cenários adversos.</p>
+          </div>
+          <div class="method-step">
+            <small>Camada 04</small>
+            <strong>Síntese</strong>
+            <p>Leitura executiva com implicações práticas para risco, liquidez e arquitetura patrimonial.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="preview" class="section preview-wrap">
+      <div class="container">
+        <div class="preview-grid">
+          <div class="preview-mock" aria-hidden="true">
+            <h4>Painel · Amostra ilustrativa</h4>
+            <div class="pm-cards">
+              <div class="pm-card"><small>Ibovespa</small><strong>—</strong><span>cotação ao vivo no app</span></div>
+              <div class="pm-card"><small>DI jan/27</small><strong>—</strong><span>curva de juros no app</span></div>
+              <div class="pm-card"><small>USD/BRL</small><strong>—</strong><span>PTAX e intradiário no app</span></div>
+              <div class="pm-card"><small>Brent e WTI</small><strong>—</strong><span>cotação e contexto no app</span></div>
+            </div>
+            <div class="pm-chart" aria-hidden="true">
+              <div class="pm-bar" style="height:40%"></div>
+              <div class="pm-bar" style="height:62%"></div>
+              <div class="pm-bar" style="height:55%"></div>
+              <div class="pm-bar" style="height:74%"></div>
+              <div class="pm-bar" style="height:68%"></div>
+              <div class="pm-bar" style="height:82%"></div>
+              <div class="pm-bar" style="height:76%"></div>
+              <div class="pm-bar" style="height:91%"></div>
+              <div class="pm-bar" style="height:84%"></div>
+              <div class="pm-bar" style="height:72%"></div>
+            </div>
+          </div>
+          <div>
+            <span class="eyebrow">Amostra visual</span>
+            <h2>O que um cliente vê no login diário.</h2>
+            <p>Painel consolidado com leitura macro, simulador de portfólio, dashboard de risco e acesso direto ao relatório de fechamento. Interface construída para quem trata decisão de alocação como decisão corporativa.</p>
+            <div class="hero-actions">
+              <a href="#acesso" class="btn" data-ga="cta_multiasset" data-ga-location="preview">Receber acesso completo</a>
+              <a href="/relatorios.html" class="btn btn-outline" data-ga="report_download" data-ga-location="preview_multiasset">Ver relatório exemplo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-strip">
+      <div class="container">
+        <span class="eyebrow" style="color:var(--gold-soft)">Assinatura</span>
+        <h2>MultiAsset Pro — simulador integral, carta semanal e alertas.</h2>
+        <p>R$ 3.970/ano · 50 vagas de fundador com preço travado vitalício. Ou comece pela amostra gratuita abaixo.</p>
+        <div class="hero-actions">
+          <a href="/assinatura.html?utm_source=multiasset&utm_medium=organic&utm_campaign=strip_pro" class="btn" data-ga="cta_assinar_pro" data-ga-location="strip_multiasset">Ver planos e assinar</a>
+          <a href="#acesso" class="btn btn-outline" data-ga="cta_multiasset" data-ga-location="strip_amostra">Amostra gratuita</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="acesso" class="section access-wrap">
+      <div class="container">
+        <div class="access-grid">
+          <div class="access-info">
+            <span class="eyebrow">Como receber</span>
+            <h2>Acesso em até 24 horas úteis por e-mail.</h2>
+            <p>Preencha os dados ao lado. Enviamos credenciais da versão de amostra imediatamente e, quando aplicável, proposta para versão completa.</p>
+            <ul>
+              <li>Painel MultiAsset com leitura diária de 4 classes de ativos</li>
+              <li>Relatório semanal integrado com leitura macro</li>
+              <li>Teaser do simulador de portfólio</li>
+              <li>Possibilidade de upgrade para versão completa, com simulador integral, alertas e histórico</li>
+            </ul>
+            <div class="compliance-note">
+              Material de caráter informativo. Não constitui recomendação de investimento nem substitui análise individualizada. Atividade de consultoria de valores mobiliários conforme Resolução CVM 20/2021. Independência declarada, sem recebimento de comissão de produtos financeiros.
+            </div>
+          </div>
+
+          <form id="accessForm" class="access-form" method="POST" action="" data-formspree="1" data-form="multiasset_access">
+            <h3>Receber acesso</h3>
+            <p class="sub">3 campos obrigatórios. Retorno em 24h úteis.</p>
+            <input type="text" name="nome" placeholder="Nome completo" autocomplete="name" required />
+            <input type="email" name="email" placeholder="E-mail corporativo" autocomplete="email" required />
+            <select name="perfil" required>
+              <option value="" disabled selected>Perfil</option>
+              <option value="empresario">Empresário / sócio</option>
+              <option value="executivo">Executivo C-level</option>
+              <option value="familia">Família ou holding</option>
+              <option value="institucional">Institucional / gestor</option>
+              <option value="outro">Outro</option>
+            </select>
+            <select name="patrimonio">
+              <option value="" disabled selected>Faixa patrimonial (opcional)</option>
+              <option value="1-3">R$ 1M a R$ 3M</option>
+              <option value="3-10">R$ 3M a R$ 10M</option>
+              <option value="10-30">R$ 10M a R$ 30M</option>
+              <option value="30+">Acima de R$ 30M</option>
+            </select>
+            <label class="consent">
+              <input type="checkbox" name="consentimento" required />
+              <span>Autorizo o envio por e-mail conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;">política de privacidade</a>.</span>
+            </label>
+            <input type="hidden" name="_subject" value="Solicitação de acesso — MultiAsset" />
+            <input type="hidden" name="_origem" value="multiasset.html#acesso" />
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+            <button type="submit" class="btn btn-gold" style="width:100%" data-ga="cta_multiasset" data-ga-location="form_access">Receber acesso</button>
+            <div class="form-note">Sem spam. Sem repasse. Cancele quando quiser.</div>
+            <div class="form-success" id="accessSuccess">
+              <h3>Solicitação recebida</h3>
+              <p>Você receberá as credenciais da versão de amostra em até 24 horas úteis.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">FAQ</span>
+          <h2>Perguntas objetivas, respostas diretas.</h2>
+        </div>
+        <details class="faq-item">
+          <summary>O que eu recebo na versão completa?</summary>
+          <p>Acesso ao painel MultiAsset com leitura diária de juros, câmbio, equities, crédito e commodities, simulador de portfólio e relatório macro semanal integrado.</p>
+        </details>
+        <details class="faq-item">
+          <summary>A plataforma é um robô de recomendação?</summary>
+          <p>Não. MultiAsset é uma ferramenta de análise fundamentalista e leitura macro. Não emite ordens, não executa operações e não faz recomendações personalizadas. Decisão sempre do investidor ou de consultoria qualificada.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Qual a frequência de atualização dos dados?</summary>
+          <p>Preços e spreads em tempo quase real via TradingView. Leitura fundamentalista atualizada diariamente após fechamento dos pregões. Relatório integrado semanal.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Há custo?</summary>
+          <p>A versão de amostra é gratuita. A versão completa está incluída no serviço de consultoria patrimonial ou pode ser licenciada separadamente para institucionais.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Funciona em mobile?</summary>
+          <p>Sim. Interface responsiva, com recorte executivo para celular e painel denso para desktop.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Quem está por trás da metodologia?</summary>
+          <p>Yan Szuchmacher, 20 anos de gestão patrimonial privada e advisory internacional. Atuação independente, sem conflito de produto.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><a class="ysz-stack" href="/" aria-label="Szuchmacher Consultoria — Yan Szuchmacher"><span class="ysz-stack__icon" aria-hidden="true">YS</span><span class="ysz-stack__type"><span class="ysz-stack__firm">Szuchmacher</span><span class="ysz-stack__descriptor">Consultoria</span></span></a></div>
+          <div class="footer-note">Consultoria de valores mobiliários independente, com foco em arquitetura patrimonial sob complexidade. Atividade regulada pela Resolução CVM 20/2021.</div>
+        </div>
+        <div class="footer-col">
+          <h5>Navegação</h5>
+          <a href="/">Home</a>
+          <a href="/relatorios.html">Relatórios</a>
+          <a href="/multiasset.html">MultiAsset — conheça</a>
+          <a href="/multiasset-app.html">Entrar na plataforma</a>
+          <a href="/#contato">Contato</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contato</h5>
+          <a href="https://wa.me/5521981088992" target="_blank" rel="noopener" data-ga="whatsapp_click" data-ga-location="footer_multiasset">WhatsApp +55 21 98108 8992</a>
+          <a id="contact-email-link">E-mail</a>
+          <a href="/privacidade.html">Privacidade</a>
+        </div>
+      </div>
+      <div class="footer-legal">
+        Este material tem caráter meramente informativo. Não constitui oferta, solicitação ou recomendação de investimento. Rentabilidade passada não representa garantia de resultados futuros. © 2026 Szuchmacher Consultoria.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var btn = document.getElementById('menuBtn');
+      var nav = document.getElementById('siteNav');
+      function openMenu()  { nav.classList.add('nav-open');    btn.setAttribute('aria-expanded', 'true');  }
+      function closeMenu() { nav.classList.remove('nav-open'); btn.setAttribute('aria-expanded', 'false'); }
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        nav.classList.contains('nav-open') ? closeMenu() : openMenu();
+      });
+      nav.querySelectorAll('a').forEach(function (link) { link.addEventListener('click', closeMenu); });
+      document.addEventListener('click', function (e) {
+        if (nav.classList.contains('nav-open') && !nav.contains(e.target) && e.target !== btn) closeMenu();
+      });
+
+      var em = 'yan' + String.fromCharCode(64) + 'szuchmacher.com.br';
+      var el = document.getElementById('contact-email-link');
+      if (el) { el.href = 'mailto:' + em; el.textContent = em; }
+
+      /* Clarity, scroll depth e delegação data-ga vivem em /assets/sz-config.js */
+
+      window.SZ && window.SZ.bindFormspree(document.getElementById('accessForm'), {
+        onSuccess: function (form) {
+          form.querySelectorAll('input,select,button,label.consent').forEach(function (n) { n.style.display = 'none'; });
+          var ok = document.getElementById('accessSuccess');
+          if (ok) ok.classList.add('show');
+        }
+      });
+    });
+  </script>
+
+  <!-- ── FASE 2 Correção A: Hero Visual — dados ao vivo + metadados ── -->
+  <script>
+  (function () {
+    'use strict';
+    var TIMEOUT_MS = 8000;
+    var PRICES_TIMEOUT_MS = 12000; // prices.php depende de upstream lento (gold-api ~3-4s)
+
+    function fetchWithTimeout(url, ms) {
+      var ctrl = new AbortController();
+      var timer = setTimeout(function () { ctrl.abort(); }, ms);
+      return fetch(url, { signal: ctrl.signal }).finally(function () { clearTimeout(timer); });
+    }
+
+    function fmtBRL(v, dec) {
+      dec = dec === undefined ? 2 : dec;
+      return v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    }
+
+    function nowBRT() {
+      return new Date().toLocaleString('pt-BR', {
+        timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function setVal(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+
+    function setMeta(id, text, cls) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = text;
+      el.className = cls || 'hv-cache';
+    }
+
+    /* 1. USD/BRL via AwesomeAPI */
+    function fetchUsdBrl() {
+      return fetchWithTimeout('https://economia.awesomeapi.com.br/last/USD-BRL', TIMEOUT_MS)
+        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(function (data) {
+          var q = data['USDBRL'];
+          if (!q || !q.bid) throw new Error('bid ausente');
+          var rate = parseFloat(q.bid);
+          var ts = q.create_date ? q.create_date.substring(0, 16) : nowBRT();
+          setVal('hv-usdbrl-val', 'R$ ' + fmtBRL(rate));
+          setMeta('hv-usdbrl-meta', 'AwesomeAPI · ao vivo · ' + ts, 'hv-live');
+          return rate;
+        })
+        .catch(function (err) {
+          console.warn('[hv] USD/BRL:', err);
+          setVal('hv-usdbrl-val', 'indisponível');
+          setMeta('hv-usdbrl-meta', 'AwesomeAPI · erro', 'hv-unavailable');
+          return null;
+        });
+    }
+
+    /* 2. Ouro via prices.php */
+    function fetchOuro(usdBrlRate) {
+      return fetchWithTimeout('/prices.php', PRICES_TIMEOUT_MS)
+        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(function (data) {
+          if (!data.ok) throw new Error('ok=false');
+          var goldUsd = parseFloat(data.gold);
+          // prices.php devolve: generated_at (timestamp BRT) e source_state
+          // (undefined = fetch ao vivo · 'cache' = cache fresco · 'stale-cache' = upstream caiu).
+          var ts = data.generated_at || '—';
+          var live = !data.stale && !data.source_state;
+          var src = live ? 'ao vivo' : (data.stale ? 'cache defasado' : 'cache');
+          var cls = live ? 'hv-live' : 'hv-cache';
+          if (usdBrlRate && goldUsd) {
+            setVal('hv-ouro-val', 'R$ ' + fmtBRL(goldUsd * usdBrlRate, 0) + '/oz');
+            setMeta('hv-ouro-meta', 'prices.php · ' + src + ' · ' + ts, cls);
+          } else if (goldUsd) {
+            setVal('hv-ouro-val', 'US$ ' + fmtBRL(goldUsd, 0) + '/oz');
+            setMeta('hv-ouro-meta', 'prices.php · ' + src + ' · ' + ts, cls);
+          } else { throw new Error('gold missing'); }
+        })
+        .catch(function (err) {
+          console.warn('[hv] Ouro:', err);
+          setVal('hv-ouro-val', 'indisponível');
+          setMeta('hv-ouro-meta', 'prices.php · erro', 'hv-unavailable');
+        });
+    }
+
+    /* 3. DI / Selic via BrasilAPI */
+    function fetchSelic() {
+      return fetchWithTimeout('https://brasilapi.com.br/api/taxas/v1', TIMEOUT_MS)
+        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(function (arr) {
+          var selic = arr.find(function (t) { return t.nome === 'Selic' || t.nome === 'SELIC'; });
+          if (!selic) throw new Error('Selic not found');
+          setVal('hv-di-val', fmtBRL(parseFloat(selic.valor), 2) + '% a.a.');
+          setMeta('hv-di-meta', 'BrasilAPI · Selic meta (proxy) · ' + nowBRT(), 'hv-cache');
+        })
+        .catch(function (err) {
+          console.warn('[hv] Selic:', err);
+          setVal('hv-di-val', 'indisponível');
+          setMeta('hv-di-meta', 'BrasilAPI · erro', 'hv-unavailable');
+        });
+    }
+
+    /* 4. Ibovespa, S&P 500, WTI, Treasury 10y via /market-data.php */
+    function fetchMarketData() {
+      return fetchWithTimeout('/market-data.php', TIMEOUT_MS)
+        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(function (d) {
+          if (!d.ok) throw new Error('ok=false');
+          var src = d.source || 'Yahoo Finance';
+
+          if (d.ibov && d.ibov.value) {
+            setVal('hv-ibov-val', fmtBRL(d.ibov.value, 0));
+            var ibovChg = d.ibov.change_pct;
+            setMeta('hv-ibov-meta', src + ' · ' + (ibovChg >= 0 ? '+' : '') + fmtBRL(ibovChg, 2) + '%',
+              ibovChg >= 0 ? 'hv-live' : 'hv-unavailable');
+          }
+
+          if (d.sp500 && d.sp500.value) {
+            setVal('hv-sp500-val', fmtBRL(d.sp500.value, 0));
+            var spChg = d.sp500.change_pct;
+            setMeta('hv-sp500-meta', src + ' · ' + (spChg >= 0 ? '+' : '') + fmtBRL(spChg, 2) + '%',
+              spChg >= 0 ? 'hv-live' : 'hv-unavailable');
+          }
+
+          if (d.wti && d.wti.value) {
+            setVal('hv-wti-val', 'US$ ' + fmtBRL(d.wti.value, 2));
+            var wtiChg = d.wti.change_pct;
+            setMeta('hv-wti-meta', src + ' · ' + (wtiChg >= 0 ? '+' : '') + fmtBRL(wtiChg, 2) + '%',
+              wtiChg >= 0 ? 'hv-live' : 'hv-unavailable');
+          }
+
+          if (d.treasury10y && d.treasury10y.value) {
+            setVal('hv-treasury-val', fmtBRL(d.treasury10y.value, 2) + '%');
+            var tChg = d.treasury10y.change_pct;
+            setMeta('hv-treasury-meta', src + ' · ' + (tChg >= 0 ? '+' : '') + fmtBRL(Math.abs(tChg), 2) + ' bps',
+              'hv-cache');
+          }
+        })
+        .catch(function (err) {
+          console.warn('[hv] market-data:', err);
+          ['ibov', 'sp500', 'wti', 'treasury'].forEach(function (k) {
+            setVal('hv-' + k + '-val', 'indisponível');
+            setMeta('hv-' + k + '-meta', 'market-data.php · erro', 'hv-unavailable');
+          });
+        });
+    }
+
+    /* 5. Orquestração */
+    function initHeroVisual() {
+      fetchMarketData();
+      fetchUsdBrl().then(function (rate) { fetchOuro(rate); });
+      fetchSelic();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeroVisual);
+    } else {
+      initHeroVisual();
+    }
+  })();
+  </script>
+</body>
+</html>

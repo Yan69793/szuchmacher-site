@@ -1,0 +1,15 @@
+{
+  "baseline_git_ref": "HEAD-before-sophistication-commit",
+  "baseline_dir": "_arquivo/design-baseline-20260718",
+  "sophistication_dir": "_arquivo/design-sophistication-20260718",
+  "purpose": "revert design sophistication without affecting other WIP",
+  "production_paths": [
+    "assets/sz-design.css",
+    "index.html",
+    "ebook.html",
+    "multiasset-app.html",
+    "multiasset.html",
+    "CLAUDE.md"
+  ],
+  "created": "2026-07-18"
+}
