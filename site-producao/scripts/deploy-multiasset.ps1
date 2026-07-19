@@ -1,4 +1,4 @@
-# deploy-multiasset.ps1 — publica a plataforma em multi-assets.com
+﻿# deploy-multiasset.ps1 — publica a plataforma em multi-assets.com
 # PRODUÇÃO (2026-06-17): use deploy-cloudflare.ps1 ou deploy-all.ps1 -Cloudflare
 # Uso legado FTP: .\scripts\deploy-multiasset.ps1 [-DryRun]
 # Requer no .env: FTP_MULTIasset_HOST, FTP_MULTIasset_USER, FTP_MULTIasset_PASS

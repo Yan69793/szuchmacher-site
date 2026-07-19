@@ -1,4 +1,4 @@
-# register-agents.ps1 — Agenda Macro + Agenda + Lead Nurture no Task Scheduler
+﻿# register-agents.ps1 — Agenda Macro + Agenda + Lead Nurture no Task Scheduler
 # Executar PowerShell como usuário normal (não precisa admin para tarefas próprias)
 # Uso: .\scripts\register-agents.ps1 [-Remove]
 

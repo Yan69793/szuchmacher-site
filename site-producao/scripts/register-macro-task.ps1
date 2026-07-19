@@ -1,4 +1,4 @@
-# register-macro-task.ps1 — Macro cron no Task Scheduler (segunda 09:00 BRT)
+﻿# register-macro-task.ps1 — Macro cron no Task Scheduler (segunda 09:00 BRT)
 # Uso: .\scripts\register-macro-task.ps1 [-Remove] [-RunNow]
 
 param(

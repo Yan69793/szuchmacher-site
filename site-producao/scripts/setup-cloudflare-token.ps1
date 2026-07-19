@@ -1,4 +1,4 @@
-# setup-cloudflare-token.ps1 — Abre o painel CF e grava token no .env
+﻿# setup-cloudflare-token.ps1 — Abre o painel CF e grava token no .env
 # Uso: .\scripts\setup-cloudflare-token.ps1 -Token "seu_token_aqui"
 
 param(

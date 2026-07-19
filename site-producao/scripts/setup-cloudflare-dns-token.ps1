@@ -1,4 +1,4 @@
-# setup-cloudflare-dns-token.ps1 — grava CLOUDFLARE_DNS_TOKEN no .env
+﻿# setup-cloudflare-dns-token.ps1 — grava CLOUDFLARE_DNS_TOKEN no .env
 # Uso: .\scripts\setup-cloudflare-dns-token.ps1 [-Token "cfut_..."]
 
 param([string]$Token, [switch]$SkipBrowser)

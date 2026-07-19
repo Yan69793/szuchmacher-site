@@ -1,4 +1,4 @@
-# register-all-automation.ps1 — Registra todas as tarefas agendadas do site
+﻿# register-all-automation.ps1 — Registra todas as tarefas agendadas do site
 # Uso: .\scripts\register-all-automation.ps1 [-RunNow]
 
 param([switch]$RunNow)

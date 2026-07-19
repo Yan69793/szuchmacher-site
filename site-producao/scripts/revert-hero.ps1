@@ -1,4 +1,4 @@
-# revert-hero.ps1 — volta ao hero clássico sem apagar arquivos editorial
+﻿# revert-hero.ps1 — volta ao hero clássico sem apagar arquivos editorial
 # Uso: .\scripts\revert-hero.ps1
 # Preview clássico sem deploy: https://szuchmacher.com.br/?hero=classic
 

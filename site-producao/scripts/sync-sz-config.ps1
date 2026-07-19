@@ -1,4 +1,4 @@
-# sync-sz-config.ps1 — Injeta IDs do .env em assets/sz-config.js
+﻿# sync-sz-config.ps1 — Injeta IDs do .env em assets/sz-config.js
 # Uso: preencha no .env e rode .\scripts\sync-sz-config.ps1
 
 $ErrorActionPreference = 'Stop'

@@ -1,4 +1,4 @@
-# setup-stripe.ps1 — Cria produtos + Payment Links anuais (BRL) via Stripe API
+﻿# setup-stripe.ps1 — Cria produtos + Payment Links anuais (BRL) via Stripe API
 # Uso:
 #   1) Cole STRIPE_SECRET_KEY=sk_test_... em site-producao/.env
 #   2) .\scripts\setup-stripe.ps1

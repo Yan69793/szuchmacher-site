@@ -1,4 +1,4 @@
-# deploy-cloudflare.ps1 — publica szuchmacher + multi-assets no Cloudflare Workers
+﻿# deploy-cloudflare.ps1 — publica szuchmacher + multi-assets no Cloudflare Workers
 # Uso: .\scripts\deploy-cloudflare.ps1 [-DryRun]
 
 param([switch]$DryRun)

@@ -1,4 +1,4 @@
-# invalidate-worker-cache.ps1 — limpa caches KV do Worker sz-sites (sem API Purge)
+﻿# invalidate-worker-cache.ps1 - limpa caches KV do Worker sz-sites (sem API Purge)
 # Uso: .\scripts\invalidate-worker-cache.ps1 [-RefreshMacro]
 
 param([switch]$RefreshMacro)
@@ -28,7 +28,7 @@ if ($RefreshMacro) {
     try {
         $r = Invoke-RestMethod -Uri 'https://szuchmacher.com.br/macro_api.php?cron=1' -TimeoutSec 180
         if ($r.ok) {
-            Write-Host "  macro_api OK — $($r.generated_at) cache=$($r.cache)" -ForegroundColor Green
+            Write-Host "  macro_api OK - $($r.generated_at) cache=$($r.cache)" -ForegroundColor Green
         } else {
             Write-Host "  macro_api falhou: $($r.error)" -ForegroundColor Yellow
         }

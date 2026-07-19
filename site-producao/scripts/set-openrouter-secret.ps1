@@ -1,4 +1,4 @@
-# set-openrouter-secret.ps1 — grava OPENROUTER_KEY no Worker sem newline extra
+﻿# set-openrouter-secret.ps1 — grava OPENROUTER_KEY no Worker sem newline extra
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 

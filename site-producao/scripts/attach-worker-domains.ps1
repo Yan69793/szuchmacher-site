@@ -1,4 +1,4 @@
-# attach-worker-domains.ps1 — custom domains gerenciados pelo Worker (apos limpeza DNS)
+﻿# attach-worker-domains.ps1 — custom domains gerenciados pelo Worker (apos limpeza DNS)
 # Uso: .\scripts\attach-worker-domains.ps1 [-DryRun]
 
 param([switch]$DryRun)

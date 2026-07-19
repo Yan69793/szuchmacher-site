@@ -1,4 +1,4 @@
-# cleanup-dns-cloudflare.ps1 — remove legado HostGator; prepara custom domains Worker
+﻿# cleanup-dns-cloudflare.ps1 — remove legado HostGator; prepara custom domains Worker
 # Requer CLOUDFLARE_DNS_TOKEN no .env (Zone > DNS > Edit)
 # Uso: .\scripts\cleanup-dns-cloudflare.ps1 [-DryRun] [-KeepApex]
 

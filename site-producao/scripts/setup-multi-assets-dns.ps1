@@ -1,4 +1,4 @@
-# setup-multi-assets-dns.ps1 — DNS Cloudflare para multi-assets.com
+﻿# setup-multi-assets-dns.ps1 — DNS Cloudflare para multi-assets.com
 # Uso:
 #   .\scripts\setup-multi-assets-dns.ps1              # abre painel + mostra valores
 #   .\scripts\setup-multi-assets-dns.ps1 -Apply       # aplica via API (precisa token DNS)

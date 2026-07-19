@@ -1,4 +1,4 @@
-# fix-cloudflare-completo.ps1 — NS via HostGator (NEWFOLD) + token purge Cloudflare
+﻿# fix-cloudflare-completo.ps1 — NS via HostGator (NEWFOLD) + token purge Cloudflare
 # Uso: .\scripts\fix-cloudflare-completo.ps1
 
 param([switch]$SkipBrowser)

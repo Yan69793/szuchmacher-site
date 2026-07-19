@@ -1,4 +1,4 @@
-# fix-dns-completo.ps1 — pipeline DNS: limpeza + custom domains Worker
+﻿# fix-dns-completo.ps1 — pipeline DNS: limpeza + custom domains Worker
 # Uso: .\scripts\fix-dns-completo.ps1 [-KeepApex]
 
 param([switch]$KeepApex)

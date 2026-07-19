@@ -1,4 +1,4 @@
-# setup-analytics.ps1 — Injeta Microsoft Clarity ID no .env e sincroniza sz-config.js
+﻿# setup-analytics.ps1 — Injeta Microsoft Clarity ID no .env e sincroniza sz-config.js
 # Uso:
 #   .\scripts\setup-analytics.ps1 -ClarityId xxxxxxxxxx
 #   .\scripts\setup-analytics.ps1 -OpenDashboard   # abre clarity.microsoft.com

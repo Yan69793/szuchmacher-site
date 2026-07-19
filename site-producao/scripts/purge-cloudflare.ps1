@@ -1,4 +1,4 @@
-# purge-cloudflare.ps1 — Purge Everything no Cloudflare
+﻿# purge-cloudflare.ps1 — Purge Everything no Cloudflare
 # Uso:
 #   .\scripts\purge-cloudflare.ps1           # purge
 #   .\scripts\purge-cloudflare.ps1 -Diagnose # só diagnóstico (sem purge)

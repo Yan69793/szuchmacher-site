@@ -1,4 +1,4 @@
-# setup-cloudflare-purge-token.ps1 — grava CLOUDFLARE_PURGE_TOKEN no .env
+﻿# setup-cloudflare-purge-token.ps1 — grava CLOUDFLARE_PURGE_TOKEN no .env
 # Uso: .\scripts\setup-cloudflare-purge-token.ps1 [-Token "cfut_..."] [-SkipBrowser]
 
 param([string]$Token, [switch]$SkipBrowser)

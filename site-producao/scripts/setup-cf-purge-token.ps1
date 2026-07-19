@@ -1,4 +1,4 @@
-# setup-cf-purge-token.ps1 — cria token CF com Cache Purge e atualiza .env
+﻿# setup-cf-purge-token.ps1 — cria token CF com Cache Purge e atualiza .env
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 

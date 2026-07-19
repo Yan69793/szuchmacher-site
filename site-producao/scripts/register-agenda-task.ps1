@@ -1,4 +1,4 @@
-# register-agenda-task.ps1 — Agenda Agent no Task Scheduler (seg + qui 08:00)
+﻿# register-agenda-task.ps1 — Agenda Agent no Task Scheduler (seg + qui 08:00)
 # Uso: .\scripts\register-agenda-task.ps1 [-Remove] [-RunNow]
 
 param(

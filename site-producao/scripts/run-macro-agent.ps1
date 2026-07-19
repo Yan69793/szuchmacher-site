@@ -1,5 +1,5 @@
-﻿# run-agenda-agent.ps1 — Gera agenda-data.json e publica via deploy-cloudflare.ps1
-# Usado pelo Task Scheduler (Szuchmacher-AgendaAgent)
+﻿# run-macro-agent.ps1 — Gera macro_data.json (via Claude) e publica via deploy-cloudflare.ps1
+# Usado pelo Task Scheduler (Szuchmacher-MacroAgent)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -7,11 +7,11 @@ $ErrorActionPreference = 'Stop'
 $ROOT   = Split-Path -Parent $PSScriptRoot
 $YAN    = Join-Path (Split-Path -Parent $ROOT) 'automacao-yan-os'
 $PY     = Join-Path $YAN 'venv\Scripts\python.exe'
-$AGENT  = Join-Path $YAN 'agents\agenda_agent.py'
+$AGENT  = Join-Path $YAN 'agents\macro_agent.py'
 $DEPLOY = Join-Path $PSScriptRoot 'deploy-cloudflare.ps1'
 $ALERT  = Join-Path $PSScriptRoot 'send-alert-email.ps1'
 $LOGDIR = Join-Path $YAN 'logs'
-$LOG    = Join-Path $LOGDIR ("agenda_scheduled_{0:yyyyMMdd}.log" -f (Get-Date))
+$LOG    = Join-Path $LOGDIR ("macro_agent_scheduled_{0:yyyyMMdd}.log" -f (Get-Date))
 
 function Write-Log([string]$Msg) {
     $line = "[{0}] {1}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Msg
@@ -21,7 +21,7 @@ function Write-Log([string]$Msg) {
 }
 
 try {
-    Write-Log '=== INICIO agenda automatizada ==='
+    Write-Log '=== INICIO macro agent automatizado ==='
 
     if (-not (Test-Path $PY)) { throw "Python não encontrado: $PY" }
     if (-not (Test-Path $AGENT)) { throw "Agent não encontrado: $AGENT" }
@@ -29,11 +29,11 @@ try {
     $env:YAN_OS_BATCH = '1'
     Push-Location $YAN
     & $PY $AGENT --dry-run
-    if ($LASTEXITCODE -ne 0) { throw "agenda_agent.py falhou (exit $LASTEXITCODE)" }
+    if ($LASTEXITCODE -ne 0) { throw "macro_agent.py falhou (exit $LASTEXITCODE)" }
     Pop-Location
 
-    $json = Join-Path $ROOT 'agenda-data.json'
-    if (-not (Test-Path $json)) { throw "agenda-data.json não gerado em $json" }
+    $json = Join-Path $ROOT 'macro_data.json'
+    if (-not (Test-Path $json)) { throw "macro_data.json não gerado em $json" }
     Write-Log "JSON OK: $json"
 
     & $DEPLOY
@@ -43,7 +43,7 @@ try {
     exit 0
 } catch {
     Write-Log "ERRO: $($_.Exception.Message)"
-    & $ALERT -Subject "[Szuchmacher] Falha na automação de agenda" -Body "run-agenda-agent.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nErro: $($_.Exception.Message)`n`nLog: $LOG"
+    & $ALERT -Subject "[Szuchmacher] Falha na automação de macro agent" -Body "run-macro-agent.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nErro: $($_.Exception.Message)`n`nLog: $LOG"
     exit 1
 } finally {
     if ((Get-Location).Path -eq $YAN) { Pop-Location }
