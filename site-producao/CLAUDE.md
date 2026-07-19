@@ -18,7 +18,8 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 |---------|--------|
 | `index.html` | Home institucional (~54 KB) |
 | `relatorios.html` | Página de relatórios e PDFs |
-| `multiasset.html` | Landing da plataforma MultiAsset |
+| `multiasset.html` | Landing legada — em szuchmacher.com.br responde 301 para multi-assets.com |
+| `consultoria.html` | Página de consultoria patrimonial — servida em `multi-assets.com/consultoria` |
 | `multiasset-app.html` | App completo da plataforma (~275 KB) |
 | `honorarios.html` | Tabela de honorários |
 | `assinatura.html` | Página de assinatura |
@@ -26,7 +27,7 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 | `radar-roic.html` | Radar ROIC |
 | `.htaccess` | Headers de segurança (CSP, HSTS, GZIP, redirects) |
 | `prices.php` | Endpoint: ouro, prata, platina, BTC ao vivo |
-| `macro_api.php` | Endpoint LLM via OpenRouter — **503, OPENROUTER_KEY ausente** |
+| `macro_api.php` | Endpoint LLM via OpenRouter — 200, secret `OPENROUTER_KEY` no Worker |
 | `macro_data.json` | Fallback estático do macro quando `macro_api.php` falha |
 | `agenda-server.php` | Endpoint: agenda de eventos econômicos |
 | `agenda-data.json` | Cache local da agenda |
@@ -36,7 +37,7 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 | `assets/sz-config.js` | Configuração central: GA4_ID, CLARITY_ID, FORMSPREE_ID |
 | `assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX) — funcional |
 | `assets/agenda.php` | Agenda ao vivo — funcional |
-| `_arquivo/` | Backups e snapshots históricos — **não editar** |
+| `_arquivo/` | Backups e snapshots históricos — **não editar**, ignorado pelo git (só existe em disco) |
 | `diagnosticos/` | Registros de diagnóstico de produção |
 | `scripts/` | Scripts de deploy e manutenção |
 | `cloudflare-workers/sz-sites/` | Worker de produção (HTML estático + APIs PHP portadas) |
@@ -157,7 +158,7 @@ curl.exe -sI "https://multi-assets.com/prices.php"
 | `/assets/macro.php` | 200 ✅ | BCB SGS + Focus: Selic, IPCA, PTAX |
 | `/assets/agenda.php` | 200 ✅ | Agenda de eventos econômicos da semana |
 | `/prices.php` | 200 ✅ | Ouro, prata, platina, Bitcoin |
-| `/macro_api.php` | 503 ❌ | Narrativa macro via LLM (OpenRouter_KEY não configurada) |
+| `/macro_api.php` | 200 ✅ | Narrativa macro via LLM. Cascata a frio chega a ~30 s; `macro_data.json` é o fallback |
 
 ---
 
@@ -180,9 +181,17 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Kiwify ebook / Cal.com / Stripe live** — `_PENDING`/`test_` em `assets/sz-config.js` (decisão de produto/billing)
-2. **PDF de amostra** — botão em `relatorios.html` aponta para `/Fechamento de Mercado 01.04.26.pdf` (404, nunca existiu) — subir PDF real ou remover botão
-3. **Contraste `--gold`** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1) — decisão de design (design system)
-4. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
-5. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
-6. **HEAD → 500** em rotas HTML do Worker (navegador usa GET/200; sem impacto de usuário)
+1. **Stripe live** — `assets/sz-config.js` ainda tem URLs `buy.stripe.com/test_*`. Desde 2026-07-18 o `ready()` reprova checkout de teste, então os CTAs de `assinatura.html` caem no fallback de e-mail. **Não há como cobrar até as URLs live entrarem.**
+2. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING`; `[data-sz-cal]` cai no WhatsApp
+3. **Enquadramento CVM** — seis textos descrevem a assinatura como research impessoal, que é atividade de analista (Res. 20/2021), enquanto o registro é de consultor (Res. 19/2021). Locais: `assinatura.html:400`, `:463`, `radar-roic.html:7`, `:14`, `:278`. Revisar com advogado antes de mexer
+4. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
+5. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
+6. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
+7. **Sitemap do multi-assets.com** — o domínio não serve `/sitemap.xml` (404). O de szuchmacher lista só URL própria e não pode cobrir outro domínio
+
+### Resolvidas em 2026-07-18
+
+- PDF de amostra 404 em `relatorios.html` — não há mais nenhuma referência a PDF na página
+- `HEAD → 500` nas rotas HTML do Worker — HEAD e GET respondem 200 nos dois domínios
+- `macro_api.php` 503 — endpoint em 200
+- Sitemap com 301/404 — `multiasset.html`, `multiasset-app.html` e `consultoria.html` saíram da lista

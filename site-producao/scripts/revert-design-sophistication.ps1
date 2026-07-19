@@ -1,4 +1,4 @@
-# revert-design-sophistication.ps1
+﻿# revert-design-sophistication.ps1
 # Restaura o design anterior à sofisticação (2026-07-18).
 # Não toca em outros arquivos do working tree.
 #
@@ -23,7 +23,8 @@ $TAG = 'design-pre-sophistication-20260718'
 $relPaths = @(
     'assets\sz-design.css',
     'index.html',
-    'ebook.html',
+    # ebook.html saiu da lista em 2026-07-18: reverter o design nao deve desfazer
+    # a remocao da pagina, que foi decisao de produto separada.
     'multiasset-app.html',
     'multiasset.html',
     'CLAUDE.md'

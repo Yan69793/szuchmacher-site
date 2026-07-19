@@ -1,4 +1,4 @@
-# apply-design-sophistication.ps1
+﻿# apply-design-sophistication.ps1
 # Reaplica o snapshot de sofisticação (2026-07-18) a partir de _arquivo.
 #
 # Uso:
@@ -16,7 +16,8 @@ $SOF  = Join-Path $ROOT '_arquivo\design-sophistication-20260718'
 $files = @(
     'assets\sz-design.css',
     'index.html',
-    'ebook.html',
+    # ebook.html saiu da lista em 2026-07-18: a pagina foi descontinuada e passou
+    # a responder 301 no Worker. Reaplicar o snapshot a ressuscitaria no disco.
     'multiasset-app.html',
     'multiasset.html',
     'CLAUDE.md'
