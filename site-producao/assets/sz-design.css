@@ -422,9 +422,18 @@ header.is-scrolled {
   font-size: clamp(2.5rem, 4.6vw, 3.65rem);
   letter-spacing: var(--tracking-display);
   max-width: 14ch;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
   font-weight: 400;
   line-height: 1.05;
+}
+
+.hero-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 0 22px;
+  border: 0;
+  padding: 0;
 }
 
 .hero-lead {
@@ -432,6 +441,72 @@ header.is-scrolled {
   font-size: 1.02rem;
   line-height: 1.72;
   color: var(--muted);
+}
+
+.hero-visual-caption {
+  margin: 12px 0 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Faixa de métricas — assinatura visual da revisão v2 (visível no HTML) */
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+  margin: 48px 0 0;
+}
+
+.hero-metric {
+  background: var(--surface-soft);
+  padding: 22px 18px;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hero-metric__k {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.hero-metric__v {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--navy);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.hero-metric__s {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .hero-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
 }
 
 .hero-actions {
@@ -908,7 +983,7 @@ header.is-scrolled {
 
 .mp-evento {
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr) 32px;
+  grid-template-columns: 88px minmax(0, 1fr) 32px;
   gap: 16px;
   padding: 24px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -917,7 +992,7 @@ header.is-scrolled {
 }
 
 .mp-evento--cadencia {
-  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
 }
 
 .mp-evento:last-child {
@@ -952,41 +1027,49 @@ header.is-scrolled {
 .mp-evento-data {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   min-width: 0;
-  width: 76px;
-  max-width: 76px;
-  padding: 10px 8px;
+  width: 88px;
+  max-width: 88px;
+  padding: 12px 6px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(212, 184, 122, 0.22);
   overflow: hidden;
   flex-shrink: 0;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .mp-evento-data strong {
   font-family: var(--font-serif);
   color: #fff;
-  font-size: 1.75rem;
+  font-size: 1.65rem;
   line-height: 1;
   letter-spacing: -0.03em;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   display: block;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .mp-evento-data .mp-evento-meta,
 .mp-evento-data span {
   font-family: var(--font-mono);
-  font-size: 0.54rem;
+  font-size: 0.58rem;
   color: rgba(212, 184, 122, 0.82);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   margin-top: 6px;
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.3;
   max-width: 100%;
+  text-align: center;
+  white-space: normal;
   overflow-wrap: anywhere;
+  hyphens: none;
 }
 
 .mp-evento-body {

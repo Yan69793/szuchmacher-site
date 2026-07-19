@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Assinatura | Carta Szuchmacher &amp; Radar ROIC — Research autoral</title>
-    <meta name="description" content="Assinatura de research autoral de Yan Szuchmacher (CNPI): Radar ROIC, carta macro mensal e fechamentos aprofundados. Análise impessoal de valores mobiliários para investidores qualificados." />
+    <meta name="description" content="Carta Szuchmacher e Radar ROIC: análise de mercado e carteira com metodologia clara, em linguagem acessível. Research impessoal para quem quer conteúdo sério sem consultoria individual." />
     <meta name="robots" content="index,follow" />
-    <meta name="theme-color" content="#080808" />
+    <meta name="theme-color" content="#f3f1ec" />
     <link rel="canonical" href="https://szuchmacher.com.br/assinatura.html" />
 
     <meta property="og:type" content="website" />
@@ -21,98 +21,93 @@
          ANTES DE PUBLICAR: trocar __STRIPE_CARTA__ e __STRIPE_PRO__ pelas URLs reais https://buy.stripe.com/... -->
     <script src="/assets/sz-config.js?v=20260617"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/sz-design.css?v=20260718c" />
+    <link rel="stylesheet" href="/assets/sz-imagery.css?v=20260718b" />
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <style>
+        /* Tokens, reset, tipografia, header, .section e footer vem de
+           sz-design.css. Aqui so os componentes proprios da pagina, mais os
+           aliases que mapeiam os nomes antigos de token para os do sistema. */
         :root{
-            --gold:#c9a84c; --gold-light:#e8c96d; --gold-dim:rgba(201,168,76,0.12);
-            --bg:#080808; --surface:#0f0f0f; --surface2:#161616; --border:rgba(255,255,255,0.06);
-            --text:#e8e8e8; --muted:#666; --green:#4caf7d;
+            --gold-light: var(--gold-soft);
+            --gold-dim: rgba(140,107,58,0.12);
+            --surface2: var(--surface-soft);
+            --border: var(--line-strong);
         }
-        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-        html{scroll-behavior:smooth;}
-        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
-        .mono{font-family:'DM Mono',monospace;} .display{font-family:'Playfair Display',serif;}
-        a{color:inherit;} em{color:var(--gold-light);font-style:italic;}
-        body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.6;}
-        @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+        .display{font-family:var(--font-serif);}
+        em{color:var(--gold);font-style:italic;}
 
-        /* NAV */
-        nav{position:fixed;top:0;width:100%;z-index:100;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-        .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
-        .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--gold) 0%,#8b5e1a 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#000;}
-        .logo-text{font-size:14px;font-weight:700;letter-spacing:0.2px;line-height:1.15;}
-        .logo-text .logo-main{display:block;color:var(--text);font-size:15px;font-weight:700;letter-spacing:-0.2px;}
-        .logo-text .logo-sub{display:block;color:var(--gold);font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;opacity:0.85;}
-        .logo-rule{width:1px;height:26px;flex-shrink:0;background:linear-gradient(to bottom,transparent,rgba(201,168,76,.38) 18%,rgba(201,168,76,.38) 82%,transparent);}
-        .logo-founder{font-size:11px;font-weight:500;letter-spacing:0.08em;color:var(--muted);white-space:nowrap;}
-        .nav-links{display:flex;gap:32px;list-style:none;align-items:center;}
-        .nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.3px;transition:color 0.2s;}
-        .nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--gold);}
-        .nav-cta{padding:9px 20px;border:1px solid rgba(201,168,76,0.4);border-radius:100px;color:var(--gold) !important;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.25s;}
-        .nav-cta:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
-
-        .section{max-width:1200px;margin:0 auto;padding:96px 60px;}
-        .sec-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
-        .sec-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);font-weight:400;color:var(--text);line-height:1.18;margin-bottom:16px;}
+        /* Layout base - metrica do sistema (--max 1120px) */
+        .section{max-width:var(--max);margin:0 auto;padding:96px 24px;}
+        .sec-eyebrow{font-family:var(--font-mono);font-size:0.64rem;font-weight:500;letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+        .sec-title{font-family:var(--font-serif);font-size:clamp(1.55rem,2.6vw,1.95rem);font-weight:400;color:var(--text);line-height:1.18;margin-bottom:16px;}
         .sec-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:640px;}
         .sec-head{margin-bottom:44px;}
 
         /* HERO */
-        .hero-h{max-width:1200px;margin:0 auto;padding:132px 60px 64px;}
-        .hero-tag{display:inline-flex;align-items:center;gap:10px;padding:9px 20px 9px 14px;background:linear-gradient(135deg,rgba(201,168,76,0.12) 0%,rgba(201,168,76,0.04) 100%);border:1px solid rgba(201,168,76,0.38);border-radius:100px;font-family:'Playfair Display',serif;font-size:13px;font-style:italic;letter-spacing:0.04em;color:var(--gold-light);margin-bottom:30px;box-shadow:0 0 24px rgba(201,168,76,0.08),inset 0 1px 0 rgba(201,168,76,0.1);}
-        .hero-tag-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(201,168,76,0.7);animation:pulse 2s infinite;}
-        h1.hero-title{font-family:'Playfair Display',serif;font-size:clamp(34px,5.2vw,58px);font-weight:400;line-height:1.14;color:var(--text);margin-bottom:22px;max-width:920px;}
-        .hero-sub{font-size:16px;color:var(--muted);line-height:1.75;max-width:660px;margin-bottom:32px;}
+        .hero-h{max-width:var(--max);margin:0 auto;padding:132px 24px 64px;}
+        .hero-h-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:64px;align-items:center;}
+        .hero-tag{display:inline-block;font-family:var(--font-mono);font-size:0.64rem;font-weight:500;letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--gold);margin-bottom:22px;}
+        /* headline desta pagina e longo: 14ch/3.65rem (medida da home, de titulo
+           curto) quebrava em 6 linhas e desequilibrava o grid */
+        h1.hero-title{font-family:var(--font-serif);font-size:clamp(2rem,3.4vw,2.75rem);font-weight:400;line-height:1.1;letter-spacing:var(--tracking-display);color:var(--text);margin-bottom:22px;max-width:20ch;}
+        .hero-rule-h{width:40px;height:1px;background:var(--gold);margin:0 0 22px;}
+        .hero-sub{font-size:1.02rem;color:var(--muted);line-height:1.72;max-width:38ch;margin-bottom:32px;}
         .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+        .hero-visual-h{border:1px solid var(--line-strong);padding:10px;min-width:0;}
+        .hero-visual-cap{text-align:center;margin:12px 0 0;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--muted);font-weight:500;}
 
-        /* BOTÕES */
-        .btn-primary{padding:14px 28px;background:var(--gold);color:#000;font-weight:700;font-size:13px;letter-spacing:0.05em;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.25s;}
-        .btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,0.25);}
-        .btn-ghost{padding:14px 28px;background:transparent;color:var(--gold);font-weight:600;font-size:13px;letter-spacing:0.05em;border:1px solid rgba(201,168,76,0.4);border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.25s;}
-        .btn-ghost:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);transform:translateY(-2px);}
+        /* BOTOES - craft: sem lift, sem glow */
+        .btn-primary{padding:14px 28px;background:var(--navy);color:#f4f1ea;font-family:var(--font-mono);font-weight:500;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;min-height:48px;border:1px solid var(--navy);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s,color 0.2s;}
+        .btn-primary:hover{background:var(--navy-soft);border-color:var(--navy-soft);}
+        .btn-ghost{padding:14px 28px;background:transparent;color:var(--navy);font-family:var(--font-mono);font-weight:500;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;min-height:48px;border:1px solid var(--line-strong);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:border-color 0.2s,background 0.2s;}
+        .btn-ghost:hover{border-color:var(--navy);background:rgba(12,21,36,0.03);}
 
         /* FILOSOFIA */
         .philo{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-        .philo-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px;}
-        .philo-item strong{display:block;font-family:'DM Mono',monospace;color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:12px;}
+        .philo-item{background:var(--surface);border:1px solid var(--border);border-radius:0;padding:30px;}
+        .philo-item strong{display:block;font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:12px;}
         .philo-item span{color:var(--muted);font-size:14px;line-height:1.7;}
 
         /* RADAR ROIC HERO */
-        .roic-hero{display:grid;grid-template-columns:1.1fr 0.9fr;gap:34px;align-items:center;background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,rgba(201,168,76,0.012) 100%);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:48px;}
+        .roic-hero{display:grid;grid-template-columns:1.1fr 0.9fr;gap:34px;align-items:center;background:linear-gradient(135deg,rgba(140,107,58,0.06) 0%,rgba(140,107,58,0.012) 100%);border:1px solid rgba(140,107,58,0.25);border-radius:0;padding:48px;}
         .roic-hero h2{font-family:'Playfair Display',serif;font-size:32px;font-weight:400;color:var(--text);margin-bottom:14px;line-height:1.2;}
         .roic-hero p{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:14px;}
         .roic-hero .roic-mark{text-align:center;padding:30px;border-left:1px solid var(--border);}
         .roic-hero .roic-mark .rm-big{font-family:'Playfair Display',serif;font-style:italic;font-size:52px;color:var(--gold-light);line-height:1;}
-        .roic-hero .roic-mark .rm-cap{display:block;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:12px;}
+        .roic-hero .roic-mark .rm-cap{display:block;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:12px;}
         .roic-hero .roic-mark .rm-desc{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.6;}
 
         /* TIERS */
         .plans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:stretch;max-width:840px;margin:0 auto;}
-        .plan{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 32px;display:flex;flex-direction:column;}
-        .plan.featured{border:1px solid rgba(201,168,76,0.4);background:linear-gradient(160deg,rgba(201,168,76,0.07) 0%,rgba(201,168,76,0.015) 45%,var(--surface) 100%);box-shadow:0 20px 50px rgba(0,0,0,0.4),0 0 0 1px rgba(201,168,76,0.05);}
-        .plan-tag{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--gold);margin-bottom:16px;}
+        .plan{background:var(--surface);border:1px solid var(--border);border-radius:0;padding:36px 32px;display:flex;flex-direction:column;}
+        /* destaque por hairline dourada, igual a honorarios.html */
+        .plan.featured{border:1px solid var(--gold);background:var(--surface-soft);}
+        .plan-tag{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--gold);margin-bottom:16px;}
         .plan h3{font-size:22px;font-weight:600;color:var(--text);margin-bottom:10px;letter-spacing:-0.2px;}
         .plan-desc{font-size:14px;color:var(--muted);line-height:1.65;margin:0;}
         .plan-price{margin:22px 0 4px;padding-top:20px;border-top:1px solid var(--border);}
         .plan-price .pp-value{font-family:'Playfair Display',serif;font-size:40px;line-height:1;color:var(--gold-light);letter-spacing:-0.5px;}
-        .plan-price .pp-value small{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0;}
+        .plan-price .pp-value small{font-family:'Public Sans',system-ui,sans-serif;font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0;}
         .plan-price .pp-unit{display:block;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5;}
         .plan ul{list-style:none;margin:22px 0 0;padding:0;flex-grow:1;}
-        .plan ul li{position:relative;padding-left:22px;margin-bottom:11px;font-size:14px;color:#b4b4b4;line-height:1.5;}
-        .plan ul li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+        .plan ul li{position:relative;padding-left:22px;margin-bottom:11px;font-size:14px;color:var(--muted);line-height:1.5;}
+        .plan ul li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:0;background:var(--gold);}
         .plan .btn-primary,.plan .btn-ghost{width:100%;margin-top:26px;}
-        .plan .placeholder-note{font-size:11px;color:#555;text-align:center;margin-top:10px;font-style:italic;}
+        .plan .placeholder-note{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;font-style:italic;}
 
         /* FUNDADORES */
-        .founder-band{margin-top:28px;border:1px solid rgba(201,168,76,0.35);border-left:3px solid var(--gold);border-radius:14px;background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,rgba(201,168,76,0.012) 100%);padding:32px 36px;display:flex;gap:30px;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:840px;margin-left:auto;margin-right:auto;}
+        .founder-band{margin-top:28px;border:1px solid rgba(140,107,58,0.35);border-left:3px solid var(--gold);border-radius:0;background:linear-gradient(135deg,rgba(140,107,58,0.06) 0%,rgba(140,107,58,0.012) 100%);padding:32px 36px;display:flex;gap:30px;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:840px;margin-left:auto;margin-right:auto;}
         .founder-band .fb-text strong{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:22px;color:var(--gold-light);margin-bottom:8px;}
         .founder-band .fb-text span{font-size:14px;color:var(--muted);line-height:1.6;}
-        .founder-band .fb-count{font-family:'DM Mono',monospace;text-align:center;white-space:nowrap;}
+        .founder-band .fb-count{font-family:'JetBrains Mono',ui-monospace,monospace;text-align:center;white-space:nowrap;}
         .founder-band .fb-count b{display:block;font-size:34px;color:var(--gold-light);font-weight:500;}
         .founder-band .fb-count span{font-size:11px;color:var(--gold);letter-spacing:0.16em;text-transform:uppercase;}
 
@@ -120,14 +115,14 @@
         .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
         .signup-info h2{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;color:var(--text);margin-bottom:14px;}
         .signup-info p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px;}
-        .signup-form{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;}
+        .signup-form{background:var(--surface);border:1px solid var(--border);border-radius:0;padding:32px;}
         .signup-form h3{font-size:18px;font-weight:600;margin-bottom:6px;}
         .signup-form .sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
-        .signup-form input,.signup-form select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 14px;color:var(--text);font:inherit;margin-bottom:12px;outline:none;}
+        .signup-form input,.signup-form select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:0;padding:13px 14px;color:var(--text);font:inherit;margin-bottom:12px;outline:none;}
         .signup-form input:focus,.signup-form select:focus{border-color:var(--gold);}
-        .signup-form select{color:var(--muted);} .signup-form option{background:#161616;color:var(--text);}
+        .signup-form select{color:var(--muted);} .signup-form option{background:var(--surface2);color:var(--text);}
         .signup-form .btn-primary{width:100%;margin-top:6px;}
-        .signup-form .form-note{font-size:11px;color:#555;margin-top:12px;line-height:1.6;text-align:center;}
+        .signup-form .form-note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;text-align:center;}
 
         /* FAQ */
         .faq{max-width:840px;}
@@ -139,43 +134,51 @@
         details.faq-item[open] summary::after{content:'\2013';}
         details.faq-item p{margin-top:14px;font-size:14px;color:var(--muted);line-height:1.75;}
 
-        .compliance{margin-top:30px;padding:22px 24px;background:var(--surface);border-left:2px solid var(--gold);border-radius:8px;font-size:13px;color:var(--muted);line-height:1.8;}
+        .compliance{margin-top:30px;padding:22px 24px;background:var(--surface);border-left:2px solid var(--gold);border-radius:0;font-size:13px;color:var(--muted);line-height:1.8;}
 
         /* CTA */
-        .cta-section{background:linear-gradient(135deg,#0d0d0d 0%,#111008 50%,#0d0d0d 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:100px 60px;text-align:center;position:relative;overflow:hidden;}
-        .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);pointer-events:none;}
-        .cta-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;position:relative;}
-        .cta-title{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);font-weight:400;font-style:italic;color:var(--gold-light);margin-bottom:16px;line-height:1.15;position:relative;}
-        .cta-sub{font-size:15px;color:var(--muted);margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7;position:relative;}
+        /* hairline clara embaixo: --line-strong e navy 14% e sumiria contra o rodape navy */
+        .cta-section{background:var(--navy);border-top:1px solid var(--line-strong);border-bottom:1px solid rgba(240,238,226,0.14);padding:100px 24px;text-align:center;position:relative;overflow:hidden;}
+        .cta-eyebrow{font-family:var(--font-mono);font-size:0.64rem;font-weight:500;letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--gold-bright);margin-bottom:16px;position:relative;}
+        .cta-title{font-family:var(--font-serif);font-size:clamp(1.9rem,4vw,2.9rem);font-weight:400;color:#f4eee2;margin-bottom:16px;line-height:1.15;position:relative;}
+        .cta-sub{font-size:15px;color:rgba(240,238,226,0.74);margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7;position:relative;}
         .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;}
+        /* inversao sobre navy: o btn navy do sistema sumiria no fundo */
+        .cta-section .btn-primary{background:#f4eee2;color:var(--navy);border-color:#f4eee2;}
+        .cta-section .btn-primary:hover{background:#fff;border-color:#fff;}
+        .cta-section .btn-ghost{color:#f4eee2;border-color:rgba(240,238,226,0.34);}
+        .cta-section .btn-ghost:hover{border-color:#f4eee2;background:rgba(240,238,226,0.06);}
 
         /* FOOTER */
-        footer{background:#040404;border-top:1px solid var(--border);}
+        /* O rodape e navy mas herdava cor de texto do tema claro: .footer-col-title
+           ficava em 1.07:1 e links/disclaimer em 3.11:1. Cores p/ fundo escuro. */
+        footer{background:var(--navy);border-top:1px solid var(--line-strong);}
         .footer-inner{max-width:1400px;margin:0 auto;padding:60px 60px 40px;display:grid;grid-template-columns:2fr 1fr 1.4fr 1.4fr;gap:48px;}
         .footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-        .footer-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;max-width:300px;}
+        .footer-desc{font-size:13px;color:rgba(240,238,226,0.72);line-height:1.7;margin-bottom:20px;max-width:300px;}
         .footer-status{display:flex;align-items:center;gap:8px;}
-        .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-        .status-text{font-size:12px;color:var(--green);}
-        .footer-col-title{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text);margin-bottom:18px;}
+        .status-dot{width:7px;height:7px;background:#5fbf8d;}
+        .status-text{font-size:12px;color:#5fbf8d;}
+        .footer-col-title{font-family:var(--font-mono);font-size:0.64rem;font-weight:500;letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--gold-bright);margin-bottom:18px;}
         .footer-links{list-style:none;display:flex;flex-direction:column;gap:10px;}
-        .footer-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s;display:inline-flex;align-items:center;}
-        .footer-links a:hover{color:var(--text);}
-        .footer-site-link{display:inline-flex !important;align-items:center;gap:6px;padding:8px 16px;border:1px solid rgba(201,168,76,0.3);border-radius:100px;color:var(--gold) !important;font-size:12px;font-weight:600;transition:all 0.2s !important;}
+        .footer-links a{font-size:13px;color:rgba(240,238,226,0.74);text-decoration:none;transition:color 0.2s;display:inline-flex;align-items:center;}
+        .footer-links a:hover{color:#f4eee2;}
+        .footer-site-link{display:inline-flex !important;align-items:center;gap:6px;padding:8px 16px;border:1px solid rgba(140,107,58,0.3);border-radius:0;color:var(--gold) !important;font-size:12px;font-weight:600;transition:all 0.2s !important;}
         .footer-site-link:hover{background:var(--gold-dim) !important;border-color:var(--gold) !important;}
-        .footer-bottom{max-width:1400px;margin:0 auto;padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
-        .footer-bottom-left,.footer-bottom-right{font-size:12px;color:var(--muted);}
+        .footer-bottom{max-width:1400px;margin:0 auto;padding:20px 60px;border-top:1px solid rgba(240,238,226,0.12);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+        .footer-bottom-left,.footer-bottom-right{font-size:12px;color:rgba(240,238,226,0.66);}
         .footer-dot{margin:0 8px;}
-        .footer-disclaimer{max-width:1400px;margin:0 auto;padding:16px 60px 32px;font-size:11px;color:#444;line-height:1.7;}
-        .footer-disclaimer strong{color:#555;}
+        .footer-disclaimer{max-width:1400px;margin:0 auto;padding:16px 60px 32px;font-size:11px;color:rgba(240,238,226,0.60);line-height:1.7;}
+        .footer-disclaimer strong{color:rgba(240,238,226,0.82);}
 
         @media (max-width:1024px){
             .footer-inner{grid-template-columns:1fr 1fr;padding:48px 32px 32px;gap:36px;}
             .footer-bottom{padding:16px 32px;} .footer-disclaimer{padding:12px 32px 28px;}
         }
         @media (max-width:900px){
-            nav{padding:0 20px;} .nav-links li:not(.nav-cta-li){display:none;}
-            .section{padding:72px 24px;} .hero-h{padding:116px 24px 56px;}
+            .section{padding:72px 24px;}
+            .hero-h{padding:116px 24px 56px;}
+            .hero-h-grid{grid-template-columns:1fr;gap:36px;}
             .philo,.signup-grid{grid-template-columns:1fr;}
             .roic-hero{grid-template-columns:1fr;padding:34px;} .roic-hero .roic-mark{border-left:none;border-top:1px solid var(--border);}
             .cta-section{padding:80px 28px;}
@@ -201,72 +204,68 @@
             .plan{padding:30px 24px;}
         }
 
-        .ysz-lockup{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
-        .ysz-lockup__icon{width:40px;height:40px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;
-          justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;
-          font-size:0.95rem;color:#0b1630;letter-spacing:0.01em}
-        .ysz-lockup__type{display:flex;flex-direction:column;gap:2px;line-height:1.15}
-        .ysz-lockup__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.05rem;
-          color:#0b1630}
-        .ysz-lockup__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.22em;
-          text-transform:uppercase;color:#8f6b34;margin-top:1px}
-        .ysz-lockup:hover .ysz-lockup__firm{color:#16233f}
-        .ysz-lockup--dark .ysz-lockup__icon{border-color:#c9a565;color:#f1ede6}
-        .ysz-lockup--dark .ysz-lockup__firm{color:#f1ede6}
-        .ysz-lockup--dark .ysz-lockup__descriptor{color:#c9a565}
-        .ysz-lockup--dark:hover .ysz-lockup__firm{color:#e4ded2}
-        @media (max-width:640px){
-          .ysz-lockup__icon{width:34px;height:34px;font-size:0.8rem}
-          .ysz-lockup__firm{font-size:0.92rem}
-          .ysz-lockup__descriptor{font-size:0.54rem}
-        }
-        .ysz-stack{display:inline-flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;color:inherit;text-align:center}
-        .ysz-stack__icon{width:64px;height:64px;flex-shrink:0;border:1px solid #0b1630;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.5rem;color:#0b1630;letter-spacing:0.01em}
-        .ysz-stack__type{display:flex;flex-direction:column;align-items:center}
-        .ysz-stack__firm{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:600;font-size:1.2rem;color:#0b1630;line-height:1.1}
-        .ysz-stack__descriptor{font-family:'Manrope',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#8f6b34;margin-top:5px}
-        .ysz-stack:hover .ysz-stack__firm{color:#16233f}
-        .ysz-stack--dark .ysz-stack__icon{border-color:#c9a565;color:#f1ede6}
-        .ysz-stack--dark .ysz-stack__firm{color:#f1ede6}
-        .ysz-stack--dark .ysz-stack__descriptor{color:#c9a565}
+        /* .ysz-lockup e .ysz-stack vem de sz-design.css - bloco duplicado removido */
+            .ico{width:15px;height:15px;flex-shrink:0;opacity:0.8;}
+        .footer-links .ico{margin-right:7px;}
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="index.html" class="ysz-lockup ysz-lockup--dark" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+<!-- HEADER — mesma estrutura de index.html, estilizada por sz-design.css -->
+<header>
+  <div class="container header-row">
+    <a class="ysz-lockup" href="index.html" translate="no" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
       <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
       <span class="ysz-lockup__type">
         <span class="ysz-lockup__firm">Szuchmacher</span>
         <span class="ysz-lockup__descriptor">Consultoria</span>
       </span>
     </a>
-    <ul class="nav-links">
 
-        <li><a href="index.html">Consultoria</a></li>
-        <li><a href="honorarios.html">Honorários</a></li>
-        <li><a href="assinatura.html" aria-current="page">Assinatura</a></li>
-        <li class="nav-cta-li"><a href="#tiers" class="nav-cta">Assinar</a></li>
-    </ul>
-</nav>
+    <nav class="nav" id="siteNav" aria-label="Principal">
+      <a href="honorarios.html">Honorários</a>
+      <a href="assinatura.html" aria-current="page">Assinatura</a>
+      <a href="relatorios.html">Relatórios</a>
+      <a href="https://multi-assets.com" target="_blank" rel="noopener">MultiAsset</a>
+      <a href="index.html#contato">Contato</a>
+    </nav>
+
+    <a href="#tiers" class="nav-cta" data-ga="cta_assinatura" data-ga-location="nav">Assinar</a>
+
+    <button class="mobile-menu-toggle" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
 
 <!-- HERO -->
 <section class="hero-h">
-    <div class="hero-tag"><span class="hero-tag-dot"></span> Assinatura · Research autoral</div>
-    <h1 class="hero-title">A minha leitura de mercado, por escrito — não mais um <em>app</em>, e sim a análise de quem geriu R$ 2,5 bi.</h1>
-    <p class="hero-sub">Research impessoal de um analista credenciado (CNPI): o <strong>Radar ROIC</strong>, a carta macro mensal e os fechamentos aprofundados. A mesma disciplina que aplico ao patrimônio dos meus clientes, agora aberta por assinatura.</p>
-    <div class="hero-actions">
-        <a href="#tiers" class="btn-primary" data-ga="cta_assinar_pro" data-ga-location="hero_assinatura">Assinar agora</a>
+  <div class="hero-h-grid">
+    <div>
+      <div class="hero-tag">Assinatura, research autoral</div>
+      <h1 class="hero-title">Análise de mercado com método, assinatura clara e linguagem que qualquer decisor entende.</h1>
+      <p class="hero-rule-h" aria-hidden="true"></p>
+      <p class="hero-sub">A <strong>Carta Szuchmacher</strong> reúne Radar ROIC, leitura macro e fechamentos de mercado. É conteúdo impessoal: a mesma análise para todos os assinantes, sem recomendação individual e sem comissão de produto.</p>
+      <div class="hero-actions">
+        <a href="#tiers" class="btn-primary" data-ga="cta_assinar_pro" data-ga-location="hero_assinatura">Ver planos e assinar</a>
         <a href="radar-roic.html" class="btn-ghost" data-ga="cta_amostra_roic" data-ga-location="hero_assinatura">Ver amostra do Radar ROIC</a>
+      </div>
     </div>
+    <div class="hero-visual-h">
+      <div class="figure-craft figure-craft--retrato figure-craft--deriva figure-craft--luz figure-craft--foco-dir">
+        <img src="/assets/img/assinatura-hero.webp" alt="Envelope escuro lacrado com selo dourado, representando a entrega recorrente da carta" loading="eager" fetchpriority="high" width="1920" height="1072" decoding="async" />
+      </div>
+      <p class="hero-visual-cap">Entrega recorrente, mesma análise para todos</p>
+    </div>
+  </div>
 </section>
 
 <!-- FILOSOFIA -->
 <section class="section" style="padding-top:0;">
     <div class="philo">
-        <div class="philo-item"><strong>Autoral</strong><span>Escrito por mim, não por um comitê. Você assina a cabeça que analisa, não uma ferramenta automatizada.</span></div>
-        <div class="philo-item"><strong>Radar ROIC</strong><span>Uma metodologia própria: ativos rastreados pelo retorno sobre o capital investido — qualidade antes de narrativa.</span></div>
-        <div class="philo-item"><strong>Impessoal &amp; CNPI</strong><span>Análise de valores mobiliários (CVM 20/2021), independente e sem comissão de produto. Não é recomendação individual.</span></div>
+        <div class="philo-item"><strong>Autoral</strong><span>Texto escrito por quem analisa, com responsabilidade sobre o conteúdo. Você assina a análise, não um feed genérico.</span></div>
+        <div class="philo-item"><strong>Radar ROIC</strong><span>Ativos acompanhados pelo retorno sobre o capital investido. Qualidade operacional antes de narrativa de mercado.</span></div>
+        <div class="philo-item"><strong>Independência</strong><span>Conteúdo impessoal, sem comissão de produto. Não substitui consultoria individual.</span></div>
     </div>
 </section>
 
@@ -274,24 +273,24 @@
 <section class="section" style="padding-top:24px;">
     <div class="sec-head">
         <div class="sec-eyebrow">A metodologia</div>
-        <h2 class="sec-title">Radar ROIC — qualidade medida pelo capital, não pelo hype</h2>
-        <p class="sec-sub">O ROIC (retorno sobre o capital investido) separa quem cria valor de quem só cresce. É a lente que organiza toda a carta.</p>
+        <h2 class="sec-title">Radar ROIC: qualidade medida pelo capital investido</h2>
+        <p class="sec-sub">O ROIC (retorno sobre o capital investido) ajuda a distinguir empresas que criam valor daquelas que apenas crescem. É o filtro central da Carta.</p>
     </div>
     <div class="roic-hero">
         <div>
-            <h2>Eu rastreio, ranqueio e explico.</h2>
-            <p>Cada edição traz uma watchlist ranqueada por ROIC, com a tese curta de cada nome, a carteira-modelo e o que mudou desde a última edição. Sem ruído, sem preço-alvo mágico — leitura executiva de quem aloca de verdade.</p>
-            <p style="margin-bottom:0;"><a href="radar-roic.html" style="color:var(--gold);font-weight:600;">Ver uma amostra ilustrativa &rarr;</a></p>
+            <h2>Seleção, ranking e tese em cada edição</h2>
+            <p>Cada número traz uma lista ranqueada por ROIC, com tese resumida, carteira modelo e o que mudou desde a edição anterior. Sem ruído e sem promessa de preço alvo: leitura objetiva para quem aloca capital.</p>
+            <p style="margin-bottom:0;"><a href="radar-roic.html" style="color:var(--gold);font-weight:600;">Ver amostra ilustrativa</a></p>
         </div>
         <div class="roic-mark">
             <div class="rm-big">ROIC</div>
-            <span class="rm-cap">a lente da carta</span>
-            <div class="rm-desc">Retorno sobre o capital investido como filtro primário de qualidade.</div>
+            <span class="rm-cap">filtro da carta</span>
+            <div class="rm-desc">Retorno sobre o capital investido como critério principal de qualidade.</div>
         </div>
     </div>
 </section>
 
-<div id="checkout-ok" hidden style="max-width:840px;margin:0 auto 24px;padding:16px 22px;border:1px solid rgba(76,175,125,0.45);border-radius:12px;background:rgba(76,175,125,0.08);color:#9fd9b8;font-size:14px;line-height:1.6;">
+<div id="checkout-ok" hidden style="max-width:840px;margin:0 auto 24px;padding:16px 22px;border:1px solid rgba(76,175,125,0.45);border-radius:0;background:rgba(76,175,125,0.08);color:#9fd9b8;font-size:14px;line-height:1.6;">
     <strong style="color:#4caf7d;">Assinatura recebida.</strong> Obrigado — em instantes você recebe a confirmação por e-mail. Qualquer dúvida: <a href="mailto:yan@szuchmacher.com.br" style="color:var(--gold);">yan@szuchmacher.com.br</a>.
 </div>
 
@@ -299,55 +298,55 @@
 <section id="tiers" class="section" style="padding-top:24px;">
     <div class="founder-band" style="margin-bottom:32px;">
         <div class="fb-text">
-            <strong>50 vagas de sócio-fundador</strong>
-            <span>Preço travado vitalício + acesso direto à minha agenda. Checkout aberto — quem assina primeiro garante a condição.</span>
+            <strong>Condição de fundador, 50 vagas</strong>
+            <span>Preço mantido para os primeiros assinantes e canal direto de atendimento. Quem assina primeiro garante a condição enquanto houver vaga.</span>
         </div>
         <div class="fb-count"><b>50</b><span>vagas</span></div>
     </div>
 
     <div class="sec-head" style="text-align:center;">
         <div class="sec-eyebrow">Planos</div>
-        <h2 class="sec-title">Duas formas de assinar</h2>
-        <p class="sec-sub" style="margin:0 auto;">Cobrança anual no cartão · pagamento seguro via Stripe · cancele a renovação quando quiser.</p>
+        <h2 class="sec-title">Escolha o formato que faz sentido para você</h2>
+        <p class="sec-sub" style="margin:0 auto;">Cobrança anual no cartão, pagamento seguro e renovação que você pode cancelar quando quiser.</p>
     </div>
 
     <div class="plans-grid">
         <div class="plan">
             <div class="plan-tag">Research</div>
             <h3>Carta Szuchmacher</h3>
-            <p class="plan-desc">A leitura autoral, sem a plataforma. Para quem quer a análise direto na caixa de entrada.</p>
+            <p class="plan-desc">Análise autoral direto no e-mail, sem a plataforma. Ideal para quem quer leitura de qualidade e disciplina de acompanhamento.</p>
             <div class="plan-price">
                 <span class="pp-value">R$ 1.970 <small>/ano</small></span>
-                <span class="pp-unit">~ R$ 164/mês · cobrança anual</span>
+                <span class="pp-unit">cerca de R$ 164 por mês, cobrança anual</span>
             </div>
             <ul>
-                <li>Radar ROIC — watchlist ranqueada + teses</li>
+                <li>Radar ROIC: lista ranqueada e teses resumidas</li>
                 <li>Carta macro mensal</li>
                 <li>Fechamentos de mercado aprofundados</li>
                 <li>Arquivo das edições anteriores</li>
             </ul>
             <!-- ALTERADO 2026-06-01: href -> Stripe Payment Link recorrente (R$ 1.970/ano). Trocar placeholder. -->
             <a href="mailto:yan@szuchmacher.com.br" class="btn-ghost" data-stripe-carta data-ga="cta_assinar_carta" data-ga-location="assinatura">Assinar a Carta</a>
-            <p class="placeholder-note" style="font-style:normal;color:#666;">Cartão · renovação anual · confirmação por e-mail</p>
+            <p class="placeholder-note" style="font-style:normal;color:var(--muted);">Cartão, renovação anual, confirmação por e-mail</p>
         </div>
 
         <div class="plan featured">
-            <div class="plan-tag">Research + Plataforma</div>
+            <div class="plan-tag">Research e plataforma</div>
             <h3>MultiAsset Pro</h3>
-            <p class="plan-desc">Tudo da Carta mais o acesso completo à plataforma — simulador integral, alertas e histórico.</p>
+            <p class="plan-desc">Tudo da Carta, mais acesso completo à plataforma MultiAsset: simulador, alertas e histórico.</p>
             <div class="plan-price">
                 <span class="pp-value">R$ 3.970 <small>/ano</small></span>
-                <span class="pp-unit">~ R$ 331/mês · cobrança anual</span>
+                <span class="pp-unit">cerca de R$ 331 por mês, cobrança anual</span>
             </div>
             <ul>
                 <li>Tudo da Carta Szuchmacher</li>
-                <li>Simulador de portfólio integral</li>
+                <li>Simulador de portfólio completo</li>
                 <li>Alertas de mercado e de carteira</li>
-                <li>Histórico completo e cenários salvos</li>
+                <li>Histórico e cenários salvos</li>
             </ul>
             <!-- ALTERADO 2026-06-01: href -> Stripe Payment Link recorrente (R$ 3.970/ano). Trocar placeholder. -->
             <a href="mailto:yan@szuchmacher.com.br" class="btn-primary" data-stripe-pro data-ga="cta_assinar_pro" data-ga-location="assinatura">Assinar o Pro</a>
-            <p class="placeholder-note" style="font-style:normal;color:var(--gold);">Mais escolhido · plataforma + carta</p>
+            <p class="placeholder-note" style="font-style:normal;color:var(--gold);">Mais completo: plataforma e carta</p>
         </div>
     </div>
 </section>
@@ -356,14 +355,14 @@
 <section class="section" style="padding-top:24px;">
     <div class="signup-grid">
         <div class="signup-info">
-            <div class="sec-eyebrow">Prefere conversar antes?</div>
-            <h2>Reserve sua vaga de fundador</h2>
-            <p>Se quiser alinhar escopo antes do checkout, deixe seus dados. Respondo em até 24h úteis e garanto a condição de fundador pela ordem de contato.</p>
-            <p style="font-size:13px;">Já decidiu? Use os botões de assinatura acima — é imediato.</p>
+            <div class="sec-eyebrow">Prefere falar antes?</div>
+            <h2>Deixe seu contato</h2>
+            <p>Se quiser alinhar expectativas antes de assinar, envie seus dados. Retorno em até 24 horas úteis, com prioridade de fundador pela ordem de contato.</p>
+            <p style="font-size:13px;">Já decidiu? Use os botões de assinatura acima. O processo é imediato.</p>
         </div>
         <form id="leadForm" class="signup-form" method="POST" action="" data-formspree="1" data-form="assinatura_interesse">
-            <h3>Quero ser avisado</h3>
-            <p class="sub">3 campos. Retorno na abertura.</p>
+            <h3>Quero mais informações</h3>
+            <p class="sub">Três campos. Retorno em até 24 horas úteis.</p>
             <input type="text" name="nome" placeholder="Nome completo" autocomplete="name" required />
             <input type="email" name="email" placeholder="E-mail" autocomplete="email" required />
             <select name="perfil" required>
@@ -383,7 +382,7 @@
             </select>
             <input type="hidden" name="_subject" value="Interesse — Assinatura (Carta / MultiAsset Pro)" />
             <input type="hidden" name="_origem" value="assinatura.html" />
-            <button type="submit" class="btn-primary" data-ga="cta_assinatura_interesse" data-ga-location="assinatura_form">Entrar na lista</button>
+            <button type="submit" class="btn-primary" data-ga="cta_assinatura_interesse" data-ga-location="assinatura_form">Enviar contato</button>
             <div class="form-note">Retorno em até 24 horas úteis.</div>
         </form>
     </div>
@@ -396,22 +395,22 @@
         <h2 class="sec-title">Sobre a assinatura</h2>
     </div>
     <div class="faq">
-        <details class="faq-item"><summary>O que é o Radar ROIC?</summary><p>É a watchlist autoral ranqueada pelo retorno sobre o capital investido (ROIC), com a tese curta de cada nome e uma carteira-modelo. A lente de qualidade que organiza toda a carta. <a href="radar-roic.html" style="color:var(--gold)">Veja uma amostra ilustrativa</a>.</p></details>
-        <details class="faq-item"><summary>Assinatura é a mesma coisa que consultoria?</summary><p>Não. A assinatura é <strong>research impessoal</strong> (análise de valores mobiliários, CNPI, CVM 20/2021) — a mesma carta para todos, não é recomendação individual. A <a href="honorarios.html" style="color:var(--gold)">consultoria</a> é o aconselhamento individualizado do seu patrimônio, contratado à parte.</p></details>
-        <details class="faq-item"><summary>Qual a diferença entre a Carta e o MultiAsset Pro?</summary><p>A Carta é o research (Radar ROIC + macro mensal + fechamentos). O Pro inclui a Carta e libera a plataforma completa — simulador integral, alertas e histórico.</p></details>
-        <details class="faq-item"><summary>Como funciona a cobrança e o cancelamento?</summary><p>Cobrança anual via gateway (a definir na publicação). Você pode cancelar a renovação a qualquer momento; o acesso permanece até o fim do período contratado.</p></details>
-        <details class="faq-item"><summary>Já sou cliente de consultoria. Pago a assinatura?</summary><p>Não. A versão completa da plataforma já está incluída no serviço de consultoria. A assinatura é para quem quer o research/ferramentas sem o mandato de consultoria.</p></details>
+        <details class="faq-item"><summary>O que é o Radar ROIC?</summary><p>É a lista de ativos acompanhada e ranqueada pelo retorno sobre o capital investido (ROIC), com tese resumida e carteira modelo. É o eixo de qualidade da Carta. <a href="radar-roic.html" style="color:var(--gold)">Veja uma amostra</a>.</p></details>
+        <details class="faq-item"><summary>Assinatura é a mesma coisa que consultoria?</summary><p>Não. A assinatura é <strong>research impessoal</strong>: o mesmo conteúdo para todos, sem recomendação individual. A <a href="honorarios.html" style="color:var(--gold)">consultoria</a> é o aconselhamento do seu patrimônio, contratado à parte.</p></details>
+        <details class="faq-item"><summary>Qual a diferença entre a Carta e o MultiAsset Pro?</summary><p>A Carta entrega a análise (Radar ROIC, macro e fechamentos). O Pro inclui a Carta e o acesso completo à plataforma MultiAsset, com simulador, alertas e histórico.</p></details>
+        <details class="faq-item"><summary>Como funcionam cobrança e cancelamento?</summary><p>A cobrança é anual. Você pode cancelar a renovação a qualquer momento e o acesso segue até o fim do período já pago.</p></details>
+        <details class="faq-item"><summary>Já sou cliente de consultoria. Preciso pagar a assinatura?</summary><p>Não. A versão completa da plataforma já faz parte do serviço de consultoria. A assinatura é para quem quer o research e as ferramentas sem o mandato de consultoria.</p></details>
     </div>
     <div class="compliance">
-        Conteúdo de caráter informativo e impessoal, elaborado por analista credenciado (CNPI) nos termos da Resolução CVM nº 20/2021. Não constitui recomendação individualizada de investimento nem oferta de valores mobiliários. Decisões de investimento são de responsabilidade do assinante. Rentabilidade passada não garante resultados futuros.
+        Conteúdo informativo e impessoal. Não constitui recomendação individual de investimento nem oferta de valores mobiliários. Decisões de investimento são de responsabilidade do assinante. Rentabilidade passada não garante resultados futuros.
     </div>
 </section>
 
 <!-- CTA -->
 <section class="cta-section">
-    <div class="cta-eyebrow">Patrimônio acima de R$ 10M?</div>
-    <h2 class="cta-title">A carta abre a porta. A consultoria entra na sala.</h2>
-    <p class="cta-sub">Para quem precisa de aconselhamento individual — alocação, governança e sucessão — o caminho é a consultoria patrimonial.</p>
+    <div class="cta-eyebrow">Precisa de aconselhamento individual?</div>
+    <h2 class="cta-title">A Carta informa. A consultoria decide com você.</h2>
+    <p class="cta-sub">Para quem precisa de alocação, governança e acompanhamento personalizado, o caminho é a consultoria patrimonial.</p>
     <div class="cta-actions">
         <a href="honorarios.html" class="btn-primary">Conhecer a consultoria</a>
         <a href="radar-roic.html" class="btn-ghost">Ver o Radar ROIC</a>
@@ -429,7 +428,7 @@
                     <span class="ysz-stack__descriptor">Consultoria</span>
                 </span>
             </a>
-            <p class="footer-desc">Research autoral e consultoria patrimonial independente. Radar ROIC, carta macro e fechamentos — análise impessoal de um analista credenciado.</p>
+            <p class="footer-desc">Research autoral e consultoria patrimonial independente. Radar ROIC, carta macro e fechamentos, em conteúdo impessoal.</p>
             <div class="footer-status"><span class="status-dot"></span><span class="status-text">Lista de fundadores aberta</span></div>
         </div>
         <div class="footer-col">
@@ -452,17 +451,17 @@
         <div class="footer-col">
             <div class="footer-col-title">Contato</div>
             <ul class="footer-links">
-                <li><a href="mailto:yan@szuchmacher.com.br"><i class="fas fa-envelope" style="margin-right:7px;opacity:0.5;"></i>yan@szuchmacher.com.br</a></li>
-                <li><a href="https://wa.me/5521981088992" target="_blank" rel="noopener"><i class="fab fa-whatsapp" style="margin-right:7px;opacity:0.5;"></i>(21) 98108-8992</a></li>
+                <li><a href="mailto:yan@szuchmacher.com.br"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14"/><path d="M2.5 6.5 12 13l9.5-6.5"/></svg>yan@szuchmacher.com.br</a></li>
+                <li><a href="https://wa.me/5521981088992" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.2 3.2z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>(21) 98108-8992</a></li>
                 <li style="margin-top:16px;"><a href="index.html" class="footer-site-link">szuchmacher.com.br</a></li>
             </ul>
         </div>
     </div>
     <div class="footer-bottom">
         <div class="footer-bottom-left">© 2026 Szuchmacher Consultoria. Todos os direitos reservados.</div>
-        <div class="footer-bottom-right"><span>Research impessoal · CNPI</span><span class="footer-dot">·</span><span>CVM nº 20/2021</span></div>
+        <div class="footer-bottom-right"><span>Research impessoal</span></div>
     </div>
-    <div class="footer-disclaimer"><strong>Aviso:</strong> Material informativo e impessoal de análise de valores mobiliários (CVM nº 20/2021). Não constitui recomendação individualizada nem oferta. Valores e condições desta página são de um modelo em revisão e podem mudar. Rentabilidade passada não garante resultados futuros.</div>
+    <div class="footer-disclaimer"><strong>Aviso:</strong> Material informativo e impessoal. Não constitui recomendação individualizada nem oferta. Valores e condições desta página são de um modelo em revisão e podem mudar. Rentabilidade passada não garante resultados futuros.</div>
 </footer>
 
 <script>
@@ -481,5 +480,6 @@
         });
     });
 </script>
+<script src="/assets/sz-site.js?v=20260718"></script>
 </body>
 </html>

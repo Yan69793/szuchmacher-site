@@ -1,4 +1,4 @@
-# build-cloudflare-public.ps1 — monta public/ do Worker sz-sites
+﻿# build-cloudflare-public.ps1 — monta public/ do Worker sz-sites
 # Uso: .\scripts\build-cloudflare-public.ps1
 
 Set-StrictMode -Version Latest
@@ -26,6 +26,22 @@ function Copy-IfExists([string]$Src, [string]$Dst) {
     return $true
 }
 
+function Copy-Tree([string]$Src, [string]$Dst, [string]$Filter) {
+    if (-not (Test-Path $Src)) {
+        Write-Host "  SKIP   $Src" -ForegroundColor Yellow
+        return $false
+    }
+    if (-not (Test-Path $Dst)) { New-Item -ItemType Directory -Path $Dst -Force | Out-Null }
+    # @() e obrigatorio: com um unico resultado o Get-ChildItem devolve escalar,
+    # e sob Set-StrictMode o .Count abaixo lanca excecao
+    $itens = @(Get-ChildItem -Path $Src -Filter $Filter -File)
+    foreach ($i in $itens) {
+        Copy-Item $i.FullName (Join-Path $Dst $i.Name) -Force
+    }
+    Write-Host "  COPY   $($itens.Count) x $Filter -> $Dst" -ForegroundColor DarkGray
+    return $true
+}
+
 Write-Host "`n=== BUILD CLOUDFLARE PUBLIC ===" -ForegroundColor Cyan
 Reset-Dir $OUT
 New-Item -ItemType Directory -Path $SZ -Force | Out-Null
@@ -36,16 +52,21 @@ New-Item -ItemType Directory -Path (Join-Path $MULTI 'assets') -Force | Out-Null
 Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
-    'privacidade.html', 'radar-roic.html', 'ebook.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
+    'privacidade.html', 'radar-roic.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
     'relatorio_cache.json', 'og-cover.jpg', 'logo.png',
     'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js')
+$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js')
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
+
+# Imagética institucional (assets/img/*.webp). Diretorio inteiro: a serie cresce
+# sem exigir edicao desta allowlist. Os PNG originais ficam fora da arvore, em
+# ../_fontes-img, e nao sao publicados.
+Copy-Tree (Join-Path $ROOT 'assets\img') (Join-Path $SZ 'assets\img') '*.webp' | Out-Null
 
 Write-Host "`n-- multi-assets.com --" -ForegroundColor Green
 Copy-IfExists (Join-Path $ROOT 'multiasset-app.html') (Join-Path $MULTI 'index.html') | Out-Null
@@ -54,6 +75,11 @@ Copy-IfExists (Join-Path $ROOT 'consultoria.html') (Join-Path $MULTI 'consultori
 Copy-IfExists (Join-Path $ROOT 'macro_data.json') (Join-Path $MULTI 'macro_data.json') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'og-cover.jpg') (Join-Path $MULTI 'og-cover.jpg') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\sz-config.js') | Out-Null
+
+# Demo em video do painel (mp4 + webm + poster). Gerada por scripts\encodar-demo.ps1
+Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.mp4'  | Out-Null
+Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.webm' | Out-Null
+Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.jpg'  | Out-Null
 foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
     Copy-IfExists (Join-Path $ROOT $f) (Join-Path $MULTI $f) | Out-Null
 }

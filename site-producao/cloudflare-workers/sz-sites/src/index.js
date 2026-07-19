@@ -63,6 +63,25 @@ async function serveStatic(request, env, siteKey) {
     return new Response('Asset missing', { status: 404 });
   }
 
+  // Garantir charset UTF-8 em HTML/JSON/JS/CSS (evita mojibake no browser)
+  const ct = res.headers.get('Content-Type') || '';
+  const pathLower = path.toLowerCase();
+  let nextType = null;
+  if (pathLower.endsWith('.html') || pathLower.endsWith('/')) {
+    nextType = 'text/html; charset=utf-8';
+  } else if (pathLower.endsWith('.js')) {
+    nextType = 'application/javascript; charset=utf-8';
+  } else if (pathLower.endsWith('.css')) {
+    nextType = 'text/css; charset=utf-8';
+  } else if (pathLower.endsWith('.json')) {
+    nextType = 'application/json; charset=utf-8';
+  }
+  if (nextType && !/charset=/i.test(ct)) {
+    const headers = new Headers(res.headers);
+    headers.set('Content-Type', nextType);
+    return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+  }
+
   return res;
 }
 
@@ -87,6 +106,11 @@ async function routeRequest(request, env) {
   if (siteKey === 'sz') {
     if (url.pathname === '/multiasset-app.html' || url.pathname === '/multiasset.html') {
       return redirect('https://multi-assets.com/');
+    }
+    // Ebook descontinuado (2026-07-18). A pagina estava indexada e no sitemap:
+    // 301 para a home preserva o historico de link em vez de devolver 404.
+    if (url.pathname === '/ebook' || url.pathname === '/ebook.html') {
+      return redirect(`${url.protocol}//${host}/`);
     }
     if (url.pathname.startsWith('/fechamento/')) {
       const result = await handleFechamento(request, env);

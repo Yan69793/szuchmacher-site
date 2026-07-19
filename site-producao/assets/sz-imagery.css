@@ -1,0 +1,262 @@
+/* ==========================================================================
+   sz-imagery.css — camada de imagética institucional
+   Blocos escuros de contraste sobre a base creme do site.
+   Craft: radius 0, hairline, sem glow, sem bounce. Movimento lento e contido.
+   Reversível: basta remover o <link> desta folha.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Moldura base
+   -------------------------------------------------------------------------- */
+
+.figure-craft {
+  position: relative;
+  overflow: hidden;
+  background: var(--navy);
+  border: 1px solid var(--line-strong);
+  /* o navy do render encosta na borda sem halo */
+  isolation: isolate;
+}
+
+.figure-craft img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* alinha o render ao peso tipográfico do site, sem estourar o ouro */
+  filter: saturate(0.92) contrast(1.02);
+}
+
+/* hairline dourada interna, mesma linguagem da .hero-rule */
+.figure-craft::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(196, 164, 106, 0.14);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* legenda mono, mesmo padrão de .hero-visual-caption */
+.figure-craft-caption {
+  margin: 12px 0 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   2. Deriva lenta — o "movimento" das peças
+   Escala mínima (1 -> 1.045) em 28s, alternando. Sem bounce: ease-in-out puro.
+   -------------------------------------------------------------------------- */
+
+@keyframes sz-deriva {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.045) translate3d(-1.1%, -0.7%, 0);
+  }
+}
+
+.figure-craft--deriva img {
+  animation: sz-deriva 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   3. Passagem de luz — luz atravessando o vidro, não glow
+   Gradiente linear de baixa opacidade cruzando a peça a cada 14s.
+   -------------------------------------------------------------------------- */
+
+@keyframes sz-passagem {
+  0% {
+    transform: translateX(-120%) skewX(-14deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-14deg);
+  }
+}
+
+.figure-craft--luz::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 38%;
+  z-index: 1;
+  /* Pico calibrado na tela: a 7% a passagem era imperceptível sobre o navy.
+     A 16% lê como luz atravessando o vidro e ainda não vira glow. */
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(196, 164, 106, 0.10) 42%,
+    rgba(240, 232, 214, 0.16) 52%,
+    rgba(196, 164, 106, 0.09) 62%,
+    transparent 100%
+  );
+  animation: sz-passagem 14s linear infinite;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. Parallax de entrada, dirigido por scroll, sem JS
+   Progressive enhancement: sem suporte, a peça simplesmente fica estática.
+   -------------------------------------------------------------------------- */
+
+@keyframes sz-parallax {
+  from {
+    transform: translate3d(0, 3.5%, 0);
+  }
+  to {
+    transform: translate3d(0, -3.5%, 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .figure-craft--parallax img {
+      animation: sz-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+      /* compensa o deslocamento para não abrir faixa vazia na moldura */
+      height: 112%;
+      margin-top: -6%;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Faixa full-bleed — seção escura entre blocos creme
+   -------------------------------------------------------------------------- */
+
+.section-band {
+  position: relative;
+  overflow: hidden;
+  background: var(--navy);
+  color: #f0e8d6;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.section-band__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.section-band__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+/* véu navy: garante contraste AA do texto sobre a imagem */
+.section-band__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(12, 21, 36, 0.94) 0%,
+    rgba(12, 21, 36, 0.82) 46%,
+    rgba(12, 21, 36, 0.58) 100%
+  );
+}
+
+.section-band > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Variante cirúrgica: aplica só a mecânica do fundo em uma seção que JÁ é
+   escura. Não altera nenhuma cor de texto, então não há risco de regressão
+   de contraste no conteúdo existente. */
+.has-backdrop {
+  position: relative;
+  overflow: hidden;
+}
+
+.has-backdrop > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.section-band .eyebrow {
+  color: var(--gold-bright);
+}
+
+.section-band h2,
+.section-band h3 {
+  color: #f4eee2;
+}
+
+.section-band p {
+  color: rgba(240, 238, 226, 0.74);
+}
+
+/* --------------------------------------------------------------------------
+   5b. Foco do recorte
+   Os renders são 16:9 com o terço esquerdo vazio, reservado para headline.
+   Em moldura retrato o corte central cai no vazio: deslocar para o assunto.
+   -------------------------------------------------------------------------- */
+
+.figure-craft--foco-dir img {
+  object-position: 78% center;
+}
+
+.figure-craft--foco-esq img {
+  object-position: 22% center;
+}
+
+/* --------------------------------------------------------------------------
+   6. Proporções de moldura
+   -------------------------------------------------------------------------- */
+
+.figure-craft--retrato {
+  aspect-ratio: 4 / 5;
+}
+
+.figure-craft--paisagem {
+  aspect-ratio: 16 / 9;
+}
+
+.figure-craft--painel {
+  aspect-ratio: 3 / 2;
+}
+
+/* --------------------------------------------------------------------------
+   7. Mobile — corta movimento, preserva peso visual
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .figure-craft--deriva img,
+  .figure-craft--luz::before {
+    animation: none;
+  }
+
+  .figure-craft--retrato {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Acessibilidade — desliga todo movimento decorativo
+   Reforça o bloco global de sz-design.css.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .figure-craft--deriva img,
+  .figure-craft--luz::before,
+  .figure-craft--parallax img {
+    animation: none !important;
+    transform: none !important;
+    height: 100%;
+    margin-top: 0;
+  }
+}

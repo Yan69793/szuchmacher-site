@@ -6,3 +6,17 @@ backups/
 
 # Node
 node_modules/
+
+# Originais PNG dos renders Higgsfield (~84 MB) — a entrega é o .webp em
+# site-producao/assets/img/. Mantidos localmente só para regerar em outro tamanho.
+_fontes-img/
+
+# Credenciais — nunca versionar. Guardar em gerenciador de senhas, não em arquivo.
+*.key
+*.pem
+.env
+.env.*
+*[Ss]enha*
+*[Ss]ecret*
+*credencia*
+*[Aa]pi?[Kk]ey*

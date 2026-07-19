@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yan Szuchmacher | Wealth Advisory & Market Intelligence</title>
-  <meta name="description" content="Advisory patrimonial independente para famílias e executivos. Alocação global, liquidez, governança e gestão de risco com 20 anos de experiência em private banking." />
+  <meta name="description" content="Consultoria patrimonial independente para famílias, empresários e executivos. Alocação, governança e gestão de risco com 20 anos de experiência em private banking." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <meta name="author" content="Yan Szuchmacher" />
   <meta name="theme-color" content="#f3f1ec" />
@@ -36,7 +36,8 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" as="style" />
   <link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/sz-design.css?v=20260718s" />
+  <link rel="stylesheet" href="/assets/sz-design.css?v=20260718c" />
+  <link rel="stylesheet" href="/assets/sz-imagery.css?v=20260718b" />
 
   <!-- Configuração central (Clarity + Formspree). Editar IDs em /assets/sz-config.js -->
   <script src="/assets/sz-config.js?v=20260618"></script>
@@ -112,8 +113,9 @@
   }
   </script>
 </head>
-<body data-page="home">
+<body data-page="home" data-design="sophistication-20260718v2">
 
+  <!-- craft-revision: sophistication-20260718v2 | revert: scripts/revert-design-sophistication.ps1 -->
   <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
 
   <header>
@@ -126,15 +128,13 @@
         </span>
       </a>
 
-      <nav class="nav" id="siteNav" aria-label="Principal">
-        <a href="#autoridade">Sobre</a>
-        <a href="#ofertas">O que entregamos</a>
-        <a href="relatorios.html">Relatórios</a>
-        <a href="ebook.html" data-ga="cta_ebook" data-ga-location="nav">Ebook</a>
-        <a href="assinatura.html" data-ga="cta_assinatura" data-ga-location="nav">Assinatura</a>
-        <a href="https://multi-assets.com" target="_blank" rel="noopener" data-ga="cta_multiasset" data-ga-location="nav">MultiAsset</a>
-        <a href="#contato">Contato</a>
-      </nav>
+    <nav class="nav" id="siteNav" aria-label="Principal">
+      <a href="honorarios.html">Honorários</a>
+      <a href="assinatura.html">Assinatura</a>
+      <a href="relatorios.html">Relatórios</a>
+      <a href="https://multi-assets.com" target="_blank" rel="noopener">MultiAsset</a>
+      <a href="index.html#contato">Contato</a>
+    </nav>
 
       <a href="#contato" class="nav-cta" data-ga="cta_diagnostico" data-ga-location="nav">Agendar diagnóstico</a>
 
@@ -145,47 +145,54 @@
   </header>
 
   <main id="main-content">
-    <section class="hero reveal is-visible" id="hero">
+    <section class="hero hero--craft reveal is-visible" id="hero">
       <div class="container">
         <div class="hero-grid">
           <div class="prose">
-            <span class="eyebrow">Wealth Advisory · UHNW</span>
-            <h1>Clareza estratégica para patrimônios complexos.</h1>
-            <p class="hero-lead">Advisory patrimonial com 20 anos de experiência em private banking, voltado a famílias e executivos que precisam de disciplina de risco, governança de alocação e leitura global de mercados.</p>
+            <span class="eyebrow">Consultoria patrimonial independente</span>
+            <h1>Organização e clareza para quem decide sobre patrimônio.</h1>
+            <p class="hero-rule" aria-hidden="true"></p>
+            <p class="hero-lead">Consultoria independente com duas décadas de experiência em private banking. Ajudamos famílias, empresários e profissionais a organizar alocação, liquidez e risco com método, transparência e remuneração sem comissão de produto.</p>
             <div class="hero-actions">
-              <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="hero">Agendar diagnóstico</a>
-              <a href="assinatura.html?utm_source=home&utm_medium=organic&utm_campaign=hero_fundador" class="btn btn-outline" data-ga="cta_assinatura" data-ga-location="hero">Carta e planos</a>
-            </div>
-            <div class="hero-trust">
-              <div class="trust-item"><strong>Experiência</strong>20 anos private banking</div>
-              <div class="trust-item"><strong>Origem</strong>Private banking internacional</div>
-              <div class="trust-item"><strong>Modelo</strong>Independente e sem conflito</div>
+              <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="hero">Agendar conversa inicial</a>
+              <a href="assinatura.html?utm_source=home&utm_medium=organic&utm_campaign=hero_fundador" class="btn btn-outline" data-ga="cta_assinatura" data-ga-location="hero">Conhecer a Carta</a>
             </div>
           </div>
           <div class="hero-visual">
-            <div class="hero-visual-frame">
-              <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=960&amp;h=1200&amp;q=82" alt="Arquitetura institucional discreta" loading="eager" fetchpriority="high" width="960" height="1200" decoding="async" />
+            <div class="hero-visual-frame figure-craft figure-craft--deriva figure-craft--luz figure-craft--foco-dir">
+              <img src="/assets/img/index-hero.webp" alt="Camadas de vidro sobrepostas com gravação dourada, representando patrimônio organizado em uma visão única" loading="eager" fetchpriority="high" width="1920" height="1080" decoding="async" />
             </div>
+            <p class="hero-visual-caption">Risco, alocação e governança em um mesmo processo</p>
           </div>
+        </div>
+
+        <div class="hero-metrics" aria-label="Sinais de credibilidade">
+          <div class="hero-metric"><span class="hero-metric__k">Experiência</span><span class="hero-metric__v">20 anos</span><span class="hero-metric__s">em private banking</span></div>
+          <div class="hero-metric"><span class="hero-metric__k">Alcance</span><span class="hero-metric__v">Global</span><span class="hero-metric__s">ativos e estruturas no Brasil e no exterior</span></div>
+          <div class="hero-metric"><span class="hero-metric__k">Modelo</span><span class="hero-metric__v">Independente</span><span class="hero-metric__s">sem vínculo com banco ou distribuidora</span></div>
+          <div class="hero-metric"><span class="hero-metric__k">Remuneração</span><span class="hero-metric__v">Honorário</span><span class="hero-metric__s">sem comissão de produto</span></div>
         </div>
 
         <div class="pillars">
           <div class="pillars-grid">
-            <div class="pillar"><strong>Alocação</strong><span>Visão consolidada entre classes, moedas, geografias e estruturas de custódia.</span></div>
-            <div class="pillar"><strong>Governança</strong><span>Processo decisório claro para patrimônio familiar, liquidez e horizonte de capital.</span></div>
-            <div class="pillar"><strong>Risco</strong><span>Leitura de concentração, correlação, drawdown potencial e regime macro.</span></div>
+            <div class="pillar"><strong>01, Alocação</strong><span>Uma visão única do patrimônio, por classe de ativo, moeda e custódia.</span></div>
+            <div class="pillar"><strong>02, Governança</strong><span>Regras claras para decidir, rebalancear e registrar o que importa ao longo do tempo.</span></div>
+            <div class="pillar"><strong>03, Risco</strong><span>Leitura objetiva de concentração, liquidez e cenário macro antes de qualquer movimento.</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="antecipacao" class="macro-wrap" aria-label="Antecipação macro — da semana">
+    <section id="antecipacao" class="macro-wrap has-backdrop" aria-label="Antecipação macro — da semana">
+      <div class="section-band__bg" aria-hidden="true">
+        <img src="/assets/img/index-antecipacao.webp" alt="" loading="lazy" decoding="async" width="1280" height="859" />
+      </div>
       <div class="container">
         <div class="macro-head">
           <div>
-            <span class="eyebrow">Antecipação macro</span>
-            <h2>Calendário da semana e expectativas Focus</h2>
-            <p>Mediana, intervalo e dispersão coletados pelo Banco Central semanalmente, com calendário oficial de divulgações. Sem projeção própria e sem preço-alvo.</p>
+            <span class="eyebrow">Leitura de mercado</span>
+            <h2>O que o mercado acompanha nesta semana</h2>
+            <p>Expectativas Focus e calendário oficial do Banco Central, reunidos em um só painel. Dados públicos, sem projeção própria e sem indicação de preço.</p>
           </div>
           <div class="mp-stamp" data-role="stamp"></div>
         </div>
@@ -199,11 +206,11 @@
               <article class="mp-card"><small>PIB (expectativa 2026)</small><strong>—</strong><span class="mp-ref">Aguardando Focus</span></article>
             </div>
             <div class="mp-agenda">
-              <h3>Calendário — da semana</h3>
+              <h3 id="agendaTitle" data-role="agenda-title">Calendário da semana</h3>
               <ul data-role="agenda"></ul>
             </div>
           </div>
-          <div class="mp-disclaimer" data-role="disclaimer">Dados agregados de mercado. Medianas, intervalos e calendário refletem fontes públicas oficiais; não constituem recomendação nem análise formal de valores mobiliários nos termos da Resolução CVM nº 20/2021.</div>
+          <div class="mp-disclaimer" data-role="disclaimer">Dados agregados de mercado. Medianas, intervalos e calendário refletem fontes públicas oficiais; não constituem recomendação nem análise formal de valores mobiliários nos termos da Resolução CVM nº 19/2021.</div>
         </div>
       </div>
     </section>
@@ -213,23 +220,23 @@
         <div class="authority-grid">
           <div class="authority-bio">
             <span class="eyebrow">Quem conduz</span>
-            <h2>Duas décadas em private banking aplicadas a patrimônios brasileiros sofisticados.</h2>
-            <p>Formação em tesouraria, gestão de risco e advisory patrimonial em private banking internacional. A prática combina leitura macro disciplinada, arquitetura de portfólio em múltiplas jurisdições e governança de alocação voltada a preservação de capital em horizontes longos.</p>
-            <p>A atuação hoje é independente, remunerada por honorário profissional e sem retrocessões de distribuidores, o que preserva a qualidade analítica e o alinhamento de interesses.</p>
+            <h2>Vinte anos de mercado a serviço de decisões patrimoniais mais sólidas.</h2>
+            <p>Trajetória em tesouraria, risco e consultoria patrimonial em ambiente internacional de private banking. O trabalho une leitura de mercado, desenho de carteira e acompanhamento contínuo, com foco em preservar e organizar capital no longo prazo.</p>
+            <p>Hoje a prática é independente: o cliente paga honorário profissional, sem comissão de produto e sem repasse de distribuidora. Isso alinha a recomendação ao interesse de quem contrata.</p>
             <div class="authority-metrics">
               <div class="metric"><div class="metric-value">20+</div><div class="metric-label">Anos de mercado</div></div>
-              <div class="metric"><div class="metric-value">Global</div><div class="metric-label">Macro e alocação</div></div>
-              <div class="metric"><div class="metric-value">Multi</div><div class="metric-label">Jurisdição e custódia</div></div>
+              <div class="metric"><div class="metric-value">Global</div><div class="metric-label">Mercados e alocação</div></div>
+              <div class="metric"><div class="metric-value">Multi</div><div class="metric-label">Países e custódias</div></div>
               <div class="metric"><div class="metric-value">0%</div><div class="metric-label">Comissão de produto</div></div>
             </div>
           </div>
           <div class="credential-panel">
-            <h3>Princípios de atuação</h3>
+            <h3>Como trabalhamos</h3>
             <div class="credential-list">
-              <div><strong>Independência</strong>Remuneração por honorário direto do cliente, não por produto.</div>
-              <div><strong>Discrição</strong>Processos e comunicação compatíveis com patrimônio familiar sensível.</div>
-              <div><strong>Substância</strong>Menos narrativa comercial, mais diagnóstico técnico e decisão informada.</div>
-              <div><strong>Continuidade</strong>Monitoramento executivo contínuo, não apenas proposta inicial.</div>
+              <div><strong>Independência</strong>Você remunera o trabalho de consultoria, não a venda de um produto.</div>
+              <div><strong>Discrição</strong>Comunicação e processos adequados a decisões patrimoniais sensíveis.</div>
+              <div><strong>Clareza</strong>Diagnóstico objetivo, linguagem direta e próximos passos definidos.</div>
+              <div><strong>Continuidade</strong>Acompanhamento regular, não apenas uma proposta inicial.</div>
             </div>
           </div>
         </div>
@@ -241,36 +248,36 @@
         <div class="section-head">
           <div>
             <span class="eyebrow">Para quem é</span>
-            <h2>Três perfis onde o trabalho gera o maior impacto</h2>
-            <p>Clientes com patrimônio relevante, múltiplas estruturas, exposição internacional ou necessidade real de governança patrimonial.</p>
+            <h2>Quem mais se beneficia deste trabalho</h2>
+            <p>Pessoas e famílias com patrimônio relevante, estruturas diversas ou exposição no exterior, que querem decisões mais organizadas e menos dependentes de produto.</p>
           </div>
         </div>
         <div class="for-whom-grid">
           <div class="whom-card">
             <h3>Empresários e sócios</h3>
-            <p>Concentração relevante em um ativo empresarial, necessidade de diversificar sem perder liquidez operacional.</p>
+            <p>Patrimônio concentrado no negócio e necessidade de diversificar sem perder liquidez no dia a dia.</p>
             <ul>
-              <li>Estruturação de liquidez pós-evento</li>
+              <li>Liquidez após eventos societários</li>
               <li>Diversificação fora do ativo principal</li>
-              <li>Planejamento sucessório</li>
+              <li>Planejamento de sucessão</li>
             </ul>
           </div>
           <div class="whom-card">
-            <h3>Executivos C-level</h3>
-            <p>Compensação em vesting, exposição concentrada em ações da empresa, horizonte longo de aposentadoria.</p>
+            <h3>Executivos e profissionais</h3>
+            <p>Remuneração variável, ações da empresa e horizonte longo de aposentadoria ou transição de carreira.</p>
             <ul>
-              <li>Gestão de concentração em RSU e options</li>
-              <li>Alocação global e multi-moeda</li>
+              <li>Gestão de concentração em ações e incentivos</li>
+              <li>Alocação em diferentes moedas e mercados</li>
               <li>Plano financeiro de longo prazo</li>
             </ul>
           </div>
           <div class="whom-card">
             <h3>Famílias e holdings</h3>
-            <p>Patrimônio com múltiplas estruturas, segunda geração envolvida e necessidade de governança clara.</p>
+            <p>Patrimônio com várias estruturas, mais de uma geração envolvida e necessidade de regras claras de decisão.</p>
             <ul>
               <li>Política patrimonial formal</li>
-              <li>Consolidação e relatórios</li>
-              <li>Arquitetura multi-jurisdição</li>
+              <li>Consolidação e relatórios periódicos</li>
+              <li>Estrutura no Brasil e no exterior</li>
             </ul>
           </div>
         </div>
@@ -282,46 +289,46 @@
         <div class="section-head">
           <div>
             <span class="eyebrow">O que entregamos</span>
-            <h2>Três frentes de trabalho claras, com entregáveis definidos</h2>
-            <p>Escopo técnico e remuneração por honorário profissional acordados antes do início. Sem cross-selling, sem produto vinculado.</p>
+            <h2>Três frentes de trabalho, com escopo e preço definidos desde o início</h2>
+            <p>Você sabe o que será feito, em quanto tempo e quanto custa. Não há venda cruzada de produto financeiro.</p>
           </div>
         </div>
         <div class="offers-grid">
           <div class="offer">
             <span class="offer-tag">Ponto de partida</span>
             <h3>Diagnóstico patrimonial</h3>
-            <p>Leitura consolidada do portfólio atual, incluindo pontos cegos estruturais e riscos não precificados.</p>
+            <p>Uma leitura completa do patrimônio atual: o que está bem estruturado, onde há risco e o que precisa de atenção.</p>
             <ul>
-              <li>Mapeamento de ativos, passivos e custódia</li>
+              <li>Mapeamento de ativos, passivos e custódias</li>
               <li>Análise de concentração, liquidez e moeda</li>
-              <li>Leitura de risco e regime macro</li>
+              <li>Leitura de risco e cenário de mercado</li>
               <li>Relatório executivo de 15 a 25 páginas</li>
             </ul>
             <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="offer">Solicitar diagnóstico</a>
           </div>
           <div class="offer">
-            <span class="offer-tag">Reestruturação</span>
+            <span class="offer-tag">Estrutura</span>
             <h3>Arquitetura de alocação</h3>
-            <p>Construção de política patrimonial formal alinhada a horizonte, regime macro e tolerância real a drawdown.</p>
+            <p>Definição de uma política patrimonial clara, alinhada ao seu horizonte, à sua liquidez e à sua capacidade real de suportar oscilações.</p>
             <ul>
-              <li>Policy statement patrimonial</li>
-              <li>Arquitetura multi-classe e multi-moeda</li>
-              <li>Cronograma de implementação</li>
-              <li>Validação com estruturas existentes</li>
+              <li>Política patrimonial formal</li>
+              <li>Alocação por classes e moedas</li>
+              <li>Plano de implementação por etapas</li>
+              <li>Ajuste às estruturas que você já usa</li>
             </ul>
-            <a href="#contato" class="btn" data-ga="cta_alocacao" data-ga-location="offer">Conversar sobre estrutura</a>
+            <a href="#contato" class="btn" data-ga="cta_alocacao" data-ga-location="offer">Falar sobre estrutura</a>
           </div>
           <div class="offer">
-            <span class="offer-tag">Continuidade</span>
-            <h3>Monitoramento executivo</h3>
-            <p>Acompanhamento mensal e trimestral com leitura de risco, revisão tática e relatório objetivo.</p>
+            <span class="offer-tag">Acompanhamento</span>
+            <h3>Monitoramento contínuo</h3>
+            <p>Revisão periódica de risco, mercado e carteira, com relatório objetivo e canal direto com o consultor.</p>
             <ul>
-              <li>Leitura macro e micro recorrente</li>
-              <li>Revisão de risco e rebalance</li>
+              <li>Leitura de mercado em ritmo combinado</li>
+              <li>Revisão de risco e rebalanceamento</li>
               <li>Relatório gerencial consolidado</li>
-              <li>Acesso direto ao advisor</li>
+              <li>Acesso direto ao consultor</li>
             </ul>
-            <a href="#contato" class="btn" data-ga="cta_monitoramento" data-ga-location="offer">Entender o escopo</a>
+            <a href="#contato" class="btn" data-ga="cta_monitoramento" data-ga-location="offer">Ver como funciona</a>
           </div>
         </div>
       </div>
@@ -332,22 +339,22 @@
         <div class="section-head">
           <div>
             <span class="eyebrow">Amostra de análise</span>
-            <h2>Leitura dos vetores que movem preços</h2>
-            <p>Recorte executivo dos principais movimentos de mercado, com foco em implicações para risco, liquidez e posicionamento patrimonial. Relatório completo enviado semanalmente aos assinantes.</p>
+            <h2>O que move o mercado, em linguagem executiva</h2>
+            <p>Resumo dos principais movimentos, com impacto em risco, liquidez e posicionamento. O relatório completo chega periodicamente a quem assina a Carta.</p>
           </div>
           <div class="section-date">Amostra ilustrativa</div>
         </div>
 
         <div class="market-grid">
           <article class="market-main">
-            <h3>Como o relatório semanal traduz vetores macro em decisões de carteira</h3>
-            <p>O fechamento publicado todo pregão integra três camadas. A primeira é o registro objetivo do que se moveu, índices brasileiros, paridades cambiais, juros americanos, commodities energéticas e metais preciosos, com magnitude e direção. A segunda é a leitura de causa, isolando o que foi reação a dado macro, prêmio de risco geopolítico, fluxo técnico ou rotação setorial. A terceira é a implicação para alocação, indicando onde a leitura altera ou não a tese de risco corrente.</p>
-            <p>O foco não é prever o próximo movimento. É garantir que a carteira não seja surpreendida por uma assimetria de informação dentro do próprio mercado em que ela está exposta. Os destaques do dia entram organizados por classe de ativo, com nota de contexto, e quando relevantes, comparativos contra o consenso de Reuters, Bloomberg e B3. O destinatário recebe a peça antes da abertura asiática, em formato curto e auditável.</p>
+            <h3>Como o relatório ajuda na decisão de carteira</h3>
+            <p>Cada edição organiza o dia em três camadas. Primeiro, o registro do que se moveu: bolsas, câmbio, juros e commodities, com direção e intensidade. Depois, a leitura da causa: dado econômico, fluxo, risco geopolítico ou rotação de setores. Por fim, a implicação prática: o que isso muda, ou não muda, na tese de risco da carteira.</p>
+            <p>O objetivo não é prever o próximo pregão. É reduzir surpresa. Os destaques vêm por classe de ativo, com contexto e, quando faz sentido, comparação com o consenso de mercado. O texto é curto, objetivo e pensado para quem decide sob prazo.</p>
             <div class="hero-actions">
-              <a href="relatorios.html" class="btn" data-ga="cta_relatorio" data-ga-location="sample">Receber relatório</a>
-              <a href="relatorios.html" class="btn btn-outline" data-ga="cta_relatorio_amostra" data-ga-location="sample">Ver amostra completa</a>
+              <a href="relatorios.html" class="btn" data-ga="cta_relatorio" data-ga-location="sample">Receber o relatório</a>
+              <a href="relatorios.html" class="btn btn-outline" data-ga="cta_relatorio_amostra" data-ga-location="sample">Ver amostra</a>
             </div>
-            <div class="market-subnote">Peça ilustrativa. Conteúdo real do relatório varia conforme o pregão, com fontes consolidadas de Reuters, Bloomberg e B3.</div>
+            <div class="market-subnote">Conteúdo ilustrativo. A edição real varia com o pregão e usa fontes públicas e de mercado consolidadas.</div>
           </article>
           <aside class="market-side">
             <div class="market-card"><small>Ibovespa</small><strong>—</strong><span>Fechamento e variação no relatório</span></div>
@@ -364,25 +371,25 @@
         <div class="section-head">
           <div>
             <span class="eyebrow">Metodologia</span>
-            <h2>Quatro etapas estruturadas, sem atalhos</h2>
-            <p>Sequência aplicada em todos os engajamentos. Cada etapa tem escopo, entregável e horizonte de tempo pré-acordados.</p>
+            <h2>Quatro etapas, sempre com escopo e prazo combinados</h2>
+            <p>O mesmo caminho em todos os trabalhos. Cada etapa tem entregável e tempo definidos antes de começar.</p>
           </div>
         </div>
         <div class="method-grid">
-          <div class="method-step"><h3>Contexto</h3><p>Entendimento do perfil, complexidade, estruturas existentes e prioridades. Definição de escopo e honorário.</p></div>
-          <div class="method-step"><h3>Diagnóstico</h3><p>Leitura consolidada do patrimônio, mapeamento de riscos e pontos cegos, análise de liquidez e concentração.</p></div>
-          <div class="method-step"><h3>Arquitetura</h3><p>Construção da política patrimonial, definição de alocação-alvo, plano de implementação e validação jurídica.</p></div>
-          <div class="method-step"><h3>Monitoramento</h3><p>Acompanhamento contínuo com revisão de risco, rebalance e comunicação executiva em cadência acordada.</p></div>
+          <div class="method-step"><h3>Contexto</h3><p>Entendemos perfil, estruturas e prioridades. Definimos escopo e honorário.</p></div>
+          <div class="method-step"><h3>Diagnóstico</h3><p>Mapeamos o patrimônio, os riscos e os pontos que pedem atenção imediata.</p></div>
+          <div class="method-step"><h3>Arquitetura</h3><p>Desenhamos a política de alocação e o plano de implementação, alinhados ao que você já utiliza.</p></div>
+          <div class="method-step"><h3>Monitoramento</h3><p>Acompanhamos risco e mercado na cadência acordada, com relatório e contato direto.</p></div>
         </div>
       </div>
     </section>
 
     <section class="cta-strip">
       <div class="container">
-        <h3>Uma conversa de 30 minutos pode revelar pontos cegos estruturais que o portfólio atual não mostra.</h3>
+        <h3>Uma conversa inicial de 30 minutos basta para mapear riscos e oportunidades que o extrato sozinho não mostra.</h3>
         <div class="hero-actions" style="margin:0">
-          <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="strip">Agendar diagnóstico</a>
-          <a href="relatorios.html" class="btn btn-outline" data-ga="cta_relatorio" data-ga-location="strip">Receber relatório</a>
+          <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="strip">Agendar conversa</a>
+          <a href="relatorios.html" class="btn btn-outline" data-ga="cta_relatorio" data-ga-location="strip">Receber o relatório</a>
         </div>
       </div>
     </section>
@@ -391,20 +398,20 @@
       <div class="container">
         <div class="credentials-grid">
           <div>
-            <span class="eyebrow">Credenciais e compliance</span>
-            <h2>Posicionamento institucional. Execução discreta.</h2>
-            <p>Atuação voltada a clientes que valorizam rigor, sobriedade e clareza de processo. Menos ruído comercial, mais substância técnica.</p>
+            <span class="eyebrow">Credenciais e conformidade</span>
+            <h2>Rigor no processo, discrição na execução.</h2>
+            <p>Atuamos com quem valoriza método, clareza e responsabilidade. Menos ruído comercial, mais conteúdo útil para decidir.</p>
             <div class="compliance-note">
-              Este site é de autoria de Yan Szuchmacher e possui caráter meramente informativo. O conteúdo não constitui oferta, solicitação, recomendação ou análise formal de valores mobiliários nos termos da Resolução CVM nº 20/2021. Contratação de serviços de advisory é formalizada por instrumento próprio.
+              Este site é de autoria de Yan Szuchmacher e tem caráter informativo. O conteúdo não constitui oferta, solicitação, recomendação ou análise formal de valores mobiliários nos termos da Resolução CVM nº 19/2021. A contratação de serviços é formalizada por contrato próprio.
             </div>
           </div>
           <div class="credential-panel">
             <h3>Base de atuação</h3>
             <div class="credential-list">
-              <div><strong>Wealth management</strong>Experiência em tesouraria, risco e leitura de mercados com foco em patrimônio sofisticado.</div>
-              <div><strong>Market intelligence</strong>Acompanhamento macro e geopolítico com impacto direto sobre liquidez, câmbio, juros e alocação.</div>
-              <div><strong>UHNW</strong>Abordagem orientada a clientes que operam em múltiplas classes, moedas e estruturas de custódia.</div>
-              <div><strong>Independência</strong>Modelo de honorário profissional, sem comissão de produto e sem retrocessão.</div>
+              <div><strong>Gestão de patrimônio</strong>Experiência em tesouraria, risco e leitura de mercados aplicada a carteiras complexas.</div>
+              <div><strong>Inteligência de mercado</strong>Acompanhamento de juros, câmbio, liquidez e cenário global com impacto na alocação.</div>
+              <div><strong>Patrimônio elevado</strong>Atendimento a quem opera com várias classes de ativo, moedas e estruturas de custódia.</div>
+              <div><strong>Independência</strong>Honorário profissional, sem comissão de produto e sem repasse de distribuidora.</div>
             </div>
           </div>
         </div>
@@ -416,7 +423,7 @@
         <div class="section-head">
           <div>
             <span class="eyebrow">Perguntas frequentes</span>
-            <h2>O que costuma aparecer no primeiro contato</h2>
+            <h2>O que a maioria pergunta no primeiro contato</h2>
           </div>
         </div>
         <div class="faq-wrap">
@@ -436,8 +443,8 @@
         <div class="contact-grid">
           <div class="contact-box">
             <span class="eyebrow">Primeiro contato</span>
-            <h2>Conversa objetiva sobre risco, liquidez e estrutura patrimonial</h2>
-            <p>Contato inicial para entender contexto, grau de complexidade e prioridades patrimoniais, com foco em clareza e encaminhamento executivo. Retorno em até 24 horas úteis.</p>
+            <h2>Conversa objetiva sobre risco, liquidez e organização do patrimônio</h2>
+            <p>Primeiro contato para entender o seu contexto e priorizar o que importa. Retorno em até 24 horas úteis, com próximo passo claro.</p>
             <span class="contact-meta-label">WhatsApp</span>
             <p><a href="https://wa.me/5521981088992" target="_blank" rel="noopener" data-ga="whatsapp_click" data-ga-location="contato">+55 21 98108 8992</a></p>
             <span class="contact-meta-label">E-mail</span>
@@ -447,8 +454,8 @@
           </div>
 
           <form class="contact-form" id="leadForm" method="POST" action="" data-formspree="1" data-form="contato">
-            <h3>Agendar diagnóstico inicial</h3>
-            <p>Preencha os dados abaixo para dar início ao contato.</p>
+            <h3>Agendar conversa inicial</h3>
+            <p>Preencha os dados. Entramos em contato em até 24 horas úteis.</p>
             <label for="nome" class="sr-only">Nome completo</label>
             <input type="text" id="nome" name="nome" placeholder="Nome completo" autocomplete="name" required />
             <label for="email" class="sr-only">E-mail</label>
@@ -494,7 +501,7 @@
               </span>
             </a>
           </div>
-          <div class="footer-note">Advisory patrimonial independente. Este material possui caráter meramente informativo e institucional. Não constitui oferta, solicitação ou recomendação de investimento nos termos da Resolução CVM nº 20/2021. Rentabilidade passada não representa garantia de resultados futuros.</div>
+          <div class="footer-note">Advisory patrimonial independente. Este material possui caráter meramente informativo e institucional. Não constitui oferta, solicitação ou recomendação de investimento nos termos da Resolução CVM nº 19/2021. Rentabilidade passada não representa garantia de resultados futuros.</div>
         </div>
         <div class="footer-col">
           <h4>Navegação</h4>
@@ -515,7 +522,7 @@
       </div>
       <div class="footer-legal">
         <div>© 2026 Szuchmacher Consultoria. Todos os direitos reservados.</div>
-        <div>Rio de Janeiro, Brasil • CNPJ 49.463.402/0001-11 • CVM nº 20/2021</div>
+        <div>Rio de Janeiro, Brasil • CNPJ 49.463.402/0001-11 • CVM nº 19/2021</div>
       </div>
     </div>
   </footer>
@@ -542,6 +549,6 @@
   </script>
 
   <script src="/assets/sz-site.js?v=20260618" defer></script>
-  <script src="/assets/macro-panel.js?v=20260618b" defer></script>
+  <script src="/assets/macro-panel.js?v=20260718final" defer></script>
 </body>
 </html>
