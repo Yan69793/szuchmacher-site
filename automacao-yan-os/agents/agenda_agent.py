@@ -339,25 +339,50 @@ def _eventos_copom_fomc(ini: str, fim: str) -> list[dict]:
 
 
 def _eventos_ibge(ini: str, fim: str) -> list[dict]:
-    """Calendário oficial do IBGE (dinâmico). Hora convertida de UTC para BRT."""
-    eventos: list[dict] = []
-    url = (
-        "https://servicodados.ibge.gov.br/api/v3/calendario/"
-        f"?de={ini}&ate={fim}&qtd=100"
-    )
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            raw = resp.read()
-            # O CDN do IBGE às vezes responde gzip mesmo sem Accept-Encoding (magic 1f 8b).
-            if resp.headers.get("Content-Encoding") == "gzip" or raw[:2] == b"\x1f\x8b":
-                raw = gzip.decompress(raw)
-            data = json.loads(raw.decode("utf-8"))
-    except Exception as e:
-        log(f"IBGE calendário falhou (opcional): {e}")
-        return eventos
+    """Calendário oficial do IBGE (dinâmico). Hora convertida de UTC para BRT.
 
-    for item in data.get("items", []):
+    A API v3 ignora ou deforma filtros `de`/`ate` estreitos em ISO (retorna 0
+    itens). Buscamos o(s) mês(es) civil(is) que cobrem a janela e filtramos
+    localmente por `ini`..`fim`.
+    """
+    eventos: list[dict] = []
+    d0 = date.fromisoformat(ini)
+    d1 = date.fromisoformat(fim)
+    meses: list[tuple[int, int]] = []
+    cursor = date(d0.year, d0.month, 1)
+    last = date(d1.year, d1.month, 1)
+    while cursor <= last:
+        meses.append((cursor.year, cursor.month))
+        if cursor.month == 12:
+            cursor = date(cursor.year + 1, 1, 1)
+        else:
+            cursor = date(cursor.year, cursor.month + 1, 1)
+
+    items: list[dict] = []
+    for ano, mes in meses:
+        # intervalo civil do mês (ISO); testado 2026-07: retorna releases de julho
+        mes_ini = f"{ano:04d}-{mes:02d}-01"
+        if mes == 12:
+            mes_fim = f"{ano:04d}-12-31"
+        else:
+            mes_fim = (date(ano, mes + 1, 1) - timedelta(days=1)).isoformat()
+        url = (
+            "https://servicodados.ibge.gov.br/api/v3/calendario/"
+            f"?de={mes_ini}&ate={mes_fim}&qtd=100"
+        )
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                raw = resp.read()
+                if resp.headers.get("Content-Encoding") == "gzip" or raw[:2] == b"\x1f\x8b":
+                    raw = gzip.decompress(raw)
+                data = json.loads(raw.decode("utf-8"))
+            items.extend(data.get("items") or [])
+            log(f"IBGE mês {ano}-{mes:02d}: {len(data.get('items') or [])} item(ns)")
+        except Exception as e:
+            log(f"IBGE calendário falhou (opcional) {ano}-{mes:02d}: {e}")
+
+    for item in items:
         titulo = str(item.get("titulo", "")).strip()
         div = str(item.get("data_divulgacao", "")).strip()
         if not titulo or not div:
@@ -375,7 +400,8 @@ def _eventos_ibge(ini: str, fim: str) -> list[dict]:
         rel = relevancia_ibge(titulo)
         if rel == "baixa" and not INCLUIR_IBGE_BAIXA:
             continue
-        hora_brt = (dt - timedelta(hours=3)).strftime("%H:%M")  # campo IBGE vem em UTC
+        # IBGE devolve horário em UTC (campo sem fuso). Converter para BRT (UTC-3).
+        hora_brt = (dt - timedelta(hours=3)).strftime("%H:%M")
         eventos.append({
             "data": data_str,
             "hora_brt": hora_brt,

@@ -44,18 +44,41 @@
   }
   function diaDaSemana(iso) {
     try {
-      var d = new Date(iso + 'T12:00:00-03:00');
-      return ['dom','seg','ter','qua','qui','sex','sáb'][d.getDay()];
+      // Formatar o weekday em America/Sao_Paulo evita erro de fuso do getDay() local
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: BRT, weekday: 'short'
+      }).formatToParts(new Date(String(iso).slice(0, 10) + 'T12:00:00-03:00'));
+      var w = '';
+      parts.forEach(function (p) { if (p.type === 'weekday') w = p.value; });
+      var map = { Sun: 'dom', Mon: 'seg', Tue: 'ter', Wed: 'qua', Thu: 'qui', Fri: 'sex', Sat: 'sáb' };
+      return map[w] || '';
     } catch (e) { return ''; }
   }
   function fmtAgendaCelula(iso) {
     var s = String(iso || '').slice(0, 10);
     var p = s.split('-');
+    // Coluna visual tem 76px: strong = só o dia (ex.: 20). Meta = weekday + DD/MM.
     if (p.length !== 3) return { dia: '—', meta: '' };
     var rel = relativoDia(s);
-    var meta = p[1] + '/' + p[0].slice(2) + ' · ' + diaDaSemana(iso);
-    if (rel) meta = rel + ' · ' + meta;
+    var dataBr = p[2] + '/' + p[1];
+    var meta = diaDaSemana(iso) + ', ' + dataBr;
+    if (rel) meta = rel + ', ' + dataBr;
     return { dia: p[2], meta: meta };
+  }
+
+  function rotuloJanelaAgenda(agenda) {
+    var j = agenda && agenda.janela;
+    if (!j || !j.inicio || !j.fim) return 'Calendário da semana';
+    var hoje = hojeBrIso();
+    var ini = String(j.inicio).slice(0, 10);
+    var fim = String(j.fim).slice(0, 10);
+    var prefixo = 'Calendário da semana';
+    if (hoje >= ini && hoje <= fim) prefixo = 'Esta semana';
+    else if (ini > hoje) prefixo = 'Próxima semana';
+    else prefixo = 'Semana de referência';
+    var a = ini.slice(8, 10) + '/' + ini.slice(5, 7);
+    var b = fim.slice(8, 10) + '/' + fim.slice(5, 7);
+    return prefixo + ' (' + a + ' a ' + b + ')';
   }
   function intervaloFocus(f) {
     if (!f) return '';
@@ -250,8 +273,8 @@
     }
     return {
       data: iso,
-      evento: 'Sem divulgações relevantes',
-      descricao: 'Nenhum dado macro de alta relevância programado para divulgação neste dia útil.',
+      evento: 'Sem divulgação macro programada',
+      descricao: 'Nenhum release de alta relevância (BCB, IBGE, BLS, Fed) nesta data. O dia útil segue no mercado sem dado novo na agenda curada.',
       _quiet: true
     };
   }
@@ -355,12 +378,14 @@
 
     var tickerEl  = root.querySelector('[data-role=ticker]');
     var agendaEl  = root.querySelector('[data-role=agenda]');
-    var stampEl   = root.querySelector('[data-role=stamp]');
+    var stampEl   = document.querySelector('[data-role=stamp]');
     var discEl    = root.querySelector('[data-role=disclaimer]');
+    var titleEl   = document.getElementById('agendaTitle') || document.querySelector('[data-role=agenda-title]');
 
     if (tickerEl) tickerEl.innerHTML = renderTicker(macro);
     if (agendaEl) agendaEl.innerHTML = renderAgenda(agenda);
-    if (stampEl)  stampEl.textContent = 'Atualizado ' + updatedStamp(macro) + (macro && macro.fresh === false ? ' · cache' : '');
+    if (titleEl)  titleEl.textContent = rotuloJanelaAgenda(agenda);
+    if (stampEl)  stampEl.textContent = 'Atualizado ' + updatedStamp(macro) + (macro && macro.fresh === false ? ', cache' : '');
     if (discEl)   discEl.textContent  = renderDisclaimer(macro, agenda);
 
     root.removeAttribute('data-loading');
