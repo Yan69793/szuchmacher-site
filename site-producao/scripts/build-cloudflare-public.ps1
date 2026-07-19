@@ -80,6 +80,11 @@ Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\
 Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.mp4'  | Out-Null
 Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.webm' | Out-Null
 Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.jpg'  | Out-Null
+
+# Hero ambiente (assets/media): video de fundo + stills webp. Servido em multi-assets.com.
+# *.jpg fica de fora: o unico jpg (hero-desk-night-poster.jpg) nao e referenciado.
+Copy-Tree (Join-Path $ROOT 'assets\media') (Join-Path $MULTI 'assets\media') '*.mp4'  | Out-Null
+Copy-Tree (Join-Path $ROOT 'assets\media') (Join-Path $MULTI 'assets\media') '*.webp' | Out-Null
 foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
     Copy-IfExists (Join-Path $ROOT $f) (Join-Path $MULTI $f) | Out-Null
 }

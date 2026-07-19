@@ -21,6 +21,57 @@ const API_ROUTES = {
   '/assets/agenda.php': (req, env) => handleAgenda(env, req),
 };
 
+// Extensoes de midia que exigem suporte a Range (video/audio). O binding
+// env.ASSETS.fetch() ignora o header Range e devolve o arquivo inteiro (HTTP 200),
+// o que quebra o playback no Safari/iOS. Para esses tipos, o Worker sintetiza o 206.
+const RANGE_TYPES = /\.(mp4|webm|mov|m4v|m4a|ogg|ogv|mp3|wav)$/i;
+
+// Adiciona Range/206 a respostas de midia. So bufferiza quando ha header Range;
+// sem Range apenas anuncia Accept-Ranges e repassa o stream (custo zero).
+async function withRangeSupport(res, request, path) {
+  if (!RANGE_TYPES.test(path)) return res;
+  if (res.status !== 200) return res; // 206 do ASSETS, 304, 404 etc.: repassa
+
+  const range = request.headers.get('Range');
+  if (!range) {
+    const h = new Headers(res.headers);
+    h.set('Accept-Ranges', 'bytes');
+    return new Response(res.body, { status: 200, statusText: res.statusText, headers: h });
+  }
+
+  const buf = await res.arrayBuffer();
+  const total = buf.byteLength;
+  const h = new Headers(res.headers);
+  h.set('Accept-Ranges', 'bytes');
+
+  // Formatos aceitos: bytes=start-end, bytes=start-, bytes=-suffix
+  const m = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
+  if (!m || (m[1] === '' && m[2] === '')) {
+    h.set('Content-Length', String(total));
+    return new Response(buf, { status: 200, statusText: 'OK', headers: h });
+  }
+
+  let start, end;
+  if (m[1] === '') {
+    const suffix = parseInt(m[2], 10);
+    start = suffix <= 0 ? total : Math.max(0, total - suffix);
+    end = total - 1;
+  } else {
+    start = parseInt(m[1], 10);
+    end = m[2] === '' ? total - 1 : Math.min(parseInt(m[2], 10), total - 1);
+  }
+
+  if (start >= total || start > end) {
+    h.set('Content-Range', `bytes */${total}`);
+    return new Response(null, { status: 416, statusText: 'Range Not Satisfiable', headers: h });
+  }
+
+  const slice = buf.slice(start, end + 1);
+  h.set('Content-Range', `bytes ${start}-${end}/${total}`);
+  h.set('Content-Length', String(slice.byteLength));
+  return new Response(slice, { status: 206, statusText: 'Partial Content', headers: h });
+}
+
 function normalizeHost(host) {
   return (host || '').toLowerCase();
 }
@@ -82,7 +133,7 @@ async function serveStatic(request, env, siteKey) {
     return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
   }
 
-  return res;
+  return withRangeSupport(res, request, path);
 }
 
 async function routeRequest(request, env) {

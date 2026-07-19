@@ -147,7 +147,31 @@
             min-height: 100vh; display: grid; grid-template-columns: 1.05fr 0.95fr;
             align-items: center; padding: 96px 48px 72px;
             max-width: var(--max); margin: 0 auto; gap: 56px;
+            position: relative;
         }
+        /* Fundo ambiente do hero: video em desktop, still webp em mobile/reduced-motion.
+           Full-bleed via 100vw (body{overflow-x:hidden} clipa); fora do fluxo do grid. */
+        .hero-media {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100vw; height: 100%; z-index: 0; overflow: hidden; pointer-events: none;
+        }
+        .hero-media__still, .hero-media__still img, .hero-media__video {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; object-position: right center; display: block;
+        }
+        .hero-media__video { opacity: 0; transition: opacity .8s ease; }
+        .hero-media__video.is-playing { opacity: 1; }
+        @media (prefers-reduced-motion: reduce) {
+            /* reduced-motion: video aparece sem fade (troca instantanea, sem animar) */
+            .hero-media__video { transition: none; }
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background:
+                linear-gradient(90deg, #0a0c10 0%, rgba(10,12,16,.9) 38%, rgba(10,12,16,.5) 72%, rgba(10,12,16,.32) 100%),
+                linear-gradient(180deg, rgba(10,12,16,.35) 0%, rgba(10,12,16,0) 30%, rgba(10,12,16,.55) 100%);
+        }
+        .hero-left, .hero-right { position: relative; z-index: 1; }
         .hero-tag {
             display: inline-flex; align-items: center; gap: 10px;
             padding: 8px 14px;
@@ -1487,6 +1511,20 @@
 
 <!-- HERO COM WIDGETS TRADINGVIEW -->
 <section class="hero">
+    <div class="hero-media" aria-hidden="true">
+        <!-- Base estatica: sempre no DOM. Mobile e reduced-motion param aqui. -->
+        <picture class="hero-media__still">
+            <source media="(max-width: 768px)" srcset="/assets/media/hero-desk-night-mobile.webp">
+            <img src="/assets/media/hero-desk-night.webp" alt="" width="1475" height="1152" decoding="async">
+        </picture>
+        <!-- Video ambiente: ativado em desktop (mobile fica no <picture> por peso).
+             Toca tambem sob reduced-motion, por decisao do produto (ambiente, mudo).
+             SEM poster: a <picture> estatica ja faz esse papel ate o fade (is-playing). -->
+        <video class="hero-media__video" autoplay muted playsinline preload="none" data-hero-video>
+            <source data-src="/assets/media/hero-desk-night.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+    </div>
     <div class="hero-left">
         <div class="hero-tag">
             <span class="hero-tag-dot"></span>
@@ -1606,6 +1644,39 @@
         </div>
     </div>
 </section>
+
+<!-- Hero video gate: ativa o mp4 ambiente em desktop. Mobile fica no <picture>
+     estatico (zero bytes de video). Se o autoplay mudo for bloqueado, recupera no
+     primeiro gesto/scroll do usuario. -->
+<script>
+(function () {
+  if (!window.matchMedia('(min-width: 769px)').matches) return; // mobile: fica no <picture>
+  var v = document.querySelector('[data-hero-video]');
+  if (!v) return;
+  var s = v.querySelector('source[data-src]');
+  if (s && !s.getAttribute('src')) s.src = s.getAttribute('data-src');
+  v.muted = true; // exigencia das politicas de autoplay
+  v.addEventListener('playing', function () { v.classList.add('is-playing'); }, { once: true });
+  v.load();
+  function tryPlay() {
+    try {
+      var p = v.play();
+      if (p && p.then) return p.then(function () { return true; }, function () { return false; });
+    } catch (e) {}
+    return Promise.resolve(!v.paused);
+  }
+  tryPlay().then(function (ok) {
+    if (ok) return;
+    var evs = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+    function kick() {
+      tryPlay().then(function (ok2) {
+        if (ok2) evs.forEach(function (e) { window.removeEventListener(e, kick); });
+      });
+    }
+    evs.forEach(function (e) { window.addEventListener(e, kick, { passive: true }); });
+  });
+})();
+</script>
 
 <!-- MACRO STRIP — sem DXY -->
 <div class="macro-strip">
