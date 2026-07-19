@@ -1,0 +1,23 @@
+{
+  "name": "subscribe_pr_activity",
+  "description": "Subscribe this session to GitHub activity on a pull request. Once subscribed, comments and CI failures are delivered into this conversation as <github-webhook-activity> messages. Idempotent. If a Claude agent (PR Steward) is already watching the PR, the call succeeds but this session will NOT receive events.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "description": "The repository owner (user or organization name)."
+      },
+      "repo": {
+        "type": "string",
+        "description": "The repository name."
+      },
+      "pullNumber": {
+        "type": "integer",
+        "description": "The pull request number."
+      }
+    },
+    "required": ["owner", "repo", "pullNumber"]
+  }
+}

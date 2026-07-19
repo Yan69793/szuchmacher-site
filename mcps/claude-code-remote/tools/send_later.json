@@ -1,0 +1,24 @@
+{
+  "name": "send_later",
+  "description": "Schedule a message to be delivered back into THIS SESSION at a future time. The message arrives as an ordinary user turn, so you can use it to remind yourself to resume work, check on something, or continue after a delay. Delivery survives container restarts. Granularity is one minute. Thin wrapper over create_trigger (a self-bind + run_once_at Routine); the returned trigger_id can be passed to delete_trigger to cancel before it fires.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "description": "The text to deliver as a user turn. Write it assuming your current conversation context — this session continues, it does not start fresh."
+      },
+      "at": {
+        "type": "string",
+        "description": "RFC3339 timestamp for the fire time (e.g. 2026-04-20T17:00:00Z). Must be in the future. Mutually exclusive with 'delay_minutes'."
+      },
+      "delay_minutes": {
+        "type": "integer",
+        "description": "Fire this many minutes from now. Minimum 1. Mutually exclusive with 'at'.",
+        "minimum": 1
+      }
+    },
+    "required": ["message"]
+  }
+}

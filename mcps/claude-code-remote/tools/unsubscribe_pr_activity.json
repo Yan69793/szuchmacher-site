@@ -1,0 +1,23 @@
+{
+  "name": "unsubscribe_pr_activity",
+  "description": "Unsubscribe this session from GitHub activity on a pull request. Webhook events for this PR will no longer be delivered into the conversation. Use this when the PR has merged, been closed, or the user asks to stop monitoring.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "description": "The repository owner (user or organization name)."
+      },
+      "repo": {
+        "type": "string",
+        "description": "The repository name."
+      },
+      "pullNumber": {
+        "type": "integer",
+        "description": "The pull request number."
+      }
+    },
+    "required": ["owner", "repo", "pullNumber"]
+  }
+}

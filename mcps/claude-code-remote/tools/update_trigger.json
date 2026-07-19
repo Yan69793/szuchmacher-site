@@ -1,0 +1,35 @@
+{
+  "name": "update_trigger",
+  "description": "Update a Routine's name, cron expression, enabled state, or model. Only provided fields are changed; omit a field to leave it as-is. The Routine must belong to this account. Use list_triggers to find the trigger_id if it's no longer in context.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "trigger_id": {
+        "type": "string",
+        "description": "The Routine's trigger ID to update (starts with 'trig_')."
+      },
+      "name": {
+        "type": "string",
+        "description": "New human-readable name."
+      },
+      "cron_expression": {
+        "type": "string",
+        "description": "New 5-field cron expression. Minimum interval is hourly. Setting this clears run_once_at."
+      },
+      "enabled": {
+        "type": "boolean",
+        "description": "Enable or disable the Routine. Disabled Routines stay stored but never fire."
+      },
+      "run_once_at": {
+        "type": "string",
+        "description": "New RFC3339 one-shot fire time. Must be in the future. Setting this clears cron_expression."
+      },
+      "model": {
+        "type": "string",
+        "description": "Change the model used for this Routine's future fires. Use ONLY when a human explicitly asks to change the Routine's model."
+      }
+    },
+    "required": ["trigger_id"]
+  }
+}
