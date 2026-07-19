@@ -36,7 +36,7 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" as="style" />
   <link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/sz-design.css?v=20260718s" />
+  <link rel="stylesheet" href="/assets/sz-design.css?v=20260718v2" />
 
   <!-- Configuração central (Clarity + Formspree). Editar IDs em /assets/sz-config.js -->
   <script src="/assets/sz-config.js?v=20260618"></script>
@@ -112,8 +112,9 @@
   }
   </script>
 </head>
-<body data-page="home">
+<body data-page="home" data-design="sophistication-20260718v2">
 
+  <!-- craft-revision: sophistication-20260718v2 | revert: scripts/revert-design-sophistication.ps1 -->
   <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
 
   <header>
@@ -145,35 +146,39 @@
   </header>
 
   <main id="main-content">
-    <section class="hero reveal is-visible" id="hero">
+    <section class="hero hero--craft reveal is-visible" id="hero">
       <div class="container">
         <div class="hero-grid">
           <div class="prose">
             <span class="eyebrow">Wealth Advisory · UHNW</span>
-            <h1>Clareza estratégica para patrimônios complexos.</h1>
+            <h1>Clareza estratégica<br />para patrimônios complexos.</h1>
+            <p class="hero-rule" aria-hidden="true"></p>
             <p class="hero-lead">Advisory patrimonial com 20 anos de experiência em private banking, voltado a famílias e executivos que precisam de disciplina de risco, governança de alocação e leitura global de mercados.</p>
             <div class="hero-actions">
               <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="hero">Agendar diagnóstico</a>
               <a href="assinatura.html?utm_source=home&utm_medium=organic&utm_campaign=hero_fundador" class="btn btn-outline" data-ga="cta_assinatura" data-ga-location="hero">Carta e planos</a>
-            </div>
-            <div class="hero-trust">
-              <div class="trust-item"><strong>Experiência</strong>20 anos private banking</div>
-              <div class="trust-item"><strong>Origem</strong>Private banking internacional</div>
-              <div class="trust-item"><strong>Modelo</strong>Independente e sem conflito</div>
             </div>
           </div>
           <div class="hero-visual">
             <div class="hero-visual-frame">
               <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=960&amp;h=1200&amp;q=82" alt="Arquitetura institucional discreta" loading="eager" fetchpriority="high" width="960" height="1200" decoding="async" />
             </div>
+            <p class="hero-visual-caption">Leitura de risco · alocação · governança</p>
           </div>
+        </div>
+
+        <div class="hero-metrics" aria-label="Sinais de credibilidade">
+          <div class="hero-metric"><span class="hero-metric__k">Experiência</span><span class="hero-metric__v">20 anos</span><span class="hero-metric__s">private banking</span></div>
+          <div class="hero-metric"><span class="hero-metric__k">Origem</span><span class="hero-metric__v">Global</span><span class="hero-metric__s">multi-jurisdição</span></div>
+          <div class="hero-metric"><span class="hero-metric__k">Modelo</span><span class="hero-metric__v">Independente</span><span class="hero-metric__s">sem conflito de produto</span></div>
+          <div class="hero-metric"><span class="hero-metric__k">Remuneração</span><span class="hero-metric__v">Honorário</span><span class="hero-metric__s">0% comissão</span></div>
         </div>
 
         <div class="pillars">
           <div class="pillars-grid">
-            <div class="pillar"><strong>Alocação</strong><span>Visão consolidada entre classes, moedas, geografias e estruturas de custódia.</span></div>
-            <div class="pillar"><strong>Governança</strong><span>Processo decisório claro para patrimônio familiar, liquidez e horizonte de capital.</span></div>
-            <div class="pillar"><strong>Risco</strong><span>Leitura de concentração, correlação, drawdown potencial e regime macro.</span></div>
+            <div class="pillar"><strong>01 · Alocação</strong><span>Visão consolidada entre classes, moedas, geografias e estruturas de custódia.</span></div>
+            <div class="pillar"><strong>02 · Governança</strong><span>Processo decisório claro para patrimônio familiar, liquidez e horizonte de capital.</span></div>
+            <div class="pillar"><strong>03 · Risco</strong><span>Leitura de concentração, correlação, drawdown potencial e regime macro.</span></div>
           </div>
         </div>
       </div>

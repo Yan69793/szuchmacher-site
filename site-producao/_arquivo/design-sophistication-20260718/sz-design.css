@@ -422,9 +422,18 @@ header.is-scrolled {
   font-size: clamp(2.5rem, 4.6vw, 3.65rem);
   letter-spacing: var(--tracking-display);
   max-width: 14ch;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
   font-weight: 400;
   line-height: 1.05;
+}
+
+.hero-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 0 22px;
+  border: 0;
+  padding: 0;
 }
 
 .hero-lead {
@@ -432,6 +441,71 @@ header.is-scrolled {
   font-size: 1.02rem;
   line-height: 1.72;
   color: var(--muted);
+}
+
+.hero-visual-caption {
+  margin: 12px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Faixa de métricas — assinatura visual da revisão v2 (visível no HTML) */
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+  margin: 48px 0 0;
+}
+
+.hero-metric {
+  background: var(--surface-soft);
+  padding: 22px 18px;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hero-metric__k {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.hero-metric__v {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--navy);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.hero-metric__s {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .hero-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
 }
 
 .hero-actions {
