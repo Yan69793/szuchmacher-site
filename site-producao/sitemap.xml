@@ -1,57 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap de szuchmacher.com.br. Lista so URL canonica deste dominio que responde 200.
+
+  Ficaram de fora, de proposito:
+    multiasset.html, multiasset-app.html  301 para multi-assets.com
+    consultoria.html                      404 aqui; vive em multi-assets.com/consultoria
+    ebook.html                            descontinuada em 2026-07-18, 301 para a home
+
+  Sitemap com 301 ou 404 gasta orcamento de rastreio e derruba a confianca do
+  arquivo inteiro. URL de outro dominio exige sitemap proprio la, nao aqui.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://szuchmacher.com.br/</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://szuchmacher.com.br/multiasset.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://szuchmacher.com.br/multiasset-app.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://szuchmacher.com.br/relatorios.html</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://szuchmacher.com.br/honorarios.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://szuchmacher.com.br/assinatura.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://szuchmacher.com.br/radar-roic.html</loc>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://szuchmacher.com.br/privacidade.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://szuchmacher.com.br/radar-roic.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://szuchmacher.com.br/relatorios.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://szuchmacher.com.br/consultoria.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
   </url>
 </urlset>
