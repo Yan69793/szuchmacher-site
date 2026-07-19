@@ -4116,11 +4116,69 @@ setTimeout(() => { desenharDonut(500000); desenharBenchmark(); }, 300);
 // executa, mas preserva a config). Aqui cada um e instanciado quando o container
 // entra em viewport. Aba fechada tem display:none, entao nao intersecta e so
 // carrega quando a aba abre — o mesmo mecanismo cobre os dois casos.
+// O aviso de indisponivel tambem mora aqui: e armado por container, no instante
+// em que o script real entra no DOM. Container ainda pendente nunca e acusado.
 (function () {
     var containers = [].slice.call(document.querySelectorAll('.tradingview-widget-container'));
     var pendentes = containers.filter(function (c) {
         return c.querySelector('script[type="text/tv-lazy"]');
     });
+
+    var PRAZO = 9000;   // ms de tolerancia contados a partir da injecao do script
+
+    function mensagem() {
+        var fb = document.createElement('div');
+        fb.className = 'tv-fallback';
+        fb.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;min-height:120px;color: var(--gold);font-size:12px;font-family:\'DM Mono\',monospace;text-align:center;padding:16px;';
+        fb.innerHTML = '<span><i class="fas fa-chart-line" style="display:block;font-size:22px;margin-bottom:8px;opacity:0.4"></i>Gráfico TradingView indisponível<br><span style="font-size:10px;opacity:0.6">Verifique sua conexão ou bloqueador de scripts</span></span>';
+        return fb;
+    }
+
+    function avisar(container) {
+        if (!container.querySelector('.tv-fallback')) container.appendChild(mensagem());
+    }
+
+    // Vigia um container ate o iframe nascer. MutationObserver e nao polling:
+    // dispara no exato instante da insercao e o mesmo callback resolve os dois
+    // casos — cancela o aviso pendente e remove o aviso que ja foi anexado.
+    function vigiar(container) {
+        var timer = null;
+        var mo = null;
+
+        function temIframe() { return !!container.querySelector('iframe'); }
+
+        function encerrar() {
+            if (timer) { clearTimeout(timer); timer = null; }
+            if (mo) { mo.disconnect(); mo = null; }
+        }
+
+        function veredito() {
+            timer = null;
+            if (temIframe()) { encerrar(); return; }
+            // Aba em background nao renderiza o widget: adiar o julgamento ate
+            // a aba voltar, senao os 25 containers viram falso positivo.
+            if (document.hidden) {
+                document.addEventListener('visibilitychange', function volta() {
+                    document.removeEventListener('visibilitychange', volta);
+                    timer = setTimeout(veredito, PRAZO);
+                });
+                return;
+            }
+            avisar(container);
+            // Segue vigiando de proposito: iframe atrasado apaga o aviso.
+        }
+
+        if ('MutationObserver' in window) {
+            mo = new MutationObserver(function () {
+                if (!temIframe()) return;
+                var velho = container.querySelector('.tv-fallback');
+                if (velho) velho.parentNode.removeChild(velho);
+                encerrar();
+            });
+            mo.observe(container, { childList: true, subtree: true });
+        }
+        timer = setTimeout(veredito, PRAZO);
+    }
 
     function ativar(container) {
         var inerte = container.querySelector('script[type="text/tv-lazy"]');
@@ -4130,7 +4188,10 @@ setTimeout(() => { desenharDonut(500000); desenharBenchmark(); }, 300);
         real.async = true;
         real.src = inerte.getAttribute('data-src');
         real.textContent = inerte.textContent;   // config JSON do widget
+        // Falha inequivoca: bloqueador ou rede derrubou o s3.tradingview.com.
+        real.onerror = function () { avisar(container); };
         inerte.parentNode.replaceChild(real, inerte);
+        vigiar(container);
     }
 
     // Sem IntersectionObserver, carrega tudo: degrada para o comportamento antigo.
@@ -5475,18 +5536,5 @@ if (document.readyState === 'loading') {
 })();
 </script>
 
-<script>
-// Fallback TradingView — se o widget não carregar em 9s, exibe mensagem
-setTimeout(function() {
-    document.querySelectorAll('.tradingview-widget-container').forEach(function(c) {
-        if (!c.querySelector('iframe')) {
-            var fb = document.createElement('div');
-            fb.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;min-height:120px;color: var(--gold);font-size:12px;font-family:\'DM Mono\',monospace;text-align:center;padding:16px;';
-            fb.innerHTML = '<span><i class="fas fa-chart-line" style="display:block;font-size:22px;margin-bottom:8px;opacity:0.4"></i>Gráfico TradingView indisponível<br><span style="font-size:10px;opacity:0.6">Verifique sua conexão ou bloqueador de scripts</span></span>';
-            c.appendChild(fb);
-        }
-    });
-}, 9000);
-</script>
 </body>
 </html>
