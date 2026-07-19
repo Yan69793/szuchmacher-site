@@ -9,7 +9,7 @@ window.SZ_CLARITY_ID = 'x89me5cgm8';
 window.SZ_FORMSPREE_ID    = 'mojrayrl';
 window.SZ_STRIPE_CARTA_URL = 'https://buy.stripe.com/test_14A3cx5BAfiG5dc5wVb3q01';
 window.SZ_STRIPE_PRO_URL = 'https://buy.stripe.com/test_aFadRb2po8Uiaxwf7vb3q02';
-window.SZ_KIWIFY_EBOOK_URL = '_PENDING'; /* substituir pela URL Kiwify após criar produto */
+
 
 /* Fase 1 stack — editar após criar contas (ver docs/CALCOM-SETUP.md) */
 window.SZ_WHATSAPP = '5521981088992';
@@ -17,8 +17,16 @@ window.SZ_CALCOM_URL = 'https://cal.com/_PENDING/szuchmacher-diagnostico';
 window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible cloud estiver ativo */
 
 (function () {
+  /* Um link so e considerado pronto se nao for placeholder E nao for checkout
+     de teste. As URLs buy.stripe.com/test_* passavam por aqui e sobrescreviam
+     o mailto dos CTAs de assinatura: o visitante caia num checkout que nunca
+     cobra. Com test_ reprovado, o botao volta ao fallback de e-mail ate as
+     URLs live entrarem. */
   function ready(v) {
-    return v && typeof v === 'string' && v.indexOf('_PENDING') === -1;
+    if (!v || typeof v !== 'string') return false;
+    if (v.indexOf('_PENDING') !== -1) return false;
+    if (/buy\.stripe\.com\/test_/.test(v)) return false;
+    return true;
   }
 
   window.SZ = window.SZ || {};
@@ -270,21 +278,8 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     });
   };
 
-  window.SZ.kiwifyEbookReady = ready(window.SZ_KIWIFY_EBOOK_URL);
-
-  window.SZ.wireEbookButtons = function () {
-    var mail = 'yan@szuchmacher.com.br';
-    document.querySelectorAll('[data-sz-ebook]').forEach(function (el) {
-      if (window.SZ.kiwifyEbookReady) {
-        el.href = window.SZ_KIWIFY_EBOOK_URL;
-        el.setAttribute('target', '_blank');
-        el.setAttribute('rel', 'noopener');
-      } else {
-        el.href = 'mailto:' + mail + '?subject=Interesse%20no%20Ebook%20de%20Estrat%C3%A9gias';
-        el.removeAttribute('target');
-      }
-    });
-  };
+  /* wireEbookButtons removido em 2026-07-18 junto com a pagina do ebook.
+     Nao resta nenhum [data-sz-ebook] no site. */
 
   window.SZ.wireStripeButtons = function () {
     var carta = document.querySelector('[data-stripe-carta]');
@@ -354,7 +349,6 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     }, true);
 
     window.SZ.wireStripeButtons();
-    window.SZ.wireEbookButtons();
     window.SZ.wireConversionLinks();
 
     document.addEventListener('click', function (e) {
