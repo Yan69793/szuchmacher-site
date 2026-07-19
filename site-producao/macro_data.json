@@ -1,88 +1,90 @@
 {
-  "generated_at": "21/06/2026, 10:00 BRT",
+  "generated_at": "18/07/2026 às 00:59 BRT",
   "data": {
-    "eyebrow": "Cenário Macro Brasil · Junho 2026",
-    "alert_title": "COPOM manteve Selic em 14,25% e FOMC reiterou postura restritiva: mercado aguarda PCE de maio como próximo catalisador",
-    "alert_text": "Com o Banco Central brasileiro mantendo a Selic em 14,25% a.a. na reunião de 17 de junho — em linha com o esperado — e o Federal Reserve reafirmando postura restritiva na mesma data, a semana de 22 a 26 de junho abre sem grandes ruídos de política monetária. O foco se desloca para o PCE de maio (indicador preferido do Fed, divulgado na sexta-feira 26/jun), que ditará o tom para a próxima janela do FOMC em julho. No Brasil, o IPCA-15 de junho (25/jun) medirá se as pressões de preços de maio arrefecem ou persistem acima do teto da meta de 4,5%. Câmbio estabilizado em torno de R$ 5,06 após absorver as duas decisões sem volatilidade relevante. Ativos defensivos e renda fixa seguem como âncora de portfólio em ambiente de juros elevados.",
-    "alert_badge": "COPOM 14,25% MANTIDA · FOMC HAWKISH · PCE 26/JUN",
+    "eyebrow": "Cenário Global · Julho 2026",
+    "alert_title": "S&P 500 recua 1,01% · WTI dispara +3,51% para US$81,72 · Ouro supera US$4.022 e Nikkei cede 2,79%",
+    "alert_text": "O pregão de 17 de julho marca deterioração de apetite a risco nos mercados desenvolvidos, com Nasdaq liderando perdas (-1,40%) e Nikkei sofrendo o maior recuo da sessão (-2,79%), possivelmente refletindo revisões de projeções de lucros em tecnologia e reprecificação de prêmio de risco global. O salto de 3,51% no WTI para US$81,72 introduz pressão inflacionária em momento delicado, com o Fed ainda em postura restritiva e o PCE ainda sendo monitorado como catalisador de corte; o recuo do Treasury 10Y para 4,541% (-0,61%) sugere flight-to-quality que atenua parcialmente a alta dos yields reais. No Brasil, o Ibovespa segurou o movimento vendedor global e fechou praticamente estável (-0,06%), mas o dólar avançou 0,45% para R$5,1136, risco que precifica o choque de commodities e a incerteza fiscal doméstica sobre o pano de fundo de Selic a 14,25%. Com petróleo mais alto pressionando IPCA via combustíveis e câmbio, o BCB deverá manter postura conservadora na próxima reunião do COPOM, postergando qualquer sinalização de afrouxamento para o quarto trimestre de 2026.",
+    "alert_badge": "COPOM — PRÓXIMA REUNIÃO AGO/2026",
     "canais": [
       {
         "variavel": "Petróleo (WTI/Brent)",
-        "direcao": "neutral",
-        "mecanismo": "Preços de energia global impactam diretamente a inflação de serviços e combustíveis no Brasil. Pressão altista em Brent (acima de USD 80/bbl) reforça núcleo inflacionário e justifica manutenção de juros elevados pelo BC. Depreciação do real amplifica efeito de pass-through para preços domésticos."
+        "direcao": "up",
+        "mecanismo": "Alta de 3,51% no WTI para US$81,72 eleva custo de combustíveis e fretes, pressionando IPCA de bens industriais e serviços de transporte no Brasil nos próximos 30-45 dias."
       },
       {
         "variavel": "Inflação Global",
         "direcao": "up",
-        "mecanismo": "Inflação persistente em economias desenvolvidas (EUA, Zona do Euro) reduz espaço para cortes de juros globais. Banco Central europeu e Fed mantêm ciclo restritivo, elevando custo de capital internacional e pressionando emergentes. Brasil importa pressões inflacionárias via câmbio e commodities. PCE de maio (26/jun) é o próximo dado decisivo para o ritmo de afrouxamento global."
+        "mecanismo": "Choque de petróleo combinado com ouro acima de US$4.022 sinaliza que agentes continuam precificando risco inflacionário estrutural; desinflação global perde momentum, reduzindo espaço para cortes de juros nas economias centrais."
       },
       {
         "variavel": "Juros (Fed / BCB)",
-        "direcao": "up",
-        "mecanismo": "FOMC manteve Fed Funds na reunião de 17/jun, reiterando postura restritiva com viés 'higher for longer' no dot plot. COPOM manteve Selic em 14,25% a.a. na mesma data, sinalizando que a pausa no ciclo de aperto se estende enquanto o IPCA não convergir para a meta. Diferencial de juros Brasil-EUA permanece elevado. PCE de maio (26/jun) e Boletim Focus (22/jun) são os próximos calibradores do timing do primeiro corte."
+        "direcao": "neutral",
+        "mecanismo": "Fed mantém postura restritiva aguardando PCE; BCB, com Selic em 14,25% e petróleo em alta, não tem espaço para sinalizar corte no curto prazo, mantendo a curva DI inclinada na parte longa."
       },
       {
         "variavel": "PIB Global",
         "direcao": "down",
-        "mecanismo": "Crescimento global desacelera em contexto de juros elevados e incerteza geopolítica. Demanda por commodities arrefece, reduzindo preços e receitas de exportação brasileiras. Economia brasileira sofre duplo impacto: juros altos domésticos e fraco crescimento externo limitam expansão. GDP Q1 EUA — 3ª estimativa (25/jun) — calibra a força da atividade subjacente."
+        "mecanismo": "Queda simultânea de S&P 500, Nasdaq, DAX e Nikkei aponta para revisão baixista de expectativas de crescimento global; alta de energia comprime margem das firmas e renda real das famílias nos países importadores."
       },
       {
         "variavel": "Dólar (DXY)",
-        "direcao": "up",
-        "mecanismo": "Índice do dólar permanece forte, sustentado por diferenciais de juros EUA-emergentes e flight-to-safety. Pressiona moedas de mercados em desenvolvimento, incluindo real. Expectativa de depreciação do BRL para R$ 5.20 reflete este cenário de fortalecimento relativo do dólar."
+        "direcao": "neutral",
+        "mecanismo": "Treasury 10Y recuando (-0,61%) limita a sustentação do dólar via diferencial de juros; petróleo mais alto favorece moedas de países exportadores, criando dinâmica mista para o DXY."
       },
       {
         "variavel": "Real (BRL)",
         "direcao": "down",
-        "mecanismo": "Real estabilizado em R$ 5,06 após absorver COPOM e FOMC sem surpresas. Expectativa de depreciação para R$ 5,20 até fim de 2026 mantida, pressionada por fluxos de capital, déficit em conta corrente e dólar forte globalmente. Juros elevados no Brasil não compensam risco cambial percebido. PCE de maio pode provocar volatilidade adicional no câmbio via ajuste de expectativas para o Fed."
+        "mecanismo": "BRL depreciou 0,45% para R$5,1136 em sessão de risk-off global; pressão combinada de incerteza fiscal doméstica, alta do dólar e aversão a risco emergente mantém viés de enfraquecimento no curto prazo."
       },
       {
         "variavel": "Ouro",
         "direcao": "up",
-        "mecanismo": "Ouro se beneficia de juros reais comprimidos e incerteza geopolítica. Decisões de manutenção de juros tanto do FOMC quanto do COPOM reforçam o ambiente de 'higher for longer', sustentando a demanda por hedge inflacionário e cambial. Depreciação do real torna ouro mais atrativo para investidores brasileiros."
+        "mecanismo": "Ouro acima de US$4.022 (+0,92%) confirma demand estrutural por hedge contra inflação e risco geopolítico; flight-to-quality em sessão de queda dos índices amplifica o movimento altista."
       },
       {
         "variavel": "Bitcoin",
-        "direcao": "neutral",
-        "mecanismo": "Bitcoin oscila entre pressões de juros elevados (reduz apetite por risco) e narrativa de hedge inflacionário. Volatilidade elevada reflete incerteza macro global. No Brasil, depreciação do real pode atrair investidores buscando proteção cambial, mas juros reais altos competem com criptoativos."
+        "direcao": "down",
+        "mecanismo": "Ambiente de risk-off com queda de Nasdaq e tecnologia pressiona ativos de alto beta como criptomoedas; correlação com renda variável tecnológica tende a ser negativa neste tipo de sessão."
       }
     ],
     "brasil": [
       {
-        "label": "SELIC e COPOM",
-        "text": "Banco Central manteve a Selic em 14,25% a.a. na reunião de 17 de junho, confirmando a pausa no ciclo de aperto. Comunicado reafirmou vigilância sobre a inflação: IPCA projetado em 5,3% permanece acima da meta de 3% (teto 4,5%), justificando cautela prolongada. Mercado precifica redução gradual para 13,75% até dezembro, mas o ritmo depende da trajetória de inflação de serviços e núcleo. Próxima reunião do COPOM: julho. Boletim Focus de 22/jun e IPCA-15 de 25/jun são os primeiros dados pós-decisão — qualquer surpresa altista consolida a pausa até agosto ou além."
+        "label": "SELIC e COPOM — Reunião Agosto 2026",
+        "text": "O COPOM manteve a Selic em 14,25% na última reunião, sinalizando que o ciclo de aperto chegou ao fim, mas sem antecipar cortes diante da persistência inflacionária nos serviços. O choque de petróleo observado nesta sessão (+3,51% no WTI) deteriora marginalmente o balanço de riscos do BCB, pois combustíveis e energia têm peso relevante no IPCA. A apreciação do dólar para R$5,1136 adiciona pressão via bens tradables, dificultando a convergência da inflação à meta no horizonte relevante. Para a reunião de agosto, o cenário base é manutenção em 14,25%, com linguagem que preserva cautela prolongada antes de qualquer afrouxamento."
       },
       {
         "label": "Câmbio e Contas Externas",
-        "text": "PTAX em R$ 5,0641 (17/06), estabilizado após absorver as decisões do COPOM e do FOMC sem volatilidade relevante. A ausência de surpresas nas duas reuniões de 17/jun reduziu o ruído de curto prazo. Expectativa de depreciação estrutural para R$ 5,20 até fim de 2026 mantida, pressionada por déficit em conta corrente, fluxos de IED reduzidos e dólar forte globalmente. PCE de maio (26/jun) é o próximo catalisador externo com capacidade de mover o câmbio de forma relevante."
+        "text": "O real fechou em R$5,1136 (+0,45%) em sessão marcada por aversão a risco global e alta de commodities energéticas, que paradoxalmente não beneficiaram o BRL dada a dominância do canal de risco emergente. O Brasil é importador líquido de petróleo refinado, de modo que a alta do WTI deteriora o saldo da balança comercial em produtos petroquímicos e combustíveis processados. A volatilidade cambial permanece elevada enquanto o mercado aguarda definição sobre o arcabouço fiscal e a trajetória da dívida pública, fatores que sustentam um piso estrutural para o dólar acima de R$5,00. Fluxos de investimento estrangeiro em renda fixa local continuam sendo suporte parcial, mas insuficientes para reverter a tendência de enfraquecimento do BRL sem âncora fiscal crível."
       },
       {
-        "label": "Renda Fixa — Prêmio em NTN-B e DI longo",
-        "text": "Com Selic mantida em 14,25% e FOMC sem surpresas, a curva DI absorveu as decisões sem disrupção. NTN-B permanece atrativa (IPCA + 5-6% a.a. em prazos longos), refletindo desconfiança do mercado com ancoragem de expectativas. DI longo (2027-2028) oferece oportunidades com possibilidade de ganho de capital caso Selic ceda conforme FOCUS. PCE americano de 26/jun é o próximo evento com capacidade de reconfigurar o pricing global de juros e afetar o diferencial Brasil-EUA. Boletim Focus de 22/jun atualizará as medianas pós-COPOM."
+        "label": "Renda Fixa — NTN-B e Curva DI sob Pressão de Petróleo",
+        "text": "A curva DI deve precificar manutenção prolongada da Selic, com os vértices mais longos respondendo negativamente ao choque de petróleo e à leitura hawkish que ele impõe ao BCB. As NTN-B continuam como ativo preferencial para proteção inflacionária em carteiras de longo prazo, especialmente com IPCA implícito devendo incorporar a alta de energia nas próximas semanas. O crédito privado de alta qualidade (FIDC senior, debêntures AAA) mantém atratividade via spread sobre CDI, com duration curta protegendo contra volatilidade de taxa. Fundos de inflação (IMA-B 5+) devem sofrer marcação negativa no curto prazo caso a curva de juros reais se desloque para cima em resposta ao cenário de petróleo elevado."
       },
       {
-        "label": "Atividade e Fiscal",
-        "text": "PIB real projetado em 1,96% para 2026, refletindo fraco dinamismo econômico. Consumo desacelera com juros elevados, enquanto investimento permanece contido. Setor público enfrenta pressão fiscal, com gastos obrigatórios crescentes e receitas limitadas. Mercado monitora trajetória de dívida pública e possíveis medidas de consolidação fiscal. Desemprego permanece elevado, limitando recuperação de renda. Cenário de estagflação leve (baixo crescimento + inflação persistente) pressiona margens corporativas."
+        "label": "Commodities e Setor Externo — Minério Estável, Petróleo como Vetor Dominante",
+        "text": "O minério de ferro recuou marginalmente para US$98,81 (-0,07%), mantendo-se abaixo do patamar de US$100 que garante margens confortáveis para as grandes mineradoras brasileiras. A ausência de dados do Shanghai Composite nesta sessão impede leitura precisa do apetite chinês por minério, mas o contexto de moderação do crescimento de Pequim mantém viés neutro para a commodity. O petróleo, por outro lado, emerge como o vetor macro dominante da sessão: a alta de 3,51% no WTI reflete tensões de oferta que beneficiam exportadores como Petrobras, mas penalizam o saldo de derivados da conta corrente brasileira. O ouro acima de US$4.022 reforça a demanda por ativos reais em contexto de incerteza, favorecendo fundos de metais preciosos na alocação local."
       }
     ],
     "beneficiados": [
-      "<strong>Ouro e Metais Preciosos</strong> — hedge inflacionário e cambial em ambiente de juros reais comprimidos e depreciação do real",
-      "<strong>Renda Fixa Prefixada (DI longo)</strong> — possibilidade de ganho de capital com redução de Selic conforme FOCUS, além de fluxo de caixa atrativo",
-      "<strong>NTN-B (Tesouro Inflacionário)</strong> — prêmio de inflação elevado (5-6% a.a.) compensa desconfiança com ancoragem de expectativas",
-      "<strong>Setores Defensivos (Utilities, Consumo Essencial)</strong> — fluxos de caixa previsíveis em ambiente de juros elevados e crescimento fraco",
-      "<strong>Dólar e Ativos em Moeda Estrangeira</strong> — depreciação do real cria oportunidades de hedge cambial para investidores brasileiros"
+      "<strong>Petrobras (PETR3/PETR4)</strong> — WTI +3,51% amplia margem de refino e receita de E&P no curto prazo",
+      "<strong>Fundos de Ouro e ETFs de Metais Preciosos</strong> — ouro acima de US$4.022 com flight-to-quality ativo",
+      "<strong>Exportadores em dólar (agro, celulose)</strong> — BRL mais fraco a R$5,1136 eleva receita em reais",
+      "<strong>NTN-B e Fundos IPCA+</strong> — choque de petróleo pressionará IPCA, valorizando proteção inflacionária longa",
+      "<strong>FTSE 100 e empresas britânicas de energia</strong> — único índice europeu no positivo (+0,27%), sustentado por peso em commodities"
     ],
     "penalizados": [
-      "<strong>Ações Cíclicas e Small Caps</strong> — crescimento fraco (1,96% PIB) e juros elevados reduzem múltiplos de valuation e apetite por risco",
-      "<strong>Crédito Corporativo (BBB- e abaixo)</strong> — spread elevado reflete desconfiança com solvência em cenário de atividade fraca e juros altos",
-      "<strong>Imobiliário Residencial</strong> — juros elevados reduzem demanda por financiamento imobiliário e pressionam preços de imóveis",
-      "<strong>Setores Exportadores (ex-commodities)</strong> — depreciação do real não compensa fraco crescimento global e redução de demanda externa",
-      "<strong>Bitcoin e Criptoativos</strong> — juros reais elevados competem com ativos sem fluxo de caixa, reduzindo atratividade relativa"
+      "<strong>Tecnologia (Nasdaq/BVMF growth)</strong> — recuo de 1,40% no Nasdaq represa múltiplos e fluxo para o segmento",
+      "<strong>Companhias aéreas e transportadoras</strong> — custo de combustível avança com WTI a US$81,72, comprimindo margens",
+      "<strong>Construtoras e consumo discricionário</strong> — Selic mantida alta por mais tempo reduz crédito e poder de compra",
+      "<strong>Importadores e indústria petroquímica</strong> — petróleo mais caro eleva custo de matéria-prima em dólar com BRL depreciado",
+      "<strong>Títulos prefixados longos (LTN)</strong> — risco de alta de inflação e postura hawkish do BCB pressiona PU dos prefixados"
     ],
     "cenarios_brent": [
-      "<strong>Cenário 1 — Brent acima de USD 85/bbl:</strong> Pressão inflacionária amplificada via combustíveis e energia, forçando BC a manter Selic elevada por mais tempo. Depreciação do real se intensifica, elevando pass-through de preços internacionais. Margens corporativas sofrem compressão adicional.",
-      "<strong>Cenário 2 — Brent entre USD 75-80/bbl (Base):</strong> Inflação de energia moderada permite trajetória de redução gradual de Selic conforme FOCUS. Câmbio deprecia para R$ 5,20 de forma ordenada. Ambiente favorável para renda fixa prefixada e NTN-B com ganho de capital.",
-      "<strong>Cenário 3 — Brent abaixo de USD 70/bbl:</strong> Alívio inflacionário permite aceleração de cortes de Selic, potencialmente abaixo de 13,75%. Real se estabiliza ou aprecia, reduzindo pressão de custos. Ações cíclicas e crédito corporativo se beneficiam de ambiente mais favorável. Ouro perde atratividade relativa."
+      "<strong>Cenário 1 — Normalização Gradual (US$75–80):</strong> Oferta OPEP+ estabiliza e demanda global modera com desaceleração nos EUA e China; Brent recua para a faixa de equilíbrio, aliviando pressão inflacionária global. BCB ganha espaço para sinalizar início de corte de Selic no 4T26, favorecendo NTN-B curtas e crédito privado.",
+      "<strong>Cenário 2 — Patamar Elevado Persistente (US$82–90):</strong> Tensões geopolíticas no Oriente Médio ou cortes adicionais da OPEP+ sustentam Brent elevado por 60-90 dias; IPCA brasileiro recebe choque de 0,3–0,5 p.p. via combustíveis, forçando BCB a manter Selic inalterada até o 1T27. Petrobras beneficiada; consumo doméstico penalizado.",
+      "<strong>Cenário 3 — Choque de Oferta Severo (acima de US$95):</strong> Conflito geopolítico interrompe rotas de exportação do Golfo Pérsico; Brent dispara acima de US$95, reavivando estagflação global. Fed posterga qualquer corte, Treasury 10Y volta a 5%+, emergentes sofrem forte saída de fluxos e BRL pode testar R$5,50.",
+      "<strong>Cenário 4 — Colapso da Demanda (abaixo de US$70):</strong> Recessão técnica nos EUA ou hard landing chinês derruba demanda global por energia; Brent recua abaixo de US$70, aliviando inflação mas sinalizando contração de crescimento. Ambiente deflacionário favorece cortes de juros globais, mas penaliza exportadores brasileiros de commodities e reduz receita da Petrobras.",
+      "<strong>Cenário 5 — Alta com Dólar Forte (US$82–88 + DXY acima de 105):</strong> Petróleo sobe em dólar forte simultaneamente; BRL sofre dupla pressão (commodity cara + DXY elevado), levando câmbio para R$5,30–5,50. Inflação de importados se soma à pressão de combustíveis, inviabilizando cortes de Selic em 2026 e elevando risco de desancoragem de expectativas no Boletim Focus."
     ],
     "ativos": {
       "ouro": {

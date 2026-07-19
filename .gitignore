@@ -11,6 +11,11 @@ node_modules/
 # site-producao/assets/img/. Mantidos localmente só para regerar em outro tamanho.
 _fontes-img/
 
+# Artefatos gerados pelas skills de auditoria (~67 MB de PNG e JSON).
+# Reproduzíveis a qualquer momento; versionar só faz o repositório crescer.
+site-producao/diagnosticos/
+agenda-corrigida.png
+
 # Credenciais — nunca versionar. Guardar em gerenciador de senhas, não em arquivo.
 *.key
 *.pem

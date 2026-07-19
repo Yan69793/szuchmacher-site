@@ -1,36 +1,36 @@
 {
-    "generated_at": "2026-07-06 19:12:55",
-    "date_label": "Fechamento · semana encerrada em 06 jul 2026",
-    "eyebrow": "Fechamento da semana",
-    "h2": "Leitura semanal dos vetores que movem preços",
+    "generated_at": "2026-07-17 20:36:14",
+    "date_label": "Fechamento de sexta, 17 jul 2026",
+    "eyebrow": "Fechamento do dia",
+    "h2": "Leitura diária dos vetores que movem preços",
     "prices": {
         "ibovespa": {
-            "value": "172.448",
-            "change_pct": "-0,93%",
-            "label": "Sexta · -0,93%"
+            "value": "173.714",
+            "change_pct": "-0,06%",
+            "label": "Sexta · -0,06%"
         },
         "usd_brl": {
-            "value": "5,1282",
-            "change_pct": "-0,79%",
-            "label": "Sexta · -0,79%"
+            "value": "5,1092",
+            "change_pct": "+0,17%",
+            "label": "Sexta · +0,17%"
         },
         "sp500": {
-            "value": "7.537,43",
-            "change_pct": "+0,72%",
-            "label": "Sexta · +0,72%"
+            "value": "7.457,69",
+            "change_pct": "-1,01%",
+            "label": "Sexta · -1,01%"
         },
         "wti": {
-            "value": "68,68",
-            "change_pct": "+0,19%",
-            "label": "Sexta · +0,19%"
+            "value": "81,78",
+            "change_pct": "+3,58%",
+            "label": "Sexta · +3,58%"
         }
     },
     "report": {
-        "headline": "Ibovespa fecha sexta em baixa de 0,93%, aos 172.448 pontos; dólar recua a R$ 5,13 e petróleo (WTI) sobe a US$ 68,68",
-        "paragraph1": "Ibovespa em queda no primeiro pregão da semana, na contramão dos recordes renovados em Wall Street. O índice recuou 0,93%, aos 172.448 pontos, pressionado por Petrobras e Vale.",
-        "paragraph2": "O dólar cedeu 0,79%, cotado a R$ 5,13, de volta abaixo dos R$ 5,15, no compasso do enfraquecimento da moeda americana no exterior.",
-        "paragraph3": "Liquidez reduzida e sinais de atividade industrial morna mantiveram o foco local na expectativa de corte de juros pelo Copom.",
-        "next_week": "07/07, 08h00 Brasil, IGP-DI de junho pela FGV. 07/07, 09h30 Estados Unidos, Balança comercial de maio. 07/07, 11h00 Brasil, Produção e vendas de veículos pela Anfavea",
-        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes à semana encerrada em 06 jul 2026."
+        "headline": "Ibovespa fecha sexta em baixa de 0,06%, aos 173.714 pontos; dólar sobe a R$ 5,11 e petróleo (WTI) sobe a US$ 81,78",
+        "paragraph1": "O Ibovespa driblou a aversão global ao risco nesta sexta-feira e fechou praticamente estável, em queda de 0,06%, aos 173.714 pontos, sustentado pela alta de 2,5% da Petrobras, que acompanhou a disparada do petróleo. Na semana, o índice acumulou perda de 2,33%. O dólar subiu 0,25%, a R$ 5,1109, depois de tocar R$ 5,1328 na máxima do dia.",
+        "paragraph2": "Em Nova York, o S&amp;P 500 caiu 1,01% e fechou sua primeira semana negativa em várias semanas, com os semicondutores em queda pelo terceiro dia seguido. O índice do setor na Filadélfia acumula recuo de 23,5% desde o recorde de 22 de junho. O Nasdaq-100 perdeu 1,49% e o Dow cedeu 0,77%.",
+        "paragraph3": "A Ásia concentrou as perdas mais pesadas. O Nikkei despencou 4,03%, aos 64.141 pontos, e já acumula queda de 12% desde o pico recente, Xangai perdeu 3,05% e Taiwan caiu mais de 6%, no pior pregão desde abril de 2025.",
+        "next_week": "Segunda-feira, 08h25, Brasil, Boletim Focus, medianas semanais do mercado para Selic, IPCA, câmbio e PIB (Banco Central). Na semana, Brasil, prévias operacionais de Vale e Petrobras, que antecedem o início da temporada de balanços do segundo trimestre. Na semana, Europa, decisão de juros do Banco Central Europeu, além do acompanhamento das negociações entre Brasil e Estados Unidos sobre a tarifa de 25%.",
+        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes ao pregão de 17 jul 2026."
     }
 }
