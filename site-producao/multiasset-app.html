@@ -141,6 +141,12 @@
             transition: color 0.2s;
         }
         .nav-links a:hover { color: var(--text); }
+        /* Ultimo item sai do dominio: hairline a esquerda separa a navegacao
+           interna do link para o site institucional, e o ouro marca que e um
+           destino diferente sem precisar de icone. */
+        .nav-links .nav-institucional { border-left: 1px solid var(--border); padding-left: 28px; }
+        .nav-links .nav-institucional a { color: var(--gold); }
+        .nav-links .nav-institucional a:hover { color: var(--text); }
         .nav-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
 
         .hero {
@@ -1505,6 +1511,7 @@
         <li><a href="#simuladores">Simuladores</a></li>
         <li><a href="#alocacao">Alocação</a></li>
         <li><a href="/consultoria" data-ga="nav_consultoria" data-ga-location="nav">Consultoria</a></li>
+        <li class="nav-institucional"><a href="https://szuchmacher.com.br/" data-ga="nav_site_institucional" data-ga-location="nav">Szuchmacher Consultoria</a></li>
     </ul>
     <div class="nav-time mono" id="nav-clock">--:--:--</div>
 </nav>
@@ -2952,6 +2959,9 @@
                 <li><a href="#alocacao">Alocação</a></li>
                 <li><a href="#panorama">Panorama Macro</a></li>
                 <li><a href="#panorama">Macro</a></li>
+                <!-- .nav-links some abaixo de 900px, entao no mobile este e o
+                     unico caminho de volta para o site institucional. -->
+                <li><a href="https://szuchmacher.com.br/" data-ga="footer_site_institucional" data-ga-location="footer">Szuchmacher Consultoria <i class="fas fa-external-link-alt" style="font-size:9px;opacity:0.5;margin-left:4px;"></i></a></li>
             </ul>
         </div>
         <div class="footer-col">
