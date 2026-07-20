@@ -14,9 +14,17 @@ function Reset-Dir([string]$Path) {
     New-Item -ItemType Directory -Path $Path -Force | Out-Null
 }
 
+# Arquivos que sumiram do source durante o build. O build antigo so imprimia
+# SKIP em amarelo e seguia, entao um arquivo movido ou renomeado virava 404 em
+# producao sem ninguem perceber. Foi assim que sitemap.xml, og-cover.jpg,
+# logo.png, macro_data.json, relatorio_cache.json e a consultoria.html cairam
+# em 19/07/2026. Agora o build falha e o deploy nao chega a rodar.
+$script:Faltando = @()
+
 function Copy-IfExists([string]$Src, [string]$Dst) {
     if (-not (Test-Path $Src)) {
         Write-Host "  SKIP   $Src" -ForegroundColor Yellow
+        $script:Faltando += $Src
         return $false
     }
     $parent = Split-Path $Dst -Parent
@@ -29,6 +37,7 @@ function Copy-IfExists([string]$Src, [string]$Dst) {
 function Copy-Tree([string]$Src, [string]$Dst, [string]$Filter) {
     if (-not (Test-Path $Src)) {
         Write-Host "  SKIP   $Src" -ForegroundColor Yellow
+        $script:Faltando += "$Src ($Filter)"
         return $false
     }
     if (-not (Test-Path $Dst)) { New-Item -ItemType Directory -Path $Dst -Force | Out-Null }
@@ -76,6 +85,10 @@ Copy-IfExists (Join-Path $ROOT 'macro_data.json') (Join-Path $MULTI 'macro_data.
 Copy-IfExists (Join-Path $ROOT 'og-cover.jpg') (Join-Path $MULTI 'og-cover.jpg') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\sz-config.js') | Out-Null
 
+# Imagética institucional (assets/img/*.webp), tambem usada em consultoria.html.
+# Mesmo diretorio inteiro do bloco sz, sem allowlist propria.
+Copy-Tree (Join-Path $ROOT 'assets\img') (Join-Path $MULTI 'assets\img') '*.webp' | Out-Null
+
 # Demo em video do painel (mp4 + webm + poster). Gerada por scripts\encodar-demo.ps1
 Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.mp4'  | Out-Null
 Copy-Tree (Join-Path $ROOT 'assets\video') (Join-Path $MULTI 'assets\video') '*.webm' | Out-Null
@@ -89,4 +102,25 @@ foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
     Copy-IfExists (Join-Path $ROOT $f) (Join-Path $MULTI $f) | Out-Null
 }
 
-Write-Host "`nBuild concluido: $OUT" -ForegroundColor Green
+# --- Verificacao de saida -----------------------------------------------------
+# Confere o resultado em public/, nao a lista de copias. Pega tambem o caso em
+# que a copia falhou sem erro, que a contagem de SKIP sozinha nao pegaria.
+$obrigatorios = @(
+    'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
+    'sz\privacidade.html', 'sz\radar-roic.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
+    'sz\logo.png', 'sz\macro_data.json', 'sz\relatorio_cache.json', 'sz\agenda-data.json',
+    'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
+    'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
+    'multi\og-cover.jpg', 'multi\assets\sz-config.js'
+)
+$ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })
+
+if ($script:Faltando.Count -gt 0 -or $ausentes.Count -gt 0) {
+    Write-Host "`n=== BUILD REPROVADO ===" -ForegroundColor Red
+    foreach ($f in $script:Faltando) { Write-Host "  fonte ausente:  $f" -ForegroundColor Red }
+    foreach ($f in $ausentes)        { Write-Host "  saida ausente:  $f" -ForegroundColor Red }
+    throw "Build incompleto. Deploy abortado para nao publicar 404 em producao."
+}
+
+Write-Host "`n$($obrigatorios.Count) arquivos obrigatorios conferidos em public/." -ForegroundColor DarkGray
+Write-Host "Build concluido: $OUT" -ForegroundColor Green
