@@ -104,3 +104,14 @@ node atualizar.js
 | `site-producao/scripts/deploy.sh` | Publicação via FTP |
 | `automacao-yan-os/main.py` | Orquestrador do pipeline diário |
 | `atualizador-relatorios/atualizar.js` | Atualiza relatório de fechamento |
+
+---
+
+## Controle remoto (automação na nuvem)
+
+O site é atualizado **sozinho, na nuvem**, via Claude Code Remote — sem depender
+do PC ligado. A rotina `szuchmacher-domingo` publica `macro_data.json` e
+`agenda-data.json` toda semana. Como criar, listar, pausar ou remover rotinas
+(e o catálogo das ferramentas do MCP): **[`docs/controle-remoto-claude-code.md`](docs/controle-remoto-claude-code.md)**.
+
+> Segredos (FTP/API) **nunca** entram no repo nem no prompt versionado de uma rotina.

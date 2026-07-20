@@ -1,0 +1,47 @@
+{
+  "name": "create_trigger",
+  "description": "Create a Routine (scheduled trigger). Three targeting modes: (1) default — fires into THIS SESSION, resuming the same conversation each time; (2) persistent_session_id set — fires into a SPECIFIC OTHER SESSION you name (must be in your account); (3) create_new_session_on_fire=true — spawns a FRESH SESSION in this environment on each firing. Use mode 1 for recurring work you want to pick back up yourself; mode 2 for waking a sibling session you created; mode 3 when each firing should start from a clean slate.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Human-readable Routine name."
+      },
+      "prompt": {
+        "type": "string",
+        "description": "The message the Routine sends on each firing. When binding to an existing session (modes 1-2), write it assuming past context. In fresh-session mode (mode 3), write it as a complete standalone instruction since each firing starts from nothing."
+      },
+      "cron_expression": {
+        "type": "string",
+        "description": "Standard 5-field cron expression. Minimum interval is hourly. Mutually exclusive with run_once_at. Omit both for a poke-only Routine that never fires on its own schedule."
+      },
+      "run_once_at": {
+        "type": "string",
+        "description": "RFC3339 timestamp for a one-shot fire (e.g. 2026-04-20T17:00:00Z). Must be in the future. Mutually exclusive with cron_expression."
+      },
+      "persistent_session_id": {
+        "type": "string",
+        "description": "Optional session ID to fire into instead of this one. Must belong to the same account. Mutually exclusive with create_new_session_on_fire."
+      },
+      "create_new_session_on_fire": {
+        "type": "boolean",
+        "description": "If true, each firing creates a fresh session in the calling session's environment. Default false. Mutually exclusive with persistent_session_id."
+      },
+      "environment_id": {
+        "type": "string",
+        "description": "Environment ID (starts with 'env_'). Defaults to the calling session's environment."
+      },
+      "notifications": {
+        "type": "object",
+        "description": "Completion notifications. Only apply to fresh-session-per-fire Routines. Pass {} to opt out of all channels.",
+        "properties": {
+          "push": { "type": "boolean" },
+          "email": { "type": "boolean" }
+        }
+      }
+    },
+    "required": ["name", "prompt"]
+  }
+}

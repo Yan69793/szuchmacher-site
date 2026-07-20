@@ -1,0 +1,19 @@
+{
+  "name": "add_repo",
+  "description": "Add a GitHub repository to the current session so you can read, clone, or operate on it alongside the repos already in the session. Invoke ONLY when the user explicitly asks to add a repo. The backend performs the real reachability + authorization check and returns a structured error or a clone command. Do not pre-check the repo with curl/gh/git ls-remote before calling — unauthenticated 404s on private repos are misleading.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "description": "GitHub owner (user or organization) of the repo to add."
+      },
+      "repo": {
+        "type": "string",
+        "description": "GitHub repo name (do not include the owner prefix — pass owner and repo separately)."
+      }
+    },
+    "required": ["owner", "repo"]
+  }
+}

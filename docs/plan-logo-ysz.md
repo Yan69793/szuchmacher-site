@@ -5,6 +5,34 @@ Escopo desta fase: **Site institucional** (`E:\Diretorio\Claude\Site\site-produc
 Fases seguintes (após aprovação visual desta): VIX Radar, Jarvis, graphify, Radar Quant Brasil, MultiAsset-Supabase.
 Fora de escopo (decidido): Jornada Interior (marca "Maia Veras", incompatível).
 
+## Status: ✅ implementado e verificado (2026-07-19)
+
+O plano foi executado em `ae1cd14` (2026-07-12, "feat(brand): implementa logo YSZ") e refinado pela unificação
+de design system de `2026-07-18` ("craft v2"). Revarredura completa nesta sessão confirmou, arquivo por arquivo:
+
+- **Grupo A (CSS)** — bloco `.ysz-lockup`/`.ysz-stack` presente em `assets/sz-design.css` (fonte canônica,
+  consumida via `<link>` por `relatorios.html`, `honorarios.html`, `assinatura.html`, `radar-roic.html`) e também
+  duplicado localmente em `multiasset.html`, `privacidade.html`, `consultoria.html` — redundante mas inofensivo.
+- **Grupo B (fontes)** — Playfair Display + Manrope carregadas nas 8 páginas do escopo.
+- **Grupo C (markup)** — `.brand-lockup`/`.nav-logo`+`.logo-icon`/`.nav-brand` zerados em todas as páginas do
+  escopo; `multiasset-app.html` corretamente intocado (identidade própria "MultiAsset / Plataforma").
+- **Grupo D (favicon/assets)** — `favicon.svg` bate com o mockup (quadrado navy, moldura dourada, "YS" creme);
+  `favicon.ico` e `apple-touch-icon.png` (180×180) regenerados; `assets/brand/avatar-square-512.png` e
+  `avatar-round-512.png` entregues; as 3 tags de favicon presentes nas 8 páginas.
+- **Grupo E (verificação)** — varredura `grep` equivalente ao `Select-String` da Task E2 confirma zero
+  ocorrências de markup vivo com as classes antigas fora de `multiasset-app.html`.
+
+**Ressalva encontrada (não corrigida — fora do pedido, risco zero):** `assinatura.html`, `consultoria.html`,
+`honorarios.html`, `multiasset.html` e `privacidade.html` ainda têm **seletores CSS órfãos** (`.nav-brand`,
+`.nav-logo`, `.logo-icon` etc.) sem nenhum elemento correspondente no markup — herança das versões antigas,
+sem efeito visual ou funcional. Limpeza é opcional; não realizada aqui por não fazer parte do objetivo do plano
+(identidade visual + favicon).
+
+A "Pendência registrada" no final deste documento (unificação de tokens de cor/fonte) segue **parcialmente
+aberta**: `relatorios.html` ainda carrega alguns valores hardcoded antigos (`#0a1428`/`#92703a`/`#eef0f4`) ao
+lado dos tokens canônicos — consistente com a decisão já registrada de tratar como item separado, fora deste
+escopo.
+
 ## Goal
 
 Substituir as 3 variantes atuais de marca em texto (`.brand-lockup`, `.nav-logo`+`.logo-icon`, `.nav-brand`) por um

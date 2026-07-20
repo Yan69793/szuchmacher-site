@@ -1,0 +1,19 @@
+{
+  "name": "list_repos",
+  "description": "List repositories the current user has access to. Returns repo full_name (owner/repo), URL, and metadata such as visibility and last-push time. Use this to pick a repo for create_session sources, or to discover what's available before asking the user.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Optional case-insensitive substring matched against full_name (owner/repo). Empty matches everything."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum number of repos to return (default 50, max 200). Applied after the query filter."
+      }
+    },
+    "required": []
+  }
+}

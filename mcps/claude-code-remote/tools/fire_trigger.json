@@ -1,0 +1,19 @@
+{
+  "name": "fire_trigger",
+  "description": "Fire a Routine (scheduled trigger) immediately, outside of its schedule. The Routine must belong to the calling session's account. Optionally include a text message that is appended as an extra user turn after the Routine's configured prompt, to pass run-specific context into that one firing.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "trigger_id": {
+        "type": "string",
+        "description": "The Routine's trigger ID (starts with 'trig_')."
+      },
+      "text": {
+        "type": "string",
+        "description": "Optional text appended as an extra user message after the Routine's configured prompt. Bounded to 64 KiB."
+      }
+    },
+    "required": ["trigger_id"]
+  }
+}

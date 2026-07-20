@@ -1,0 +1,23 @@
+{
+  "name": "register_repo_root",
+  "description": "Tell the session that a repo attached via add_repo has finished cloning, so its CLAUDE.md, skills, and plugins load on the next turn. Only call immediately after a successful clone that add_repo instructed you to run — it returns a tool error for a repo that is not already in this session's sources.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "description": "GitHub owner of the repo that was just cloned (same value passed to add_repo)."
+      },
+      "repo": {
+        "type": "string",
+        "description": "GitHub repo name that was just cloned (same value passed to add_repo)."
+      },
+      "directory": {
+        "type": "string",
+        "description": "Absolute path of the clone on disk."
+      }
+    },
+    "required": ["owner", "repo", "directory"]
+  }
+}

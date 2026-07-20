@@ -1,0 +1,15 @@
+{
+  "name": "list_environments",
+  "description": "List Claude Code Remote environments for the current user. Returns environment IDs, names, kinds, and states. Use this to pick an environment_id for create_trigger (fresh-session mode) or create_session.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "limit": {
+        "type": "integer",
+        "description": "Maximum number of environments to return (default 20, max 100)."
+      }
+    },
+    "required": []
+  }
+}

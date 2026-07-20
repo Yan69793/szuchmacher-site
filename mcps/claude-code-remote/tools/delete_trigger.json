@@ -1,0 +1,15 @@
+{
+  "name": "delete_trigger",
+  "description": "Delete a Routine (scheduled trigger). The Routine must belong to the calling session's account. Use this to undo a create_trigger call (bad cron, wrong prompt) or to clean up Routines whose work is done.",
+  "inputSchema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "trigger_id": {
+        "type": "string",
+        "description": "The Routine's trigger ID to delete (starts with 'trig_')."
+      }
+    },
+    "required": ["trigger_id"]
+  }
+}
