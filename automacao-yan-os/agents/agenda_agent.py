@@ -5,7 +5,9 @@ Gera agenda-data.json a partir de FONTES OFICIAIS e publica via FTP.
 
 Fontes:
   - BR dinâmico: API de calendário do IBGE (servicodados.ibge.gov.br/api/v3/calendario)
-  - BR dinâmico: BCB Olinda (CalendarioEvento) — opcional
+  - BR dinâmico: BCB Olinda (CalendarioEvento) — REMOVIDO 2026-07-19: endpoint
+    nunca existiu no Olinda/IFDATA (HTTP 400 "Cannot find EntitySet ... CalendarioEvento").
+    Não há substituto público de calendário de eventos do BCB no portal Olinda.
   - BR determinístico: Boletim Focus (2ª feira), COPOM (datas fixas 2026)
   - US determinístico: calendário anual oficial 2026 — CPI, PPI, Retail Sales,
     Nonfarm Payrolls (BLS/Census) e FOMC (Fed). Datas hardcoded a partir dos
@@ -416,47 +418,33 @@ def _eventos_ibge(ini: str, fim: str) -> list[dict]:
     return eventos
 
 
-def _eventos_bcb_olinda(ini: str, fim: str, ja_tem: list[dict]) -> list[dict]:
-    eventos: list[dict] = []
-    try:
-        url = (
-            "https://olinda.bcb.gov.br/olinda/servico/IFDATA/versao/v1/odata/"
-            f"CalendarioEvento?$filter=Data%20ge%20%27{ini}%27%20and%20Data%20le%20%27{fim}%27"
-            "&$select=Data,Descricao,Hora&$format=json&$top=20"
-        )
-        with urllib.request.urlopen(url, timeout=8) as resp:
-            bcb = json.loads(resp.read().decode("utf-8"))
-        for ev in bcb.get("value", []):
-            data_str = str(ev.get("Data", ""))[:10]
-            desc = str(ev.get("Descricao", "")).strip()
-            if not na_janela(data_str, ini, fim) or len(desc) < 4:
-                continue
-            if any(e["data"] == data_str and e.get("fonte") == "BCB" for e in ja_tem):
-                continue
-            hora = str(ev.get("Hora", "09:00"))[:5] or "09:00"
-            eventos.append({
-                "data": data_str, "hora_brt": hora, "regiao": "BR",
-                "evento": desc, "evento_en": desc,
-                "descricao": "Evento do calendário oficial do Banco Central do Brasil.",
-                "descricao_en": "Event from the official Banco Central do Brasil calendar.",
-                "fonte": "BCB", "relevancia": "media",
-            })
-    except Exception as e:
-        log(f"BCB Olinda opcional falhou: {e}")
-    return eventos
+_PESO_RELEVANCIA = {"alta": 3, "media": 2, "baixa": 1}
 
 
 def _dedupe(eventos: list[dict]) -> list[dict]:
-    """Remove duplicatas por (data, regiao, hora_brt) — mantém a primeira ocorrência."""
-    vistos = set()
-    out = []
+    """Remove duplicatas por (data, regiao, evento) — mantém a de maior relevância.
+
+    A chave era (data, regiao, hora_brt), o que tratava horário como identidade:
+    divulgações distintas no mesmo horário colapsavam numa só. Em 10/07/2026 o
+    IBGE publica IPCA, INPC e Pesquisa Industrial todas às 09:00 BRT; sobrava
+    uma, e como o critério era "primeira ocorrência" e a ordem vem da API, a
+    sobrevivente era a Pesquisa Industrial (média) enquanto o IPCA (alta) sumia.
+    Todo mês de divulgação de IPCA a agenda do site perdia o dado mais
+    importante do calendário brasileiro.
+    """
+    melhor: dict[tuple, dict] = {}
+    ordem: list[tuple] = []
     for e in eventos:
-        chave = (e["data"], e.get("regiao"), e.get("hora_brt"))
-        if chave in vistos:
+        chave = (e["data"], e.get("regiao"), (e.get("evento") or "").strip().casefold())
+        atual = melhor.get(chave)
+        if atual is None:
+            melhor[chave] = e
+            ordem.append(chave)
             continue
-        vistos.add(chave)
-        out.append(e)
-    return out
+        # duplicata de verdade (mesmo evento, mesmo dia): fica a de maior relevância
+        if _PESO_RELEVANCIA.get(e.get("relevancia"), 0) > _PESO_RELEVANCIA.get(atual.get("relevancia"), 0):
+            melhor[chave] = e
+    return [melhor[k] for k in ordem]
 
 
 # ---------------------------------------------------------------------------
@@ -471,7 +459,6 @@ def gerar_agenda(hoje: date | None = None) -> dict:
     eventos += _eventos_us(ini, fim)
     eventos += _eventos_copom_fomc(ini, fim)
     eventos += _eventos_ibge(ini, fim)
-    eventos += _eventos_bcb_olinda(ini, fim, eventos)
 
     eventos = _dedupe(eventos)
     eventos.sort(key=lambda e: (e["data"], e["hora_brt"]))
