@@ -262,9 +262,10 @@ def testar_populador():
         prs = Presentation(str(TEMPLATE_PPTX))
         _ok("Populador leitura", f"{len(prs.slides)} slides encontrados")
 
-        # Tenta rodar diagnóstico
-        from data.populador import diagnosticar_template
-        # Só imprime se explicitamente pedido
+        # diagnosticar_template nunca existiu em data/populador.py (checado no
+        # historico do repo) — main.py ja trata isso como ferramenta de dev
+        # opcional, com import guardado. Testar o que o modulo de fato exporta.
+        from data.populador import popular_pptx
         _ok("Populador importação", "módulo carregado com sucesso")
     except Exception as e:
         _erro("Populador", str(e)[:100])
