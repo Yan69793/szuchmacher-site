@@ -7,8 +7,13 @@
 
 window.SZ_CLARITY_ID = 'x89me5cgm8';
 window.SZ_FORMSPREE_ID    = 'mojrayrl';
-window.SZ_STRIPE_CARTA_URL = 'https://buy.stripe.com/test_14A3cx5BAfiG5dc5wVb3q01';
-window.SZ_STRIPE_PRO_URL = 'https://buy.stripe.com/test_aFadRb2po8Uiaxwf7vb3q02';
+/* Payment Links reais, modo live, conferidos direto no dashboard Stripe em
+   19/07/2026: pk_live_...oeMA, sem banner de ativacao pendente. Ja existiam
+   desde 17/06/2026 (lookup_key sz_carta_anual_link / sz_pro_anual_link) com a
+   pagina de confirmacao configurada para assinatura.html?checkout=ok — so
+   nunca tinham sido ligados aqui, o config continuava com os buy.stripe.com/test_. */
+window.SZ_STRIPE_CARTA_URL = 'https://buy.stripe.com/dRm4gyaiG5YrbYvfrM1RC02';
+window.SZ_STRIPE_PRO_URL = 'https://buy.stripe.com/eVqaEW1Ma0E75A7djE1RC01';
 
 
 /* Fase 1 stack — editar após criar contas (ver docs/CALCOM-SETUP.md) */
