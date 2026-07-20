@@ -39,7 +39,8 @@ function fallbackVal(live, key, prevData) {
 export async function handleMarketData(env) {
   const cache = await readCache(env.CACHE, CACHE_KEY);
   if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    return jsonResponse({ ...cache, source: 'Yahoo Finance · cache' }, {
+    const cacheSource = cache.stale?.length ? 'Yahoo Finance · cache (parcial)' : 'Yahoo Finance · cache';
+    return jsonResponse({ ...cache, source: cacheSource }, {
       headers: { 'Cache-Control': 'public, max-age=300' },
     });
   }
@@ -59,6 +60,16 @@ export async function handleMarketData(env) {
   const treasury10y = fallbackVal(treasuryLive, 'treasury10y', prevData);
   const ntnb11 = fallbackVal(ntnbLive, 'ntnb11', prevData);
 
+  // stale lista quais ativos vieram do fallback (cache anterior ou SEED) em vez
+  // de fetch ao vivo bem-sucedido — sem isso, 'source' mentia 'ao vivo' mesmo
+  // quando um ou mais ativos vinham do SEED hardcoded de 15/06/2026.
+  const stale = [];
+  if (!ibovLive) stale.push('ibov');
+  if (!sp500Live) stale.push('sp500');
+  if (!wtiLive) stale.push('wti');
+  if (!treasuryLive) stale.push('treasury10y');
+  if (!ntnbLive) stale.push('ntnb11');
+
   const payload = {
     ok: true,
     ibov,
@@ -67,7 +78,8 @@ export async function handleMarketData(env) {
     treasury10y,
     ntnb11,
     updated_at: brtNow(),
-    source: 'Yahoo Finance · ao vivo',
+    source: stale.length === 0 ? 'Yahoo Finance · ao vivo' : 'Yahoo Finance · parcial',
+    stale,
     ts: Math.floor(Date.now() / 1000),
   };
 

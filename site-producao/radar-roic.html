@@ -58,6 +58,12 @@
         .report-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:18px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;color:var(--muted);}
         .report-meta b{color:var(--gold);font-weight:500;}
 
+        .report-head-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;align-items:center;}
+        @media (max-width:900px){
+            .report-head-grid{grid-template-columns:1fr;gap:24px;}
+            .report-head-visual{order:-1;}
+        }
+
         .letter{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0;padding:30px 34px;}
         /* era #c4c4c4 sobre --surface: 1.42:1, heranca de tema escuro */
         .letter p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:14px;}
@@ -164,16 +170,21 @@
 </header>
 
 <!-- CABEÇALHO DO RELATÓRIO -->
-<header class="report-head">
-    <div class="sample-badge"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 2h10.4A2 2 0 0 0 19 19l-5-10V3"/></svg> Amostra · dados ilustrativos · não é recomendação</div>
-    <div class="sec-eyebrow">Research · Carta Szuchmacher</div>
-    <h1 class="sec-title display">Radar ROIC</h1>
-    <div class="sec-line"></div>
-    <div class="report-meta">
-        <span>Edição <b>amostra</b></span>
-        <span>Atualizado em <b>—</b></span>
-        <span>Lente <b>retorno sobre o capital investido</b></span>
-        <span>Por <b>Yan Szuchmacher</b></span>
+<header class="report-head report-head-grid">
+    <div>
+        <div class="sample-badge"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 2h10.4A2 2 0 0 0 19 19l-5-10V3"/></svg> Amostra · dados ilustrativos · não é recomendação</div>
+        <div class="sec-eyebrow">Research · Carta Szuchmacher</div>
+        <h1 class="sec-title display">Radar ROIC</h1>
+        <div class="sec-line"></div>
+        <div class="report-meta">
+            <span>Edição <b>amostra</b></span>
+            <span>Atualizado em <b>—</b></span>
+            <span>Lente <b>retorno sobre o capital investido</b></span>
+            <span>Por <b>Yan Szuchmacher</b></span>
+        </div>
+    </div>
+    <div class="report-head-visual figure-craft figure-craft--painel figure-craft--foco-dir">
+        <img src="/assets/img/radar-roic-hero.webp" alt="Anéis concêntricos dourados sobre superfície de vidro escuro, representando o radar de retorno sobre capital investido" loading="eager" fetchpriority="high" width="1920" height="1072" decoding="async" />
     </div>
 </header>
 

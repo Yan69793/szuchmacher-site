@@ -101,6 +101,10 @@
     .btn-wa { background: #1a3d2e; color: #a7f3d0; border: 1px solid rgba(74,222,128,0.25); }
     .btn-wa:hover { background: #234d3a; }
 
+    .hero-card-col { display: flex; flex-direction: column; gap: 16px; }
+    .hero-visual { border: 1px solid var(--border); aspect-ratio: 2.4 / 1; overflow: hidden; }
+    .hero-visual img { width: 100%; height: 100%; object-fit: cover; object-position: 68% 55%; display: block; }
+
     .hero-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 0; padding: 28px;
@@ -129,6 +133,9 @@
 
     .section-title { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 12px; }
     .section-sub { color: var(--muted); margin-bottom: 32px; max-width: 640px; }
+
+    .pilares-visual { margin: 0 0 28px; border: 1px solid var(--border); aspect-ratio: 3 / 1; overflow: hidden; }
+    .pilares-visual img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; display: block; }
 
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .card {
@@ -219,14 +226,19 @@
         <a href="/" class="btn btn-ghost" data-sz-vip="explorar_plataforma" data-ga="click_plataforma" data-ga-location="hero_consultoria">Explorar MultiAsset</a>
       </div>
     </div>
-    <aside class="hero-card">
-      <h2 class="mono">Escopo típico</h2>
-      <div class="metric"><span>Perfil</span><span>Qualificado / institucional</span></div>
-      <div class="metric"><span>Horizonte</span><span>3–15 anos</span></div>
-      <div class="metric"><span>Cobertura</span><span>RF · Crédito · Commodities · Cripto</span></div>
-      <div class="metric"><span>Ferramenta</span><span>MultiAsset + relatório macro</span></div>
-      <div class="metric"><span>Primeiro passo</span><span>Diagnóstico 45 min</span></div>
-    </aside>
+    <div class="hero-card-col">
+      <div class="hero-visual">
+        <img src="/assets/img/consultoria-hero.webp" alt="Pavilhão de vidro e latão sobre fundo escuro, representando arquitetura patrimonial" loading="eager" fetchpriority="high" width="1920" height="1072" decoding="async" />
+      </div>
+      <aside class="hero-card">
+        <h2 class="mono">Escopo típico</h2>
+        <div class="metric"><span>Perfil</span><span>Qualificado / institucional</span></div>
+        <div class="metric"><span>Horizonte</span><span>3–15 anos</span></div>
+        <div class="metric"><span>Cobertura</span><span>RF · Crédito · Commodities · Cripto</span></div>
+        <div class="metric"><span>Ferramenta</span><span>MultiAsset + relatório macro</span></div>
+        <div class="metric"><span>Primeiro passo</span><span>Diagnóstico 45 min</span></div>
+      </aside>
+    </div>
   </div>
 
   <!-- DEMO DO PAINEL — fora do hero, preload="none": o video so e baixado se o
@@ -259,6 +271,9 @@
     <div class="wrap">
       <h2 class="section-title display">Três pilares de entrega</h2>
       <p class="section-sub">Diagnóstico patrimonial, ferramenta analítica e acompanhamento institucional em uma jornada integrada.</p>
+      <figure class="pilares-visual">
+        <img src="/assets/img/consultoria-pilares.webp" alt="Sequência de painéis verticais de vidro escuro, representando os três pilares de entrega" loading="lazy" decoding="async" width="1280" height="859" />
+      </figure>
       <div class="grid-3">
         <article class="card">
           <div class="card-tag">01 · Agendamento</div>
