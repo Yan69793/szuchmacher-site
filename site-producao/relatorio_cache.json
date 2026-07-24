@@ -1,36 +1,38 @@
 {
-    "generated_at": "2026-07-17 20:36:14",
-    "date_label": "Fechamento de sexta, 17 jul 2026",
+    "generated_at": "2026-07-21 12:28:32",
+    "date_label": "Fechamento de segunda, 20 jul 2026",
     "eyebrow": "Fechamento do dia",
     "h2": "Leitura diária dos vetores que movem preços",
     "prices": {
         "ibovespa": {
-            "value": "173.714",
-            "change_pct": "-0,06%",
-            "label": "Sexta · -0,06%"
+            "value": "173.371",
+            "change_pct": "-0,20%",
+            "label": "Segunda · -0,20%"
         },
         "usd_brl": {
-            "value": "5,1092",
-            "change_pct": "+0,17%",
-            "label": "Sexta · +0,17%"
+            "value": "5,0904",
+            "change_pct": "-0,37%",
+            "label": "Segunda · -0,37%"
         },
         "sp500": {
-            "value": "7.457,69",
-            "change_pct": "-1,01%",
-            "label": "Sexta · -1,01%"
+            "value": "7.443,28",
+            "change_pct": "-0,19%",
+            "label": "Segunda · -0,19%"
         },
         "wti": {
-            "value": "81,78",
-            "change_pct": "+3,58%",
-            "label": "Sexta · +3,58%"
+            "value": "83,23",
+            "change_pct": "+0,90%",
+            "label": "Segunda · +0,90%"
         }
     },
     "report": {
-        "headline": "Ibovespa fecha sexta em baixa de 0,06%, aos 173.714 pontos; dólar sobe a R$ 5,11 e petróleo (WTI) sobe a US$ 81,78",
-        "paragraph1": "O Ibovespa driblou a aversão global ao risco nesta sexta-feira e fechou praticamente estável, em queda de 0,06%, aos 173.714 pontos, sustentado pela alta de 2,5% da Petrobras, que acompanhou a disparada do petróleo. Na semana, o índice acumulou perda de 2,33%. O dólar subiu 0,25%, a R$ 5,1109, depois de tocar R$ 5,1328 na máxima do dia.",
-        "paragraph2": "Em Nova York, o S&amp;P 500 caiu 1,01% e fechou sua primeira semana negativa em várias semanas, com os semicondutores em queda pelo terceiro dia seguido. O índice do setor na Filadélfia acumula recuo de 23,5% desde o recorde de 22 de junho. O Nasdaq-100 perdeu 1,49% e o Dow cedeu 0,77%.",
-        "paragraph3": "A Ásia concentrou as perdas mais pesadas. O Nikkei despencou 4,03%, aos 64.141 pontos, e já acumula queda de 12% desde o pico recente, Xangai perdeu 3,05% e Taiwan caiu mais de 6%, no pior pregão desde abril de 2025.",
-        "next_week": "Segunda-feira, 08h25, Brasil, Boletim Focus, medianas semanais do mercado para Selic, IPCA, câmbio e PIB (Banco Central). Na semana, Brasil, prévias operacionais de Vale e Petrobras, que antecedem o início da temporada de balanços do segundo trimestre. Na semana, Europa, decisão de juros do Banco Central Europeu, além do acompanhamento das negociações entre Brasil e Estados Unidos sobre a tarifa de 25%.",
-        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes ao pregão de 17 jul 2026."
-    }
+        "headline": "Ibovespa fecha segunda em baixa de 0,20%, aos 173.371 pontos; dólar recua a R$ 5,09 e petróleo (WTI) sobe a US$ 83,23",
+        "paragraph1": "O Ibovespa fechou esta segunda-feira em leve queda de 0,20%, aos 173.371 pontos, em um pregão de baixa volatilidade e giro financeiro de R$ 16 bilhões. O dólar comercial acompanhou o tom mais calmo do exterior e recuou 0,43%, cotado a R$ 5,089.",
+        "paragraph2": "Em Nova York, o S&amp;P 500 cedeu 0,19% e o Dow Jones caiu 0,59%, pressionados pela alta do petróleo, enquanto o Nasdaq-100 fechou perto da estabilidade, com ganho de 0,04%. As ações de semicondutores tentaram recuperar parte das perdas da semana passada, com a Micron subindo quase 2% e a AMD avançando 1,6%.",
+        "paragraph3": "O petróleo subiu no nono dia seguido de trocas militares entre Estados Unidos e Irã. O WTI fechou a US$ 83,23, em alta de 0,90%, e o Brent avançou 1,27%, a US$ 89,22. No fim da tarde, uma fala do porta-voz da chancelaria iraniana, que citou a continuidade de mensagens por intermediários, reacendeu a hipótese de uma saída diplomática.",
+        "next_week": "Hoje, 22h15, China, decisão da taxa de juros de referência (LPR) de 1 e 5 anos pelo Banco do Povo da China, referência para o crédito, o mercado imobiliário chinês e o minério de ferro. Terça-feira, 03h00, Reino Unido, taxa de desemprego e rendimentos médios (ILO), termômetro do mercado de trabalho para o Comitê de Política Monetária do Banco da Inglaterra. Terça-feira, 06h00, Zona do Euro, índice ZEW de sentimento econômico na Alemanha e no bloco, leitura antecedente de atividade e confiança na maior economia europeia.",
+        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes ao pregão de 20 jul 2026."
+    },
+    "latest_slug": "20260720-22a7f76b",
+    "latest_url": "https://szuchmacher.com.br/fechamento/20260720-22a7f76b"
 }

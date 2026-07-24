@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 agenda_agent.py — Agent 2: Agenda Agent
-Gera agenda-data.json a partir de FONTES OFICIAIS e publica via FTP.
+Gera agenda-data.json a partir de FONTES OFICIAIS.
+Publicacao via deploy-cloudflare.ps1 (Cloudflare Workers).
 
 Fontes:
   - BR dinâmico: API de calendário do IBGE (servicodados.ibge.gov.br/api/v3/calendario)
@@ -12,6 +13,11 @@ Fontes:
   - US determinístico: calendário anual oficial 2026 — CPI, PPI, Retail Sales,
     Nonfarm Payrolls (BLS/Census) e FOMC (Fed). Datas hardcoded a partir dos
     schedules oficiais; horários convertidos de ET para BRT com regra de DST dos EUA.
+  - EU determinístico: ECB decisões de juros (8 reuniões, ecb.europa.eu)
+  - UK determinístico: BoE MPC decisões (8 reuniões, bankofengland.co.uk)
+  - JP determinístico: BoJ Monetary Policy Meetings (8 reuniões, boj.or.jp)
+  - CN determinístico: China GDP trimestral, CPI mensal, PMI industrial (NBS stats.gov.cn)
+  - EU determinístico: Eurozone CPI Flash mensal (Eurostat ec.europa.eu/eurostat)
 
 Guarda anti-regressão: se a agenda recém-gerada tiver MENOS eventos que a agenda
 vigente para a MESMA janela, a vigente é preservada e um alerta é logado — evita
@@ -44,9 +50,7 @@ try:
 except Exception:
     pass
 
-from config import SITE_FTP_HOST, SITE_PASS, SITE_REMOTE_DIR  # noqa: E402,F401
-from atualizador_site import FTPClient  # noqa: E402
-
+# Publicação via deploy-cloudflare.ps1 (Cloudflare Workers), sem FTP.
 # ---------------------------------------------------------------------------
 # Calendários determinísticos 2026
 # ---------------------------------------------------------------------------
@@ -86,6 +90,118 @@ US_RETAIL_2026 = [
 US_NFP_2026 = [
     "2026-02-11", "2026-03-06", "2026-04-03", "2026-05-08", "2026-06-05",
     "2026-07-02", "2026-08-07", "2026-09-04", "2026-10-02", "2026-11-06", "2026-12-04",
+]
+
+# ECB: Governing Council monetary policy meetings 2026. Announcement 14:15 CET (10:15 BRT
+# in winter Nov-Feb, 09:15 BRT in summer Mar-Oct). Source: ecb.europa.eu/press/calendars
+ECB_2026 = [
+    "2026-02-05", "2026-03-19", "2026-04-30", "2026-06-11",
+    "2026-07-23", "2026-09-10", "2026-10-29", "2026-12-17",
+]
+
+# BoE: MPC announcement dates 2026. 12:00 UK (08:00 BRT summer, 09:00 BRT winter).
+# Source: bankofengland.co.uk/monetary-policy/upcoming-mpc-dates
+BOE_2026 = [
+    "2026-02-05", "2026-03-19", "2026-04-30", "2026-06-18",
+    "2026-07-30", "2026-09-17", "2026-11-05", "2026-12-17",
+]
+
+# BoJ: Monetary Policy Meetings 2026. Decision on second day, announcement ~11:30 JST
+# (= 23:30 BRT previous day). Source: boj.or.jp/en/mopo/mpmsche_minu/
+BOJ_2026 = [
+    "2026-01-23", "2026-03-19", "2026-04-28", "2026-06-16",
+    "2026-07-31", "2026-09-18", "2026-10-30", "2026-12-18",
+]
+
+# China GDP: quarterly release, ~10:00 CST (= 23:00 BRT previous day). Mid-month.
+# Tentative dates based on historical pattern; source: NBS (stats.gov.cn)
+CHINA_GDP_2026 = [
+    "2026-01-16",  # Q4 2025
+    "2026-04-16",  # Q1 2026
+    "2026-07-15",  # Q2 2026
+    "2026-10-19",  # Q3 2026
+]
+
+# China CPI / PMI: monthly, ~9-12th day. CPI 09:30 CST, PMI 09:00 CST.
+# Tentative dates; source: NBS (stats.gov.cn)
+CHINA_CPI_2026 = [
+    "2026-07-10", "2026-08-10", "2026-09-10", "2026-10-13",
+    "2026-11-10", "2026-12-10",
+]
+CHINA_PMI_2026 = [
+    "2026-07-01", "2026-08-03", "2026-09-01", "2026-10-01",
+    "2026-11-02", "2026-12-01",
+]
+
+# Eurozone CPI Flash: ~last business day of reference month.
+# Tentative dates; source: Eurostat (ec.europa.eu/eurostat)
+EUROZONE_CPI_2026 = [
+    "2026-07-31", "2026-08-31", "2026-09-30", "2026-10-30",
+    "2026-11-30",
+]
+
+# UK CPI (monthly, ~16-22). Source: ONS (ons.gov.uk)
+UK_CPI_2026 = [
+    "2026-07-22", "2026-08-19", "2026-09-16", "2026-10-21",
+    "2026-11-18", "2026-12-16",
+]
+
+# UK Unemployment / Labour Market (monthly, ~14-19). Source: ONS
+UK_LABOUR_2026 = [
+    "2026-07-21", "2026-08-18", "2026-09-15", "2026-10-20",
+    "2026-11-17", "2026-12-15",
+]
+
+# UK Retail Sales (monthly, ~20-24). Source: ONS
+UK_RETAIL_2026 = [
+    "2026-07-24", "2026-08-21", "2026-09-18", "2026-10-23",
+    "2026-11-20", "2026-12-18",
+]
+
+# Japan CPI (monthly, ~18-25). Source: Statistics Bureau (stat.go.jp)
+JP_CPI_2026 = [
+    "2026-07-24", "2026-08-21", "2026-09-18", "2026-10-23",
+    "2026-11-20", "2026-12-18",
+]
+
+# Global Flash PMIs — US, EU, UK, Germany, France (monthly, ~24th).
+# S&P Global releases Manufacturing + Services + Composite.
+# Source: S&P Global PMI schedule
+GLOBAL_PMI_2026 = [
+    "2026-07-24", "2026-08-21", "2026-09-23", "2026-10-23",
+    "2026-11-23", "2026-12-16",
+]
+
+# Germany/Eurozone ZEW Economic Sentiment (monthly, ~18-22, Tuesday).
+# Source: ZEW (zew.de)
+ZEW_2026 = [
+    "2026-07-21", "2026-08-18", "2026-09-15", "2026-10-20",
+    "2026-11-17", "2026-12-15",
+]
+
+# China Loan Prime Rate (monthly, 20th or next business day).
+# Source: PBOC (pbc.gov.cn)
+CHINA_LPR_2026 = [
+    "2026-07-20", "2026-08-20", "2026-09-21", "2026-10-20",
+    "2026-11-20", "2026-12-21",
+]
+
+# Canada CPI (monthly, ~18-23). Source: Statistics Canada
+CANADA_CPI_2026 = [
+    "2026-07-20", "2026-08-19", "2026-09-16", "2026-10-21",
+    "2026-11-18", "2026-12-16",
+]
+
+# US New Home Sales (monthly, ~23-26). Source: Census Bureau
+US_NEW_HOME_2026 = [
+    "2026-07-24", "2026-08-25", "2026-09-24", "2026-10-26",
+    "2026-11-25", "2026-12-23",
+]
+
+# US Existing Home Sales (monthly, ~19-23). Source: NAR
+US_EXISTING_HOME_2026 = [
+    "2026-07-22", "2026-08-20", "2026-09-22", "2026-10-22",
+    "2026-11-19", "2026-12-22",
 ]
 
 _MESES_PT = [
@@ -418,6 +534,476 @@ def _eventos_ibge(ini: str, fim: str) -> list[dict]:
     return eventos
 
 
+def _eventos_ecb(ini: str, fim: str) -> list[dict]:
+    """ECB Governing Council monetary policy decisions. 14:15 CET/CEST."""
+    eventos: list[dict] = []
+    tpl = {
+        "evento": "BCE — Decisão de juros na Zona do Euro",
+        "evento_en": "ECB — Eurozone Rate Decision",
+        "descricao": (
+            "Decisão do European Central Bank sobre as três taxas de juro de referência "
+            "(deposit facility, MRO, MLF). A presidente Christine Lagarde concede coletiva "
+            "às 14:45 CET. Impacto direto no euro (EUR/USD) e nos juros soberanos da Zona do Euro."
+        ),
+        "descricao_en": (
+            "ECB decision on the three key interest rates (deposit facility, MRO, MLF). "
+            "President Lagarde holds press conference at 14:45 CET. Direct impact on EUR/USD "
+            "and Eurozone sovereign yields."
+        ),
+        "fonte": "ECB",
+        "relevancia": "alta",
+    }
+    for data_str in ECB_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        # CET/CEST → BRT: summer (Mar-Oct) UTC+2→BRT+5, winter UTC+1→BRT+4
+        d = date.fromisoformat(data_str)
+        is_summer = d.month in (3, 4, 5, 6, 7, 8, 9, 10)
+        offset = 5 if is_summer else 4
+        hora = f"{14 + offset:02d}:15"
+        eventos.append({
+            "data": data_str,
+            "hora_brt": hora,
+            "regiao": "EU",
+            "evento": tpl["evento"],
+            "evento_en": tpl["evento_en"],
+            "descricao": tpl["descricao"],
+            "descricao_en": tpl["descricao_en"],
+            "fonte": tpl["fonte"],
+            "relevancia": tpl["relevancia"],
+        })
+    return eventos
+
+
+def _eventos_boe(ini: str, fim: str) -> list[dict]:
+    """Bank of England MPC decisions. 12:00 UK (BST/GMT)."""
+    eventos: list[dict] = []
+    tpl = {
+        "evento": "BoE — Decisão de juros no Reino Unido (MPC)",
+        "evento_en": "BoE — UK Rate Decision (MPC)",
+        "descricao": (
+            "O Monetary Policy Committee do Bank of England divulga a decisão sobre a Bank Rate "
+            "e a ata da reunião simultaneamente. Impacto direto na GBP e nos gilts. "
+            "Quatro das oito reuniões incluem o Monetary Policy Report com projeções macro."
+        ),
+        "descricao_en": (
+            "The MPC announces the Bank Rate decision and minutes simultaneously. "
+            "Four meetings per year include the Monetary Policy Report with macro projections. "
+            "Direct impact on GBP and gilt yields."
+        ),
+        "fonte": "Bank of England",
+        "relevancia": "alta",
+    }
+    for data_str in BOE_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        # UK → BRT: summer (BST=UTC+1) → BRT+4; winter (GMT=UTC+0) → BRT+3
+        d = date.fromisoformat(data_str)
+        is_summer = d.month in (3, 4, 5, 6, 7, 8, 9, 10)
+        offset = 4 if is_summer else 3
+        hora = f"{12 + offset:02d}:00"
+        eventos.append({
+            "data": data_str,
+            "hora_brt": hora,
+            "regiao": "UK",
+            "evento": tpl["evento"],
+            "evento_en": tpl["evento_en"],
+            "descricao": tpl["descricao"],
+            "descricao_en": tpl["descricao_en"],
+            "fonte": tpl["fonte"],
+            "relevancia": tpl["relevancia"],
+        })
+    return eventos
+
+
+def _eventos_boj(ini: str, fim: str) -> list[dict]:
+    """Bank of Japan Monetary Policy Meetings. Announcement ~11:30 JST."""
+    eventos: list[dict] = []
+    tpl = {
+        "evento": "BoJ — Decisão de juros no Japão",
+        "evento_en": "BoJ — Japan Rate Decision",
+        "descricao": (
+            "O Bank of Japan divulga a decisão sobre a policy rate e publica o Outlook Report "
+            "trimestral (jan, abr, jul, out). Impacto no USD/JPY, Nikkei 225 e JGBs. "
+            "Divulgação ocorre de madrugada no horário brasileiro (11:30 JST = 23:30 BRT do dia anterior)."
+        ),
+        "descricao_en": (
+            "The BoJ announces its policy rate decision and publishes the quarterly Outlook Report "
+            "(Jan, Apr, Jul, Oct). Impact on USD/JPY, Nikkei 225 and JGBs."
+        ),
+        "fonte": "Bank of Japan",
+        "relevancia": "alta",
+    }
+    for data_str in BOJ_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        # JST (UTC+9) → BRT (UTC-3) → JST = BRT + 12. 11:30 JST = 23:30 BRT (dia anterior).
+        # Colocamos no dia da reunião com horário "23:30" para indicar que é do dia seguinte JST.
+        eventos.append({
+            "data": data_str,
+            "hora_brt": "23:30",
+            "regiao": "JP",
+            "evento": tpl["evento"],
+            "evento_en": tpl["evento_en"],
+            "descricao": tpl["descricao"],
+            "descricao_en": tpl["descricao_en"],
+            "fonte": tpl["fonte"],
+            "relevancia": tpl["relevancia"],
+        })
+    return eventos
+
+
+def _eventos_china(ini: str, fim: str) -> list[dict]:
+    """China GDP (quarterly), CPI (monthly), PMI (monthly). NBS releases ~09:30-10:00 CST."""
+    eventos: list[dict] = []
+
+    # GDP — quarterly
+    tpl_gdp = {
+        "evento": "China — PIB trimestral",
+        "evento_en": "China — Quarterly GDP",
+        "descricao": (
+            "Produto Interno Bruto da China, segunda maior economia global. Divulgado pelo "
+            "National Bureau of Statistics (NBS) com breakdown por setor (indústria, serviços, "
+            "agricultura). Driver de commodities (minério de ferro, cobre, petróleo) e EM FX."
+        ),
+        "descricao_en": (
+            "China GDP released by NBS with sector breakdown. Key driver for commodities "
+            "(iron ore, copper, crude) and EM FX."
+        ),
+        "fonte": "NBS China",
+        "relevancia": "alta",
+    }
+    for data_str in CHINA_GDP_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "23:00", "regiao": "CN",
+            "evento": tpl_gdp["evento"], "evento_en": tpl_gdp["evento_en"],
+            "descricao": tpl_gdp["descricao"], "descricao_en": tpl_gdp["descricao_en"],
+            "fonte": tpl_gdp["fonte"], "relevancia": tpl_gdp["relevancia"],
+        })
+
+    # CPI — monthly
+    tpl_cpi = {
+        "evento": "China — IPC ao consumidor (CPI)",
+        "evento_en": "China — Consumer Price Index (CPI)",
+        "descricao": (
+            "Inflação ao consumidor na China. Leituras baixas sinalizam risco deflacionário "
+            "e fraqueza de demanda doméstica, com impacto em commodities e moedas de países "
+            "exportadores de matérias-primas (BRL, AUD, NZD, CLP)."
+        ),
+        "descricao_en": (
+            "China consumer inflation. Low readings signal deflation risk and weak domestic "
+            "demand, impacting commodities and commodity-exporting currencies (BRL, AUD, NZD, CLP)."
+        ),
+        "fonte": "NBS China",
+        "relevancia": "media",
+    }
+    for data_str in CHINA_CPI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "22:30", "regiao": "CN",
+            "evento": tpl_cpi["evento"], "evento_en": tpl_cpi["evento_en"],
+            "descricao": tpl_cpi["descricao"], "descricao_en": tpl_cpi["descricao_en"],
+            "fonte": tpl_cpi["fonte"], "relevancia": tpl_cpi["relevancia"],
+        })
+
+    # PMI — monthly (Manufacturing + Services composite)
+    tpl_pmi = {
+        "evento": "China — PMI Industrial (NBS)",
+        "evento_en": "China — Manufacturing PMI (NBS)",
+        "descricao": (
+            "Índice de Gerentes de Compras da indústria chinesa, compilado pelo NBS. "
+            "Abaixo de 50 indica contração. Indicador antecedente de atividade industrial e "
+            "demanda por commodities. Também relevante o Caixin PMI (setor privado, ~2 dias depois)."
+        ),
+        "descricao_en": (
+            "China manufacturing PMI by NBS. Below 50 signals contraction. Leading indicator "
+            "for industrial activity and commodity demand."
+        ),
+        "fonte": "NBS China",
+        "relevancia": "media",
+    }
+    for data_str in CHINA_PMI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "22:00", "regiao": "CN",
+            "evento": tpl_pmi["evento"], "evento_en": tpl_pmi["evento_en"],
+            "descricao": tpl_pmi["descricao"], "descricao_en": tpl_pmi["descricao_en"],
+            "fonte": tpl_pmi["fonte"], "relevancia": tpl_pmi["relevancia"],
+        })
+
+    return eventos
+
+
+def _eventos_eurozone(ini: str, fim: str) -> list[dict]:
+    """Eurozone CPI Flash (~last business day of month) + GDP Flash."""
+    eventos: list[dict] = []
+    tpl = {
+        "evento": "Zona do Euro — IPC Flash",
+        "evento_en": "Eurozone — CPI Flash Estimate",
+        "descricao": (
+            "Estimativa preliminar da inflação ao consumidor na Zona do Euro (índice cheio "
+            "e núcleo). Divulgado pelo Eurostat. Principal dado de inflação para o BCE "
+            "antes da decisão de juros seguinte."
+        ),
+        "descricao_en": (
+            "Preliminary Eurozone CPI estimate (headline and core) by Eurostat. Key inflation "
+            "data point ahead of ECB rate decisions."
+        ),
+        "fonte": "Eurostat",
+        "relevancia": "alta",
+    }
+    for data_str in EUROZONE_CPI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "06:00", "regiao": "EU",
+            "evento": tpl["evento"], "evento_en": tpl["evento_en"],
+            "descricao": tpl["descricao"], "descricao_en": tpl["descricao_en"],
+            "fonte": tpl["fonte"], "relevancia": tpl["relevancia"],
+        })
+    return eventos
+
+
+def _eventos_semanais(ini: str, fim: str) -> list[dict]:
+    """Eventos recorrentes toda semana: Jobless Claims (qui), EIA Oil (qua)."""
+    eventos: list[dict] = []
+    d0 = date.fromisoformat(ini)
+    d1 = date.fromisoformat(fim)
+    cursor = d0
+    while cursor <= d1:
+        iso = cursor.isoformat()
+        if cursor.weekday() == 2:  # Wednesday
+            eventos.append({
+                "data": iso, "hora_brt": "11:30", "regiao": "US",
+                "evento": "EUA — Estoques de petróleo bruto (EIA)",
+                "evento_en": "US — EIA Crude Oil Inventories",
+                "descricao": (
+                    "Relatório semanal da Energy Information Administration com a variação "
+                    "dos estoques de petróleo bruto, gasolina e destilados nos EUA. Impacto "
+                    "direto nos preços do WTI/Brent e nas ações de energia."
+                ),
+                "descricao_en": "Weekly EIA crude oil inventory report. Direct impact on WTI/Brent and energy equities.",
+                "fonte": "EIA", "relevancia": "media",
+            })
+        elif cursor.weekday() == 3:  # Thursday
+            eventos.append({
+                "data": iso, "hora_brt": "09:30", "regiao": "US",
+                "evento": "EUA — Novos pedidos de seguro-desemprego",
+                "evento_en": "US — Initial Jobless Claims",
+                "descricao": (
+                    "Número semanal de novos pedidos de auxílio-desemprego nos EUA. "
+                    "Indicador antecedente da saúde do mercado de trabalho americano, "
+                    "com impacto em Treasuries, DXY e expectativas para o FOMC."
+                ),
+                "descricao_en": "Weekly initial jobless claims. Leading indicator of US labor market health. Impacts Treasuries, DXY and FOMC expectations.",
+                "fonte": "Department of Labor", "relevancia": "media",
+            })
+        cursor += timedelta(days=1)
+    return eventos
+
+
+def _eventos_uk_cpi(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in UK_CPI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "03:00", "regiao": "UK",
+            "evento": "Reino Unido — IPC ao consumidor (CPI)",
+            "evento_en": "UK — Consumer Price Index (CPI)",
+            "descricao": (
+                "Inflação ao consumidor no Reino Unido, cheia e núcleo. Principal "
+                "referência de inflação para o Bank of England. Impacto em GBP, gilts e FTSE 100."
+            ),
+            "descricao_en": "UK headline and core CPI. Key inflation benchmark for Bank of England. Impacts GBP, gilts and FTSE 100.",
+            "fonte": "ONS", "relevancia": "alta",
+        })
+    return eventos
+
+
+def _eventos_uk_labour(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in UK_LABOUR_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "03:00", "regiao": "UK",
+            "evento": "Reino Unido — Taxa de desemprego (ILO)",
+            "evento_en": "UK — ILO Unemployment Rate",
+            "descricao": (
+                "Taxa de desemprego e variação de rendimentos médios no Reino Unido. "
+                "Indicador-chave para o MPC do BoE calibrar o mercado de trabalho."
+            ),
+            "descricao_en": "UK unemployment rate and average earnings. Key labour market gauge for MPC decisions.",
+            "fonte": "ONS", "relevancia": "media",
+        })
+    return eventos
+
+
+def _eventos_uk_retail(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in UK_RETAIL_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "03:00", "regiao": "UK",
+            "evento": "Reino Unido — Vendas no varejo",
+            "evento_en": "UK — Retail Sales",
+            "descricao": (
+                "Vendas no varejo do Reino Unido (variação mensal e anual). "
+                "Termômetro do consumo das famílias e da atividade econômica britânica."
+            ),
+            "descricao_en": "UK monthly and annual retail sales. Household consumption gauge for the British economy.",
+            "fonte": "ONS", "relevancia": "media",
+        })
+    return eventos
+
+
+def _eventos_jp_cpi(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in JP_CPI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "20:30", "regiao": "JP",
+            "evento": "Japão — IPC nacional (CPI)",
+            "evento_en": "Japan — National Consumer Price Index",
+            "descricao": (
+                "Inflação ao consumidor no Japão (cheia e núcleo, excluindo alimentos "
+                "frescos). Dado essencial para a trajetória da taxa do BoJ. Impacto em "
+                "USD/JPY, Nikkei 225 e JGBs."
+            ),
+            "descricao_en": "Japan headline and core CPI. Key data point for BoJ rate trajectory. Impacts USD/JPY, Nikkei 225 and JGBs.",
+            "fonte": "Statistics Bureau of Japan", "relevancia": "alta",
+        })
+    return eventos
+
+
+def _eventos_global_pmi(ini: str, fim: str) -> list[dict]:
+    """Flash PMIs: US, Eurozone, UK, Germany, France (S&P Global, ~24th)."""
+    eventos: list[dict] = []
+    regioes = [
+        ("US", "EUA", "S&P Global US"),
+        ("EU", "Zona do Euro", "S&P Global Eurozone"),
+        ("UK", "Reino Unido", "S&P Global UK"),
+        ("DE", "Alemanha", "S&P Global Germany"),
+    ]
+    for data_str in GLOBAL_PMI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        for reg, nome, fonte in regioes:
+            eventos.append({
+                "data": data_str, "hora_brt": "10:45" if reg == "US" else "05:00", "regiao": reg,
+                "evento": f"{nome} — PMI Industrial e Serviços (Flash)",
+                "evento_en": f"{nome} — Manufacturing & Services PMI (Flash)",
+                "descricao": (
+                    f"Índice de Gerentes de Compras ({nome}) — leitura preliminar (flash) "
+                    f"da indústria e serviços. Abaixo de 50 indica contração. Impacto direto "
+                    f"em expectativas de PIB, juros e moedas."
+                ),
+                "descricao_en": f"{nome} flash PMI for manufacturing and services. Below 50 signals contraction.",
+                "fonte": fonte, "relevancia": "alta",
+            })
+    return eventos
+
+
+def _eventos_zew(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in ZEW_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "06:00", "regiao": "EU",
+            "evento": "Alemanha/Zona do Euro — ZEW de Sentimento Econômico",
+            "evento_en": "Germany/Eurozone — ZEW Economic Sentiment",
+            "descricao": (
+                "Índice ZEW de sentimento econômico na Alemanha e Zona do Euro, baseado "
+                "em survey com analistas e investidores institucionais. Indicador antecedente "
+                "de atividade e confiança na maior economia europeia."
+            ),
+            "descricao_en": "ZEW survey of economic sentiment among analysts and institutional investors. Leading indicator for German/Eurozone activity.",
+            "fonte": "ZEW", "relevancia": "alta",
+        })
+    return eventos
+
+
+def _eventos_china_lpr(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in CHINA_LPR_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "22:15", "regiao": "CN",
+            "evento": "China — Taxa de Juros de Referência (LPR)",
+            "evento_en": "China — Loan Prime Rate (LPR)",
+            "descricao": (
+                "O PBOC anuncia a taxa LPR de 1 e 5 anos, referência para o crédito "
+                "bancário na China. Impacto no mercado imobiliário chinês, commodities, "
+                "minério de ferro e moedas de países exportadores (AUD, BRL, CLP)."
+            ),
+            "descricao_en": "PBOC announces 1Y and 5Y Loan Prime Rate. Impacts Chinese property, commodities, iron ore and exporter currencies (AUD, BRL, CLP).",
+            "fonte": "PBOC", "relevancia": "alta",
+        })
+    return eventos
+
+
+def _eventos_canada_cpi(ini: str, fim: str) -> list[dict]:
+    eventos: list[dict] = []
+    for data_str in CANADA_CPI_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "09:30", "regiao": "CA",
+            "evento": "Canadá — IPC ao consumidor (CPI)",
+            "evento_en": "Canada — Consumer Price Index (CPI)",
+            "descricao": (
+                "Inflação ao consumidor no Canadá, referência para o Bank of Canada. "
+                "Impacto em CAD, bonds canadenses e expectativas de política monetária."
+            ),
+            "descricao_en": "Canada headline CPI. Key benchmark for Bank of Canada. Impacts CAD and rate expectations.",
+            "fonte": "Statistics Canada", "relevancia": "media",
+        })
+    return eventos
+
+
+def _eventos_us_housing(ini: str, fim: str) -> list[dict]:
+    """US New Home Sales + Existing Home Sales (monthly)."""
+    eventos: list[dict] = []
+    for data_str in US_NEW_HOME_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "11:00", "regiao": "US",
+            "evento": "EUA — Vendas de imóveis novos",
+            "evento_en": "US — New Home Sales",
+            "descricao": (
+                "Vendas de imóveis residenciais novos nos EUA (annualized rate). "
+                "Indicador do mercado imobiliário e da saúde do consumo americano."
+            ),
+            "descricao_en": "US new single-family home sales. Housing market and consumer health indicator.",
+            "fonte": "Census Bureau", "relevancia": "media",
+        })
+    for data_str in US_EXISTING_HOME_2026:
+        if not na_janela(data_str, ini, fim):
+            continue
+        eventos.append({
+            "data": data_str, "hora_brt": "11:00", "regiao": "US",
+            "evento": "EUA — Vendas de imóveis usados",
+            "evento_en": "US — Existing Home Sales",
+            "descricao": (
+                "Vendas de imóveis residenciais existentes nos EUA. Cobre ~90% "
+                "do mercado imobiliário americano. Indicador de atividade e preços."
+            ),
+            "descricao_en": "US existing home sales. Covers ~90% of US housing market. Activity and price indicator.",
+            "fonte": "NAR", "relevancia": "media",
+        })
+    return eventos
+
+
 _PESO_RELEVANCIA = {"alta": 3, "media": 2, "baixa": 1}
 
 
@@ -459,6 +1045,21 @@ def gerar_agenda(hoje: date | None = None) -> dict:
     eventos += _eventos_us(ini, fim)
     eventos += _eventos_copom_fomc(ini, fim)
     eventos += _eventos_ibge(ini, fim)
+    eventos += _eventos_semanais(ini, fim)
+    eventos += _eventos_ecb(ini, fim)
+    eventos += _eventos_boe(ini, fim)
+    eventos += _eventos_boj(ini, fim)
+    eventos += _eventos_china(ini, fim)
+    eventos += _eventos_eurozone(ini, fim)
+    eventos += _eventos_uk_cpi(ini, fim)
+    eventos += _eventos_uk_labour(ini, fim)
+    eventos += _eventos_uk_retail(ini, fim)
+    eventos += _eventos_jp_cpi(ini, fim)
+    eventos += _eventos_global_pmi(ini, fim)
+    eventos += _eventos_zew(ini, fim)
+    eventos += _eventos_china_lpr(ini, fim)
+    eventos += _eventos_canada_cpi(ini, fim)
+    eventos += _eventos_us_housing(ini, fim)
 
     eventos = _dedupe(eventos)
     eventos.sort(key=lambda e: (e["data"], e["hora_brt"]))
@@ -473,6 +1074,11 @@ def gerar_agenda(hoje: date | None = None) -> dict:
                 "BLS — CPI, PPI, Nonfarm Payrolls (schedule oficial 2026)",
                 "Census Bureau — Advance Retail Sales (schedule oficial 2026)",
                 "Fed — FOMC calendar (federalreserve.gov)",
+                "ECB — Governing Council calendar (ecb.europa.eu)",
+                "Bank of England — MPC calendar (bankofengland.co.uk)",
+                "Bank of Japan — MPM schedule (boj.or.jp)",
+                "NBS China — GDP, CPI, PMI (stats.gov.cn)",
+                "Eurostat — CPI Flash calendar (ec.europa.eu/eurostat)",
             ],
             "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado.",
             "disciplina_en": "Scheduled releases from official sources. No result anticipation.",
@@ -526,23 +1132,9 @@ def salvar_local(payload: dict) -> bool:
         return False
 
 
-def upload_ftp(payload: dict) -> bool:
-    if not SITE_PASS:
-        log("ERRO: SITE_PASS não configurada.")
-        return False
-    ftp = FTPClient()
-    if not ftp.conectar():
-        return False
-    remote_dir = SITE_REMOTE_DIR.rstrip("/")
-    if not ftp.ir_para(remote_dir):
-        for alt in ["/public_html", "public_html", "/home1/hg545631/public_html"]:
-            if ftp.ir_para(alt):
-                break
-    ok = ftp.upload_json("agenda-data.json", payload)
-    ftp.fechar()
-    log(f"FTP {'OK' if ok else 'ERRO'} — agenda-data.json")
-    return ok
-
+# Publicação: deploy-cloudflare.ps1 cuida do upload. O agenda_agent apenas
+# gera e salva localmente. A task Szuchmacher-AgendaAgent (run-agenda-agent.ps1)
+# chama deploy-cloudflare.ps1 apos este script.
 
 def main():
     parser = argparse.ArgumentParser(description="Agenda Agent — MultiAsset")
@@ -572,11 +1164,9 @@ def main():
         sys.exit(1)
 
     if args.dry_run:
-        log("DRY-RUN: FTP pulado.")
-    elif not upload_ftp(payload):
-        sys.exit(1)
+        log("DRY-RUN: deploy pulado (agenda-data.json salvo localmente).")
 
-    log("AGENDA AGENT CONCLUÍDO")
+    log("AGENDA AGENT CONCLUÍDO (deploy via run-agenda-agent.ps1 → deploy-cloudflare.ps1)")
 
 
 if __name__ == "__main__":

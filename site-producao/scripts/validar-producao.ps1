@@ -33,7 +33,7 @@ $checks = @(
     @{ Url = "$SZ/relatorios.html";  Status = 200 }
     @{ Url = "$SZ/honorarios.html";  Status = 200 }
     @{ Url = "$SZ/assinatura.html";  Status = 200; Contem = 'data-stripe-carta' }
-    @{ Url = "$SZ/radar-roic.html";  Status = 200 }
+    @{ Url = "$SZ/radar-roic.html";  Status = 301; Rotulo = 'radar-roic -> assinatura' }
     @{ Url = "$SZ/privacidade.html"; Status = 200 }
 
     # --- os 8 assets que sumiram no incidente de 19/07/2026 ---

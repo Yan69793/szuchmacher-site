@@ -3,7 +3,7 @@ const CSP = [
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://plausible.io https://s3.tradingview.com https://s.tradingview.com https://cdnjs.cloudflare.com https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
   "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
-  "img-src 'self' data: https:",
+  "img-src 'self' data: https://s3.tradingview.com https://static.cloudflareinsights.com https://*.clarity.ms https://c.bing.com https://szuchmacher.com.br https://multi-assets.com",
   "connect-src 'self' https://szuchmacher.com.br https://multi-assets.com https://economia.awesomeapi.com.br https://api.bcb.gov.br https://brapi.dev https://brasilapi.com.br https://api.coingecko.com https://www.clarity.ms https://*.clarity.ms https://c.clarity.ms https://plausible.io https://formspree.io https://query1.finance.yahoo.com https://cloudflareinsights.com",
   "frame-src https://s.tradingview.com https://www.tradingview.com https://tradingview-widget.com https://www.tradingview-widget.com https://cal.com https://*.cal.com",
   "frame-ancestors 'self'",

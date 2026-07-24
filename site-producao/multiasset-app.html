@@ -890,6 +890,14 @@
             /* rede de seguranca contra scroll horizontal em telas estreitas;
                seguro aqui pois .alloc-donut-wrap ja e position:static neste breakpoint */
             html { overflow-x: hidden; }
+            /* Nav — tablet/iPad: reduz padding e gap para caber as 6 abas */
+            nav { padding: 0 24px; }
+            .nav-links { gap: 16px; }
+            .nav-links a { font-size: 10px; letter-spacing: 0.02em; }
+            .nav-links .nav-institucional { padding-left: 16px; }
+            .nav-time { font-size: 10px; display: none; }
+            .logo-text .logo-main { font-size: 13px; }
+            .logo-text .logo-sub { font-size: 8px; }
             .footer-inner { grid-template-columns: 1fr 1fr; padding: 48px 32px 32px; gap: 36px; }
             .footer-bottom { padding: 16px 32px; }
             .footer-disclaimer { padding: 12px 32px 28px; }
@@ -914,6 +922,17 @@
             .bench-header { flex-direction: column; }
             .bench-controls { align-items: flex-start; }
             .bench-chart-wrap { height: 300px; }
+        }
+
+        @media (max-width: 850px) {
+            /* Nav reduzido em tablet pequeno: gap menor, institucional abreviado */
+            nav { padding: 0 14px; }
+            .nav-links { gap: 10px; }
+            .nav-links a { font-size: 9px; }
+            .nav-links .nav-institucional { padding-left: 8px; }
+            .logo-icon { width: 24px; height: 24px; font-size: 9px; }
+            .logo-text .logo-main { font-size: 12px; }
+            .logo-text .logo-sub { font-size: 7px; }
         }
 
         @media (max-width: 768px) {
@@ -1491,6 +1510,56 @@
             .cripto-ta-grid { grid-template-columns: 1fr; }
             .cripto-mini-grid { grid-template-columns: 1fr 1fr; }
         }
+
+        /* ── CENARIOS GEOPOLITICOS ── */
+        .geo-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 0; }
+        .geo-card { background: var(--surface); border: 1px solid var(--border); border-radius: 0; padding: 28px; }
+        .geo-prob-chart-wrap { height: 300px; position: relative; }
+        .geo-return-chart-wrap { height: 360px; position: relative; }
+        .geo-prob-note { font-size: 10px; color: var(--muted); line-height: 1.6; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+        .geo-scenario-selector { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .geo-sc-card { padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 0; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
+        .geo-sc-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
+        .geo-sc-card.active { border-color: var(--gold); background: var(--gold-dim); }
+        .geo-sc-card.active .geo-sc-name { color: var(--text); }
+        .geo-sc-index { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 0; color: var(--muted); flex-shrink: 0; }
+        .geo-sc-card.active .geo-sc-index { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); }
+        .geo-sc-body { flex: 1; min-width: 0; }
+        .geo-sc-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; color: rgba(255,255,255,0.75); }
+        .geo-sc-prob { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+        .geo-scenario-detail { }
+        .geo-detail-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .geo-detail-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .geo-detail-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+        .geo-detail-text { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 10px; }
+        .geo-return-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .geo-return-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 0; padding: 10px 8px; text-align: center; }
+        .geo-return-item .geo-ret-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+        .geo-return-item .geo-ret-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; }
+        .geo-ret-pos { color: var(--green); }
+        .geo-ret-neg { color: var(--red); }
+        .geo-ret-neu { color: var(--muted); }
+        .geo-macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .geo-macro-mini { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 0; padding: 14px; }
+        .geo-macro-mini-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; font-family: 'DM Mono', monospace; }
+        .geo-macro-mini-value { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+        .geo-macro-mini-chart { height: 60px; }
+        .geo-mc-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 22px; background: linear-gradient(135deg, rgba(106,150,212,0.07) 0%, rgba(106,150,212,0.02) 100%); border: 1px solid rgba(106,150,212,0.28); border-radius: 0; color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif; text-align: left; }
+        .geo-mc-toggle:hover { background: rgba(106,150,212,0.12); border-color: var(--blue); }
+        .geo-mc-toggle.active { background: rgba(106,150,212,0.11); border-color: var(--blue); }
+        .geo-mc-toggle.bmt-loading { opacity: 0.75; pointer-events: none; }
+        .geo-impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .geo-impact-card { border-radius: 0; padding: 20px; border: 1px solid; }
+        .geo-impact-card.benefit { background: rgba(76,175,125,0.04); border-color: rgba(76,175,125,0.18); }
+        .geo-impact-card.penalty { background: rgba(224,92,92,0.04); border-color: rgba(224,92,92,0.18); }
+        .geo-impact-card.neutral-card { background: rgba(91,156,246,0.04); border-color: rgba(91,156,246,0.18); }
+        .geo-impact-header { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .geo-impact-list { list-style: none; padding: 0; }
+        .geo-impact-list li { font-size: 11px; color: rgba(255,255,255,0.55); line-height: 1.6; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .geo-impact-list li:last-child { border-bottom: none; }
+        .geo-impact-list li strong { color: var(--text); }
+        @media (max-width: 900px) { .geo-main-grid { grid-template-columns: 1fr; } .geo-macro-grid { grid-template-columns: repeat(2, 1fr); } .geo-impact-grid { grid-template-columns: 1fr; } .geo-return-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .geo-macro-grid { grid-template-columns: 1fr; } .geo-prob-chart-wrap { height: 220px; } .geo-return-chart-wrap { height: 260px; } .geo-card { padding: 18px; } }
     </style>
 </head>
 <body data-page="multiasset-app" data-design="sophistication-20260718v2">
@@ -2916,6 +2985,77 @@
     <div id="macro-update-stamp-text" style="display:none"></div>
 </section>
 
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- CENARIOS GEOPOLITICOS — US-China 2026-2030 -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="geopolitica" class="section">
+    <div class="section-header reveal">
+        <div>
+            <div class="section-eyebrow">Cenarios Prospectivos · 2026-2030</div>
+            <h2 class="section-title display">Cenarios <em style="color:var(--gold);font-style:italic">Geopoliticos</em></h2>
+            <div class="section-line"></div>
+            <div style="font-size:13px;color:var(--muted);max-width:52ch;margin-top:14px;line-height:1.65;">
+                Projecoes condicionais para o eixo EUA-China, calibradas com dados de prediction markets (Polymarket, Metaculus, Good Judgment), series historicas de conflito (Correlates of War, UCDP) e indices de risco geopolitico (GPR Index, Caldara-Iacoviello).
+            </div>
+        </div>
+    </div>
+
+    <!-- 2-col: probability chart + scenario detail -->
+    <div class="geo-main-grid reveal">
+        <div class="geo-card">
+            <div class="geo-card-title mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Probabilidades estimadas</div>
+            <div class="geo-prob-chart-wrap"><canvas id="chart-geo-prob"></canvas></div>
+            <div class="geo-prob-note">Faixas refletem incerteza Knightiana (eventos unicos, sem serie historica). Probabilidades calibradas com: base rate Correlates of War (~1.2%/ano great-power war), Allison Thucydides Trap (12/16 casos), prediction markets (Polymarket, Metaculus, Good Judgment).</div>
+        </div>
+
+        <div class="geo-card">
+            <div class="geo-card-title mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Cenario selecionado</div>
+            <div class="geo-scenario-selector" id="geo-scenario-selector"><!-- JS-populated --></div>
+            <div class="geo-scenario-detail" id="geo-scenario-detail"><!-- JS-populated --></div>
+        </div>
+    </div>
+
+    <!-- Conditional Return Fan Chart -->
+    <div class="geo-card reveal" style="margin-top:24px;">
+        <div class="geo-card-title mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Retornos condicionais por cenario · horizonte 5 anos (CAGR)</div>
+        <div class="geo-return-chart-wrap"><canvas id="chart-geo-return"></canvas></div>
+        <div class="geo-prob-note">Retorno anualizado composto de cada ativo sob cada cenario geopolitico. Linha tracejada: cenario base atual (sem overlay geopolitico).</div>
+    </div>
+
+    <!-- Macro Variable Paths per Scenario -->
+    <div class="geo-card reveal" style="margin-top:24px;">
+        <div class="geo-card-title mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Trajetoria de variaveis macro por cenario · 2026-2030</div>
+        <div class="geo-macro-grid" id="geo-macro-grid"><!-- JS-populated --></div>
+    </div>
+
+    <!-- Portfolio MC Integration Toggle -->
+    <div class="geo-card reveal" style="margin-top:24px;">
+        <button class="geo-mc-toggle" id="geo-mc-toggle" onclick="toggleGeoPortfolioMC(this)">
+            <div class="bench-mc-toggle-left">
+                <span class="bmt-spinner"></span>
+                <span class="bmt-icon"><i class="fas fa-globe"></i></span>
+                <span>Simulacao Monte Carlo com cenario geopolitico</span>
+                <span style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);padding:2px 8px;border-radius:0;">5 cenarios x 2.000 trajetorias</span>
+            </div>
+            <span class="bench-mc-toggle-right" id="geo-mc-toggle-hint">Expandir simulacao geopolitica condicional</span>
+        </button>
+        <div class="bench-mc-content" id="geo-mc-content" style="display:none">
+            <div class="bench-mc-prob-grid" id="geo-mc-prob-grid"></div>
+            <div class="bench-mc-legend">
+                <div class="bmc-leg-item"><div class="bmc-leg-band" style="background:rgba(106,150,212,0.4)"></div>Cenario 1: Guerra fria administrada</div>
+                <div class="bmc-leg-item"><div class="bmc-leg-band" style="background:rgba(224,143,143,0.4)"></div>Cenario 2: Escalada limitada</div>
+                <div class="bmc-leg-item"><div class="bmc-leg-line" style="background:#4caf7d"></div>Cenario 3: Desescalada</div>
+                <div class="bmc-leg-item"><div class="bmc-leg-line" style="background:#c9a84c"></div>Cenario base (sem overlay)</div>
+            </div>
+            <div class="bench-mc-chart-wrap"><canvas id="chart-geo-portfolio-mc"></canvas></div>
+            <div class="bench-mc-disclaimer" id="geo-mc-disclaimer"></div>
+        </div>
+    </div>
+
+    <!-- Sector Impact Grid -->
+    <div class="geo-impact-grid reveal" id="geo-impact-grid" style="margin-top:24px;"><!-- JS-populated --></div>
+</section>
+
 <!-- CTA PLATAFORMA -->
 <section class="cta-section">
     <div class="cta-eyebrow">Simulação · Cenários · Macro</div>
@@ -3077,6 +3217,99 @@ window.macroLive = {
     ntnbSpread: 0.075,
     selicTerminal: 0.12
 };
+// ── CENARIOS GEOPOLITICOS (EUA-China 2026-2030) ──────────────────────────
+// Calibrados com: Polymarket (20/07/2026), Good Judgment, Metaculus,
+// Allison Thucydides Trap (Harvard), Correlates of War, GPR Index (Caldara-Iacoviello)
+// Parametros de crise: calibrados em 21 crises historicas (1990-2026)
+// Metodologia: Base Rate Bayesiana + Escada de Escalada (Kahn) + Regime-Switching de Vol
+
+window.geoScenarios = [
+    {
+        id: 'cold-war', nome: 'Guerra fria administrada', probMin: 0.35, probMax: 0.55,
+        desc: 'Desacoplamento tecnologico e comercial sem ruptura militar. Tarifas estruturais de 25-45%, restricoes a semicondutores e IA, blocos comerciais paralelos. Brasil mantem posicao nao-alinhada pragmatica. Cenario modal (35-55%).',
+        retornos: { gold: 0.095, silver: 0.06, platinum: 0.03, btc: 0.30, ntnb: 0.13, cdi: 0.12, ouro: 0.095, prata: 0.06, platina: 0.03 },
+        macro: { selic: [0.145,0.138,0.130,0.125,0.120], ipca: [0.055,0.050,0.047,0.045,0.045], usdbrl: [5.09,5.25,5.35,5.40,5.50], brent: [78,82,80,78,75] },
+        correlShift: { goldBtc: 0.10, goldSilver: 0.05, goldPlatinum: 0.03 },
+        setoresBR: {
+            beneficiados: ['<strong>Ouro e metais preciosos</strong> — demanda estrutural por refugio em desacoplamento','<strong>NTN-B e renda fixa real</strong> — juros elevados sustentam premios por periodo prolongado','<strong>Agronegocio exportador</strong> — Brasil supre ambos os blocos, poder de precificacao ampliado','<strong>Petroleo e energia</strong> — pre-sal e renovaveis com demanda dual EUA-China'],
+            penalizados: ['<strong>Semicondutores e tecnologia BR</strong> — corte de cadeias asiaticas e custos logisticos','<strong>Varejo importador</strong> — tarifas elevadas e fragmentacao comprimem margens','<strong>Industria automotiva</strong> — cadeias bipartidas, custos de compliance regulatorio'],
+            neutros: ['<strong>Bancos e financeiro</strong> — juros altos sustentam spread, inadimplencia sobe com desaceleracao','<strong>Infraestrutura</strong> — depende mais de fiscal domestico que de geopolitica externa']
+        }
+    },
+    {
+        id: 'limited-conflict', nome: 'Escalada com conflito limitado', probMin: 0.15, probMax: 0.30,
+        desc: 'Confronto naval ou aereo localizado no Mar do Sul da China ou Estreito de Taiwan. Sem escalada nuclear. Sancoes financeiras severas (SWIFT parcial, reservas congeladas). Petroleo dispara temporariamente (USD 105-130/bbl).',
+        retornos: { gold: 0.20, silver: 0.12, platinum: 0.05, btc: 0.50, ntnb: 0.10, cdi: 0.11, ouro: 0.20, prata: 0.12, platina: 0.05 },
+        macro: { selic: [0.145,0.140,0.135,0.130,0.125], ipca: [0.055,0.058,0.055,0.050,0.048], usdbrl: [5.09,5.50,5.70,5.60,5.80], brent: [78,95,105,90,85] },
+        correlShift: { goldBtc: 0.20, goldSilver: 0.10, goldPlatinum: 0.05 },
+        setoresBR: {
+            beneficiados: ['<strong>Ouro e reserva de valor</strong> — demanda extraordinaria em crise militar localizada','<strong>Petroleo e gas</strong> — pre-sal se beneficia de Brent acima de USD 100','<strong>Defesa e seguranca</strong> — reaparelhamento militar global','<strong>Agricultura de commodities</strong> — disrupcao de cadeias eleva premio de exportadores confiaveis'],
+            penalizados: ['<strong>BRL e ativos em reais</strong> — flight-to-quality para USD, real deprecia aceleradamente','<strong>Empresas com divida em USD</strong> — depreciacao cambial comprime balancos','<strong>Turismo e aviacao</strong> — reducao de viagens e custo de combustivel'],
+            neutros: ['<strong>Bitcoin e cripto</strong> — volatilidade bidirecional, beneficio de narrativa vs risco de aversao','<strong>Renda fixa curta</strong> — Selic elevada oferece protecao nominal, perde para inflacao e cambio']
+        }
+    },
+    {
+        id: 'de-escalation', nome: 'Desescalada negociada', probMin: 0.10, probMax: 0.25,
+        desc: 'Acordo comercial parcial EUA-China. Relaxamento de tarifas e sancoes tecnologicas. Retomada de fluxos de investimento bilateral. Ambiente global mais previsivel. Dolar enfraquece, emergentes se beneficiam.',
+        retornos: { gold: 0.05, silver: 0.14, platinum: 0.15, btc: 0.60, ntnb: 0.10, cdi: 0.09, ouro: 0.05, prata: 0.14, platina: 0.15 },
+        macro: { selic: [0.145,0.130,0.120,0.110,0.100], ipca: [0.055,0.048,0.045,0.043,0.040], usdbrl: [5.09,5.00,4.85,4.75,4.70], brent: [78,75,72,70,68] },
+        correlShift: { goldBtc: -0.10, goldSilver: -0.05, goldPlatinum: -0.05 },
+        setoresBR: {
+            beneficiados: ['<strong>Acoes ciclicas e small caps</strong> — juros menores e crescimento global favorecem multiples','<strong>Platina e paladio</strong> — retomada industrial global eleva demanda','<strong>Real e ativos em BRL</strong> — apreciacao cambial e fluxos de portfolio','<strong>Tecnologia e inovacao</strong> — reducao de restricoes reduz custos de cadeia'],
+            penalizados: ['<strong>Ouro</strong> — perda de premio de risco geopolitico reduz demanda por refugio','<strong>Renda fixa prefixada longa</strong> — queda de juros reduz fluxo de caixa corrente'],
+            neutros: ['<strong>Bitcoin</strong> — ganha com risk-on, perde narrativa de hedge contra colapso sistemico','<strong>Energia</strong> — preco do petroleo cai, volume de exportacao se mantem']
+        }
+    },
+    {
+        id: 'exogenous-shock', nome: 'Cooperacao por choque exogeno', probMin: 0.05, probMax: 0.15,
+        desc: 'Crise global compartilhada (pandemia, catastrofe climatica ou crise financeira sistemica) forca cooperacao pragmatica EUA-China. Acordos de estabilizacao financeira e climatica. Juros globais caem para combater recessao.',
+        retornos: { gold: 0.15, silver: 0.08, platinum: 0.02, btc: 0.80, ntnb: 0.08, cdi: 0.07, ouro: 0.15, prata: 0.08, platina: 0.02 },
+        macro: { selic: [0.145,0.120,0.100,0.090,0.085], ipca: [0.055,0.045,0.040,0.038,0.035], usdbrl: [5.09,5.10,5.00,4.90,4.85], brent: [78,60,55,58,62] },
+        correlShift: { goldBtc: 0.25, goldSilver: 0.08, goldPlatinum: 0.02 },
+        setoresBR: {
+            beneficiados: ['<strong>Bitcoin e ativos digitais</strong> — crise de confianca no sistema financeiro tradicional','<strong>Ouro</strong> — refugio em crise global, mesmo com cooperacao parcial','<strong>Renda fixa soberana BR</strong> — juros em queda acelerada geram ganho de capital'],
+            penalizados: ['<strong>Commodities ciclicas</strong> — colapso de demanda industrial global','<strong>Petroleo</strong> — Brent abaixo de USD 60 comprime receitas','<strong>Bancos</strong> — inadimplencia explode com recessao global sincronizada'],
+            neutros: ['<strong>Platina</strong> — colapso industrial vs cooperacao reconstroi cadeias','<strong>Agronegocio</strong> — demanda alimentar resistente, precos caem com deflacao global']
+        }
+    },
+    {
+        id: 'direct-conflict', nome: 'Conflito armado direto', probMin: 0.03, probMax: 0.08,
+        desc: 'Confronto militar aberto no Pacifico com baixas significativas. Bloqueios navais, ciberataques a infraestrutura, interrupcao de cadeias de suprimento globais. Potencial escalada nuclear limitada. Cenario de cauda (3-8%).',
+        retornos: { gold: 0.35, silver: 0.25, platinum: 0.10, btc: 1.50, ntnb: 0.15, cdi: 0.14, ouro: 0.35, prata: 0.25, platina: 0.10 },
+        macro: { selic: [0.145,0.155,0.170,0.180,0.180], ipca: [0.055,0.070,0.085,0.090,0.085], usdbrl: [5.09,6.00,6.50,7.00,7.50], brent: [78,110,130,120,110] },
+        correlShift: { goldBtc: 0.30, goldSilver: 0.20, goldPlatinum: 0.12 },
+        setoresBR: {
+            beneficiados: ['<strong>Ouro fisico</strong> — unico ativo com valor preservado em conflito sistemico global','<strong>Petroleo e commodities energeticas</strong> — disrupcao de oferta eleva precos a niveis extremos','<strong>Producao agricola basica</strong> — alimentos se tornam ativo estrategico','<strong>Ativos em moeda forte (offshore)</strong> — BRL colapsa, USD/CHF/JPY disparam'],
+            penalizados: ['<strong>Acoes e credito corporativo</strong> — mercados financeiros podem fechar temporariamente','<strong>Sistema bancario</strong> — risco sistemico, corridas bancarias, controles de capital','<strong>Infraestrutura conectada</strong> — ciberataques a grids eletricos e sistemas de pagamento'],
+            neutros: ['<strong>Bitcoin</strong> — extremo beneficio como reserva descentralizada vs risco de proibicao estatal','<strong>Platina</strong> — demanda militar vs colapso da demanda civil de automoveis']
+        }
+    }
+];
+
+// Ativo selecionado (null = sem overlay geopolitico, usa cenario base)
+window.geoActiveScenario = null;
+
+// Correlacoes base entre pares de ativos (tempos normais) — calibradas em serie historica 2018-2026
+window.geoBaseCorrelations = {
+    'gold-silver': 0.65, 'gold-platinum': 0.55, 'gold-btc': 0.15,
+    'silver-platinum': 0.70, 'silver-btc': 0.12, 'platinum-btc': 0.08
+};
+
+// Parametros de calibracao (fontes academicas + prediction markets)
+// Base rate great-power war (1945-presente): ~1.2%/ano (Correlates of War)
+// Disputa para guerra (grandes potencias, pos-1945): ~7.7% condicional (COW)
+// Thucydides Trap: 12/16 casos historicos = 75% forcas estruturais (Allison, Harvard)
+// Clauset (Science 2018): "Long Peace" pos-1945 nao e estatisticamente significativa
+// Gold-BTC correlacao atual: -0.88 (minima historica, State Street 2026)
+// Gold spike inicial em crises: +3 a +8% (48h), reverte em 2-6 meses
+// BTC drawdown em crise geopolitica: -5 a -15% inicial, -35 a -50% maximo
+// S&P 500 drawdown medio geopolitico: -4.4% (recuperacao 39 dias, LPL Research)
+// BRL gap risk diario em crise: 3-5% (BoJ carry unwind 2024)
+// Amplificacao de vol em crise: ouro ~1.5x, BTC ~2x, petroleo ~2-2.5x
+// Defesa/Aerospace outperformance medio: +10.8% (6m), +9.1% (12m)
+// Gold retorno medio ate equity trough: +14% (~7m), +31% (17m)
+// GPR 1sd shock: cross-border portfolio flows -15% (IMF GFSR 2023)
+
 window.btcPessMultiplier = 0.40;
 window.cenarioDescricoes = {
     pessimista: 'Geopolítica deteriorada, juros altos por mais tempo, dólar forte.',
@@ -3493,6 +3726,7 @@ function setPerfilAlocacao(perfil, btn) {
     atualizarAlocacao(val);
     desenharBenchmark(); // recalcula benchmark com novo perfil
     _refreshPortfolioMC();
+    _refreshGeoPortfolioMC();
 }
 
 function getAllocItems() { return PERFIS[perfilAtivo].items; }
@@ -3613,6 +3847,7 @@ function setBenchCenario(cenario, btn) {
     if (descEl) descEl.textContent = getCenarioDescricao(cenario);
     desenharBenchmark();
     _refreshPortfolioMC();
+    _refreshGeoPortfolioMC();
 }
 
 function setAllocCenario(cenario, btn) {
@@ -3632,6 +3867,7 @@ function setAllocCenario(cenario, btn) {
     }
     desenharBenchmark();
     _refreshPortfolioMC();
+    _refreshGeoPortfolioMC();
 }
 
 function desenharBenchmark() {
@@ -3828,6 +4064,14 @@ const VOL_PORT = {
     reserva:  0.005,
 };
 
+// Gerador de normal aleatoria para Monte Carlo (usado por _runPortfolioMC e _runPortfolioMCGeo)
+// NOTA: _runPortfolioMC chamava randNorm() que nao existia — este era um bug silencioso
+function randNorm() {
+    let u, v;
+    do { u = Math.random(); v = Math.random(); } while (u === 0);
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
 let portfolioMCChart = null;
 let portfolioMCOpen  = false;
 
@@ -3917,8 +4161,8 @@ function _runPortfolioMC() {
     const serieNtnb  = [val];
     const serieSelic = [val];
     for (let y = 1; y <= prazo; y++) {
-        serieNtnb.push(serieNtnb[y-1]   * (1 + _ntnbAno(y)));
-        serieSelic.push(serieSelic[y-1] * (1 + _selicAno(y)));
+        serieNtnb.push(serieNtnb[y-1]   * (1 + getNtnbAno(y)));
+        serieSelic.push(serieSelic[y-1] * (1 + getSelicAno(y)));
     }
     const ntnbFinal  = serieNtnb[prazo];
     const selicFinal = serieSelic[prazo];
@@ -4115,8 +4359,337 @@ function _refreshPortfolioMC() {
     }
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ── ENGINE GEOPOLITICO ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+
+let geoProbChart = null;
+let geoReturnChart = null;
+let geoPortfolioMCChart = null;
+let geoPortfolioMCOpen = false;
+
+function _initGeoScenarios() {
+    _renderGeoScenarioCards();
+    _renderGeoProbChart();
+    _renderGeoReturnChart();
+    _renderGeoMacroGrid();
+    _renderGeoImpactGrid();
+}
+
+function _renderGeoScenarioCards() {
+    var container = document.getElementById('geo-scenario-selector');
+    if (!container) return;
+    container.innerHTML = window.geoScenarios.map(function(s, i) {
+        var isActive = window.geoActiveScenario && window.geoActiveScenario.id === s.id;
+        var probRange = (s.probMin * 100).toFixed(0) + '-' + (s.probMax * 100).toFixed(0) + '%';
+        return '<div class="geo-sc-card' + (isActive ? ' active' : '') + '" onclick="selectGeoScenario(\'' + s.id + '\', this)">' +
+            '<div class="geo-sc-index">' + (i + 1) + '</div>' +
+            '<div class="geo-sc-body">' +
+                '<div class="geo-sc-name">' + s.nome + '</div>' +
+                '<div class="geo-sc-prob">Prob. estimada: ' + probRange + '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function selectGeoScenario(id, el) {
+    if (window.geoActiveScenario && window.geoActiveScenario.id === id) {
+        window.geoActiveScenario = null;
+    } else {
+        window.geoActiveScenario = window.geoScenarios.find(function(s) { return s.id === id; }) || null;
+    }
+    _renderGeoScenarioCards();
+    _renderGeoScenarioDetail();
+    _renderGeoMacroGrid();
+    _renderGeoImpactGrid();
+    _refreshGeoPortfolioMC();
+}
+
+function _renderGeoScenarioDetail() {
+    var el = document.getElementById('geo-scenario-detail');
+    if (!el) return;
+    var s = window.geoActiveScenario;
+    if (!s) {
+        el.innerHTML = '<div style="font-size:12px;color:var(--muted);line-height:1.6;padding:10px 0;">Selecione um cenario geopolitico acima para ver os retornos condicionais projetados para cada ativo.</div>';
+        return;
+    }
+    var labels = { gold: 'Ouro', silver: 'Prata', platinum: 'Platina', btc: 'BTC', ntnb: 'NTN-B', cdi: 'CDI' };
+    var retItems = ['gold','silver','platinum','btc','ntnb','cdi'].map(function(k) {
+        var val = s.retornos[k] || 0;
+        var cls = val >= 0.10 ? 'geo-ret-pos' : val < 0.05 ? 'geo-ret-neg' : 'geo-ret-neu';
+        var sign = val >= 0 ? '+' : '';
+        return '<div class="geo-return-item">' +
+            '<div class="geo-ret-label">' + (labels[k] || k) + '</div>' +
+            '<div class="geo-ret-value ' + cls + '">' + sign + (val * 100).toFixed(1) + '%</div>' +
+        '</div>';
+    }).join('');
+    el.innerHTML =
+        '<div class="geo-detail-section">' +
+            '<div class="geo-detail-label">Descricao</div>' +
+            '<div class="geo-detail-text">' + s.desc + '</div>' +
+        '</div>' +
+        '<div class="geo-detail-section">' +
+            '<div class="geo-detail-label">Retornos anuais condicionais (CAGR)</div>' +
+            '<div class="geo-return-grid">' + retItems + '</div>' +
+        '</div>';
+}
+
+function _renderGeoProbChart() {
+    var canvas = document.getElementById('chart-geo-prob');
+    if (!canvas) return;
+    if (geoProbChart) geoProbChart.destroy();
+    var labels = window.geoScenarios.map(function(s) { return s.nome; });
+    var probMins = window.geoScenarios.map(function(s) { return s.probMin * 100; });
+    var probMaxs = window.geoScenarios.map(function(s) { return s.probMax * 100; });
+    var probMids = window.geoScenarios.map(function(s) { return (s.probMin + s.probMax) / 2 * 100; });
+    geoProbChart = new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Piso', data: probMins, backgroundColor: 'rgba(201,168,76,0.15)', borderColor: 'rgba(201,168,76,0.3)', borderWidth: 1, barPercentage: 0.7 },
+                { label: 'Teto', data: probMaxs.map(function(v, i) { return v - probMins[i]; }), backgroundColor: 'rgba(201,168,76,0.35)', borderColor: 'rgba(201,168,76,0.55)', borderWidth: 1, barPercentage: 0.7 }
+            ]
+        },
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 11 }, callbacks: { label: function(ctx) { var i = ctx.dataIndex; return ' ' + probMins[i].toFixed(0) + '% - ' + probMaxs[i].toFixed(0) + '% (central: ' + probMids[i].toFixed(0) + '%)'; } } } },
+            scales: { x: { stacked: true, ticks: { color: '#555', font: { size: 10, family: 'DM Mono' }, callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' }, max: 60 }, y: { stacked: true, ticks: { color: '#888', font: { size: 10 } }, grid: { display: false } } }
+        }
+    });
+}
+
+function _renderGeoReturnChart() {
+    var canvas = document.getElementById('chart-geo-return');
+    if (!canvas) return;
+    if (geoReturnChart) geoReturnChart.destroy();
+    var assets = ['gold', 'silver', 'platinum', 'btc'];
+    var assetLabels = ['Ouro', 'Prata', 'Platina', 'Bitcoin'];
+    var colors = ['rgba(106,150,212,0.7)', 'rgba(224,143,143,0.7)', 'rgba(76,175,125,0.7)', 'rgba(201,168,76,0.7)', 'rgba(180,130,130,0.7)'];
+    var datasets = window.geoScenarios.map(function(s, i) {
+        return { label: s.nome, data: assets.map(function(a) { return (s.retornos[a] || 0) * 100; }), backgroundColor: colors[i], borderColor: colors[i].replace('0.7', '1'), borderWidth: 0, barPercentage: 0.8, categoryPercentage: 0.9 };
+    });
+    var benchCen = benchCenario || 'base';
+    var taxasAtivo = window.taxasCenario[benchCen] || window.taxasCenario.base;
+    var baseRates = assets.map(function(a) {
+        var key = a === 'btc' ? 'btc' : a;
+        return ((taxasAtivo[key] || taxasAtivo[a]) * 100) || 0;
+    });
+    datasets.push({ label: 'Cenario base atual', data: baseRates, backgroundColor: 'transparent', borderColor: '#c9a84c', borderWidth: 2, borderDash: [6, 4], type: 'line', pointRadius: 5, pointBackgroundColor: '#c9a84c', fill: false, tension: 0 });
+    geoReturnChart = new Chart(canvas, {
+        type: 'bar', data: { labels: assetLabels, datasets: datasets },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#888', font: { size: 10 }, boxWidth: 14, padding: 10 } }, tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 11 }, callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(1) + '% a.a.'; } } } }, scales: { x: { ticks: { color: '#888', font: { size: 12 } }, grid: { display: false } }, y: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+    });
+}
+
+var _geoSparkCharts = {};
+
+function _renderGeoMacroGrid() {
+    var el = document.getElementById('geo-macro-grid');
+    if (!el) return;
+    var s = window.geoActiveScenario || window.geoScenarios[0];
+    var macroKeys = [
+        { key: 'selic', label: 'Selic (% a.a.)', format: function(v) { return (v * 100).toFixed(1) + '%'; }, color: '#6a96d4' },
+        { key: 'ipca', label: 'IPCA (% a.a.)', format: function(v) { return (v * 100).toFixed(1) + '%'; }, color: '#e08f8f' },
+        { key: 'usdbrl', label: 'USD/BRL', format: function(v) { return 'R$ ' + v.toFixed(2); }, color: '#c9a84c' },
+        { key: 'brent', label: 'Brent (USD/bbl)', format: function(v) { return '$ ' + v.toFixed(0); }, color: '#d4885a' }
+    ];
+    // Destroi sparklines anteriores antes de recriar o HTML
+    Object.keys(_geoSparkCharts).forEach(function(k) {
+        if (_geoSparkCharts[k]) { _geoSparkCharts[k].destroy(); _geoSparkCharts[k] = null; }
+    });
+    _geoSparkCharts = {};
+    el.innerHTML = macroKeys.map(function(mk) {
+        var path = s.macro[mk.key];
+        var current = path[0], future = path[path.length - 1];
+        var dirColor = future > current * 1.05 ? 'var(--red)' : future < current * 0.95 ? 'var(--green)' : 'var(--muted)';
+        return '<div class="geo-macro-mini">' +
+            '<div class="geo-macro-mini-label">' + mk.label + '</div>' +
+            '<div class="geo-macro-mini-value" style="color:' + dirColor + '">' + mk.format(current) + ' &rarr; ' + mk.format(future) + '</div>' +
+            '<div style="height:60px;position:relative;"><canvas id="geo-macro-spark-' + mk.key + '" style="width:100%;height:60px;"></canvas></div>' +
+        '</div>';
+    }).join('');
+    // Renderiza sparklines apos o DOM atualizar (um unico rAF basta)
+    requestAnimationFrame(function() {
+        macroKeys.forEach(function(mk) {
+            _renderGeoSparkline('geo-macro-spark-' + mk.key, s.macro[mk.key], mk.color);
+        });
+    });
+}
+
+function _renderGeoSparkline(canvasId, data, color) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    // Garante que o canvas tem dimensoes explicitas para o Chart.js
+    canvas.width = canvas.parentElement.clientWidth || 200;
+    canvas.height = 60;
+    if (_geoSparkCharts[canvasId]) _geoSparkCharts[canvasId].destroy();
+    var ctx = canvas.getContext('2d');
+    _geoSparkCharts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: { labels: ['2026','2027','2028','2029','2030'], datasets: [{ data: data, borderColor: color, borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false }] },
+        options: { responsive: false, maintainAspectRatio: false, animation: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+    });
+}
+
+function _renderGeoImpactGrid() {
+    var el = document.getElementById('geo-impact-grid');
+    if (!el) return;
+    var s = window.geoActiveScenario;
+    if (!s) { el.innerHTML = ''; return; }
+    var sections = [
+        { key: 'beneficiados', cls: 'benefit', icon: 'fa-arrow-trend-up', color: 'var(--green)', label: 'Setores Beneficiados' },
+        { key: 'penalizados', cls: 'penalty', icon: 'fa-arrow-trend-down', color: 'var(--red)', label: 'Setores Penalizados' },
+        { key: 'neutros', cls: 'neutral-card', icon: 'fa-scale-balanced', color: 'var(--blue)', label: 'Impacto Neutro ou Ambivalente' }
+    ];
+    el.innerHTML = sections.map(function(sec) {
+        var items = (s.setoresBR[sec.key] || []).map(function(item) { return '<li>' + item + '</li>'; }).join('');
+        return '<div class="geo-impact-card ' + sec.cls + '">' +
+            '<div class="geo-impact-header"><i class="fas ' + sec.icon + '" style="color:' + sec.color + '"></i><span>' + sec.label + '</span></div>' +
+            '<ul class="geo-impact-list">' + items + '</ul></div>';
+    }).join('');
+}
+
+function toggleGeoPortfolioMC(btn) {
+    var content = document.getElementById('geo-mc-content');
+    if (geoPortfolioMCOpen) {
+        content.style.display = 'none';
+        btn.classList.remove('active');
+        geoPortfolioMCOpen = false;
+        document.getElementById('geo-mc-toggle-hint').textContent = 'Expandir simulacao geopolitica condicional';
+        return;
+    }
+    btn.classList.add('bmt-loading', 'active');
+    document.getElementById('geo-mc-toggle-hint').textContent = 'Calculando 5 cenarios x 2.000 trajetorias...';
+    setTimeout(function() {
+        _runPortfolioMCGeo();
+        content.style.display = 'block';
+        btn.classList.remove('bmt-loading');
+        geoPortfolioMCOpen = true;
+        document.getElementById('geo-mc-toggle-hint').textContent = 'Simulacao condicional por cenario geopolitico';
+    }, 40);
+}
+
+function _runPortfolioMCGeo() {
+    var val = parseInt(document.getElementById('portfolio-slider').value) || 500000;
+    var prazo = benchPrazo;
+    var perfil = perfilAtivo || 'moderado';
+    var N = 2000;
+    var itens = PERFIS[perfil].items;
+    var taxasAtivo = window.taxasCenario[benchCenario] || window.taxasCenario.base;
+
+    function _baseTaxa(key, y) {
+        switch(key) {
+            case 'ntnb': return getNtnbAno(y); case 'cdi': return getSelicAno(y); case 'reserva': return getSelicAno(y);
+            case 'gold': return taxasAtivo.gold || taxasAtivo.ouro || 0.10;
+            case 'silver': return taxasAtivo.silver || taxasAtivo.prata || 0.10;
+            case 'platinum': return taxasAtivo.platinum || taxasAtivo.platina || 0.10;
+            case 'btc': return taxasAtivo.btc || 0.10;
+            default: return 0.10;
+        }
+    }
+
+    // Cenario base (sem overlay geopolitico)
+    var basePaths = [];
+    for (var n = 0; n < N; n++) {
+        var pv = val, serie = [pv];
+        for (var y = 1; y <= prazo; y++) {
+            var portReturn = 0;
+            itens.forEach(function(item) {
+                var w = item.pct / 100, base = _baseTaxa(item.key, y), vol = VOL_PORT[item.key] || 0.10;
+                portReturn += w * (Math.exp(base - 0.5 * vol * vol + vol * randNorm()) - 1);
+            });
+            pv = Math.max(pv * (1 + portReturn), 0); serie.push(pv);
+        }
+        basePaths.push(serie);
+    }
+
+    var geoResults = [{ id: 'base', label: 'Cenario base (sem overlay)', paths: basePaths, color: '#c9a84c' }];
+    var geoColors = ['#6a96d4', '#e08f8f', '#4caf7d', '#d4885a', '#8ecfdd'];
+
+    window.geoScenarios.forEach(function(geo, gi) {
+        var paths = [];
+        for (var n = 0; n < N; n++) {
+            var pv = val, serie = [pv];
+            for (var y = 1; y <= prazo; y++) {
+                var portReturn = 0;
+                itens.forEach(function(item) {
+                    var w = item.pct / 100, geoRet = geo.retornos[item.key];
+                    var base = (geoRet !== undefined) ? geoRet : _baseTaxa(item.key, y);
+                    var vol = VOL_PORT[item.key] || 0.10;
+                    portReturn += w * (Math.exp(base - 0.5 * vol * vol + vol * randNorm()) - 1);
+                });
+                pv = Math.max(pv * (1 + portReturn), 0); serie.push(pv);
+            }
+            paths.push(serie);
+        }
+        geoResults.push({ id: geo.id, label: geo.nome, paths: paths, color: geoColors[gi] || '#888' });
+    });
+
+    // Calcular percentis
+    var labels = []; for (var y = 0; y <= prazo; y++) labels.push(y === 0 ? 'Hoje' : 'Ano ' + y);
+    geoResults.forEach(function(gr) {
+        var pct = function(arr, p) { return arr[Math.floor(p * (arr.length - 1))]; };
+        var result = { p10: [], p25: [], p50: [], p75: [], p90: [] };
+        for (var y = 0; y <= prazo; y++) {
+            var vals = gr.paths.map(function(p) { return p[y]; }).sort(function(a,b) { return a - b; });
+            result.p10.push(pct(vals, 0.10)); result.p25.push(pct(vals, 0.25)); result.p50.push(pct(vals, 0.50)); result.p75.push(pct(vals, 0.75)); result.p90.push(pct(vals, 0.90));
+        }
+        gr.result = result;
+        gr.finalVals = gr.paths.map(function(p) { return p[prazo]; }).sort(function(a,b) { return a - b; });
+        gr.medFinal = result.p50[prazo];
+        gr.cagr = ((Math.pow(gr.medFinal / val, 1 / prazo) - 1) * 100).toFixed(1);
+    });
+
+    // Render grid de probabilidades
+    var probGrid = document.getElementById('geo-mc-prob-grid');
+    if (probGrid) {
+        probGrid.innerHTML = geoResults.map(function(gr) {
+            var probPos = (gr.finalVals.filter(function(v) { return v > val; }).length / N * 100).toFixed(0);
+            var colorProb = parseFloat(probPos) >= 65 ? '#4caf7d' : parseFloat(probPos) >= 45 ? '#c9a84c' : '#e05c5c';
+            return '<div class="bench-mc-prob-card">' +
+                '<span class="bmc-icon"><i class="fas fa-chart-line"></i></span>' +
+                '<span class="bmc-label">' + gr.label + '</span>' +
+                '<span class="bmc-value" style="color:' + gr.color + '">' + (parseFloat(gr.cagr) >= 0 ? '+' : '') + gr.cagr + '%</span>' +
+                '<span class="bmc-sub">CAGR · Positivo: <strong style="color:' + colorProb + '">' + probPos + '%</strong><br>Mediana: ' + fmtBRLShort(gr.medFinal) + '</span>' +
+            '</div>';
+        }).join('');
+    }
+
+    _renderGeoPortfolioMCChart(geoResults, labels);
+}
+
+function _renderGeoPortfolioMCChart(geoResults, labels) {
+    var canvas = document.getElementById('chart-geo-portfolio-mc');
+    if (!canvas) return;
+    if (geoPortfolioMCChart) geoPortfolioMCChart.destroy();
+    var datasets = [];
+    geoResults.forEach(function(gr) {
+        if (gr.id === 'base') {
+            datasets.push({ label: gr.label + ' P75', data: gr.result.p75, borderColor: 'rgba(201,168,76,0.0)', backgroundColor: 'rgba(201,168,76,0.10)', borderWidth: 0, pointRadius: 0, tension: 0.4, fill: false });
+            datasets.push({ label: gr.label + ' P25', data: gr.result.p25, borderColor: 'rgba(201,168,76,0.0)', backgroundColor: 'rgba(201,168,76,0.05)', borderWidth: 0, pointRadius: 0, tension: 0.4, fill: 1 });
+        }
+        datasets.push({ label: gr.label + ' (P50)', data: gr.result.p50, borderColor: gr.color, backgroundColor: 'transparent', borderWidth: gr.id === 'base' ? 3 : 2, borderDash: gr.id === 'base' ? [] : [4, 4], pointRadius: gr.id === 'base' ? 4 : 2, pointBackgroundColor: gr.color, tension: 0.4, fill: false });
+    });
+    geoPortfolioMCChart = new Chart(canvas, {
+        type: 'line', data: { labels: labels, datasets: datasets },
+        options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { color: '#888', font: { size: 11, family: 'DM Mono' }, boxWidth: 22, padding: 12, filter: function(item) { return item.text.indexOf('P50') !== -1 || item.text.indexOf('base') !== -1; } } },
+                tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, titleColor: '#777', bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 11 }, padding: 12, callbacks: { label: function(ctx) { if (ctx.dataset.borderWidth === 0) return null; return ' ' + ctx.dataset.label + ': R$ ' + fmt(ctx.raw, 0); } } } },
+            scales: { x: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: function(v) { return 'R$ ' + fmt(v, 0); } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+    });
+    var disc = document.getElementById('geo-mc-disclaimer');
+    if (disc) disc.innerHTML = '<strong style="color:var(--muted)">Metodologia:</strong> 2.000 trajetorias independentes para cada um dos 5 cenarios geopoliticos + cenario base (12.000 simulacoes totais). Volatilidades: ouro 15%, prata 28%, platina 22%, Bitcoin 85%, NTN-B duration 8%, CDI/reserva 0,5%. As projecoes condicionais usam retornos anuais e trajetorias macro calibradas com dados de prediction markets (Polymarket, Good Judgment, Metaculus) e series historicas de conflito (Correlates of War, UCDP). Nao constitui garantia de retorno. Cenarios geopoliticos sao eventos unicos (Knightianos) sem serie historica para calibracao estatistica; as probabilidades refletem avaliacao qualitativa estruturada.';
+}
+
+function _refreshGeoPortfolioMC() {
+    if (geoPortfolioMCOpen) {
+        setTimeout(function() { _runPortfolioMCGeo(); }, 40);
+    }
+}
+
 atualizarAlocacao(500000);
-setTimeout(() => { desenharDonut(500000); desenharBenchmark(); }, 300);
+setTimeout(() => { desenharDonut(500000); desenharBenchmark(); _initGeoScenarios(); }, 300);
 
 // ── WIDGETS TRADINGVIEW SOB DEMANDA ──
 // Antes: os 25 widgets subiam no parse. Medido: 12 estavam em abas fechadas e

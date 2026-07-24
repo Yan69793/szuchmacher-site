@@ -300,8 +300,22 @@
             <p>Publicação semanal. Não constitui recomendação de investimento.</p>
           </div>
 
-          <!-- ALTERADO 2026-06-01: paywall direto. Form gratuito (Formspree) removido;
-               CTA agora leva aos planos pagos em assinatura.html (checkout Stripe). -->
+          <!-- ALTERADO 2026-07-20: formulario gratuito restaurado para o Fechamento diario.
+               Envia para o Worker (/relatorio-signup) que armazena em KV e manda email. -->
+          <div class="signup-form" style="margin-bottom:20px;">
+            <h3>Receba o relatório gratuitamente</h3>
+            <p>O Fechamento de Mercado diário no seu e-mail, em dias úteis, por volta das 19h BRT.</p>
+            <form id="reportSignupForm" style="margin-top:16px;">
+              <div style="display:flex;gap:10px;">
+                <input type="email" name="email" placeholder="Seu melhor e-mail" required style="flex:1;margin-bottom:0;" />
+                <button type="submit" class="btn" style="white-space:nowrap;min-width:140px;">Inscrever</button>
+              </div>
+              <div id="reportSignupMsg" style="margin-top:10px;font-size:0.88rem;display:none;"></div>
+              <div class="form-note" style="margin-top:8px;">Sem spam. Cancele quando quiser.</div>
+            </form>
+          </div>
+
+          <!-- ALTERADO 2026-06-01: paywall direto. CTA leva aos planos pagos em assinatura.html (checkout Stripe). -->
           <div class="signup-form">
             <h3>Assine a Carta Szuchmacher</h3>
             <p>Research autoral por assinatura. Cobrança anual, no cartão, cancele quando quiser.</p>
@@ -541,6 +555,58 @@
         });
     });
   }());
+  </script>
+
+  <script>
+    /* ── Formulario de inscricao gratuita ────────────────────────────────────
+     * Envia POST para /relatorio-signup (Worker sz-sites), que armazena o
+     * email em KV e dispara email de boas-vindas com o ultimo relatorio.
+     * ────────────────────────────────────────────────────────────────────── */
+    (function () {
+      'use strict';
+      var form = document.getElementById('reportSignupForm');
+      if (!form) return;
+      var msg = document.getElementById('reportSignupMsg');
+      var btn = form.querySelector('button[type="submit"]');
+      var origText = btn ? btn.textContent : '';
+
+      function showMsg(text, isError) {
+        if (!msg) return;
+        msg.textContent = text;
+        msg.style.display = 'block';
+        msg.style.color = isError ? '#b33' : '#2a6b2a';
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = (form.querySelector('input[name="email"]') || {}).value;
+        if (!email) return;
+
+        if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+        if (msg) msg.style.display = 'none';
+
+        fetch('/relatorio-signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim() }),
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d.ok) {
+              showMsg('Inscricao confirmada. Verifique seu email para acessar o ultimo relatorio.', false);
+              form.reset();
+            } else {
+              showMsg(d.error || 'Erro ao processar. Tente novamente.', true);
+            }
+          })
+          .catch(function () {
+            showMsg('Erro de conexao. Tente novamente em instantes.', true);
+          })
+          .then(function () {
+            if (btn) { btn.disabled = false; btn.textContent = origText; }
+          });
+      });
+    })();
   </script>
 
   <script src="/assets/sz-site.js?v=20260617" defer></script>

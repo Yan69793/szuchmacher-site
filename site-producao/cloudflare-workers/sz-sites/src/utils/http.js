@@ -22,9 +22,7 @@ export async function fetchJson(url, opts = {}) {
 export function jsonResponse(data, init = {}) {
   const headers = new Headers(init.headers);
   headers.set('Content-Type', 'application/json; charset=utf-8');
-  if (!headers.has('Access-Control-Allow-Origin')) {
-    headers.set('Access-Control-Allow-Origin', '*');
-  }
+
   return new Response(JSON.stringify(data), { ...init, headers });
 }
 

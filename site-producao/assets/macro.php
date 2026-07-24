@@ -184,7 +184,8 @@ function delete_cache() {
 
 /* ── cache válido? serve direto ───────────────────────────────── */
 $cache = read_cache();
-$forceLive = isset($_GET['nocache']) || isset($_GET['debug']);
+$forceLive = isset($_GET['nocache']);
+$debugMode = isset($_GET['debug']) && isset($_GET['token']) && $_GET['token'] === (getenv('CRON_SECRET') ?: '');
 
 if (
     !$forceLive
@@ -251,7 +252,7 @@ if (!focus_cache_poisoned($payload)) {
 
 $payload['fresh']  = true;
 $payload['served'] = 'live';
-if (isset($_GET['debug'])) {
+if ($debugMode) {
     $payload['_diag'] = $GLOBALS['MACRO_DIAG'];
 }
 echo json_encode($payload, JSON_UNESCAPED_UNICODE);

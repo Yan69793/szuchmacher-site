@@ -24,7 +24,6 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 | `honorarios.html` | Tabela de honorários |
 | `assinatura.html` | Página de assinatura |
 | `privacidade.html` | Política de privacidade |
-| `radar-roic.html` | Radar ROIC |
 | `.htaccess` | Headers de segurança (CSP, HSTS, GZIP, redirects) |
 | `prices.php` | Endpoint: ouro, prata, platina, BTC ao vivo |
 | `macro_api.php` | Endpoint LLM via OpenRouter — 200, secret `OPENROUTER_KEY` no Worker |
@@ -100,6 +99,7 @@ labels, hover sem bounce, grids com gap 1px, `border-radius: 0`.
 4. **Teste único em produção** — com URL, status HTTP e comparação com o esperado.
 5. **CSP em produção vem do Worker `sz-sites`** (`src/utils/headers.js`). `.htaccess` só vale no legado HostGator.
 6. **`assets/sz-config.js` é o único local de IDs externos.** Nunca duplicar GA_ID, CLARITY_ID ou FORMSPREE_ID em HTML.
+7. **Para alterações não triviais, delegar a revisão final ao subagente `code-reviewer`** (`.claude/agents/code-reviewer.md`). O agente implementador não pode substituir essa revisão por uma simples releitura própria. Após receber o parecer, corrigir todos os problemas materiais e rodar de novo as validações.
 
 ---
 
@@ -181,13 +181,21 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Stripe live** — `assets/sz-config.js` ainda tem URLs `buy.stripe.com/test_*`. Desde 2026-07-18 o `ready()` reprova checkout de teste, então os CTAs de `assinatura.html` caem no fallback de e-mail. **Não há como cobrar até as URLs live entrarem.**
-2. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING`; `[data-sz-cal]` cai no WhatsApp
-3. **Enquadramento CVM** — seis textos descrevem a assinatura como research impessoal, que é atividade de analista (Res. 20/2021), enquanto o registro é de consultor (Res. 19/2021). Locais: `assinatura.html:400`, `:463`, `radar-roic.html:7`, `:14`, `:278`. Revisar com advogado antes de mexer
-4. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
-5. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
-6. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
-7. **Sitemap do multi-assets.com** — o domínio não serve `/sitemap.xml` (404). O de szuchmacher lista só URL própria e não pode cobrir outro domínio
+1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp
+2. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
+3. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
+4. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
+5. **Sitemap do multi-assets.com** — o domínio não serve `/sitemap.xml` (404). O de szuchmacher lista só URL própria e não pode cobrir outro domínio
+6. **`wrangler` 4.101.0 com 4 vulnerabilidades altas** — `undici`, `ws` e `esbuild` entram transitivamente por ele. É `devDependency` única do Worker, não vai para o edge, então a exposição é a máquina de build, não produção. Correção real é subir para 4.112.0+ e revalidar, não `npm audit fix`. Fora da janela de domingo por decisão da rotina
+7. **Enquadramento CVM, texto remanescente** — com o Radar ROIC fora (ver "Resolvidas em 2026-07-22"), o disclaimer genérico "research impessoal" que descreve a Carta (FAQ "Assinatura é a mesma coisa que consultoria?" e o rodapé de `assinatura.html`) passou a valer só para conteúdo macro e fechamentos, o que reduz bastante o risco original. Essas linhas em si não foram reescritas nem revisadas por advogado hoje, só deixaram de descrever um produto que rankeava ativos. Validar se ainda precisa de ajuste de texto à parte
+
+### Resolvidas em 2026-07-22
+
+- **Radar ROIC descontinuado** — o produto rankeava ações por ROIC com carteira-modelo e tese por ativo, igual pra todo assinante, estrutura de relatório de análise (Res. CVM 20/2021, exige registro de analista) e não de consultoria individualizada (Res. CVM 19/2021, o registro que existe). Removido de `assinatura.html` (hero, filosofia, metodologia, tiers, FAQ, CTA, footer, CSS órfão, grid da filosofia ajustado de 3 para 2 colunas), arquivo `radar-roic.html` apagado, redirect 301 para `assinatura.html` adicionado no Worker (`src/index.js`, mesmo padrão do `/ebook`), saiu do `sitemap.xml` e dos scripts `validar-producao.ps1` (checagem agora espera 301) e `build-cloudflare-public.ps1` (saiu da lista de arquivos copiados e da de obrigatórios). `setup-stripe.ps1` teve a descrição do plano Carta reescrita sem citar Radar ROIC, mas isso só vale para uma recriação futura do produto: `Get-OrCreateProduct` reaproveita o produto existente pelo `lookup_key` e não atualiza descrição já publicada, então se o texto do produto "Carta Szuchmacher" no dashboard do Stripe ainda citar Radar ROIC, só edição manual lá resolve. Não alterado: os textos de marketing e planejamento já publicados (`docs/marketing/*.md`, `docs/FASE1-STACK.md`) que citam Radar ROIC, deixados como registro histórico
+
+### Resolvidas em 2026-07-19
+
+- **Stripe live** — `assets/sz-config.js:15-16` agora tem os Payment Links live (commit `5a2e504`); a guarda `ready()` reprova `test_*` e a validação de produção confirma. Cobrança operante
 
 ### Resolvidas em 2026-07-18
 

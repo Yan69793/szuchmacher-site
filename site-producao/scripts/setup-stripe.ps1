@@ -138,7 +138,7 @@ Write-Host "Modo: $mode" -ForegroundColor $(if ($mode -eq 'TEST') { 'Yellow' } e
 $plans = @(
     @{
         Name        = 'Carta Szuchmacher'
-        Description = 'Research autoral anual: Radar ROIC, carta macro mensal e fechamentos.'
+        Description = 'Research autoral anual: carta macro mensal e fechamentos de mercado.'
         Lookup      = 'sz_carta_anual'
         Amount      = 197000
     },

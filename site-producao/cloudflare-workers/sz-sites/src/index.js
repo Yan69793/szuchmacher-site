@@ -4,6 +4,8 @@ import { handleMacroApi } from './handlers/macro-api.js';
 import { handleMacroPanel } from './handlers/macro-panel.js';
 import { handleAgenda } from './handlers/agenda.js';
 import { handleFechamento } from './handlers/fechamento.js';
+import { handleStripeWebhook } from './handlers/stripe-webhook.js';
+import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -19,7 +21,39 @@ const API_ROUTES = {
   '/macro_api.php': (req, env) => handleMacroApi(req, env),
   '/assets/macro.php': (req, env) => handleMacroPanel(env, req),
   '/assets/agenda.php': (req, env) => handleAgenda(env, req),
+  '/stripe-webhook': (req, env) => handleStripeWebhook(req, env),
+  '/relatorio-signup': (req, env) => handleRelatorioSignup(req, env),
+  '/health': (req, env) => handleHealth(env),
 };
+
+async function handleHealth(env) {
+  const checks = {};
+  // KV cache check
+  try {
+    const ts = Date.now();
+    await env.CACHE.put('health-check', String(ts), { expirationTtl: 60 });
+    const val = await env.CACHE.get('health-check');
+    checks.kv = val ? 'ok' : 'write-read-mismatch';
+  } catch (e) {
+    checks.kv = 'fail';
+  }
+  // Macro cache freshness
+  try {
+    const macro = await env.CACHE.get('macro-api', { type: 'json' });
+    checks.macro_cache = macro?.generated_at ?? 'empty';
+  } catch {
+    checks.macro_cache = 'unavailable';
+  }
+  return new Response(JSON.stringify({
+    status: 'ok',
+    version: 'sz-sites-worker',
+    checks,
+    ts: Math.floor(Date.now() / 1000),
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+  });
+}
 
 // Extensoes de midia que exigem suporte a Range (video/audio). O binding
 // env.ASSETS.fetch() ignora o header Range e devolve o arquivo inteiro (HTTP 200),
@@ -142,7 +176,10 @@ async function routeRequest(request, env) {
   const siteKey = SITE_MAP[host];
 
   if (!siteKey) {
-    return new Response('Site não configurado', { status: 404 });
+    return applySecurityHeaders(
+      new Response('Site não configurado', { status: 404 }),
+      host
+    );
   }
 
   if (host.startsWith('www.')) {
@@ -151,7 +188,10 @@ async function routeRequest(request, env) {
   }
 
   if (url.pathname.startsWith('/sz/') || url.pathname.startsWith('/multi/')) {
-    return new Response('Not found', { status: 404 });
+    return applySecurityHeaders(
+      new Response('Not found', { status: 404 }),
+      host
+    );
   }
 
   if (siteKey === 'sz') {
@@ -162,6 +202,12 @@ async function routeRequest(request, env) {
     // 301 para a home preserva o historico de link em vez de devolver 404.
     if (url.pathname === '/ebook' || url.pathname === '/ebook.html') {
       return redirect(`${url.protocol}//${host}/`);
+    }
+    // Radar ROIC descontinuado (2026-07-22): a amostra publica, com ranking e
+    // carteira-modelo por ativo, ficava proxima demais de relatorio de analise
+    // (Resolucao CVM 20/2021). 301 para a assinatura preserva o historico de link.
+    if (url.pathname === '/radar-roic.html' || url.pathname === '/radar-roic') {
+      return redirect(`${url.protocol}//${host}/assinatura.html`);
     }
     if (url.pathname.startsWith('/fechamento/')) {
       const result = await handleFechamento(request, env);
@@ -184,10 +230,12 @@ export default {
     try {
       return await routeRequest(request, env);
     } catch (err) {
-      return new Response(JSON.stringify({ ok: false, error: err.message }), {
+      console.error('worker error:', err?.message ?? err);
+      const res = new Response(JSON.stringify({ ok: false, error: 'Erro interno do servidor' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
+      return applySecurityHeaders(res, (new URL(request.url)).hostname);
     }
   },
 

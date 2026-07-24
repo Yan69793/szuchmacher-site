@@ -99,6 +99,24 @@ Gere um JSON VÁLIDO com a estrutura EXATA abaixo. Tom técnico, analítico, par
 }`;
 }
 
+
+// Rate limiting: prevent abuse of LLM refresh (costs credits). Uses KV to track
+// last refresh timestamp. Minimum 1h between external refresh requests.
+async function checkRefreshRate(env, request) {
+  const RATE_TTL = 3600; // 1 hour between refreshes
+  const key = 'macro-refresh-rate';
+  const now = Math.floor(Date.now() / 1000);
+  const lastRefresh = await env.CACHE.get(key);
+  if (lastRefresh) {
+    const elapsed = now - parseInt(lastRefresh, 10);
+    if (elapsed < RATE_TTL) {
+      return { allowed: false, retryAfter: RATE_TTL - elapsed };
+    }
+  }
+  await env.CACHE.put(key, String(now), { expirationTtl: RATE_TTL });
+  return { allowed: true };
+}
+
 function extractJson(content) {
   let text = content.trim();
   const fence = text.match(/```(?:json)?\s*([\s\S]+?)\s*```/i);
@@ -154,6 +172,17 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     Vary: 'Origin',
   };
 
+  // Rate limit external refresh requests (scheduled cron passes forceRefreshOpt internally)
+  if (forceRefresh && !forceRefreshOpt) {
+    const rate = await checkRefreshRate(env, request);
+    if (!rate.allowed) {
+      return jsonResponse(
+        { ok: false, error: 'Rate limit', retry_after_seconds: rate.retryAfter },
+        { status: 429, headers: { ...cors, 'Retry-After': String(rate.retryAfter) } },
+      );
+    }
+  }
+
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: cors });
   }
@@ -177,7 +206,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   if (!key || !key.startsWith('sk-')) {
     if (forceRefresh) {
       return jsonResponse(
-        { ok: false, error: 'OPENROUTER_KEY inválida ou ausente no Worker', hint: 'scripts/set-openrouter-secret.ps1' },
+        { ok: false, error: 'OPENROUTER_KEY inválida ou ausente no Worker' },
         { status: 503, headers: cors },
       );
     }
@@ -241,8 +270,9 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         }, { headers: cors });
       }
     }
+    console.error('OpenRouter failed:', orRes.status);
     return jsonResponse(
-      { ok: false, error: 'OpenRouter falhou', status: orRes.status, detail: errBody },
+      { ok: false, error: 'OpenRouter falhou', status: orRes.status },
       { status: 503, headers: cors },
     );
   }
@@ -257,6 +287,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   try {
     data = extractJson(content);
   } catch (e) {
+    console.error("LLM JSON parse error:", e?.message ?? e);
     if (!forceRefresh) {
       const fallback = await loadStaticMacro(env, request);
       if (fallback?.data) {
@@ -269,7 +300,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         }, { headers: cors });
       }
     }
-    return jsonResponse({ ok: false, error: `JSON do LLM inválido: ${e.message}` }, { status: 503, headers: cors });
+    return jsonResponse({ ok: false, error: "JSON do LLM inválido" }, { status: 503, headers: cors });
   }
 
   if (!data?.eyebrow) {

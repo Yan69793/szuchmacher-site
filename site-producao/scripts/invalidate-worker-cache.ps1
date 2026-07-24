@@ -24,16 +24,36 @@ finally {
 }
 
 if ($RefreshMacro) {
-    Write-Host "  REFRESH macro_api.php?cron=1 ..." -ForegroundColor DarkCyan
-    try {
-        $r = Invoke-RestMethod -Uri 'https://szuchmacher.com.br/macro_api.php?cron=1' -TimeoutSec 180
-        if ($r.ok) {
-            Write-Host "  macro_api OK - $($r.generated_at) cache=$($r.cache)" -ForegroundColor Green
-        } else {
-            Write-Host "  macro_api falhou: $($r.error)" -ForegroundColor Yellow
+    # Best-effort: aquecer o cache que acabamos de apagar, para o primeiro visitante
+    # nao pagar a regeneracao a frio (~37 s, cascata OpenRouter).
+    #
+    # Reconstroi cache do zero e as vezes o upstream devolve 503 na primeira
+    # tentativa (visto em 19/07/2026). Nao e timeout: o TimeoutSec ja era 180 e a
+    # falha voltou em segundos. Reconsultado logo depois, o mesmo endpoint deu 200.
+    # Por isso tenta de novo em vez de desistir no primeiro erro.
+    #
+    # Continua nao-fatal de proposito: cache frio degrada latencia, nao quebra o
+    # site, e a validacao pos-deploy e quem decide se a publicacao vale.
+    $tentativas = 3
+    for ($i = 1; $i -le $tentativas; $i++) {
+        Write-Host "  REFRESH macro_api.php?cron=1 (tentativa $i/$tentativas) ..." -ForegroundColor DarkCyan
+        try {
+            $r = Invoke-RestMethod -Uri 'https://szuchmacher.com.br/macro_api.php?cron=1' -TimeoutSec 180
+            $ok = $r -and ($r.PSObject.Properties.Name -contains 'ok') -and $r.ok
+            if ($ok) {
+                Write-Host "  macro_api OK - $($r.generated_at) cache=$($r.cache)" -ForegroundColor Green
+                break
+            }
+            $motivo = if ($r -and ($r.PSObject.Properties.Name -contains 'error')) { $r.error } else { 'resposta sem ok=true' }
+            Write-Host "  macro_api falhou: $motivo" -ForegroundColor Yellow
+        } catch {
+            Write-Host "  macro_api erro: $($_.Exception.Message)" -ForegroundColor Yellow
         }
-    } catch {
-        Write-Host "  macro_api timeout/erro: $($_.Exception.Message)" -ForegroundColor Yellow
+        if ($i -lt $tentativas) {
+            Start-Sleep -Seconds (5 * $i)
+        } else {
+            Write-Host "  macro_api nao aqueceu em $tentativas tentativas. Cache fica frio; primeiro acesso paga a regeneracao." -ForegroundColor Yellow
+        }
     }
 }
 

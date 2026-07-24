@@ -12,8 +12,13 @@
     { "binding": "CACHE", "id": "fd40efe1057c4c54b3d33277d4665434" }
   ],
   "vars": {
-    "BRIEFING_ORIGIN": "https://szuchmacher-briefing.prospects-intel.workers.dev"
+    "BRIEFING_ORIGIN": "https://szuchmacher-briefing.prospects-intel.workers.dev",
+    "FROM_EMAIL": "yan@szuchmacher.com.br"
   },
+  // Secrets (definir via `wrangler secret put <nome>`):
+  //   STRIPE_WEBHOOK_SECRET   — whsec_... do dashboard Stripe > Developers > Webhooks
+  //   RESEND_API_KEY           — re_... do dashboard Resend > API Keys
+  //   BRIEFING_FETCH_TOKEN     — token de leitura do Worker briefing (ja existente)
   "routes": [
     { "pattern": "szuchmacher.com.br/*", "zone_id": "cfe602627bd2ef210d225ee9deeb45d9" },
     { "pattern": "www.szuchmacher.com.br/*", "zone_id": "cfe602627bd2ef210d225ee9deeb45d9" },

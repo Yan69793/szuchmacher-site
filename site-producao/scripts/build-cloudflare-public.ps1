@@ -61,7 +61,7 @@ New-Item -ItemType Directory -Path (Join-Path $MULTI 'assets') -Force | Out-Null
 Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
-    'privacidade.html', 'radar-roic.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
+    'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
     'relatorio_cache.json', 'og-cover.jpg', 'logo.png',
     'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'
 )
@@ -107,7 +107,7 @@ foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
 # que a copia falhou sem erro, que a contagem de SKIP sozinha nao pegaria.
 $obrigatorios = @(
     'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
-    'sz\privacidade.html', 'sz\radar-roic.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
+    'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
     'sz\logo.png', 'sz\macro_data.json', 'sz\relatorio_cache.json', 'sz\agenda-data.json',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
