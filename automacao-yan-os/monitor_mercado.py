@@ -201,8 +201,13 @@ def formatar_mensagem_alerta(gatilhos: list, analise: str, precos: dict) -> str:
         "",
         f"*Gatilhos:* {', '.join(gatilhos)}",
         "",
-        f"Ibov: {ibov.get('preco', '—')} pts ({ibov.get('sinal','')}{ibov.get('var_pct','—'):.2f}%)",
-        f"Dólar: R${dolar.get('preco', '—')} ({dolar.get('sinal','')}{dolar.get('var_pct','—'):.2f}%)",
+        # var_pct default 0 e nao '—': o default string era formatado com :.2f e
+        # lancava ValueError. Bastava o Yahoo falhar num ticker (o loop de coleta
+        # engole erro por ativo) e o alerta inteiro morria na montagem — justo no
+        # cenario volatil em que ele existe para servir. As linhas de resumo mais
+        # abaixo neste mesmo arquivo ja usavam .get('var_pct', 0).
+        f"Ibov: {ibov.get('preco', '—')} pts ({ibov.get('sinal','')}{ibov.get('var_pct', 0):.2f}%)",
+        f"Dólar: R${dolar.get('preco', '—')} ({dolar.get('sinal','')}{dolar.get('var_pct', 0):.2f}%)",
         "",
         f"_{analise}_",
         "",

@@ -157,15 +157,20 @@ class FTPClient:
     def conectar(self) -> bool:
         host = SITE_FTP_HOST or SITE_HOST
         _log(f"FTP: conectando em {host} como {SITE_USER}...")
+        # FTPS explicito (AUTH TLS na porta 21). Com ftplib.FTP puro, usuario e
+        # senha do HostGator iam em texto claro pela rede. prot_p() cifra tambem
+        # o canal de dados, nao so o de controle.
         try:
-            self.ftp = ftplib.FTP()
+            self.ftp = ftplib.FTP_TLS()
             self.ftp.connect(host, 21, timeout=30)
             self.ftp.login(SITE_USER, SITE_PASS)
+            self.ftp.prot_p()
             self.ftp.set_pasv(True)
-            _log(f"FTP: conectado — {self.ftp.getwelcome()[:60]}")
+            _log(f"FTP: conectado com TLS — {self.ftp.getwelcome()[:60]}")
             return True
         except Exception as e:
-            _log(f"FTP ERRO conexao: {e}")
+            _log(f"FTP ERRO conexao TLS: {e}")
+            _log("FTP: servidor pode nao suportar AUTH TLS. Verificar no cPanel antes de desabilitar.")
             return False
 
     def ir_para(self, path: str) -> bool:
@@ -242,7 +247,9 @@ def _publicar_ftp(cache: dict, caminho_pdf, pdf_nome_remoto) -> bool:
 
     remote_dir = SITE_REMOTE_DIR.rstrip("/")
     if not ftp.ir_para(remote_dir):
-        for alt in ["/public_html", "public_html", "/home1/hg545631/public_html"]:
+        # Sem o caminho absoluto do cPanel hardcoded: era topologia do servidor
+        # versionada. Quem precisa de caminho especifico configura SITE_REMOTE_DIR.
+        for alt in ["/public_html", "public_html"]:
             if ftp.ir_para(alt):
                 break
 
@@ -274,6 +281,12 @@ def _publicar_local(cache: dict, caminho_pdf, pdf_nome_remoto) -> bool:
 def _publicar_webhook(cache: dict) -> bool:
     if not SITE_WEBHOOK_URL:
         _log("ERRO: SITE_WEBHOOK_URL nao configurada.")
+        return False
+    # O segredo tinha fallback literal versionado. Sem ele configurado, assinar
+    # com string vazia daria uma assinatura que qualquer um reproduz — e este
+    # payload sobrescreve o relatorio_cache.json que o site publica.
+    if not SITE_WEBHOOK_SECRET:
+        _log("ERRO: SITE_WEBHOOK_SECRET nao configurada — publicacao por webhook abortada.")
         return False
     try:
         import requests

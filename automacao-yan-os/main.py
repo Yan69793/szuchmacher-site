@@ -79,9 +79,15 @@ def _checar_api_key() -> str:
 
 
 def _salvar_dados(dados: dict):
+    # Escrita atomica: _carregar_dados() e o caminho do --so-narrativa, que
+    # depende deste arquivo estar integro depois de uma coleta interrompida.
     DADOS_JSON.parent.mkdir(parents=True, exist_ok=True)
-    with open(DADOS_JSON, "w", encoding="utf-8") as f:
+    tmp = DADOS_JSON.with_suffix(DADOS_JSON.suffix + ".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(dados, f, ensure_ascii=False, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, DADOS_JSON)
     print(f"[✓] Dados salvos: {DADOS_JSON.name}")
 
 
@@ -302,8 +308,12 @@ def main():
 
     if args.testar:
         import subprocess
-        subprocess.run([sys.executable, "testar_sistema.py"])
-        return
+        # Caminho absoluto e cwd explicito: com o nome relativo, rodar de fora da
+        # pasta do projeto dava "can't open file", e sem checar o returncode o
+        # main.py saia 0 — a suite parecia ter passado sem nunca ter rodado.
+        base = Path(__file__).parent
+        r = subprocess.run([sys.executable, str(base / "testar_sistema.py")], cwd=str(base))
+        sys.exit(r.returncode)
 
     if args.config:
         diagnostico()

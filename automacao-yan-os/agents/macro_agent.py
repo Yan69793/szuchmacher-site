@@ -17,6 +17,7 @@ Deve ser rodado a partir de automacao-yan-os/:
 
 import argparse
 import json
+import os
 import sys
 import time
 from datetime import datetime
@@ -176,14 +177,24 @@ def montar_macro_data(analise: dict, macro_atual: dict) -> dict:
 # ─── Persistência ───────────────────────────────────────────────────────────
 
 def salvar_local(macro_data: dict) -> bool:
+    # Escrita atomica: macro_data.json e o fallback que o Worker serve quando o
+    # macro_api.php falha. Um arquivo truncado aqui derruba tambem o fallback.
+    tmp = MACRO_JSON_PATH.with_suffix(MACRO_JSON_PATH.suffix + ".tmp")
     try:
         MACRO_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(MACRO_JSON_PATH, "w", encoding="utf-8") as f:
+        with open(tmp, "w", encoding="utf-8") as f:
             json.dump(macro_data, f, ensure_ascii=False, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, MACRO_JSON_PATH)
         log(f"Salvo: {MACRO_JSON_PATH}")
         return True
     except Exception as e:
         log(f"ERRO ao salvar: {e}")
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
         return False
 
 

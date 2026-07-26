@@ -41,6 +41,16 @@ LOGS_DIR    = BASE_DIR / "logs"
 MAIN_PY     = BASE_DIR / "main.py"
 PYTHON_EXE  = sys.executable   # mesmo interpretador que está rodando este script
 
+# Este script não importava config, então load_dotenv() nunca rodava aqui: quem
+# seguiu o .env.example e pôs a ANTHROPIC_API_KEY só no .env tinha a tarefa
+# agendada saindo com exit(1) em _checar_api_key, enquanto `python main.py`
+# funcionava normalmente. Carregar o .env alinha os dois pontos de entrada.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env")
+except ImportError:
+    pass   # sem python-dotenv, vale só a variável de ambiente do sistema
+
 # Feriados nacionais Brasil 2026 (B3 fechada)
 # Fonte: calendário B3 + Decreto federal
 FERIADOS_BR_2026 = {

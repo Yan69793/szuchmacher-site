@@ -135,12 +135,15 @@ def testar_ftp():
 
     try:
         import ftplib
-        ftp = ftplib.FTP()
+        # FTPS explicito, igual ao atualizador_site.py — o teste precisa exercitar
+        # o mesmo caminho que a producao usa, senao valida o que nao roda.
+        ftp = ftplib.FTP_TLS()
         host = SITE_FTP_HOST or SITE_HOST
         ftp.connect(host, 21, timeout=15)
         ftp.login(SITE_USER, SITE_PASS)
+        ftp.prot_p()
         ftp.set_pasv(True)
-        _ok("FTP conexão", f"{host}")
+        _ok("FTP conexão", f"{host} (TLS)")
 
         pwd = ftp.pwd()
         _ok("FTP login", f"diretório atual: {pwd}")
