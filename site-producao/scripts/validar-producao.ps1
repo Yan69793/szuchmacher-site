@@ -41,7 +41,10 @@ $checks = @(
     @{ Url = "$SZ/og-cover.jpg";          Status = 200; MinBytes = 10000 }
     @{ Url = "$SZ/logo.png";              Status = 200; MinBytes = 10000 }
     @{ Url = "$SZ/macro_data.json";       Status = 200; MinBytes = 500 }
-    @{ Url = "$SZ/relatorio_cache.json";  Status = 200; MinBytes = 200 }
+    # Opcional: gerado por pipeline externo e gitignored, entao um deploy feito de
+    # clone limpo legitimamente nao o carrega. O Worker degrada para /relatorios.html.
+    # Se estiver presente, ainda exige tamanho minimo.
+    @{ Url = "$SZ/relatorio_cache.json";  Status = 200; MinBytes = 200; Opcional = $true }
     @{ Url = "$SZ/agenda-data.json";      Status = 200; MinBytes = 100 }
 
     # --- config: a guarda do checkout de teste nao pode se perder num rollback ---
@@ -102,7 +105,12 @@ function Test-Url([hashtable]$c) {
 
     try {
         $status = [int]$resp.StatusCode
-        if ($status -ne $c.Status) { return & $falha "HTTP $status, esperado $($c.Status)" }
+        if ($status -ne $c.Status) {
+            if ($c.ContainsKey('Opcional') -and $c.Opcional -and $status -eq 404) {
+                return @{ Rotulo = $rotulo; Url = $c.Url; Ok = $true; Motivo = 'ausente (opcional)' }
+            }
+            return & $falha "HTTP $status, esperado $($c.Status)"
+        }
 
         if ($c.ContainsKey('MinBytes') -or $c.ContainsKey('Contem')) {
             $buf = $resp.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult()
