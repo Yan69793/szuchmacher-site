@@ -6,6 +6,7 @@ import { handleAgenda } from './handlers/agenda.js';
 import { handleFechamento } from './handlers/fechamento.js';
 import { handleStripeWebhook } from './handlers/stripe-webhook.js';
 import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
+import { handleBtcScenarios } from './handlers/btc-scenarios.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -23,6 +24,7 @@ const API_ROUTES = {
   '/assets/agenda.php': (req, env) => handleAgenda(env, req),
   '/stripe-webhook': (req, env) => handleStripeWebhook(req, env),
   '/relatorio-signup': (req, env) => handleRelatorioSignup(req, env),
+  '/api/btc-scenarios': (req, env) => handleBtcScenarios(env),
   '/health': (req, env) => handleHealth(env),
 };
 
