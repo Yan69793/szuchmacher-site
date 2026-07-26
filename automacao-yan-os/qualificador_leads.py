@@ -94,9 +94,8 @@ def qualificar_com_qwen(lead: dict) -> dict:
     if not QWEN_API_KEY:
         return _qualificacao_simples(lead)
 
-    prompt = PROMPT_QUALIFICACAO.format(**{k: lead.get(k, "—") for k in LEAD_VAZIO})
-
     try:
+        prompt = PROMPT_QUALIFICACAO.format(**{k: lead.get(k, "—") for k in LEAD_VAZIO})
         from openai import OpenAI
         client = OpenAI(api_key=QWEN_API_KEY, base_url=QWEN_BASE_URL)
         resp = client.chat.completions.create(

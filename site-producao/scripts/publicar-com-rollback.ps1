@@ -117,7 +117,29 @@ try {
 }
 
 if (-not $deployOk) {
-    Registrar "FALHOU. Producao segue na versao $versaoAnterior, intocada." 'Red'
+    # O deploy-cloudflare.ps1 pode ter saido != 0 DEPOIS de um wrangler deploy
+    # bem-sucedido (ex.: purge de cache falhou). Nesse caso a versao nova ja
+    # esta no ar, e afirmar "intocada" e mentir. Conferir.
+    $posFalha = (Get-VersaoViva).Id
+    if ($posFalha -and $posFalha -ne $versaoAnterior) {
+        Registrar "FALHOU. Versao $posFalha detectada no ar (anterior era $versaoAnterior)." 'Red'
+        Registrar "O deploy parcial foi ao ar. Tentando rollback..." 'Red'
+        # Tenta rollback. Se falhar, producao fica na versao nao validada.
+        Push-Location $WORKER
+        try {
+            $saidaRb = (npx wrangler rollback $versaoAnterior -y -m "Rollback automatico: deploy falhou apos publicacao" 2>&1 | Out-String)
+            $rbOk = ($LASTEXITCODE -eq 0)
+        } finally { Pop-Location }
+        if ($rbOk) {
+            Registrar "Rollback concluido. Producao de volta em $versaoAnterior." 'Yellow'
+        } else {
+            $resumoRb = @($saidaRb -split "`n" | Where-Object { $_ -match 'SUCCESS|ERROR|has been deployed' }) -join ' '
+            Registrar "ROLLBACK FALHOU: $($resumoRb.Trim())" 'Red'
+            Registrar "Producao pode estar em $posFalha, sem validacao." 'Red'
+        }
+    } else {
+        Registrar "FALHOU. Versao viva continua $versaoAnterior, producao intocada." 'Red'
+    }
     $linhas | Set-Content -Path $LOG -Encoding utf8
     exit 1
 }
