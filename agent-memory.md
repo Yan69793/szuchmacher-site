@@ -1,7 +1,7 @@
 # Agent Memory — MultiAsset (szuchmacher.com.br)
 
-> Criado: 2026-06-14
-> Stack: HTML5/PHP (HostGator FTP) + Python 3.11 + Node.js + Claude API
+> Criado: 2026-06-14 · Revisado: 2026-07-26 (auditoria completa)
+> Stack: HTML5 + Cloudflare Workers (JS) + Python 3.11 + Node.js + OpenRouter/Claude API
 
 ---
 
@@ -10,11 +10,15 @@
 Site institucional + plataforma multiasset em szuchmacher.com.br.
 Pipeline editorial semanal: coleta Yahoo Finance → Claude gera narrativa → PPTX/PDF → FTP → email.
 
-**Estágio real (evidência objetiva, 2026-06-14):** Launch
+**Estágio real (revisado em 2026-07-26):** Launch
 - Pipeline funcional, plataforma publicada, monitor intraday ativo
-- 0 usuários pagantes confirmados
-- macro_data.json editado manualmente desde 14/06 (cron PHP desativado)
-- agenda-data.json atualizado manualmente 2x/semana
+- Cobrança Stripe live desde 19/07. **O e-mail de boas-vindas nunca chegou a
+  sair** até 26/07 — o webhook rejeitava toda entrega do Stripe por um bug de
+  codificação da assinatura (corrigido; ver `site-producao/CLAUDE.md`)
+- `macro_data.json` é fallback: quem gera a narrativa em produção é o cron do
+  Worker (`0 3 * * 1`, `wrangler.jsonc`) gravando em KV
+- `agenda-data.json` sai do bundle de assets, então **só muda com
+  `wrangler deploy`** — subir por FTP não altera o que o site serve
 
 ---
 
@@ -129,9 +133,21 @@ Run: `YAN_OS_BATCH=1 python agents/agenda_agent.py`
 **Rodar manual:** `.\scripts\run-agenda-agent.ps1`  
 **Registrar tarefa:** `.\scripts\register-agenda-task.ps1`
 
-## Próximo Passo
+## Próximo Passo (revisado 2026-07-26)
 
-1. **GA4 + Clarity** — criar propriedades e rodar `.\scripts\setup-analytics.ps1 -GaId G-... -ClarityId ...`
-2. **Stripe live** — repetir `setup-stripe.ps1 -Live` com `sk_live_`/`rk_live_`
-3. **Cloudflare purge** — token com permissão Cache Purge em `.env`
-4. **Stripe em produção** — já em modo teste via `sz-config.js` (17/06)
+1. **Confirmar os secrets do Worker** — `STRIPE_WEBHOOK_SECRET` e `RESEND_API_KEY`.
+   Sem o primeiro o webhook responde 503; sem o segundo toda inscrição em
+   `/relatorio-signup` devolve 500. Não consegui verificar isso do repositório
+2. **Testar o webhook do Stripe** — dashboard → Developers → Webhooks → Send test
+   event. Antes da correção de 26/07 isso devolvia 401 em toda entrega
+3. **Revisão jurídica da política de privacidade** — a minuta de 26/07 alinhou o
+   texto ao que o código faz (Cloudflare, Resend e Stripe como operadores,
+   transferência internacional, retenção de 12 meses), mas não foi validada por advogado
+4. **Rotina `szuchmacher-domingo`** — ler o prompt e confirmar se ela publica pelo
+   Cloudflare ou só por FTP. Se for só FTP, a agenda em produção não está sendo
+   atualizada por ela
+5. **Cal.com** — `SZ_CALCOM_URL` segue em `_PENDING`; todo `[data-sz-cal]` cai no WhatsApp
+6. **Cloudflare purge** — token com permissão Cache Purge em `.env`
+
+> **GA4 não entra na lista.** Foi removido por decisão de arquitetura e o tracking
+> vai para o Clarity. `setup-analytics.ps1` não aceita mais `-GaId`.

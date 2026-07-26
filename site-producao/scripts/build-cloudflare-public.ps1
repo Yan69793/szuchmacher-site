@@ -82,7 +82,10 @@ foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f)
 $szOpcionais = @('relatorio_cache.json')
 foreach ($f in $szOpcionais) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) -Opcional | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js')
+# hero-editorial.{css,js} e hero-switch.js sairam da lista: nenhuma das paginas de
+# szuchmacher.com.br os referencia, entao eram peso morto publicado. Os arquivos
+# continuam em disco (ver design/HERO-REVERT.md) — so nao vao mais para o bundle.
+$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js')
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
