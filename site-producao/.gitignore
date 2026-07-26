@@ -4,3 +4,4 @@ _arquivo/
 *.log
 config.php
 backups/
+relatorio_cache.json

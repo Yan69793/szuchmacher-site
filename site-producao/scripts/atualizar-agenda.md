@@ -1,37 +1,28 @@
 # Rotina semanal — Agenda macro szuchmacher.com.br
 
-Execute esta rotina toda segunda-feira às 08:30 BRT (após a abertura do Focus).
+A agenda macroeconômica é gerada e publicada automaticamente pelo Windows Task
+Scheduler (Szuchmacher-AgendaAgent, dom + seg + qui 08:00).
 
-## Objetivo
-Atualizar o calendário macroeconômico dos da semana corrente (PT + EN) e publicá-lo no servidor.
+## Como funciona (Cloudflare Workers, sem FTP)
 
-## Instruções
+1. `run-agenda-agent.ps1` executa `agenda_agent.py` que gera `agenda-data.json`
+2. `publicar-com-rollback.ps1` faz build (`build-cloudflare-public.ps1`), deploy
+   (`deploy-cloudflare.ps1`) e validação (`validar-producao.ps1`) com rollback
+   automático
+3. O Worker (`sz-sites`) serve `/assets/agenda.php` lendo `agenda-data.json` do
+   bundle — é servido como JSON estático, não como PHP
 
-1. Calcule a janela: inicio = segunda-feira da semana corrente, fim = domingo da semana corrente (formato YYYY-MM-DD).
+## Fluxo manual (se a automação falhar)
 
-2. Pesquise (WebSearch) o calendário programado para essa janela em fontes oficiais:
-   - Brasil: BCB (bcb.gov.br/calendariodivulgacao), IBGE (ibge.gov.br/calendario), S&P Global PMI Brasil
-   - EUA: BLS (bls.gov/schedule), ISM (ismworld.org), S&P Global PMI, Census Bureau, DoL
-   - Inclua apenas eventos com data e fonte confirmadas. Nunca antecipe resultado.
-   - Boletim Focus = toda segunda às 08:25 BRT.
+1. `cd E:\Diretorio\Claude\Site\automacao-yan-os`
+2. Ativar venv e rodar: `python agents\agenda_agent.py`
+3. Conferir `E:\Diretorio\Claude\Site\site-producao\agenda-data.json`
+4. Publicar: `cd ..\site-producao\scripts && .\publicar-com-rollback.ps1`
 
-3. Leia as credenciais de deploy em:
-   E:\Diretorio\Claude\Site\site-producao\.env   (chaves FTP_HOST, FTP_USER, FTP_PASS)
+## Histórico
 
-4. Leia o template em:
-   E:\Diretorio\Claude\Site\site-producao\agenda-server.php
-   Siga o formato exato (array PHP, campos: data, hora_brt, regiao, evento, evento_en, descricao, descricao_en, fonte, relevancia).
-
-5. Reescreva o agenda-server.php com a nova janela e eventos bilíngues. Atualize meta.version para hoje.
-
-6. Faça backup do arquivo vivo, upload da nova versão e valide na URL pública.
-   Sempre use TLS verificado (--ssl-reqd). Nunca use -k.
-   Capure status HTTP com -o NUL -w "%{http_code}".
-   Se a validação falhar, restaure o backup.
-
-   ATENÇÃO — caminho FTP correto (sem public_html):
-     backup:  curl --ssl-reqd -s -o agenda-backup-live.php --user "USER:PASS" "ftp://HOST/assets/agenda.php"
-     upload:  curl --ssl-reqd -T agenda-server.php --user "USER:PASS" "ftp://HOST/assets/agenda.php"
-     validar: curl -s "https://szuchmacher.com.br/assets/agenda.php" -o NUL -w "%{http_code}"
-
-7. Reporte: janela, número de eventos, evento de maior relevância, status de cada passo.
+- Até 2026-06-17: agenda era um arquivo PHP (`agenda-server.php`) publicado
+  via FTP no HostGator (caminho `assets/agenda.php`). O Worker migrou o
+  endpoint para leitura de `agenda-data.json` do bundle, eliminando a
+  dependência de FTP. O arquivo `agenda-server.php` permanece no repo como
+  referência, mas não é mais o que o site serve.

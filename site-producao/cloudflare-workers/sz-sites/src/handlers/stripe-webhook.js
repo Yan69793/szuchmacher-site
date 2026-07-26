@@ -11,18 +11,19 @@
  * no console do Worker e vao para tail.
  */
 
-const STRIPE_SIGNING_SECRET_GLOB = '[STRIPE_WEBHOOK_SECRET]'; // placeholder: sobrescrito em wrangler.jsonc vars ou secret
-
 const WELCOME_SUBJECT = 'Bem-vindo — Szuchmacher Consultoria';
 const WELCOME_PREHEADER = 'Seu acesso ao Fechamento de Mercado';
 
-function base64ToUint8Array(b64) {
-	// Substitui caracteres especiais de base64url e adiciona padding
-	const std = b64.replace(/-/g, '+').replace(/_/g, '/');
-	const pad = std.length % 4 === 0 ? '' : '='.repeat(4 - (std.length % 4));
-	const raw = atob(std + pad);
-	const bytes = new Uint8Array(raw.length);
-	for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+// Stripe envia v1= em hexadecimal (RFC 2104, secao 2). Base64 nao funciona:
+// todo caractere hex tambem e valido em base64, entao atob nao lanca erro —
+// devolve bytes errados e crypto.subtle.verify retorna false em toda entrega.
+// Bug em producao desde o Stripe live (19/07/2026).
+function hexToUint8Array(hex) {
+	if (hex.length % 2 !== 0) hex = '0' + hex;
+	const bytes = new Uint8Array(hex.length / 2);
+	for (let i = 0; i < bytes.length; i++) {
+		bytes[i] = parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+	}
 	return bytes;
 }
 
@@ -54,7 +55,7 @@ async function verifyStripeSignature(rawBody, signatureHeader, secret) {
 	);
 
 	for (const sig of sigs.split(' ')) {
-		const sigBytes = base64ToUint8Array(sig);
+		const sigBytes = hexToUint8Array(sig);
 		const ok = await crypto.subtle.verify(
 			'HMAC',
 			key,
@@ -246,7 +247,7 @@ async function sendWelcomeEmail(env, toEmail, reportUrl, dateLabel) {
 	}
 }
 
-export async function handleStripeWebhook(request, env) {
+export async function handleStripeWebhook(request, env, ctx) {
 	// Só aceita POST
 	if (request.method !== 'POST') {
 		return new Response('Method not allowed', { status: 405 });
@@ -255,9 +256,13 @@ export async function handleStripeWebhook(request, env) {
 	const signature = request.headers.get('stripe-signature');
 	const rawBody = await request.text();
 
-	// Verificar assinatura
-	const secret = env.STRIPE_WEBHOOK_SECRET || STRIPE_SIGNING_SECRET_GLOB;
-	const valid = await verifyStripeSignature(rawBody, signature, secret);
+	// Verificar assinatura. Sem secret configurado, devolve 503 em vez de
+	// cair no literal '[STRIPE_WEBHOOK_SECRET]' que estava publicado no repo.
+	if (!env.STRIPE_WEBHOOK_SECRET) {
+		console.error('[stripe-webhook] STRIPE_WEBHOOK_SECRET nao configurado no Worker');
+		return new Response('Webhook secret not configured', { status: 503 });
+	}
+	const valid = await verifyStripeSignature(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
 	if (!valid) {
 		console.error('[stripe-webhook] assinatura invalida ou ausente');
 		return new Response('Invalid signature', { status: 401 });
@@ -273,33 +278,25 @@ export async function handleStripeWebhook(request, env) {
 	const eventType = event.type;
 	console.log(`[stripe-webhook] evento recebido: ${eventType}`);
 
-	// Responder 200 imediatamente — Stripe espera resposta rápida.
-	// O envio de email roda em background (ctx.waitUntil, chamado pelo
-	// routeRequest que nao tem acesso a ctx — usamos Promise.race com
-	// timeout em vez de block).
-	const responsePromise = (async () => {
-		if (eventType === 'checkout.session.completed') {
-			const session = event.data?.object;
-			const customerEmail = session?.customer_details?.email || session?.customer_email;
+	// Stripe espera resposta rapida (<= 20s). O envio de email roda em
+	// background via ctx.waitUntil, que mantem o Worker vivo ate concluir.
+	if (eventType === 'checkout.session.completed') {
+		const session = event.data?.object;
+		const customerEmail = session?.customer_details?.email || session?.customer_email;
 
-			if (customerEmail) {
+		if (customerEmail && ctx) {
+			ctx.waitUntil((async () => {
 				const reportUrl = await getLatestReportFromCache(env);
 				await sendWelcomeEmail(env, customerEmail, reportUrl, null);
-			} else {
-				console.warn('[stripe-webhook] checkout.session.completed sem email detectavel');
-			}
+			})());
+		} else if (customerEmail) {
+			// Sem ctx (caminho de teste): envia sincrono com timeout
+			console.warn('[stripe-webhook] ctx indisponivel, envio sincrono');
+			const reportUrl = await getLatestReportFromCache(env);
+			await sendWelcomeEmail(env, customerEmail, reportUrl, null);
+		} else {
+			console.warn('[stripe-webhook] checkout.session.completed sem email detectavel');
 		}
-		// Outros eventos: ignorar silenciosamente (200)
-	})();
-
-	// Aguarda no maximo 10s para concluir o envio; se estourar, segue em frente
-	try {
-		await Promise.race([
-			responsePromise,
-			new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 10000)),
-		]);
-	} catch (e) {
-		console.warn(`[stripe-webhook] processamento background: ${e?.message ?? e}`);
 	}
 
 	return new Response(JSON.stringify({ received: true }), {
