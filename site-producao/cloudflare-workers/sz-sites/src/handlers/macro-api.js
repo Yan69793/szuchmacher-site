@@ -1,18 +1,11 @@
 import { fetchJson, jsonResponse } from '../utils/http.js';
 import { readCache, writeCache } from '../utils/cache.js';
+import { bcbSgs } from '../utils/market.js';
 
 const CACHE_KEY = 'macro-api';
 const CACHE_TTL = 7 * 24 * 3600;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OPENROUTER_MODEL = 'anthropic/claude-haiku-4-5';
-
-async function bcbSgs(serie) {
-  const j = await fetchJson(
-    `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${serie}/dados/ultimos/1?formato=json`,
-    { timeout: 8000 },
-  );
-  return Array.isArray(j) && j[0] ? j[0] : null;
-}
 
 const FOCUS_BASE =
   'https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais';
@@ -222,8 +215,10 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     return jsonResponse({ ok: false, error: 'OPENROUTER_KEY não configurada' }, { status: 503, headers: cors });
   }
 
-  const selicSgs = await bcbSgs(432);
-  const ptaxSgs = await bcbSgs(1);
+  // 8s explicito: era o timeout local deste handler antes da extracao para
+  // utils/market.js, cujo default e 10s.
+  const selicSgs = await bcbSgs(432, 8000);
+  const ptaxSgs = await bcbSgs(1, 8000);
   const anoAtual = new Date().getFullYear();
   const prompt = buildPrompt({
     dataHoje: brtDate(),

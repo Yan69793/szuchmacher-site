@@ -1,5 +1,6 @@
-import { fetchJson, jsonResponse, brtNow } from '../utils/http.js';
+import { jsonResponse, brtNow } from '../utils/http.js';
 import { readCache, writeCache } from '../utils/cache.js';
+import { fetchYahoo } from '../utils/market.js';
 
 const CACHE_KEY = 'market-data';
 const CACHE_TTL = 600;
@@ -10,25 +11,6 @@ const SEED = {
   treasury10y: { value: 4.45, change_pct: 0.0 },
   ntnb11: { value: 95.0, change_pct: 0.0 },
 };
-
-async function fetchYahoo(encodedSymbol) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodedSymbol}?interval=1d&range=1d`;
-  const j = await fetchJson(url, {
-    timeout: 10000,
-    headers: {
-      Accept: 'application/json',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'User-Agent': 'Mozilla/5.0 (compatible; MultiAssetBot/1.0)',
-    },
-  });
-  const meta = j?.chart?.result?.[0]?.meta;
-  if (!meta) return null;
-  const price = meta.regularMarketPrice != null ? Number(meta.regularMarketPrice) : null;
-  const prev = meta.chartPreviousClose != null ? Number(meta.chartPreviousClose) : null;
-  if (price == null) return null;
-  const change_pct = prev && prev > 0 ? Math.round(((price - prev) / prev) * 10000) / 100 : 0;
-  return { value: Math.round(price * 100) / 100, change_pct };
-}
 
 function fallbackVal(live, key, prevData) {
   if (live) return live;

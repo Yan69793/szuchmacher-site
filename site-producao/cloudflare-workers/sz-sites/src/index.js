@@ -1,5 +1,6 @@
 import { handlePrices } from './handlers/prices.js';
 import { handleMarketData } from './handlers/market-data.js';
+import { handleRelatorioPrices } from './handlers/relatorio-prices.js';
 import { handleMacroApi } from './handlers/macro-api.js';
 import { handleMacroPanel } from './handlers/macro-panel.js';
 import { handleAgenda } from './handlers/agenda.js';
@@ -18,6 +19,7 @@ const SITE_MAP = {
 const API_ROUTES = {
   '/prices.php': (req, env) => handlePrices(env),
   '/market-data.php': (req, env) => handleMarketData(env),
+  '/relatorio-prices.php': (req, env) => handleRelatorioPrices(env),
   '/macro_api.php': (req, env) => handleMacroApi(req, env),
   '/assets/macro.php': (req, env) => handleMacroPanel(env, req),
   '/assets/agenda.php': (req, env) => handleAgenda(env, req),
