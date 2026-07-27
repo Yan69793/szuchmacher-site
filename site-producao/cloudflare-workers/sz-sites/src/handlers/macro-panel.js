@@ -6,15 +6,37 @@ const CACHE_TTL = 900; // 15 min — alinhado ao macro.php
 const FOCUS_BASE =
   'https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais';
 
+// KPIs que vem do SGS do BCB, um fetch independente cada. Sao os numeros
+// grandes do painel: sem eles a home mostra travessao.
+const SGS_FIELDS = ['selic_meta', 'cambio_ptax'];
+
 function focusAllNull(focus) {
   if (!focus || typeof focus !== 'object') return true;
   return !Object.values(focus).some((v) => v && v.mediana != null);
 }
 
-function focusCachePoisoned(payload) {
+function sgsFaltando(payload) {
+  if (!payload) return SGS_FIELDS.slice();
+  return SGS_FIELDS.filter((k) => payload[k] == null);
+}
+
+// Um payload so pode ser gravado, ou servido do cache, com todos os KPIs
+// preenchidos. A checagem anterior era:
+//
+//   const sgsOk = payload.selic_meta != null || payload.cambio_ptax != null;
+//   return sgsOk && focusAllNull(payload.focus);
+//
+// e tinha dois furos. O `||` deixava um payload meio quebrado passar por sao:
+// com o cambio presente e a Selic nula nada era considerado envenenado, o
+// payload ia para o KV por CACHE_TTL*2 e voltava com `fresh: true`. Em
+// 26/07/2026 a home exibiu "SELIC (META HOJE), Aguardando BCB" enquanto
+// api.bcb.gov.br/dados/serie/bcdata.sgs.432 respondia 200 com 14.25, ou seja,
+// uma unica falha transitoria de bcbSgs(432) apagava o KPI da home por ate 30
+// minutos e se repunha a cada ciclo. O `&&` era o segundo furo: payload com
+// tudo nulo nao contava como envenenado e podia ser gravado.
+function cachePoisoned(payload) {
   if (!payload) return false;
-  const sgsOk = payload.selic_meta != null || payload.cambio_ptax != null;
-  return sgsOk && focusAllNull(payload.focus);
+  return sgsFaltando(payload).length > 0 || focusAllNull(payload.focus);
 }
 
 function focusUrl(indicador, anoRef) {
@@ -60,7 +82,7 @@ export async function handleMacroPanel(env, request) {
   const forceLive = url?.searchParams.has('nocache') || url?.searchParams.has('debug');
 
   const cache = forceLive ? null : await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL && !focusCachePoisoned(cache)) {
+  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL && !cachePoisoned(cache)) {
     return jsonResponse({ ...cache, served: 'cache', fresh: true }, {
       headers: { 'Cache-Control': 'public, max-age=300' },
     });
@@ -108,12 +130,39 @@ export async function handleMacroPanel(env, request) {
     served: 'live',
   };
 
+  // Recuperacao campo a campo a partir do ultimo cache bom. As chamadas ao BCB
+  // sao independentes, entao uma falhar nao pode zerar o KPI correspondente na
+  // home. O valor recuperado carrega a propria data (`selic_meta.data`,
+  // `cambio_ptax.data`), que o painel ja exibe, entao o usuario ve de quando e.
+  const recuperado = [];
+
   if (focusAllNull(payload.focus) && cache && !focusAllNull(cache.focus)) {
     payload.focus = cache.focus;
     payload.focus_recovered = 'stale_cache';
+    recuperado.push('focus');
   }
 
-  if (!focusCachePoisoned(payload)) {
+  for (const campo of SGS_FIELDS) {
+    if (payload[campo] == null && cache && cache[campo] != null) {
+      payload[campo] = cache[campo];
+      recuperado.push(campo);
+    }
+  }
+
+  if (recuperado.length > 0) {
+    payload.recuperado = recuperado;
+    // assets/macro-panel.js:388 le `fresh === false` e escreve ", cache" ao
+    // lado do carimbo de atualizacao.
+    payload.fresh = false;
+  }
+
+  // So vai para o cache o que veio integro da fonte. Payload remendado com
+  // valor antigo nao e gravado de proposito: se fosse, cada ciclo de falha
+  // regravaria o mesmo dado velho renovando o TTL, e o valor sobreviveria
+  // indefinidamente sem ninguem perceber. Assim a ponte sobre uma falha
+  // transitoria dura no maximo o TTL do ultimo write bom, e uma queda longa do
+  // BCB volta a aparecer na home em vez de ficar escondida atras de cache.
+  if (!cachePoisoned(payload) && recuperado.length === 0) {
     await writeCache(env.CACHE, CACHE_KEY, payload, CACHE_TTL * 2);
   }
 
