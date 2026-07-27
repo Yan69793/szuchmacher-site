@@ -58,6 +58,8 @@ FOCUS — Medianas do mercado (${data.anoAtual}):
 
 Gere um JSON VÁLIDO com a estrutura EXATA abaixo. Tom técnico, analítico, para investidores sofisticados. Português do Brasil. Não inclua nada fora do JSON.
 
+Em "ativos", o campo "alocacao_sugerida" é a faixa de percentual DO PATRIMÔNIO a alocar no ativo. Nunca é retorno esperado nem taxa ao ano. As premissas de retorno da plataforma são curadas fora deste payload e não devem ser inferidas aqui.
+
 {
   "eyebrow": "string — ex: 'Cenário Global · Junho 2026'",
   "alert_title": "string — headline com 3 dados de mercado chave: Selic, câmbio e evento dominante",
@@ -89,10 +91,10 @@ Gere um JSON VÁLIDO com a estrutura EXATA abaixo. Tom técnico, analítico, par
     "<strong>Cenário 1 — Título:</strong> análise de 2 a 3 linhas"
   ],
   "ativos": {
-    "ouro":    {"conservador": {"taxa": "string", "desc": "string"}, "moderado": {"taxa": "string", "desc": "string"}, "agressivo": {"taxa": "string", "desc": "string"}},
-    "prata":   {"conservador": {"taxa": "string", "desc": "string"}, "moderado": {"taxa": "string", "desc": "string"}, "agressivo": {"taxa": "string", "desc": "string"}},
-    "platina": {"conservador": {"taxa": "string", "desc": "string"}, "moderado": {"taxa": "string", "desc": "string"}, "agressivo": {"taxa": "string", "desc": "string"}},
-    "bitcoin": {"conservador": {"taxa": "string", "desc": "string"}, "moderado": {"taxa": "string", "desc": "string"}, "agressivo": {"taxa": "string", "desc": "string"}}
+    "ouro":    {"conservador": {"alocacao_sugerida": "faixa de % do patrimônio, ex: '5-8% do patrimônio'", "desc": "string"}, "moderado": {"alocacao_sugerida": "string", "desc": "string"}, "agressivo": {"alocacao_sugerida": "string", "desc": "string"}},
+    "prata":   {"conservador": {"alocacao_sugerida": "string", "desc": "string"}, "moderado": {"alocacao_sugerida": "string", "desc": "string"}, "agressivo": {"alocacao_sugerida": "string", "desc": "string"}},
+    "platina": {"conservador": {"alocacao_sugerida": "string", "desc": "string"}, "moderado": {"alocacao_sugerida": "string", "desc": "string"}, "agressivo": {"alocacao_sugerida": "string", "desc": "string"}},
+    "bitcoin": {"conservador": {"alocacao_sugerida": "string", "desc": "string"}, "moderado": {"alocacao_sugerida": "string", "desc": "string"}, "agressivo": {"alocacao_sugerida": "string", "desc": "string"}}
   },
   "premissas_perfis":   {"conservador": "1 frase", "moderado": "1 frase", "arrojado": "1 frase"},
   "premissas_cenarios": {"pessimista": "1 frase",  "base": "1 frase",     "otimista": "1 frase"}
