@@ -3491,8 +3491,13 @@ function calcSerie(inicial, aporte, taxaAnual, prazo) {
     const serie = [];
     for (let y = 0; y <= anos; y++) {
         const n   = y * 12; // número de meses
+        // A condição era `r > 0`, então qualquer taxa negativa caía em `aporte * n`
+        // e os aportes eram somados a valor de face, como se rendessem 0% em vez de
+        // renderem negativo. A fórmula de anuidade vale para r negativo; só r === 0
+        // precisa do caso especial. Com BTC pessimista a −10% a.a., 10k inicial e
+        // 500/mês por 4 anos, o bug devolvia 30.561 no lugar de 26.231 (+16,5%).
         const fv  = inicial * Math.pow(1 + r, n)
-                  + (r > 0
+                  + (r !== 0
                       ? aporte * (Math.pow(1 + r, n) - 1) / r
                       : aporte * n);
         serie.push(Math.max(fv, 0));
@@ -3622,17 +3627,62 @@ window.geoBaseCorrelations = {
 // Gold retorno medio ate equity trough: +14% (~7m), +31% (17m)
 // GPR 1sd shock: cross-border portfolio flows -15% (IMF GFSR 2023)
 
+// Modelo de drawdown total do BTC pessimista: o cliente termina com 40% do que
+// aportou. Só vale enquanto simConfigs.btc.pess === null, ou seja, enquanto o
+// BTC Radar não responde. Ver BTC_PESS_FALLBACK_ANUAL abaixo.
 window.btcPessMultiplier = 0.40;
+
+// Retorno anual do BTC pessimista usado pela carteira enquanto simConfigs.btc.pess
+// é null. A carteira precisa de uma taxa anual: o multiplicador de drawdown total
+// não tem equivalente anual estável (depende do prazo e do fluxo de aportes, que
+// diferem entre o simulador do ativo e a projeção do portfólio).
+const BTC_PESS_FALLBACK_ANUAL = -0.15;
+
 window.cenarioDescricoes = {
     pessimista: 'Geopolítica deteriorada, juros altos por mais tempo, dólar forte.',
     base: 'Ciclo de cortes do BCB em andamento, com incerteza geopolítica moderada e desinflação gradual.',
     otimista: 'Resolução do conflito geopolítico, queda acelerada de juros globais, dólar em enfraquecimento estrutural.'
 };
-window.taxasCenario = {
-    pessimista: { ouro: 0.05, prata: 0.03, platina: 0.01, btc: -0.15, cdi: 0.12, ntnb: 0.10, usdbrl: -0.10, gold: 0.05, silver: 0.03, platinum: 0.01 },
-    base:       { ouro: 0.093, prata: 0.085, platina: 0.06, btc: 0.40, cdi: 0.1425, ntnb: 0.13, usdbrl: 0.0, gold: 0.093, silver: 0.085, platinum: 0.06 },
-    otimista:   { ouro: 0.15, prata: 0.18, platina: 0.20, btc: 1.20, cdi: 0.165, ntnb: 0.16, usdbrl: 0.10, gold: 0.15, silver: 0.18, platinum: 0.20 }
-};
+
+// FONTE ÚNICA DE PREMISSA DE RETORNO: window.taxasCenario deriva de simConfigs.
+// Antes eram dois objetos independentes descrevendo a mesma coisa — o retorno anual
+// esperado de um ativo num cenário. simConfigs alimenta os cards dos simuladores (o
+// número que o cliente lê como texto) e taxasCenario alimenta o gráfico "Projeção do
+// Portfólio vs Benchmarks", o Monte Carlo da carteira e o overlay geopolítico.
+// Divergências medidas em produção em 27/07/2026, todas visíveis na mesma tela:
+//   BTC base      card +50% a.a. (BTC Radar)  x  carteira +40% a.a. (literal parado)
+//   BTC pessimista card −10% a.a.             x  carteira −15% a.a.
+//   BTC otimista   card +110% a.a.            x  carteira +120% a.a.
+//   ouro pessimista   card +4% a.a.           x  carteira +5% a.a.
+//   platina pessimista card −5% a.a.          x  carteira +1% a.a.
+// simConfigs é o lado canônico: é o que os rótulos publicados no HTML já exibem
+// (g-rate-cons "+4% a.a.", p-rate-cons "−5% a.a.") e o que os feeds server-side
+// atualizam. Mesma classe de defeito que VOL_PORT/VOL_ANUAL resolveu para volatilidade.
+window.taxasCenario = { pessimista: {}, base: {}, otimista: {} };
+
+// Consumidores leem ora a chave PT-BR, ora a EN (`taxasAtivo.ouro || taxasAtivo.gold`).
+const TAXAS_ALIAS_PTBR  = { gold: 'ouro', silver: 'prata', platinum: 'platina' };
+const TAXAS_CENARIO_SEL = { pess: 'pessimista', base: 'base', otim: 'otimista' };
+
+// Reprojeta taxasCenario a partir de simConfigs. Chamar depois de qualquer escrita
+// em simConfigs, senão a carteira continua projetando a premissa antiga.
+// Nota: cdi, ntnb e reserva são reprojetados aqui por consistência, mas as projeções
+// do portfólio não os leem daqui — usam getSelicAno()/getNtnbAno(), que modelam a
+// estrutura a termo (Selic caindo para a terminal) em vez de uma taxa plana.
+function rebuildTaxasCenario() {
+    Object.keys(TAXAS_CENARIO_SEL).forEach(function (sel) {
+        const alvo = window.taxasCenario[TAXAS_CENARIO_SEL[sel]];
+        Object.keys(simConfigs).forEach(function (asset) {
+            let taxa = simConfigs[asset][sel];
+            if (taxa == null) {
+                if (asset === 'btc' && sel === 'pess') taxa = BTC_PESS_FALLBACK_ANUAL;
+                else return; // sem premissa definida: não sobrescreve o que já existe
+            }
+            alvo[asset] = taxa;
+            if (TAXAS_ALIAS_PTBR[asset]) alvo[TAXAS_ALIAS_PTBR[asset]] = taxa;
+        });
+    });
+}
 
 // REMOVIDO em 27/07/2026: parseTaxaMacro convertia texto livre do payload macro em
 // premissa de retorno. O campo `ativos[x][perfil].taxa` do /macro_api.php nunca foi
@@ -3708,6 +3758,35 @@ const simConfigs = {
     usdbrl:   { ini: 'u-inicial', ap: 'u-aporte', prazo: 'u-prazo', pess: -0.10, base: 0.0,    otim: 0.10,  prefix: 'u', sel: 'pess' },
 };
 
+// Primeira projeção, com as premissas curadas. Os feeds server-side abaixo
+// reprojetam conforme respondem.
+rebuildTaxasCenario();
+
+// Ponto único de escrita de premissa de retorno vinda de feed server-side.
+// Grava em simConfigs, reprojeta taxasCenario e atualiza todos os consumidores dos
+// dois. Cada feed escrevia só em simConfigs, então o card do ativo e a projeção da
+// carteira exibiam retornos diferentes para o mesmo ativo no mesmo cenário.
+function applyScenarioRates(asset, r) {
+    const c = simConfigs[asset];
+    if (!c || !r) return;
+    if (r.pess != null) c.pess = r.pess;
+    if (r.base != null) c.base = r.base;
+    if (r.otim != null) c.otim = r.otim;
+
+    rebuildTaxasCenario();
+
+    // Consumidores de taxasCenario. Cada um tem guarda própria: desenharBenchmark
+    // sai se o canvas não existir, os dois _refresh só recalculam com o painel aberto.
+    if (typeof desenharBenchmark === 'function') desenharBenchmark();
+    if (typeof _refreshPortfolioMC === 'function') _refreshPortfolioMC();
+    if (typeof _refreshGeoPortfolioMC === 'function') _refreshGeoPortfolioMC();
+    if (typeof _renderGeoReturnChart === 'function' && window.geoScenarios) _renderGeoReturnChart();
+
+    // Consumidor de simConfigs: o card do próprio ativo, se estiver visível.
+    const painel = document.getElementById('sim-' + asset);
+    if (painel && painel.classList.contains('active')) recalcSim(asset);
+}
+
 // ── BTC Radar: ajuste de cenarios (server-side, sem exposicao de dados) ──
 (function fetchBtcScenarios() {
     fetch('/api/btc-scenarios')
@@ -3715,10 +3794,8 @@ const simConfigs = {
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            // Atualiza taxas no simConfigs
-            if (r.pess != null) simConfigs.btc.pess = r.pess;
-            if (r.base != null) simConfigs.btc.base = r.base;
-            if (r.otim != null) simConfigs.btc.otim = r.otim;
+            // Grava a premissa nos dois consumidores (card do BTC e carteira)
+            applyScenarioRates('btc', r);
             // Atualiza labels visiveis nos cards
             var labelPess = document.getElementById('b-rate-cons');
             var labelBase = document.getElementById('b-rate-mod');
@@ -3730,10 +3807,10 @@ const simConfigs = {
             var descPess = document.getElementById('b-desc-cons');
             if (descPess && r.pess != null) {
                 descPess.textContent = 'Cenario de stress com dados de mercado atualizados. Fear & Greed Index e sinais de trading de longo prazo indicam ' + (r.pess >= 0 ? 'desaceleracao' : 'correcao') + ' com retorno anual de ' + (r.pess >= 0 ? '+' : '') + Math.round(r.pess * 100) + '%. Drawdowns historicos de 77-84% sao possiveis em eventos extremos (colapso de exchange, vulnerabilidade criptografica, aperto regulatorio severo).';
-            }
-            // Recalcula se o simulador BTC estiver visivel
-            if (document.getElementById('sim-btc') && document.getElementById('sim-btc').classList.contains('active')) {
-                recalcSim('btc');
+                // Trava o texto: o payload macro também escreve em b-desc-cons e, se
+                // chegasse depois, o card mostraria "−10% a.a." ao lado de uma descrição
+                // falando em perda de 60% do capital. Quem define a taxa define o texto.
+                window._btcRadarDescAplicada = true;
             }
         })
         .catch(function() {
@@ -3748,18 +3825,13 @@ const simConfigs = {
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            if (r.pess != null) simConfigs.cdi.pess = r.pess;
-            if (r.base != null) simConfigs.cdi.base = r.base;
-            if (r.otim != null) simConfigs.cdi.otim = r.otim;
+            applyScenarioRates('cdi', r);
             var labelPess = document.getElementById('c-rate-cons');
             var labelBase = document.getElementById('c-rate-mod');
             var labelOtim = document.getElementById('c-rate-agr');
             if (labelPess) labelPess.textContent = '+' + Math.round(r.pess * 100) + '% a.a.';
             if (labelBase) labelBase.textContent = '+' + (r.base * 100).toFixed(1).replace('.',',') + '% a.a.';
             if (labelOtim) labelOtim.textContent = '+' + Math.round(r.otim * 100) + '% a.a.';
-            if (document.getElementById('sim-cdi') && document.getElementById('sim-cdi').classList.contains('active')) {
-                recalcSim('cdi');
-            }
         })
         .catch(function() { /* fallback silencioso */ });
 })();
@@ -3771,18 +3843,13 @@ const simConfigs = {
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            if (r.pess != null) simConfigs.ntnb.pess = r.pess;
-            if (r.base != null) simConfigs.ntnb.base = r.base;
-            if (r.otim != null) simConfigs.ntnb.otim = r.otim;
+            applyScenarioRates('ntnb', r);
             var labelPess = document.getElementById('n-rate-cons');
             var labelBase = document.getElementById('n-rate-mod');
             var labelOtim = document.getElementById('n-rate-agr');
             if (labelPess) labelPess.textContent = '+' + Math.round(r.pess * 100) + '% a.a.';
             if (labelBase) labelBase.textContent = '+' + (r.base * 100).toFixed(1).replace('.',',') + '% a.a.';
             if (labelOtim) labelOtim.textContent = '+' + Math.round(r.otim * 100) + '% a.a.';
-            if (document.getElementById('sim-ntnb') && document.getElementById('sim-ntnb').classList.contains('active')) {
-                recalcSim('ntnb');
-            }
         })
         .catch(function() { /* fallback silencioso */ });
 })();
@@ -3794,9 +3861,7 @@ const simConfigs = {
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            if (r.pess != null) simConfigs.usdbrl.pess = r.pess;
-            if (r.base != null) simConfigs.usdbrl.base = r.base;
-            if (r.otim != null) simConfigs.usdbrl.otim = r.otim;
+            applyScenarioRates('usdbrl', r);
             // Atualiza cotacao global para conversao BRL no Monte Carlo
             if (r.usdbrl_bid != null) usdBrlLive = r.usdbrl_bid;
             // Atualiza macro strip
@@ -3810,9 +3875,6 @@ const simConfigs = {
             if (labelPess) labelPess.textContent = (r.pess >= 0 ? '+' : '') + Math.round(r.pess * 100) + '% a.a.';
             if (labelBase) labelBase.textContent = (r.base >= 0 ? '+' : '') + Math.round(r.base * 100) + '% a.a.';
             if (labelOtim) labelOtim.textContent = (r.otim >= 0 ? '+' : '') + Math.round(r.otim * 100) + '% a.a.';
-            if (document.getElementById('sim-usdbrl') && document.getElementById('sim-usdbrl').classList.contains('active')) {
-                recalcSim('usdbrl');
-            }
         })
         .catch(function() { /* fallback silencioso */ });
 })();
@@ -3902,8 +3964,12 @@ function drawSimChart(asset, ini, ap, prazo, c, pessVal, baseVal, otimVal) {
     const labels = [];
     for (let i = 0; i <= prazo; i++) labels.push('Ano ' + i);
 
-    const seriePess = asset === 'btc'
-        ? Array.from({ length: prazo + 1 }, (_, i) => { const tv = ini + ap * 12 * i; return tv * 0.4; })
+    // A condição era só `asset === 'btc'`, com 0.4 fixo: a linha pessimista do gráfico
+    // ignorava c.pess e window.btcPessMultiplier. Com o BTC Radar no ar, o card exibia
+    // o valor de uma taxa anual (−10% a.a.) enquanto o gráfico logo abaixo desenhava a
+    // curva do drawdown total. Agora segue a mesma regra de recalcSim().
+    const seriePess = (asset === 'btc' && c.pess == null)
+        ? Array.from({ length: prazo + 1 }, (_, i) => { const tv = ini + ap * 12 * i; return tv * (window.btcPessMultiplier || 0.40); })
         : calcSerie(ini, ap, c.pess, prazo);
     const serieBase = calcSerie(ini, ap, c.base, prazo);
     const serieOtim = calcSerie(ini, ap, c.otim, prazo);
@@ -5970,6 +6036,11 @@ function renderMacro(d) {
                 // o card do ouro exibia "8-12% do patrimônio" no lugar de "+9,3% a.a.".
                 // O retorno mostrado é o curado no HTML, coerente com simConfigs.
                 const [, descId] = ids[perfil];
+                // b-desc-cons tem dois escritores: este e o do BTC Radar, que troca a
+                // descrição de perda total pela de taxa anual. Sem esta guarda, quem
+                // resolvesse por último vencia — e o card podia exibir "−10% a.a." com
+                // um texto falando em perda de 60% do capital.
+                if (descId === 'b-desc-cons' && window._btcRadarDescAplicada) return;
                 if (p.desc)  { const el = document.getElementById(descId);  if (el) el.textContent = p.desc; }
             });
         });
