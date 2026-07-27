@@ -7,6 +7,9 @@ import { handleFechamento } from './handlers/fechamento.js';
 import { handleStripeWebhook } from './handlers/stripe-webhook.js';
 import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
 import { handleBtcScenarios } from './handlers/btc-scenarios.js';
+import { handleCdiScenarios } from './handlers/cdi-scenarios.js';
+import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
+import { handleUsdbrlScenarios } from './handlers/usdbrl-scenarios.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -25,6 +28,9 @@ const API_ROUTES = {
   '/stripe-webhook': (req, env, ctx) => handleStripeWebhook(req, env, ctx),
   '/relatorio-signup': (req, env, ctx) => handleRelatorioSignup(req, env),
   '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env),
+  '/api/cdi-scenarios': (req, env, ctx) => handleCdiScenarios(env),
+  '/api/ntnb-scenarios': (req, env, ctx) => handleNtnbScenarios(env),
+  '/api/usdbrl-scenarios': (req, env, ctx) => handleUsdbrlScenarios(env),
   '/health': (req, env, ctx) => handleHealth(env),
 };
 

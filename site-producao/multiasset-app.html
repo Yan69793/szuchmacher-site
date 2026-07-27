@@ -1398,6 +1398,19 @@
             transition: color 0.2s;
         }
         .popup-dismiss:hover { color: #777; }
+        .popup-consent {
+            font-size: 10.5px;
+            line-height: 1.5;
+            color: var(--muted);
+            text-align: center;
+            margin: 12px 0 0;
+        }
+        .popup-consent a {
+            color: var(--muted);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .popup-consent a:hover { color: var(--gold); }
         .popup-badges {
             display: flex;
             gap: 8px;
@@ -1460,6 +1473,24 @@
             background: rgba(76,175,125,0.12);
             border-color: rgba(76,175,125,0.4);
             color: #4caf7d;
+        }
+
+        /* ── INFO CARD (sim panel right column) ── */
+        .sim-info-card {
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 0; margin-top: 8px;
+        }
+        .sim-info-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 16px; border-bottom: 1px solid var(--border);
+            font-size: 12px;
+        }
+        .sim-info-row:last-of-type { border-bottom: none; }
+        .sim-info-label { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+        .sim-info-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--text); }
+        .sim-info-note {
+            padding: 12px 16px; border-top: 1px solid var(--border);
+            font-size: 11px; color: var(--muted); line-height: 1.6;
         }
 
         /* ── TOAST NOTIFICATION ── */
@@ -2003,6 +2034,15 @@
         <button class="sim-nav-btn" onclick="activateSim('sim-btc', this)">
             <span class="sim-nav-icon" style="color:#f07a40">₿</span> Bitcoin
         </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-cdi', this)">
+            <span class="sim-nav-icon" style="color:#5b9cf6">%</span> CDI
+        </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-ntnb', this)">
+            <span class="sim-nav-icon" style="color:#4caf7d">IPCA+</span> NTN-B
+        </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-usdbrl', this)">
+            <span class="sim-nav-icon" style="color:#c9a84c">$/R$</span> USD/BRL
+        </button>
         <button class="sim-nav-btn sim-nav-compare" onclick="activateSim('sim-comparador', this)">
             <span class="sim-nav-icon"><i class="fas fa-layer-group"></i></span> Comparador
         </button>
@@ -2375,6 +2415,278 @@
                     <script type="text/tv-lazy" data-src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
                     {"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"D","timezone":"America/Sao_Paulo","theme":"dark","style":"1","locale":"br","backgroundColor":"#000000","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"save_image":false,"hide_volume":false,"support_host":"https://www.tradingview.com"}
                     </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CDI -->
+    <div id="sim-cdi" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(91,156,246,0.15);color:#5b9cf6;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">CDI</div>
+                    <div>
+                        <div class="sim-ativo-nome display">CDI / Selic</div>
+                        <div class="sim-ativo-ticker">Certificado de Depósito Interbancário · taxa over anual</div>
+                    </div>
+                </div>
+                <div class="alert-box" style="border-color:rgba(91,156,246,0.25);color:#9cbcf6;">
+                    <strong>Baixíssimo risco de crédito:</strong> o CDI é a taxa referencial do mercado interbancário brasileiro, com volatilidade próxima de zero (~0,5% a.a.). A simulação assume aplicação em fundo DI com taxa de administração de 0,2% a.a. já descontada. <strong>Rentabilidade em BRL.</strong>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label" for="c-inicial">Valor inicial (R$)</label><input type="number" id="c-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('cdi')"></div>
+                        <div class="form-group"><label class="form-label" for="c-aporte">Aporte mensal (R$)</label><input type="number" id="c-aporte" value="500" class="form-input" min="0" oninput="recalcSim('cdi')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label" for="c-prazo">Prazo (anos)</label><input type="number" id="c-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('cdi')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-cdi">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('cdi','pess',this)">
+                        <div class="sc-badge">Conservador</div>
+                        <div class="sc-rate" id="c-rate-cons" style="color:var(--red)">+12% a.a.</div>
+                        <div class="sc-desc" id="c-desc-cons">Ciclo de cortes da Selic acelerado. BCB reduz a taxa básica para ~11,5% em 12 meses. Inflação ancorada, atividade fraca e câmbio estável permitem afrouxamento monetário mais rápido que o esperado. CDI acompanha a trajetória de queda.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="c-pess">R$ —</div><div class="sc-result-ret" id="c-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="c-pess-break"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('cdi','base',this)">
+                        <div class="sc-badge">Moderado</div>
+                        <div class="sc-rate" id="c-rate-mod" style="color:#5b9cf6">+14,3% a.a.</div>
+                        <div class="sc-desc" id="c-desc-mod">Selic mantida em 14,25% (COPOM jun/2026) com cortes graduais a partir de 2027. Boletim Focus projeta Selic terminal de ~12% em 2028. CDI acompanha a Selic com spread próximo de zero. IPCA em trajetória de convergência para 4,5%.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="c-base">R$ —</div><div class="sc-result-ret" id="c-base-r">—</div></div>
+                        <div class="sc-breakdown" id="c-base-break"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('cdi','otim',this)">
+                        <div class="sc-badge">Agressivo</div>
+                        <div class="sc-rate" id="c-rate-agr" style="color:var(--green)">+16,5% a.a.</div>
+                        <div class="sc-desc" id="c-desc-agr">Choque inflacionário força BCB a elevar a Selic para até 17%. Cenário de dominância fiscal com câmbio depreciado e expectativas desancoradas. CDI em patamar elevado por período prolongado. Risco de recessão no horizonte de 2-3 anos.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="c-otim">R$ —</div><div class="sc-result-ret" id="c-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="c-otim-break"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-cdi" height="160"></canvas></div>
+
+                <!-- MONTE CARLO — CDI -->
+                <div class="mc-section" id="mc-section-cdi">
+                    <button class="mc-toggle-btn" id="mc-btn-cdi" onclick="toggleMC('cdi',this)">
+                        <span class="mc-spinner-inline"></span>
+                        <i class="fas fa-chart-area"></i>
+                        <span class="mc-label-main">Simulação Monte Carlo</span>
+                        <span class="mc-label-badge">10.000 simulações</span>
+                    </button>
+                    <div class="mc-content" id="mc-content-cdi" style="display:none">
+                        <div class="mc-header-row">
+                            <span class="mc-header-title">Cone de probabilidade — CDI (cenário base)</span>
+                            <div class="mc-brl-toggle" id="mc-brl-cdi">
+                                <button class="mc-brl-btn active" onclick="setMCCurrency('cdi','brl',this)">BRL</button>
+                            </div>
+                        </div>
+                        <div class="mc-metrics-row" id="mc-metrics-cdi"></div>
+                        <div class="mc-chart-wrap"><canvas id="chart-mc-cdi"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="sim-share-row">
+                    <button class="sim-share-btn" id="share-btn-cdi" onclick="shareSim('cdi', this)">
+                        <i class="fas fa-link"></i>
+                        <span>Compartilhar esta simulação</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">Taxa CDI Over — Referência</div>
+                <div class="sim-info-card">
+                    <div class="sim-info-row"><span class="sim-info-label">Taxa atual</span><span class="sim-info-val" style="color:#5b9cf6;" id="sp-cdi-rate">—</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val">~0,5%</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Risco de crédito</span><span class="sim-info-val">Soberano (Brasil)</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">D+0</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Indexador</span><span class="sim-info-val">Taxa DI (B3)</span></div>
+                    <div class="sim-info-note">O CDI é a taxa de juros de curtíssimo prazo do mercado interbancário brasileiro, lastreada em títulos públicos. A volatilidade é essencialmente zero — a única incerteza relevante é a trajetória futura da Selic definida pelo COPOM.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NTN-B -->
+    <div id="sim-ntnb" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(76,175,125,0.15);color:#4caf7d;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">IPCA+</div>
+                    <div>
+                        <div class="sim-ativo-nome display">NTN-B</div>
+                        <div class="sim-ativo-ticker">Tesouro IPCA+ · duration intermediária</div>
+                    </div>
+                </div>
+                <div class="alert-box" style="border-color:rgba(76,175,125,0.25);color:#8ccfad;">
+                    <strong>Título indexado à inflação:</strong> a NTN-B paga IPCA + taxa prefixada no vencimento. A duration (~5-7 anos para o ETF NTNB11) introduz volatilidade de marcação a mercado, mas o carregamento é real (acima da inflação). <strong>Rentabilidade em BRL.</strong>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label" for="n-inicial">Valor inicial (R$)</label><input type="number" id="n-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('ntnb')"></div>
+                        <div class="form-group"><label class="form-label" for="n-aporte">Aporte mensal (R$)</label><input type="number" id="n-aporte" value="500" class="form-input" min="0" oninput="recalcSim('ntnb')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label" for="n-prazo">Prazo (anos)</label><input type="number" id="n-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('ntnb')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-ntnb">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('ntnb','pess',this)">
+                        <div class="sc-badge">Conservador</div>
+                        <div class="sc-rate" id="n-rate-cons" style="color:var(--red)">+10% a.a.</div>
+                        <div class="sc-desc" id="n-desc-cons">Compressão de prêmio de risco fiscal. Arcabouço fiscal crível e reforma tributária reduzem o spread da NTN-B para IPCA+4,5%. IPCA converge para 4,5% a.a. rapidamente. Ganho de capital pela marcação a mercado na queda dos yields.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="n-pess">R$ —</div><div class="sc-result-ret" id="n-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="n-pess-break"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('ntnb','base',this)">
+                        <div class="sc-badge">Moderado</div>
+                        <div class="sc-rate" id="n-rate-mod" style="color:#4caf7d">+13% a.a.</div>
+                        <div class="sc-desc" id="n-desc-mod">IPCA projetado em 5,5% a.a. (Focus mediana 2026), spread NTN-B de 7,5% (nível de mercado jun/2026). O carregamento real de IPCA+7,5% é sustentado por juros elevados e incerteza fiscal residual. Duration de ~6 anos.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="n-base">R$ —</div><div class="sc-result-ret" id="n-base-r">—</div></div>
+                        <div class="sc-breakdown" id="n-base-break"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('ntnb','otim',this)">
+                        <div class="sc-badge">Agressivo</div>
+                        <div class="sc-rate" id="n-rate-agr" style="color:var(--green)">+16% a.a.</div>
+                        <div class="sc-desc" id="n-desc-agr">Cenário de dominância fiscal com IPCA acima de 7% a.a. e desvalorização cambial. Spread da NTN-B se amplia para IPCA+9% com aversão a risco fiscal. Duration longa gera perda por marcação a mercado no curto prazo, compensada por carregamento elevado no longo prazo.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="n-otim">R$ —</div><div class="sc-result-ret" id="n-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="n-otim-break"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-ntnb" height="160"></canvas></div>
+
+                <!-- MONTE CARLO — NTN-B -->
+                <div class="mc-section" id="mc-section-ntnb">
+                    <button class="mc-toggle-btn" id="mc-btn-ntnb" onclick="toggleMC('ntnb',this)">
+                        <span class="mc-spinner-inline"></span>
+                        <i class="fas fa-chart-area"></i>
+                        <span class="mc-label-main">Simulação Monte Carlo</span>
+                        <span class="mc-label-badge">10.000 simulações</span>
+                    </button>
+                    <div class="mc-content" id="mc-content-ntnb" style="display:none">
+                        <div class="mc-header-row">
+                            <span class="mc-header-title">Cone de probabilidade — NTN-B (cenário base)</span>
+                            <div class="mc-brl-toggle" id="mc-brl-ntnb">
+                                <button class="mc-brl-btn active" onclick="setMCCurrency('ntnb','brl',this)">BRL</button>
+                            </div>
+                        </div>
+                        <div class="mc-metrics-row" id="mc-metrics-ntnb"></div>
+                        <div class="mc-chart-wrap"><canvas id="chart-mc-ntnb"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="sim-share-row">
+                    <button class="sim-share-btn" id="share-btn-ntnb" onclick="shareSim('ntnb', this)">
+                        <i class="fas fa-link"></i>
+                        <span>Compartilhar esta simulação</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">NTN-B — Características</div>
+                <div class="sim-info-card">
+                    <div class="sim-info-row"><span class="sim-info-label">Spread IPCA+</span><span class="sim-info-val" style="color:#4caf7d;">~7,5% a.a.</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val">~8% (duration)</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Duration (NTNB11)</span><span class="sim-info-val">~6 anos</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Indexador</span><span class="sim-info-val">IPCA (IBGE)</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">D+1 (Tesouro Direto)</span></div>
+                    <div class="sim-info-note">A NTN-B é o principal instrumento de proteção contra inflação no Brasil. O ETF NTNB11 replica o índice IMA-B 5+ da B3. Diferente do CDI, a NTN-B tem risco de duration: se os juros reais sobem, o preço do título cai no curto prazo. O carregamento real (IPCA + spread) compensa esse risco no horizonte de 3-5 anos.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- USD/BRL -->
+    <div id="sim-usdbrl" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(201,168,76,0.15);color:#c9a84c;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">$/R$</div>
+                    <div>
+                        <div class="sim-ativo-nome display">USD / BRL</div>
+                        <div class="sim-ativo-ticker">Dólar comercial · aposta direcional no câmbio</div>
+                    </div>
+                    <div class="sim-ativo-preco-live">
+                        <div class="sim-preco-val" id="sp-usdbrl-price" style="color:var(--gold)">R$ —</div>
+                        <div class="sim-preco-change change-neutral" id="sp-usdbrl-change">—</div>
+                    </div>
+                </div>
+                <div class="alert-box" style="border-color:rgba(201,168,76,0.25);color:#d4b87a;">
+                    <strong>Simulador direcional:</strong> diferente dos outros ativos, USD/BRL não é uma posição comprada permanente. O investidor aposta na <strong>direção do câmbio</strong>. Cenário pessimista = BRL deprecia (USD sobe), otimista = BRL aprecia (USD cai). <strong>Este simulador modela o retorno em USD de uma posição cambial, convertido para BRL.</strong>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label" for="u-inicial">Valor inicial (USD)</label><input type="number" id="u-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('usdbrl')"></div>
+                        <div class="form-group"><label class="form-label" for="u-aporte">Aporte mensal (USD)</label><input type="number" id="u-aporte" value="500" class="form-input" min="0" oninput="recalcSim('usdbrl')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label" for="u-prazo">Prazo (anos)</label><input type="number" id="u-prazo" value="5" class="form-input" min="1" max="20" oninput="recalcSim('usdbrl')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-usdbrl">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('usdbrl','pess',this)">
+                        <div class="sc-badge">Conservador</div>
+                        <div class="sc-rate" id="u-rate-cons" style="color:var(--red)">-10% a.a.</div>
+                        <div class="sc-desc" id="u-desc-cons">BRL se deprecia fortemente. Cenário de dominância fiscal, fuga de capitais e perda de grau de investimento. Dólar sobe para R$ 7-8 no horizonte de 5 anos. Para o investidor comprado em USD, isso representa retorno positivo em BRL, mas o cenário é classificado como conservador pelo risco-país implícito.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="u-pess">$ —</div><div class="sc-result-ret" id="u-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="u-pess-break"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('usdbrl','base',this)">
+                        <div class="sc-badge">Moderado</div>
+                        <div class="sc-rate" id="u-rate-mod" style="color:var(--gold)">0% a.a.</div>
+                        <div class="sc-desc" id="u-desc-mod">Câmbio estável no patamar atual (~R$ 5,09). Diferencial de juros Brasil-EUA mantém o carry trade atrativo, compensando o risco fiscal. O investidor comprado em USD não ganha nem perde com a moeda — o retorno vem apenas dos juros em USD (~5% a.a.).</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="u-base">$ —</div><div class="sc-result-ret" id="u-base-r">—</div></div>
+                        <div class="sc-breakdown" id="u-base-break"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('usdbrl','otim',this)">
+                        <div class="sc-badge">Agressivo</div>
+                        <div class="sc-rate" id="u-rate-agr" style="color:var(--green)">+10% a.a.</div>
+                        <div class="sc-desc" id="u-desc-agr">BRL se aprecia significativamente. Reformas estruturais aprovadas, arcabouço fiscal crível, fluxo de investimento estrangeiro retorna. Dólar cai para R$ 3,50-4,00 no horizonte de 5 anos. Para o investidor comprado em USD, isso representa perda cambial expressiva em termos de BRL.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="u-otim">$ —</div><div class="sc-result-ret" id="u-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="u-otim-break"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-usdbrl" height="160"></canvas></div>
+
+                <!-- MONTE CARLO — USD/BRL -->
+                <div class="mc-section" id="mc-section-usdbrl">
+                    <button class="mc-toggle-btn" id="mc-btn-usdbrl" onclick="toggleMC('usdbrl',this)">
+                        <span class="mc-spinner-inline"></span>
+                        <i class="fas fa-chart-area"></i>
+                        <span class="mc-label-main">Simulação Monte Carlo</span>
+                        <span class="mc-label-badge">10.000 simulações</span>
+                    </button>
+                    <div class="mc-content" id="mc-content-usdbrl" style="display:none">
+                        <div class="mc-header-row">
+                            <span class="mc-header-title">Cone de probabilidade — USD/BRL (cenário base)</span>
+                            <div class="mc-brl-toggle" id="mc-brl-usdbrl">
+                                <button class="mc-brl-btn active" onclick="setMCCurrency('usdbrl','usd',this)">USD</button>
+                                <button class="mc-brl-btn" onclick="setMCCurrency('usdbrl','brl',this)">BRL</button>
+                            </div>
+                        </div>
+                        <div class="mc-metrics-row" id="mc-metrics-usdbrl"></div>
+                        <div class="mc-chart-wrap"><canvas id="chart-mc-usdbrl"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="sim-share-row">
+                    <button class="sim-share-btn" id="share-btn-usdbrl" onclick="shareSim('usdbrl', this)">
+                        <i class="fas fa-link"></i>
+                        <span>Compartilhar esta simulação</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">USD/BRL — Características</div>
+                <div class="sim-info-card">
+                    <div class="sim-info-row"><span class="sim-info-label">Cotação atual</span><span class="sim-info-val" style="color:var(--gold);" id="sp-usdbrl-rate">—</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val">~12%</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Regime cambial</span><span class="sim-info-val">Flutuante</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Carry trade (Selic - Fed Funds)</span><span class="sim-info-val">~9% a.a.</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">D+2 (Ptax)</span></div>
+                    <div class="sim-info-note">O USD/BRL é um dos pares mais voláteis do mundo (~12% a.a.). O carry trade (diferencial de juros) favorece o BRL no curto prazo, mas choques fiscais e externos podem reverter esse ganho rapidamente. Este simulador modela o retorno de uma posição comprada em USD — o inverso de uma posição comprada em BRL.</div>
                 </div>
             </div>
         </div>
@@ -2797,7 +3109,7 @@
                 </div>
                 <div class="bench-mc-chart-wrap"><canvas id="chart-portfolio-mc"></canvas></div>
                 <div class="bench-mc-disclaimer">
-                    <strong style="color: var(--muted)">Metodologia:</strong> 10.000 trajetórias independentes com retornos log-normais por ativo. Volatilidades históricas: ouro 15% · prata 28% · platina 22% · Bitcoin 85% · NTN-B duration 8% · CDI/reserva 0,5%. As probabilidades indicam a fração das simulações em que o portfólio superou o benchmark no período. Não constitui garantia de retorno.
+                    <strong style="color: var(--muted)">Metodologia:</strong> 10.000 trajetórias independentes com retornos log-normais por ativo. Volatilidades históricas: ouro 15%, prata 34%, platina 32%, Bitcoin 85%, NTN-B duration 8%, CDI 0,5%, USD/BRL 12%. As probabilidades indicam a fração das simulações em que o portfólio superou o benchmark no período. Os percentuais exibidos são premissas de cenário para fins de simulação, não projeção de resultado nem promessa de rentabilidade. <a href="/metodologia" target="_blank" style="color:var(--gold);text-decoration:underline;">Metodologia completa</a>. Retorno passado não garante retorno futuro e o resultado real pode ser inferior ao pior cenário simulado.
                 </div>
             </div>
         </div>
@@ -3317,9 +3629,9 @@ window.cenarioDescricoes = {
     otimista: 'Resolução do conflito geopolítico, queda acelerada de juros globais, dólar em enfraquecimento estrutural.'
 };
 window.taxasCenario = {
-    pessimista: { ouro: 0.05, prata: 0.03, platina: 0.01, btc: -0.15, gold: 0.05, silver: 0.03, platinum: 0.01 },
-    base:       { ouro: 0.093, prata: 0.085, platina: 0.06, btc: 0.40, gold: 0.093, silver: 0.085, platinum: 0.06 },
-    otimista:   { ouro: 0.15, prata: 0.18, platina: 0.20, btc: 1.20, gold: 0.15, silver: 0.18, platinum: 0.20 }
+    pessimista: { ouro: 0.05, prata: 0.03, platina: 0.01, btc: -0.15, cdi: 0.12, ntnb: 0.10, usdbrl: -0.10, gold: 0.05, silver: 0.03, platinum: 0.01 },
+    base:       { ouro: 0.093, prata: 0.085, platina: 0.06, btc: 0.40, cdi: 0.1425, ntnb: 0.13, usdbrl: 0.0, gold: 0.093, silver: 0.085, platinum: 0.06 },
+    otimista:   { ouro: 0.15, prata: 0.18, platina: 0.20, btc: 1.20, cdi: 0.165, ntnb: 0.16, usdbrl: 0.10, gold: 0.15, silver: 0.18, platinum: 0.20 }
 };
 
 function parseTaxaMacro(str) {
@@ -3442,6 +3754,9 @@ const simConfigs = {
     silver:   { ini: 's-inicial', ap: 's-aporte', prazo: 's-prazo', pess: 0.03,  base: 0.085, otim: 0.18,  prefix: 's', sel: 'pess' },
     platinum: { ini: 'p-inicial', ap: 'p-aporte', prazo: 'p-prazo', pess: -0.05, base: 0.06,  otim: 0.20,  prefix: 'p', sel: 'pess' },
     btc:      { ini: 'b-inicial', ap: 'b-aporte', prazo: 'b-prazo', pess: null,  base: 0.40,  otim: 1.20,  prefix: 'b', sel: 'pess' },
+    cdi:      { ini: 'c-inicial', ap: 'c-aporte', prazo: 'c-prazo', pess: 0.12,  base: 0.1425, otim: 0.165, prefix: 'c', sel: 'pess' },
+    ntnb:     { ini: 'n-inicial', ap: 'n-aporte', prazo: 'n-prazo', pess: 0.10,  base: 0.13,   otim: 0.16,  prefix: 'n', sel: 'pess' },
+    usdbrl:   { ini: 'u-inicial', ap: 'u-aporte', prazo: 'u-prazo', pess: -0.10, base: 0.0,    otim: 0.10,  prefix: 'u', sel: 'pess' },
 };
 
 // ── BTC Radar: ajuste de cenarios (server-side, sem exposicao de dados) ──
@@ -3477,6 +3792,82 @@ const simConfigs = {
         });
 })();
 
+// ── CDI: ajuste de cenarios via server-side ──
+(function fetchCdiScenarios() {
+    fetch('/api/cdi-scenarios')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.ok || !d.rates) return;
+            var r = d.rates;
+            if (r.pess != null) simConfigs.cdi.pess = r.pess;
+            if (r.base != null) simConfigs.cdi.base = r.base;
+            if (r.otim != null) simConfigs.cdi.otim = r.otim;
+            var labelPess = document.getElementById('c-rate-cons');
+            var labelBase = document.getElementById('c-rate-mod');
+            var labelOtim = document.getElementById('c-rate-agr');
+            if (labelPess) labelPess.textContent = '+' + Math.round(r.pess * 100) + '% a.a.';
+            if (labelBase) labelBase.textContent = '+' + (r.base * 100).toFixed(1).replace('.',',') + '% a.a.';
+            if (labelOtim) labelOtim.textContent = '+' + Math.round(r.otim * 100) + '% a.a.';
+            if (document.getElementById('sim-cdi') && document.getElementById('sim-cdi').classList.contains('active')) {
+                recalcSim('cdi');
+            }
+        })
+        .catch(function() { /* fallback silencioso */ });
+})();
+
+// ── NTN-B: ajuste de cenarios via server-side ──
+(function fetchNtnbScenarios() {
+    fetch('/api/ntnb-scenarios')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.ok || !d.rates) return;
+            var r = d.rates;
+            if (r.pess != null) simConfigs.ntnb.pess = r.pess;
+            if (r.base != null) simConfigs.ntnb.base = r.base;
+            if (r.otim != null) simConfigs.ntnb.otim = r.otim;
+            var labelPess = document.getElementById('n-rate-cons');
+            var labelBase = document.getElementById('n-rate-mod');
+            var labelOtim = document.getElementById('n-rate-agr');
+            if (labelPess) labelPess.textContent = '+' + Math.round(r.pess * 100) + '% a.a.';
+            if (labelBase) labelBase.textContent = '+' + (r.base * 100).toFixed(1).replace('.',',') + '% a.a.';
+            if (labelOtim) labelOtim.textContent = '+' + Math.round(r.otim * 100) + '% a.a.';
+            if (document.getElementById('sim-ntnb') && document.getElementById('sim-ntnb').classList.contains('active')) {
+                recalcSim('ntnb');
+            }
+        })
+        .catch(function() { /* fallback silencioso */ });
+})();
+
+// ── USD/BRL: cotacao ao vivo e cenarios direcionais ──
+(function fetchUsdbrlScenarios() {
+    fetch('/api/usdbrl-scenarios')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.ok || !d.rates) return;
+            var r = d.rates;
+            if (r.pess != null) simConfigs.usdbrl.pess = r.pess;
+            if (r.base != null) simConfigs.usdbrl.base = r.base;
+            if (r.otim != null) simConfigs.usdbrl.otim = r.otim;
+            // Atualiza cotacao global para conversao BRL no Monte Carlo
+            if (r.usdbrl_bid != null) usdBrlLive = r.usdbrl_bid;
+            // Atualiza macro strip
+            if (d.usdbrl_bid != null) {
+                var macroUsd = document.getElementById('macro-usd');
+                if (macroUsd) macroUsd.textContent = d.usdbrl_bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+            var labelPess = document.getElementById('u-rate-cons');
+            var labelBase = document.getElementById('u-rate-mod');
+            var labelOtim = document.getElementById('u-rate-agr');
+            if (labelPess) labelPess.textContent = (r.pess >= 0 ? '+' : '') + Math.round(r.pess * 100) + '% a.a.';
+            if (labelBase) labelBase.textContent = (r.base >= 0 ? '+' : '') + Math.round(r.base * 100) + '% a.a.';
+            if (labelOtim) labelOtim.textContent = (r.otim >= 0 ? '+' : '') + Math.round(r.otim * 100) + '% a.a.';
+            if (document.getElementById('sim-usdbrl') && document.getElementById('sim-usdbrl').classList.contains('active')) {
+                recalcSim('usdbrl');
+            }
+        })
+        .catch(function() { /* fallback silencioso */ });
+})();
+
 function selectScenario(asset, scenario, el) {
     simConfigs[asset].sel = scenario;
     const selector = document.getElementById('sc-' + asset);
@@ -3501,10 +3892,14 @@ function recalcSim(asset) {
 
     const p = c.prefix;
 
+    // BRL vs USD: CDI e NTN-B sao ativos em reais, nao dolares
+    var isBrl = (asset === 'cdi' || asset === 'ntnb');
+    var fmtVal = isBrl ? fmtBRL : fmtUSD;
+
     // Valor final da carteira
-    document.getElementById(p + '-pess').textContent   = fmtUSD(pess);
-    document.getElementById(p + '-base').textContent   = fmtUSD(base);
-    document.getElementById(p + '-otim').textContent   = fmtUSD(otim);
+    document.getElementById(p + '-pess').textContent   = fmtVal(pess);
+    document.getElementById(p + '-base').textContent   = fmtVal(base);
+    document.getElementById(p + '-otim').textContent   = fmtVal(otim);
 
     // Retorno sobre total investido
     document.getElementById(p + '-pess-r').textContent = fmtRet(pess, ini, ap, prz);
@@ -3515,7 +3910,7 @@ function recalcSim(asset) {
     const breakdown = (fv) => {
         const lucro = fv - totalInv;
         const sign  = lucro >= 0 ? '+' : '';
-        return `Aportado: ${fmtUSD(totalInv)} · Retorno: ${sign}${fmtUSD(lucro)}`;
+        return 'Aportado: ' + fmtVal(totalInv) + ' · Retorno: ' + sign + fmtVal(lucro);
     };
     const setPessBreak = document.getElementById(p + '-pess-break');
     const setBaseBreak = document.getElementById(p + '-base-break');
@@ -3537,16 +3932,21 @@ function recalcSim(asset) {
     if (elOP) elOP.textContent = _priceLabel;
 
     drawSimChart(asset, ini, ap, prz, c, pess, base, otim);
+
+    // Clarity: simulator_run
+    if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+        try { window.clarity('event', 'simulator_run'); } catch(e) {}
+    }
 }
 
 const simCharts = {};
 
 function drawSimChart(asset, ini, ap, prazo, c, pessVal, baseVal, otimVal) {
-    const canvasId = { gold: 'chart-gold', silver: 'chart-silver', platinum: 'chart-platinum', btc: 'chart-btc' }[asset];
+    const canvasId = { gold: 'chart-gold', silver: 'chart-silver', platinum: 'chart-platinum', btc: 'chart-btc', cdi: 'chart-cdi', ntnb: 'chart-ntnb', usdbrl: 'chart-usdbrl' }[asset];
     const canvas   = document.getElementById(canvasId);
     if (!canvas) return;
 
-    const colors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', btc: '#f07a40' };
+    const colors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', btc: '#f07a40', cdi: '#5b9cf6', ntnb: '#4caf7d', usdbrl: '#c9a84c' };
     const color  = colors[asset];
     const sel    = simConfigs[asset].sel;
 
@@ -4086,15 +4486,20 @@ function desenharBenchmark() {
 // ── MONTE CARLO DO PORTFÓLIO COMPLETO ──────────────────────────
 // ══════════════════════════════════════════════════════════════════
 
-// Volatilidade por chave de ativo no portfólio
+// Volatilidade por chave de ativo no portfólio.
+// FONTE ÚNICA: VOL_ANUAL (motor Monte Carlo por ativo) deriva daqui. Antes eram
+// dois objetos independentes que divergiam em prata (0,28 vs 0,34) e platina
+// (0,22 vs 0,32), e o texto de metodologia exibido ao usuário publicava os
+// valores daqui enquanto os simuladores individuais calculavam com os de lá.
 const VOL_PORT = {
     ntnb:     0.08,   // duration risk: NTN-B intermediária ~8%/ano
     cdi:      0.005,  // essencialmente sem risco de mercado
     gold:     0.15,
-    silver:   0.28,
-    platinum: 0.22,
+    silver:   0.34,   // histórico 5a: ~34% a.a.
+    platinum: 0.32,   // histórico 5a: ~32% a.a.
     btc:      0.85,
     reserva:  0.005,
+    usdbrl:   0.12,   // volatilidade cambial histórica ~12% a.a.
 };
 
 // Gerador de normal aleatoria para Monte Carlo (usado por _runPortfolioMC e _runPortfolioMCGeo)
@@ -4853,11 +5258,15 @@ document.addEventListener('keydown', e => {
 // ── MONTE CARLO ENGINE
 // ══════════════════════════════════════════════════════════════════
 
+// Deriva de VOL_PORT para não haver duas verdades sobre a mesma volatilidade.
 const VOL_ANUAL = {
-    gold:     0.15,
-    silver:   0.34,   // histórico 5a via Yahoo Finance: ~34% a.a.
-    platinum: 0.32,   // histórico 5a via Yahoo Finance: ~32% a.a.
-    btc:      0.85,
+    gold:     VOL_PORT.gold,
+    silver:   VOL_PORT.silver,
+    platinum: VOL_PORT.platinum,
+    btc:      VOL_PORT.btc,
+    cdi:      VOL_PORT.cdi,
+    ntnb:     VOL_PORT.ntnb,
+    usdbrl:   VOL_PORT.usdbrl,
 };
 
 let usdBrlLive = 5.75;
@@ -4951,6 +5360,10 @@ function _buildMC(asset, currency) {
     const vol   = VOL_ANUAL[asset] || 0.20;
     const result = runMC(ini, ap, taxa, vol, prazo, 10000);
     mcState[asset] = { currency: currency, result: result, ini: ini, ap: ap, prazo: prazo, taxa: taxa, vol: vol };
+    // Clarity: mc_run
+    if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+        try { window.clarity('event', 'mc_run'); } catch(e) {}
+    }
     _renderMCMetrics(asset, result, ini, ap, prazo, taxa, vol, currency);
     _renderMCChart(asset, result, prazo, currency, ini, ap);
 }
@@ -5085,8 +5498,10 @@ function _renderMCChart(asset, result, prazo, currency, ini, ap) {
 // ══════════════════════════════════════════════════════════════════
 
 async function exportPDF(fabEl) {
-    fabEl.classList.add('fab-loading');
-    fabEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span class="fab-text"> Gerando...</span>';
+    if (fabEl) {
+        fabEl.classList.add('fab-loading');
+        fabEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span class="fab-text"> Gerando...</span>';
+    }
 
     try {
         const { jsPDF } = window.jspdf;
@@ -5121,7 +5536,7 @@ async function exportPDF(fabEl) {
             var panel = document.querySelector('.sim-panel.active');
             if (!panel) return 'Ouro';
             var id = panel.id || '';
-            var map = { 'sim-ouro':'Ouro (XAU/USD)', 'sim-prata':'Prata (XAG/USD)', 'sim-platina':'Platina (XPT/USD)', 'sim-btc':'Bitcoin (BTC/USD)' };
+            var map = { 'sim-ouro':'Ouro (XAU/USD)', 'sim-prata':'Prata (XAG/USD)', 'sim-platina':'Platina (XPT/USD)', 'sim-btc':'Bitcoin (BTC/USD)', 'sim-cdi':'CDI', 'sim-ntnb':'NTN-B (IPCA+)', 'sim-usdbrl':'USD/BRL' };
             return map[id] || 'Ativo';
         }
         function getSimConfig() {
@@ -5133,6 +5548,9 @@ async function exportPDF(fabEl) {
                 'sim-prata':   { prefix:'s', asset:'silver' },
                 'sim-platina': { prefix:'p', asset:'platinum' },
                 'sim-btc':     { prefix:'b', asset:'btc' },
+                'sim-cdi':     { prefix:'c', asset:'cdi' },
+                'sim-ntnb':    { prefix:'n', asset:'ntnb' },
+                'sim-usdbrl':  { prefix:'u', asset:'usdbrl' },
             };
             var cfg = map[id] || { prefix:'g', asset:'gold' };
             var conf = simConfigs[cfg.asset] || {};
@@ -5333,14 +5751,20 @@ async function exportPDF(fabEl) {
 
         // ── DOWNLOAD ────────────────────────────────────────────
         var ts = new Date().toISOString().slice(0,10);
+        // Clarity: pdf_download
+        if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+            try { window.clarity('event', 'pdf_download'); } catch(e) {}
+        }
         pdf.save('multiasset-relatorio-' + ts + '.pdf');
 
     } catch(err) {
         console.error('PDF error:', err);
         alert('Erro ao gerar PDF: ' + err.message);
     } finally {
-        fabEl.classList.remove('fab-loading');
-        fabEl.innerHTML = '<i class="fas fa-file-pdf"></i><span class="fab-text">Exportar Relatório</span>';
+        if (fabEl) {
+            fabEl.classList.remove('fab-loading');
+            fabEl.innerHTML = '<i class="fas fa-file-pdf"></i><span class="fab-text">Exportar Relatório</span>';
+        }
     }
 }
 
@@ -5629,13 +6053,18 @@ async function fetchRFDiario() {
     }
     let ntnbPrice = null, selicRate = null;
 
-    // NTNB11: proxy server-side (market-data.php) — evita CORS Yahoo no browser
+    // NTNB11: proxy server-side (market-data.php) — evita CORS Yahoo no browser.
+    // O handler devolve stale[] com os ativos que cairam no SEED hardcoded em vez
+    // de fetch ao vivo. Sem checar isso, o SEED (95) passava no teste p > 0 e
+    // preemptava o fallback brapi.dev abaixo, que funciona. Dado falso ganhava de
+    // dado bom, silenciosamente.
     try {
         const res = await fetch('/market-data.php', { signal: AbortSignal.timeout(10000), headers: { 'Accept': 'application/json' } });
         if (res.ok) {
             const d = await res.json();
+            const seeded = Array.isArray(d?.stale) && d.stale.indexOf('ntnb11') !== -1;
             const p = d?.ntnb11?.value;
-            if (p > 0) ntnbPrice = p;
+            if (!seeded && p > 0) ntnbPrice = p;
         }
     } catch(e) {}
     if (!ntnbPrice) {
@@ -5720,6 +6149,10 @@ setInterval(function () { gerarAnaliseMacro(false); }, 2 * 60 * 60 * 1000);
         if (Date.now() - pageEnterTime < MIN_TIME_MS) return;
         popupShown = true;
         sessionStorage.setItem(POPUP_KEY, '1');
+        // Clarity: popup_shown
+        if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+            try { window.clarity('event', 'popup_shown', { time_on_page: Math.round((Date.now() - pageEnterTime) / 1000) }); } catch(e) {}
+        }
         const overlay = document.getElementById('exit-popup-overlay');
         if (overlay) {
             overlay.classList.add('active');
@@ -5770,14 +6203,34 @@ function submitExitPopup() {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
-    var submitPromise = (window.SZ && window.SZ.submitLead)
-        ? window.SZ.submitLead({
+    // /relatorio-signup e o caminho real: grava o inscrito no KV, aplica rate limit
+    // e dispara o e-mail de boas-vindas com o ultimo Fechamento via Resend. Antes
+    // daqui o popup ia direto para o Formspree, que so repassa para a caixa de
+    // entrada: o visitante lia "a primeira analise chega em breve" e nada chegava.
+    // Formspree fica como rede de seguranca para nao perder lead se o handler cair.
+    function _formspreeFallback() {
+        if (!(window.SZ && window.SZ.submitLead)) {
+            return Promise.reject(new Error('formspree_pending'));
+        }
+        return window.SZ.submitLead({
             email: email,
             form: 'multiasset_exit_popup',
             origem: 'exit_popup',
-            extra: { interesse: 'analise_semanal' }
-          })
-        : Promise.reject(new Error('formspree_pending'));
+            extra: { interesse: 'fechamento_mercado' }
+        });
+    }
+
+    var submitPromise = fetch('/relatorio-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup' })
+    }).then(function (r) {
+        if (!r.ok) throw new Error('signup status ' + r.status);
+        return r;
+    }).catch(function (err) {
+        console.warn('relatorio-signup indisponivel, usando Formspree:', err.message);
+        return _formspreeFallback();
+    });
 
     submitPromise.then(function () {
         localStorage.setItem('szuchmacher_subscribed', '1');
@@ -5785,11 +6238,17 @@ function submitExitPopup() {
         var success = document.getElementById('popup-success');
         if (main)    main.style.display    = 'none';
         if (success) success.style.display = 'block';
-        setTimeout(closeExitPopup, 3500);
+        // Dispara PDF como isca imediata: o visitante sai com o relatorio na mao
+        try { exportPDF(null); } catch(e) {}
+        setTimeout(closeExitPopup, 5000);
         window.ga && window.ga('lead_capture', {
             source: 'exit_popup',
             form: 'multiasset_exit_popup'
         });
+        // Clarity: popup_signup
+        if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+            try { window.clarity('event', 'popup_signup', { source: 'exit_popup' }); } catch(e) {}
+        }
     }).catch(function () {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-envelope"></i> Receber análises';
@@ -5847,6 +6306,9 @@ const _SHARE_ASSET_TO_PANEL = {
     silver:   'sim-prata',
     platinum: 'sim-platina',
     btc:      'sim-btc',
+    cdi:      'sim-cdi',
+    ntnb:     'sim-ntnb',
+    usdbrl:   'sim-usdbrl',
 };
 
 // Feedback visual (toast) com fallback inline
@@ -5924,6 +6386,9 @@ function shareSim(asset, btnEl) {
         }
         window.ga && window.ga('simulation_shared', { asset: asset, prazo: prazo, ini: ini, ap: ap, scenario: sel });
         if (window.clarity) window.clarity('set', 'shared_sim', asset);
+        if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+            try { window.clarity('event', 'share_click', { asset: asset, type: 'sim' }); } catch(e) {}
+        }
     }).catch(function(err){
         console.warn('copy failed', err);
         _shareToast('Não foi possível copiar automaticamente. URL: ' + url, 5000);
@@ -5963,6 +6428,9 @@ function sharePortfolio(btnEl) {
         }
         window.ga && window.ga('simulation_shared', { asset: 'portfolio', total: total, perfil: perfil, cenario: cenario, prazo: prazo });
         if (window.clarity) window.clarity('set', 'shared_sim', 'portfolio');
+        if (window.clarity && window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+            try { window.clarity('event', 'share_click', { type: 'portfolio' }); } catch(e) {}
+        }
     }).catch(function(err){
         console.warn('copy failed', err);
         _shareToast('Não foi possível copiar automaticamente. URL: ' + url, 5000);
@@ -6095,7 +6563,7 @@ if (document.readyState === 'loading') {
                 Antes de ir — sua simulação<br>vai <em>desaparecer</em>
             </h2>
             <p class="popup-body">
-                Salve seu relatório em PDF ou deixe seu e-mail para receber novidades da plataforma.
+                Salve seu relatório em PDF ou deixe seu e-mail para receber o Fechamento de Mercado.
             </p>
             <div class="popup-badges">
                 <span class="popup-badge"><i class="fas fa-lock"></i> Sem spam, jamais</span>
@@ -6115,6 +6583,12 @@ if (document.readyState === 'loading') {
                     <i class="fas fa-envelope"></i> Receber análises
                 </button>
             </div>
+            <p class="popup-consent">
+                Ao enviar, você concorda em receber o Fechamento de Mercado por e-mail e
+                autoriza o tratamento do seu endereço para esse fim, conforme a
+                <a href="/privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.
+                Você pode cancelar a qualquer momento.
+            </p>
             <span class="popup-dismiss" onclick="closeExitPopup()">
                 Não preciso, já tenho minha estratégia definida
             </span>
@@ -6123,8 +6597,8 @@ if (document.readyState === 'loading') {
         <div class="popup-success-msg" id="popup-success">
             <div class="success-icon">✅</div>
             <h3>Perfeito, temos um acordo.</h3>
-            <p>Verifique seu email — a primeira análise chega em breve.<br>
-            Enquanto isso, explore os simuladores abaixo.</p>
+            <p>Seu relatorio em PDF esta sendo gerado agora.<br>
+            Verifique sua pasta de downloads.</p>
         </div>
     </div>
 </div>

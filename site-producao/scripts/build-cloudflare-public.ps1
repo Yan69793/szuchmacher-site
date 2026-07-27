@@ -84,6 +84,15 @@ Copy-IfExists (Join-Path $ROOT 'consultoria.html') (Join-Path $MULTI 'consultori
 Copy-IfExists (Join-Path $ROOT 'macro_data.json') (Join-Path $MULTI 'macro_data.json') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'og-cover.jpg') (Join-Path $MULTI 'og-cover.jpg') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\sz-config.js') | Out-Null
+# Politica de privacidade. multi-assets.com coleta e-mail no popup do simulador e
+# ate 26/07/2026 respondia 404 em /privacidade.html e /privacidade: coleta sem
+# aviso ao titular. Copiada nas duas formas, com e sem extensao, igual consultoria.
+Copy-IfExists (Join-Path $ROOT 'privacidade.html') (Join-Path $MULTI 'privacidade.html') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'privacidade.html') (Join-Path $MULTI 'privacidade') | Out-Null
+
+# Pagina de metodologia — fontes, calibracao, limitacoes. Copiada nas duas formas.
+Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologia.html') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologia') | Out-Null
 
 # Imagética institucional (assets/img/*.webp), tambem usada em consultoria.html.
 # Mesmo diretorio inteiro do bloco sz, sem allowlist propria.
@@ -111,6 +120,8 @@ $obrigatorios = @(
     'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
+    'multi\privacidade.html', 'multi\privacidade',
+    'multi\metodologia.html', 'multi\metodologia',
     'multi\og-cover.jpg', 'multi\assets\sz-config.js'
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologia — MultiAsset</title>
+    <meta name="description" content="Metodologia completa da plataforma MultiAsset: fontes de dados, calibracao de volatilidades, modelo de Monte Carlo e construcao de cenarios." />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://multi-assets.com/metodologia" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c4a46a;
+            --bg: #0a0c10;
+            --surface: #10141a;
+            --border: rgba(232,228,217,0.08);
+            --text: #e8e4d9;
+            --muted: #8b93a0;
+            --max: 860px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.65; -webkit-font-smoothing: antialiased;
+        }
+        .page { max-width: var(--max); margin: 0 auto; padding: 64px 24px 80px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold);
+            text-decoration: none; letter-spacing: 0.06em; margin-bottom: 40px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        h1 {
+            font-family: 'Playfair Display', Georgia, serif; font-size: 36px;
+            font-weight: 400; letter-spacing: -0.02em; margin-bottom: 8px;
+        }
+        h1 em { font-style: italic; color: var(--gold); }
+        .subtitle {
+            font-size: 14px; color: var(--muted); margin-bottom: 48px;
+            padding-bottom: 24px; border-bottom: 1px solid var(--border);
+        }
+        h2 {
+            font-family: 'Playfair Display', Georgia, serif; font-size: 22px;
+            font-weight: 400; color: var(--gold); margin-top: 48px; margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+        h3 {
+            font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+            color: var(--text); margin-top: 28px; margin-bottom: 8px;
+        }
+        p { font-size: 14px; color: var(--text); margin-bottom: 12px; }
+        p.muted { color: var(--muted); font-size: 13px; }
+
+        table {
+            width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+            font-size: 13px;
+        }
+        th {
+            text-align: left; padding: 8px 12px; font-family: 'DM Mono', monospace;
+            font-size: 10px; font-weight: 500; letter-spacing: 0.08em; color: var(--muted);
+            border-bottom: 1px solid var(--border); text-transform: uppercase;
+        }
+        td {
+            padding: 8px 12px; border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+        td:nth-child(2) { color: var(--muted); font-size: 12px; }
+        td:last-child { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 11px; text-align: right; white-space: nowrap; }
+
+        .disclaimer-box {
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 20px 24px; margin-top: 48px; font-size: 12px;
+            color: var(--muted); line-height: 1.7;
+        }
+        .disclaimer-box strong { color: var(--text); }
+
+        .footer {
+            margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border);
+            font-size: 11px; color: var(--muted);
+        }
+        .footer a { color: var(--gold); text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <a href="/" class="back-link">&larr; Voltar para MultiAsset</a>
+
+    <h1>Metodologia <em>MultiAsset</em></h1>
+    <p class="subtitle">Fontes de dados, calibracao de volatilidades, modelo de Monte Carlo e construcao de cenarios. Ultima atualizacao: julho de 2026.</p>
+
+    <h2>1. Fontes de dados</h2>
+    <p>Cada ativo da plataforma utiliza fontes publicas, verificaveis e atualizadas automaticamente. Nenhum dado e inserido manualmente.</p>
+
+    <table>
+        <thead>
+            <tr><th>Ativo</th><th>Fonte primaria</th><th>Atualizacao</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Ouro (XAU/USD)</td><td>Gold API (gold-api.com)</td><td>15 min</td></tr>
+            <tr><td>Prata (XAG/USD)</td><td>Gold API (gold-api.com)</td><td>15 min</td></tr>
+            <tr><td>Platina (XPT/USD)</td><td>Gold API (gold-api.com)</td><td>15 min</td></tr>
+            <tr><td>Bitcoin (BTC/USD)</td><td>CoinGecko API + BTC Radar (server-side)</td><td>2 min / 2 h</td></tr>
+            <tr><td>CDI</td><td>BrasilAPI (brasilapi.com.br) + BCB SGS serie 12</td><td>4 h</td></tr>
+            <tr><td>NTN-B (IPCA+)</td><td>Yahoo Finance (NTNB11.SA) + brapi.dev</td><td>2 h</td></tr>
+            <tr><td>USD/BRL</td><td>AwesomeAPI (economia.awesomeapi.com.br)</td><td>30 min</td></tr>
+            <tr><td>Ibovespa</td><td>Yahoo Finance (^BVSP)</td><td>10 min</td></tr>
+            <tr><td>S&amp;P 500</td><td>Yahoo Finance (^GSPC)</td><td>10 min</td></tr>
+            <tr><td>WTI</td><td>Yahoo Finance (CL=F)</td><td>10 min</td></tr>
+            <tr><td>Selic Meta</td><td>BCB SGS serie 432</td><td>15 min</td></tr>
+            <tr><td>IPCA</td><td>BCB SGS serie 13522 + Focus (expectativas)</td><td>15 min</td></tr>
+            <tr><td>Cenario macro (LLM)</td><td>BCB SGS + Focus + OpenRouter (Claude Haiku 4.5)</td><td>7 dias</td></tr>
+        </tbody>
+    </table>
+
+    <p class="muted">Fallback: quando a fonte primaria falha, o sistema utiliza a secundaria automaticamente. Se ambas falharem, o ultimo valor em cache e mantido. O frontend tambem possui valores hardcoded calibrados como ultima rede de seguranca.</p>
+
+    <h2>2. Modelo de Monte Carlo</h2>
+
+    <h3>2.1 Motor</h3>
+    <p>O motor de simulacao utiliza o modelo de Movimento Browniano Geometrico (GBM) com drift determinístico e choque estocastico normal:</p>
+    <p style="font-family:'DM Mono',monospace;font-size:13px;background:var(--surface);padding:12px 16px;border:1px solid var(--border);">
+        S<sub>t+1</sub> = S<sub>t</sub> &times; exp(&mu; &minus; &frac12;&sigma;<sup>2</sup> + &sigma; &times; Z)
+    </p>
+    <p>Onde <strong>&mu;</strong> e a taxa de retorno anual esperada (cenario base do ativo), <strong>&sigma;</strong> e a volatilidade anual, e <strong>Z ~ N(0,1)</strong> e um choque aleatorio normal. A cada ano da simulacao, um novo choque e sorteado independentemente.</p>
+    <p>O gerador de numeros aleatorios utiliza o algoritmo Mulberry32, um PRNG deterministico de 32 bits. A semente padrao e 42, garantindo que a mesma configuracao de parametros produza sempre os mesmos resultados — a simulacao e <strong>reprodutivel</strong>.</p>
+
+    <h3>2.2 Parametros</h3>
+    <p>Cada simulacao individual gera <strong>10.000 trajetorias independentes</strong> para o horizonte de tempo escolhido (1 a 30 anos). Os aportes mensais sao incorporados ao final de cada ano. O valor final de cada trajetoria e registrado, e os percentis P10, P25, P50 (mediana), P75 e P90 sao calculados sobre a distribuicao empirica dos resultados.</p>
+
+    <h3>2.3 Limitacoes</h3>
+    <ul style="margin-left:20px;font-size:14px;color:var(--text);margin-bottom:16px;">
+        <li style="margin-bottom:6px;"><strong>Normalidade dos retornos</strong>: o modelo assume choques normais, o que subestima eventos extremos (caudas grossas). Drawdowns historicos de 30-80% em commodities e criptoativos nao sao totalmente capturados.</li>
+        <li style="margin-bottom:6px;"><strong>Correlacoes estaticas</strong>: o modelo trata cada ativo como independente. Nao ha matriz de correlacao entre ativos — cada simulacao e univariada. A correlacao so e relevante no Monte Carlo de portfolio.</li>
+        <li style="margin-bottom:6px;"><strong>Volatilidade constante</strong>: a volatilidade e fixa ao longo de todo o horizonte. Regime de volatilidade (calmaria vs. crise) nao e modelado.</li>
+        <li style="margin-bottom:6px;"><strong>Sem custos de transacao</strong>: spread, corretagem e slippage nao sao descontados.</li>
+        <li><strong>Sem risco de credito</strong>: para CDI e NTN-B, assume-se que o emissor (Tesouro Nacional) honra integralmente os pagamentos.</li>
+    </ul>
+
+    <h2>3. Calibracao de volatilidades</h2>
+    <p>As volatilidades anuais foram calibradas com series historicas de 5 anos (2021-2026), arredondadas para o meio ponto percentual mais proximo. Fontes: Yahoo Finance, CoinGecko, BCB.</p>
+
+    <table>
+        <thead>
+            <tr><th>Ativo</th><th>Volatilidade anual</th><th>Fonte da estimativa</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Ouro</td><td>15%</td><td>Desvio-padrao dos retornos diarios do XAU/USD (5 anos)</td></tr>
+            <tr><td>Prata</td><td>34%</td><td>Desvio-padrao dos retornos diarios do XAG/USD (5 anos)</td></tr>
+            <tr><td>Platina</td><td>32%</td><td>Desvio-padrao dos retornos diarios do XPT/USD (5 anos)</td></tr>
+            <tr><td>Bitcoin</td><td>85%</td><td>Desvio-padrao dos retornos diarios do BTC/USD (5 anos)</td></tr>
+            <tr><td>NTN-B</td><td>8%</td><td>Duration risk: duration de ~6 anos x volatilidade de taxa de juros real de ~1,3% a.a.</td></tr>
+            <tr><td>CDI</td><td>0,5%</td><td>Essencialmente zero — risco de mercado desprezivel para taxa DI over</td></tr>
+            <tr><td>USD/BRL</td><td>12%</td><td>Desvio-padrao dos retornos diarios do USD/BRL (5 anos)</td></tr>
+        </tbody>
+    </table>
+
+    <h2>4. Construcao de cenarios</h2>
+
+    <h3>4.1 Cenarios-base por ativo</h3>
+    <p>Os cenarios conservador, moderado e agressivo de cada ativo sao construidos a partir de:</p>
+    <ul style="margin-left:20px;font-size:14px;color:var(--text);margin-bottom:16px;">
+        <li style="margin-bottom:6px;"><strong>Cenario base</strong>: taxa de retorno esperada fundamentada em dados de mercado atuais (yield de titulos, premio de risco, taxa de juros real).</li>
+        <li style="margin-bottom:6px;"><strong>Cenario conservador</strong>: base menos um spread proporcional a volatilidade do ativo (~1-1,5 desvios-padrao).</li>
+        <li><strong>Cenario agressivo</strong>: base mais um spread proporcional a volatilidade do ativo (~1-1,5 desvios-padrao).</li>
+    </ul>
+    <p>Para o CDI, os cenarios refletem trajetorias alternativas da taxa Selic (cortes acelerados, manutencao, ou elevacao). Para a NTN-B, os cenarios variam o spread sobre o IPCA (compressao, manutencao, ou ampliacao do premio de risco fiscal). Para o USD/BRL, os cenarios modelam a direcao do cambio (apreciacao, estabilidade, ou depreciacao do BRL).</p>
+
+    <h3>4.2 Cenarios geopoliticos (portfolio)</h3>
+    <p>Os 5 cenarios geopoliticos da secao "Cenarios Prospectivos 2026-2030" utilizam calibracao bayesiana com base em:</p>
+    <ul style="margin-left:20px;font-size:14px;color:var(--text);margin-bottom:16px;">
+        <li style="margin-bottom:6px;">Probabilidades base (base rates) historicas de conflito entre grandes potencias (Correlates of War, 1945-presente)</li>
+        <li style="margin-bottom:6px;">Precificacao de mercados de apostas (Polymarket, jul/2026)</li>
+        <li style="margin-bottom:6px;">Julzo estruturado de especialistas (Good Judgment Project, Metaculus)</li>
+        <li>Modelos academicos de escalada de conflito (Thucydides Trap, Allison/Harvard; escada de escalada de Kahn)</li>
+    </ul>
+    <p>Cada cenario define retornos esperados, trajetorias de variaveis macro (Selic, IPCA, USD/BRL, Brent) e deslocamentos de correlacao entre pares de ativos. O modelo de portfolio aplica esses retornos como overrides sobre as taxas-base dos ativos individuais.</p>
+
+    <h3>4.3 Cenarios macro (LLM)</h3>
+    <p>O panorama macroeconomico da home e gerado por um modelo de linguagem (Claude Haiku 4.5 via OpenRouter) que processa dados estruturados do BCB (Selic, IPCA, PTAX, expectativas Focus) e produz uma narrativa em portugues. O LLM nao "inventa" dados — ele sintetiza os numeros oficiais em texto. A geracao e semanal (segundas-feiras) com cache de 7 dias.</p>
+
+    <h2>5. Referencias</h2>
+    <table>
+        <thead>
+            <tr><th>Fonte</th><th>URL</th><th>Uso</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>BCB SGS</td><td>api.bcb.gov.br</td><td>Selic, CDI, IPCA</td></tr>
+            <tr><td>BCB Focus</td><td>olinda.bcb.gov.br</td><td>Expectativas de mercado</td></tr>
+            <tr><td>BrasilAPI</td><td>brasilapi.com.br</td><td>Taxas (CDI, Selic)</td></tr>
+            <tr><td>brapi.dev</td><td>brapi.dev</td><td>Cotacoes B3 (NTNB11)</td></tr>
+            <tr><td>AwesomeAPI</td><td>economia.awesomeapi.com.br</td><td>Cambio (USD/BRL)</td></tr>
+            <tr><td>Yahoo Finance</td><td>query1.finance.yahoo.com</td><td>Indices, commodities, ETFs</td></tr>
+            <tr><td>CoinGecko</td><td>api.coingecko.com</td><td>Criptoativos</td></tr>
+            <tr><td>Gold API</td><td>api.gold-api.com</td><td>Metais preciosos</td></tr>
+        </tbody>
+    </table>
+
+    <div class="disclaimer-box">
+        <strong>Aviso importante:</strong> Esta pagina descreve a metodologia de calculo da plataforma MultiAsset. As simulacoes apresentadas tem carater exclusivamente informativo e educacional. Nenhum conteudo desta pagina ou da plataforma constitui recomendacao de investimento, oferta de produto financeiro ou aconselhamento personalizado. Resultados passados e simulacoes baseadas em dados historicos nao garantem retornos futuros. Consulte um profissional credenciado antes de tomar decisoes de investimento. Para duvidas sobre a metodologia, entre em contato: <a href="mailto:contato@multi-assets.com">contato@multi-assets.com</a>.
+    </div>
+
+    <div class="footer">
+        &copy; 2026 MultiAsset. <a href="/">multi-assets.com</a> &middot; <a href="/privacidade">Privacidade</a>
+    </div>
+</div>
+<script src="/assets/sz-config.js?v=20260719"></script>
+<script>
+// Clarity: metodologia_view
+(function() {
+    if (window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+        var t = document.createElement('script');
+        t.async = 1; t.src = 'https://www.clarity.ms/tag/' + window.SZ_CLARITY_ID;
+        document.head.appendChild(t);
+        t.onload = function() {
+            if (window.clarity) {
+                window.clarity('event', 'metodologia_view', { referrer: document.referrer });
+            }
+        };
+    }
+})();
+</script>
+</body>
+</html>
