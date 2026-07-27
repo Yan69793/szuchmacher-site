@@ -136,6 +136,46 @@ function extractJson(content) {
   }
 }
 
+// Renomeia o campo legado `taxa` para `alocacao_sugerida` em ativos[x][perfil].
+//
+// O schema do prompt ja pede `alocacao_sugerida`, mas o modelo continua
+// devolvendo `taxa`: verificado no refresh de 27/07/2026, que gerou texto novo
+// e sem `warn: llm_json_fallback`, ou seja, veio do LLM com o schema novo e
+// mesmo assim ignorou o nome. Instrucao no prompt nao e barreira. A garantia
+// tem que estar depois da resposta, onde nao depende do modelo obedecer.
+//
+// O campo sempre foi faixa de alocacao ("8-12% do patrimonio"), nunca retorno
+// esperado. Ate 27/07/2026 o frontend parseava esse texto como taxa anual e
+// capturava o segundo numero da faixa junto com o hifen, projetando ouro a -12%
+// a.a. no cenario base. O frontend ja parou de ler o campo; isto fecha a
+// origem, para que o nome ambiguo nao volte a circular no payload.
+const PERFIS_ATIVO = ['conservador', 'moderado', 'agressivo'];
+
+// Exportada para teste. Os tres pontos de aplicacao (cache, fallback estatico e
+// resposta ao vivo) usam esta mesma funcao, mas so o do fallback e alcancavel
+// sem chave do LLM, entao a precedencia entre os dois campos precisa de teste
+// direto.
+export function normalizarAtivos(data) {
+  if (!data || typeof data.ativos !== 'object' || data.ativos === null) return data;
+  let renomeados = 0;
+  for (const ativo of Object.values(data.ativos)) {
+    if (!ativo || typeof ativo !== 'object') continue;
+    for (const perfil of PERFIS_ATIVO) {
+      const bloco = ativo[perfil];
+      if (!bloco || typeof bloco !== 'object' || !('taxa' in bloco)) continue;
+      // Se o modelo acertar o nome, o valor certo vence. So preenche a partir
+      // do legado quando `alocacao_sugerida` esta ausente ou nula.
+      if (bloco.alocacao_sugerida == null) bloco.alocacao_sugerida = bloco.taxa;
+      delete bloco.taxa;
+      renomeados++;
+    }
+  }
+  if (renomeados > 0) {
+    console.warn(`[macro-api] campo legado 'taxa' normalizado para 'alocacao_sugerida' em ${renomeados} bloco(s)`);
+  }
+  return data;
+}
+
 async function loadStaticMacro(env, request) {
   const base = new URL(request.url);
   for (const path of ['/sz/macro_data.json', '/multi/macro_data.json']) {
@@ -145,7 +185,12 @@ async function loadStaticMacro(env, request) {
     if (!res.ok) continue;
     try {
       const payload = await res.json();
-      if (payload?.data) return payload;
+      // O macro_data.json versionado ainda traz `taxa`. Normaliza aqui para o
+      // fallback nao reintroduzir o nome legado que os outros caminhos limpam.
+      if (payload?.data) {
+        normalizarAtivos(payload.data);
+        return payload;
+      }
     } catch {
       /* try next path */
     }
@@ -192,6 +237,10 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   if (!forceRefresh) {
     const cached = await readCache(env.CACHE, CACHE_KEY);
     if (cached?.data && cached.ts && Date.now() / 1000 - cached.ts < CACHE_TTL) {
+      // O cache tem TTL de 7 dias, entao o payload gravado antes desta mudanca
+      // ainda circula com `taxa`. Normaliza na leitura tambem, senao a saida do
+      // endpoint fica inconsistente ate o cache velho expirar.
+      normalizarAtivos(cached.data);
       return jsonResponse(
         {
           ok: true,
@@ -308,6 +357,10 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   if (!data?.eyebrow) {
     return jsonResponse({ ok: false, error: 'JSON do LLM sem campos obrigatórios' }, { status: 503, headers: cors });
   }
+
+  // Antes do writeCache: o cache tem que guardar o payload ja normalizado, para
+  // a proxima leitura nao precisar corrigir de novo.
+  normalizarAtivos(data);
 
   const generated_at = new Intl.DateTimeFormat('pt-BR', {
     timeZone: 'America/Sao_Paulo',
