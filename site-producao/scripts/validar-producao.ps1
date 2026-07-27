@@ -22,6 +22,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.Net.Http
 
 $SZ    = 'https://szuchmacher.com.br'
 $MULTI = 'https://multi-assets.com'
@@ -41,7 +42,7 @@ $checks = @(
     @{ Url = "$SZ/og-cover.jpg";          Status = 200; MinBytes = 10000 }
     @{ Url = "$SZ/logo.png";              Status = 200; MinBytes = 10000 }
     @{ Url = "$SZ/macro_data.json";       Status = 200; MinBytes = 500 }
-    @{ Url = "$SZ/relatorio_cache.json";  Status = 200; MinBytes = 200 }
+    @{ Url = "$SZ/relatorio_cache.json";  Status = @(200, 404); Rotulo = 'relatorio_cache.json (cache regeneravel)' }
     @{ Url = "$SZ/agenda-data.json";      Status = 200; MinBytes = 100 }
 
     # --- config: a guarda do checkout de teste nao pode se perder num rollback ---
@@ -66,6 +67,11 @@ $checks = @(
        Rotulo = 'multi home, com link institucional' }
     @{ Url = "$MULTI/consultoria"; Status = 200; Contem = 'szuchmacher.com.br';
        Rotulo = 'consultoria, com link institucional' }
+    # multi-assets.com coleta e-mail no popup do simulador. Ate 26/07/2026 o
+    # dominio respondia 404 aqui: coleta sem aviso ao titular. O popup linka
+    # /privacidade.html, entao esta pagina nao pode sumir de novo em silencio.
+    @{ Url = "$MULTI/privacidade.html"; Status = 200; Contem = 'Privacidade';
+       Rotulo = 'multi: politica de privacidade (linkada no popup de lead)' }
     @{ Url = "$MULTI/og-cover.jpg";                     Status = 200; MinBytes = 10000 }
     @{ Url = "$MULTI/prices.php";                       Status = 200; Contem = '"ok"' }
     @{ Url = "$MULTI/assets/video/demo-multiasset.mp4"; Status = 200; MinBytes = 100000 }
@@ -96,13 +102,14 @@ function Test-Url([hashtable]$c) {
     try {
         $resp = (Get-Client $tmo).GetAsync($c.Url).GetAwaiter().GetResult()
     } catch {
-        $msg = $_.Exception.InnerException?.Message ?? $_.Exception.Message
+        if ($_.Exception.InnerException -and $_.Exception.InnerException.Message) { $msg = $_.Exception.InnerException.Message } else { $msg = $_.Exception.Message }
         return & $falha "erro de rede: $msg"
     }
 
     try {
         $status = [int]$resp.StatusCode
-        if ($status -ne $c.Status) { return & $falha "HTTP $status, esperado $($c.Status)" }
+        $esperados = if ($c.Status -is [array]) { $c.Status } else { @($c.Status) }
+        if ($status -notin $esperados) { return & $falha "HTTP $status, esperado $($esperados -join ' ou ')" }
 
         if ($c.ContainsKey('MinBytes') -or $c.ContainsKey('Contem')) {
             $buf = $resp.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult()

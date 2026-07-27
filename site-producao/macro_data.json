@@ -1,90 +1,89 @@
 {
+  "generated_at": "26/07/2026 às 14:40 BRT",
   "data": {
-    "brasil": [
-      {
-        "label": "SELIC e COPOM",
-        "text": "COPOM mantém Selic em 14,25% na reunião de junho, sinalizando fim do ciclo de aperto iniciado em 2024. Mercado precifica estabilização em torno de 14% até dezembro, com possível redução apenas em 2027 caso inflação converja à meta. Comunicação do Banco Central reforça vigilância sobre inflação de serviços e expectativas desancoradas. Prêmio de juros reais permanece elevado comparado a pares emergentes, sustentando atratividade de renda fixa doméstica."
-      },
-      {
-        "label": "Câmbio e Contas Externas",
-        "text": "PTAX em R$ 5,12 reflete estabilidade relativa do real ante manutenção de juros elevados e fluxos de carry trade. Conta corrente brasileira permanece deficitária, mas financiada por investimento direto e fluxos de portfólio atraídos por prêmios de renda fixa. Risco fiscal e comunicação política geram volatilidade ocasional, mas estrutura de juros altos oferece âncora para o câmbio. Vigilância sobre sustentabilidade da dívida pública permanece crítica."
-      },
-      {
-        "label": "Renda Fixa — Prêmio em NTN-B e DI longo",
-        "text": "Inflação acumulada acima da meta sustenta spreads atrativos em NTN-B, com prêmios de inflação em patamares compensadores. Curva de DI longo oferece oportunidades em prazos de 5 a 10 anos, com taxa média em torno de 14% refletindo expectativas de estabilização de juros. Demanda por proteção inflacionária permanece elevada ante incertezas sobre convergência. Investidores estrangeiros aumentam alocação em títulos brasileiros, aproveitando carry trade e diversificação."
-      },
-      {
-        "label": "Atividade e Fiscal",
-        "text": "PIB brasileiro cresce moderadamente, sustentado por consumo resiliente e investimento privado. Mercado de trabalho permanece aquecido, oferecendo suporte a renda das famílias. Pressões fiscais limitam espaço para políticas expansionistas, com foco em consolidação de contas públicas. Reforma tributária e discussões sobre gastos obrigatórios permanecem em pauta, gerando incerteza sobre trajetória de dívida pública. Cenário base aponta para crescimento de 2,5% a 3% em 2026."
-      }
-    ],
-    "alert_badge": "COPOM HOLD · 20/JUL",
-    "beneficiados": [
-      "<strong>NTN-B e Títulos Prefixados Longos</strong> — prêmios de inflação e juros reais elevados sustentam demanda de investidores estrangeiros",
-      "<strong>Ações de Utilidade Pública (Energia, Saneamento)</strong> — receitas indexadas à inflação e demanda defensiva em cenário de juros estáveis",
-      "<strong>Dólar Futuro (comprado)</strong> — prêmio de juros brasileiro sustenta carry trade, mas risco fiscal oferece proteção para posições defensivas",
-      "<strong>Ouro (BRL)</strong> — demanda por proteção ante incertezas políticas e fiscais, com juros elevados oferecendo suporte relativo",
-      "<strong>Setores Defensivos (Consumo Básico, Saúde)</strong> — crescimento moderado e inflação sustentam margens em setores com poder de precificação"
-    ],
-    "penalizados": [
-      "<strong>Ações Cíclicas (Construção, Varejo)</strong> — juros elevados limitam consumo de bens duráveis e investimento em infraestrutura",
-      "<strong>Bancos (exposição a crédito)</strong> — Selic elevada reduz demanda por crédito e pressiona margens de intermediação",
-      "<strong>Empresas com Dívida em Dólar</strong> — câmbio em R$ 5,12 pressiona custos financeiros e fluxos de caixa em moeda estrangeira",
-      "<strong>Bonds Corporativos de Menor Rating</strong> — spread de crédito permanece elevado, penalizando emissores com perfil de risco elevado",
-      "<strong>Ações de Tecnologia e Growth</strong> — juros reais elevados reduzem atratividade de fluxos futuros descontados"
-    ],
+    "eyebrow": "Cenário Macro Brasil · Julho 2026",
+    "alert_title": "Selic em 14.25% | Câmbio R$ 5.07 | COPOM em Pausa Estratégica",
+    "alert_text": "O Banco Central mantém a taxa Selic em 14.25% a.a., sinalizando fim do ciclo de aperto em contexto de inflação persistente (FOCUS: 5.15% para 2026) e atividade econômica moderada (PIB: 1.99%). O mercado precifica Selic em 14% ao final do ano, sugerindo estabilização. O câmbio opera em R$ 5.07, refletindo prêmio de risco elevado e fluxos externos cautelosos. A dinâmica de juros reais elevados (8%+) permanece como âncora de ativos de renda fixa, enquanto a depreciação do Real limita ganhos em moeda local para investidores em dólar.",
+    "alert_badge": "COPOM 05/AGO",
     "canais": [
       {
         "variavel": "Petróleo (WTI/Brent)",
         "direcao": "neutral",
-        "mecanismo": "WTI em US$ 81,46 reflete equilíbrio entre oferta OPEC+ e demanda global moderada. Pressões inflacionárias em combustíveis sustentam custos domésticos, impactando indiretamente a inflação de serviços no Brasil. Risco de volatilidade permanece elevado ante geopolítica, mas sem tendência clara de rompimento."
+        "mecanismo": "Preços de energia global impactam inflação de serviços e transportes no Brasil, afetando a trajetória do IPCA. Pressões geopolíticas e dinâmica de oferta OPEC+ mantêm volatilidade, com transmissão para combustíveis domésticos e custos de produção. Cenário de estabilização em USD 75-85/bbl reduz pressão inflacionária, favorecendo eventual flexibilização futura do BC."
       },
       {
         "variavel": "Inflação Global",
         "direcao": "down",
-        "mecanismo": "Trajetória desinflacionária em curso nos EUA e zona do euro reduz pressão por novos apertos monetários. No Brasil, inflação acima da meta sustenta vigilância do BCB, mas sinais de moderação em núcleo abrem espaço para estabilização de juros. Ancoragem de expectativas permanece crítica para convergência à meta."
+        "mecanismo": "Desaceleração gradual em economias desenvolvidas (EUA, Zona Euro) reduz pressão sobre commodities e importações brasileiras. Ancoragem de expectativas inflacionárias globais em 2-3% limita pass-through para preços domésticos. Contudo, inflação de serviços persiste, mantendo vigilância do BC sobre núcleo."
       },
       {
         "variavel": "Juros (Fed / BCB)",
         "direcao": "neutral",
-        "mecanismo": "Fed funds e Selic em patamar restritivo, ambos sinalizando fim de ciclos de aperto. Mercado precifica estabilização em torno de 14% no Brasil até dezembro. Assimetria de juros reais (Brasil vs. EUA) permanece atrativa, sustentando carry trade e fluxos para renda fixa doméstica."
+        "mecanismo": "Fed em pausa após ciclo de cortes, operando em 4.5-5.0% a.a. BCB mantém Selic em 14.25%, gerando diferencial de 900-950 bps. Prêmio de risco Brasil permanece elevado, sustentando demanda por ativos de renda fixa local. Eventual flexibilização do Fed em 2027 pode reduzir atratividade relativa de DI longo."
       },
       {
         "variavel": "PIB Global",
         "direcao": "neutral",
-        "mecanismo": "Crescimento global desacelerando gradualmente, com EUA mostrando resiliência moderada e zona do euro em ritmo lento. Brasil acompanha dinâmica externa com atividade doméstica sustentada por consumo, mas pressões fiscais limitam potencial de expansão. Cenário de soft landing permanece central nas projeções."
+        "mecanismo": "Crescimento global moderado (2.5-3.0%) limita demanda por commodities e exportações brasileiras. Atividade em EUA e China desacelera, reduzindo impulso externo. Brasil segue com PIB de 1.99%, refletindo juros altos e consumo contido, com pouco suporte de investimento privado."
       },
       {
         "variavel": "Dólar (DXY)",
-        "direcao": "neutral",
-        "mecanismo": "Índice do dólar estável ante manutenção de juros elevados nos EUA e fluxos de safe-haven moderados. Ausência de pressão por aperto adicional do Fed reduz demanda por dólar defensivo. Dinâmica dependerá de dados de atividade americana e comunicação do FOMC nas próximas semanas."
+        "direcao": "up",
+        "mecanismo": "Índice do dólar mantém força em 103-105, sustentado por diferenciais de juros EUA-Zona Euro e fluxos de risco-off. Pressão sobre moedas emergentes persiste, com BRL refletindo prêmio de risco elevado e incerteza fiscal doméstica. Apreciação do dólar reduz competitividade de exportações brasileiras."
       },
       {
         "variavel": "Real (BRL)",
-        "direcao": "neutral",
-        "mecanismo": "PTAX em R$ 5,12 reflete equilíbrio entre prêmio de juros domésticos elevados e fluxos externos moderados. Inflação acima da meta sustenta Selic elevada, oferecendo suporte ao real. Risco fiscal e incertezas políticas permanecem como fatores de pressão, mas carry trade continua atrativo para investidores estrangeiros."
+        "direcao": "down",
+        "mecanismo": "PTAX em R$ 5.07 reflete depreciação acumulada de ~8% no ano, impulsionada por saídas de portfólio e prêmio de risco elevado. Déficit em conta corrente (~2% do PIB) e incerteza sobre trajetória fiscal ampliam pressão. Juros reais altos não compensam risco cambial percebido, mantendo BRL fraco."
       },
       {
         "variavel": "Ouro",
         "direcao": "up",
-        "mecanismo": "Ouro em US$ 4.014,60 reflete demanda por proteção ante incertezas macroeconômicas globais e potencial volatilidade geopolítica. Juros reais elevados no Brasil e EUA limitam upside, mas fluxos para ativos defensivos sustentam patamares elevados. Correlação negativa com dólar oferece diversificação em carteiras."
+        "mecanismo": "Demanda por ativos de segurança aumenta em contexto de volatilidade geopolítica e incerteza macro. Juros reais globais em patamares moderados (1-2%) reduzem custo de oportunidade do ouro. Depreciação do Real amplifica ganhos em moeda local para investidores brasileiros, tornando ouro hedge eficaz."
       },
       {
         "variavel": "Bitcoin",
-        "direcao": "neutral",
-        "mecanismo": "Bitcoin em US$ 64.771 reflete dinâmica de ativos de risco moderada, com investidores avaliando cenário de juros estáveis. Ausência de pressão por novos apertos monetários reduz headwinds, mas falta de catalisadores claros limita momentum de alta. Volatilidade permanece elevada ante sentimento de mercado."
+        "direcao": "up",
+        "mecanismo": "Aprovação de ETFs de Bitcoin em mercados desenvolvidos e adoção institucional sustentam demanda. Cenário de juros globais em pausa favorece ativos de risco. Volatilidade elevada e correlação com risco-off mantêm perfil especulativo, com ganhos em BRL amplificados pela depreciação cambial."
       }
     ],
-    "cenarios_brent": [
-      "<strong>Cenário Base — Estabilização de Juros e Câmbio Resiliente:</strong> Selic permanece em 14% até dezembro, sustentando carry trade e demanda por renda fixa. Câmbio opera em R$ 5,10-5,20, com fluxos externos compensando pressões fiscais. Inflação converge gradualmente à meta, permitindo redução de juros em 2027. Renda fixa doméstica oferece retornos reais atrativos.",
-      "<strong>Cenário Otimista — Desinflação Acelerada e Redução de Juros:</strong> Inflação converge mais rapidamente à meta, permitindo COPOM iniciar redução de juros em Q4 2026. Câmbio se aprecia para R$ 4,90-5,00, com fluxos externos acelerados. Ações cíclicas se beneficiam de ambiente de juros mais baixos. Ouro e ativos defensivos sofrem pressão relativa.",
-      "<strong>Cenário Pessimista — Inflação Persistente e Pressão Fiscal:</strong> Inflação de serviços permanece elevada, forçando COPOM a manter Selic em 14,5% até 2027. Pressões fiscais geram volatilidade no câmbio, com PTAX em R$ 5,30-5,50. Spreads de crédito se ampliam, penalizando corporativo. Ouro e ativos defensivos se beneficiam de ambiente de incerteza. Renda fixa longa oferece proteção."
+    "brasil": [
+      {
+        "label": "SELIC e COPOM",
+        "text": "O Banco Central mantém Selic em 14.25% a.a., sinalizando fim do ciclo de aperto após 11 aumentos consecutivos. Mercado precifica estabilização em 14% até dezembro, com possível início de cortes em 2027 caso inflação converja para meta. Expectativas de inflação para 2027 em 4.5% sugerem espaço futuro, mas núcleo persistente (5.8%) exige cautela. Próxima reunião (05/08) deve manter taxa, com comunicação focada em dados de atividade e dinâmica de preços."
+      },
+      {
+        "label": "Câmbio e Contas Externas",
+        "text": "PTAX em R$ 5.07 reflete depreciação acumulada do Real, com mercado precificando R$ 5.20 para fim de ano. Déficit em conta corrente (~2% do PIB) e saídas de portfólio ampliam pressão cambial. Reservas internacionais em USD 330 bi oferecem colchão, mas insuficiente para reverter tendência. Prêmio de risco Brasil em 350-400 bps acima de emergentes pares reflete incerteza fiscal e política."
+      },
+      {
+        "label": "Renda Fixa — Prêmio em NTN-B e DI longo",
+        "text": "Juros reais em DI longo (8%+ a.a.) permanecem atraentes para investidores de longo prazo. NTN-B oferece proteção inflacionária com cupom real de 5.5-6%, adequado para portfólios defensivos. Curva de DI invertida em prazos curtos (até 2 anos) reflete expectativa de cortes futuros, enquanto prazos longos (5-10 anos) precificam estabilização. Spread de crédito corporativo em 250-300 bps oferece oportunidades seletivas em emissores de qualidade."
+      },
+      {
+        "label": "Atividade e Fiscal",
+        "text": "PIB de 1.99% reflete desaceleração após crescimento de 2.9% em 2024, impulsionado por juros altos e consumo contido. Investimento privado permanece fraco (-1.5% a.a.), com incerteza sobre retorno. Resultado fiscal deteriora-se, com déficit primário em ~1.5% do PIB, alimentando preocupações sobre sustentabilidade. Reforma tributária e revisão de gastos permanecem em agenda, mas com implementação lenta, mantendo prêmio de risco elevado."
+      }
     ],
-    "premissas_perfis": {
-      "conservador": "Preservação de capital com foco em renda fixa prefixada (DI longo), NTN-B e ouro; exposição mínima a risco cambial e criptoativos.",
-      "moderado": "Equilíbrio entre renda fixa (60-70%) e ativos reais (ouro, prata); hedge cambial via ouro; exposição seletiva a ações defensivas.",
-      "arrojado": "Alocação diversificada em renda fixa, metais preciosos, criptoativos e ações cíclicas; aposta em depreciação do real e possível melhora de crescimento."
-    },
+    "beneficiados": [
+      "<strong>NTN-B (Tesouro Direto)</strong> — proteção inflacionária com cupom real de 5.5-6% a.a. em contexto de inflação persistente",
+      "<strong>DI Longo (5-10 anos)</strong> — juros reais de 8%+ oferecem retorno atrativo para investidores de horizonte estendido",
+      "<strong>Ouro</strong> — hedge cambial eficaz com depreciação do Real e demanda por ativos de segurança",
+      "<strong>Ações de Exportadores (Vale, JBS)</strong> — depreciação do Real melhora competitividade e margens em moeda estrangeira",
+      "<strong>Crédito Corporativo (BBB+)</strong> — spread de 250-300 bps oferece oportunidades seletivas em emissores de qualidade"
+    ],
+    "penalizados": [
+      "<strong>Ações de Consumo Discricionário</strong> — juros altos e depreciação cambial reduzem poder de compra e margens",
+      "<strong>Imóveis Residenciais</strong> — Selic em 14.25% eleva custo de financiamento e reduz demanda por crédito imobiliário",
+      "<strong>Dólar Futuro</strong> — apreciação do Real em cenário de melhora fiscal ou cortes de juros futuros",
+      "<strong>Ações de Bancos (Juros Reais Altos)</strong> — compressão de spread de crédito e redução de volume de operações",
+      "<strong>Commodities Agrícolas</strong> — demanda global fraca e oferta abundante pressionam preços em dólar"
+    ],
+    "cenarios_brent": [
+      "<strong>Cenário 1 — Estabilização em USD 75-85/bbl:</strong> Oferta OPEC+ controlada e demanda global moderada mantêm preços em faixa neutra. Inflação de energia recua, favorecendo eventual flexibilização do BC em 2027. Câmbio estabiliza em R$ 5.10-5.15, reduzindo pressão sobre importações.",
+      "<strong>Cenário 2 — Choque de Oferta (USD 95-105/bbl):</strong> Tensões geopolíticas ou redução de produção OPEC+ elevam preços. Inflação de combustíveis e transportes ressurge, forçando BC a manter Selic elevada por mais tempo. Real deprecia para R$ 5.30-5.40, amplificando pressão inflacionária.",
+      "<strong>Cenário 3 — Recessão Global (USD 55-65/bbl):</strong> Desaceleração acentuada em EUA e China reduz demanda por energia. Preços caem, favorecendo desinflação global e cortes de juros. Brasil beneficia-se com redução de pressão inflacionária, permitindo cortes de Selic em 2027, mas exportações sofrem com demanda fraca."
+    ],
     "ativos": {
       "ouro": {
         "conservador": {
@@ -143,14 +142,15 @@
         }
       }
     },
-    "eyebrow": "Cenário Macro · Julho 2026",
-    "alert_text": "O COPOM mantém a Selic em 14,25% após ciclo de aperto, sinalizando possível estabilização até dezembro conforme precificação do mercado. O câmbio opera próximo a R$ 5,10, refletindo equilíbrio entre fluxos externos e prêmio de juros domésticos. A inflação acumulada acima da meta sustenta spreads atrativos em NTN-B e DI longo, enquanto o Fed também mantém postura cautelosa. Petróleo em US$ 81,46 oferece suporte a ativos defensivos, com ouro em patamares elevados sinalizando demanda por proteção.",
+    "premissas_perfis": {
+      "conservador": "Preservação de capital com foco em renda fixa prefixada (DI longo), NTN-B e ouro; exposição mínima a risco cambial e criptoativos.",
+      "moderado": "Equilíbrio entre renda fixa (60-70%) e ativos reais (ouro, prata); hedge cambial via ouro; exposição seletiva a ações defensivas.",
+      "arrojado": "Alocação diversificada em renda fixa, metais preciosos, criptoativos e ações cíclicas; aposta em depreciação do real e possível melhora de crescimento."
+    },
     "premissas_cenarios": {
       "pessimista": "Inflação não cede, Selic permanece em 14,25% até fim de 2026, real deprecia para R$ 5,40, PIB cresce apenas 0,5%, crédito corporativo sofre deterioração.",
       "base": "Inflação converge gradualmente para meta, Selic reduz para 13,75%, real deprecia para R$ 5,20, PIB cresce 1,96%, ambiente de renda fixa atrativa com ganho de capital.",
       "otimista": "Inflação cede rapidamente, Selic reduz para 12,5%, real se estabiliza em R$ 5,00, PIB cresce 2,8%, ações cíclicas se recuperam, crédito corporativo normaliza."
-    },
-    "alert_title": "Selic em 14,25% sinaliza fim do aperto; câmbio estável em R$ 5,12; inflação sustenta prêmios de renda fixa"
-  },
-  "generated_at": "20.07.2026 às 12:48 BRT"
+    }
+  }
 }

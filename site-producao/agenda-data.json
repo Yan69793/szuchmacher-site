@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "2026-07-24",
+    "version": "2026-07-26",
     "curator": "Szuchmacher Consultoria",
     "fontes_primarias": [
       "IBGE — Calendário de divulgações (API v3/calendario)",
@@ -21,14 +21,14 @@
       "en"
     ]
   },
-  "gerado": "2026-07-24T16:51:39-03:00",
+  "gerado": "2026-07-26T14:31:53-03:00",
   "janela": {
-    "inicio": "2026-07-20",
-    "fim": "2026-07-24"
+    "inicio": "2026-07-27",
+    "fim": "2026-07-31"
   },
   "eventos": [
     {
-      "data": "2026-07-20",
+      "data": "2026-07-27",
       "hora_brt": "08:25",
       "regiao": "BR",
       "evento": "Boletim Focus",
@@ -39,73 +39,18 @@
       "relevancia": "alta"
     },
     {
-      "data": "2026-07-20",
-      "hora_brt": "09:30",
-      "regiao": "CA",
-      "evento": "Canadá — IPC ao consumidor (CPI)",
-      "evento_en": "Canada — Consumer Price Index (CPI)",
-      "descricao": "Inflação ao consumidor no Canadá, referência para o Bank of Canada. Impacto em CAD, bonds canadenses e expectativas de política monetária.",
-      "descricao_en": "Canada headline CPI. Key benchmark for Bank of Canada. Impacts CAD and rate expectations.",
-      "fonte": "Statistics Canada",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-07-20",
-      "hora_brt": "22:15",
-      "regiao": "CN",
-      "evento": "China — Taxa de Juros de Referência (LPR)",
-      "evento_en": "China — Loan Prime Rate (LPR)",
-      "descricao": "O PBOC anuncia a taxa LPR de 1 e 5 anos, referência para o crédito bancário na China. Impacto no mercado imobiliário chinês, commodities, minério de ferro e moedas de países exportadores (AUD, BRL, CLP).",
-      "descricao_en": "PBOC announces 1Y and 5Y Loan Prime Rate. Impacts Chinese property, commodities, iron ore and exporter currencies (AUD, BRL, CLP).",
-      "fonte": "PBOC",
+      "data": "2026-07-28",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Índice Nacional de Preços ao Consumidor Amplo 15",
+      "evento_en": "Índice Nacional de Preços ao Consumidor Amplo 15",
+      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor Amplo 15.",
+      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor Amplo 15.",
+      "fonte": "IBGE",
       "relevancia": "alta"
     },
     {
-      "data": "2026-07-21",
-      "hora_brt": "03:00",
-      "regiao": "UK",
-      "evento": "Reino Unido — Taxa de desemprego (ILO)",
-      "evento_en": "UK — ILO Unemployment Rate",
-      "descricao": "Taxa de desemprego e variação de rendimentos médios no Reino Unido. Indicador-chave para o MPC do BoE calibrar o mercado de trabalho.",
-      "descricao_en": "UK unemployment rate and average earnings. Key labour market gauge for MPC decisions.",
-      "fonte": "ONS",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-07-21",
-      "hora_brt": "06:00",
-      "regiao": "EU",
-      "evento": "Alemanha/Zona do Euro — ZEW de Sentimento Econômico",
-      "evento_en": "Germany/Eurozone — ZEW Economic Sentiment",
-      "descricao": "Índice ZEW de sentimento econômico na Alemanha e Zona do Euro, baseado em survey com analistas e investidores institucionais. Indicador antecedente de atividade e confiança na maior economia europeia.",
-      "descricao_en": "ZEW survey of economic sentiment among analysts and institutional investors. Leading indicator for German/Eurozone activity.",
-      "fonte": "ZEW",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-22",
-      "hora_brt": "03:00",
-      "regiao": "UK",
-      "evento": "Reino Unido — IPC ao consumidor (CPI)",
-      "evento_en": "UK — Consumer Price Index (CPI)",
-      "descricao": "Inflação ao consumidor no Reino Unido, cheia e núcleo. Principal referência de inflação para o Bank of England. Impacto em GBP, gilts e FTSE 100.",
-      "descricao_en": "UK headline and core CPI. Key inflation benchmark for Bank of England. Impacts GBP, gilts and FTSE 100.",
-      "fonte": "ONS",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-22",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "EUA — Vendas de imóveis usados",
-      "evento_en": "US — Existing Home Sales",
-      "descricao": "Vendas de imóveis residenciais existentes nos EUA. Cobre ~90% do mercado imobiliário americano. Indicador de atividade e preços.",
-      "descricao_en": "US existing home sales. Covers ~90% of US housing market. Activity and price indicator.",
-      "fonte": "NAR",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-07-22",
+      "data": "2026-07-29",
       "hora_brt": "11:30",
       "regiao": "US",
       "evento": "EUA — Estoques de petróleo bruto (EIA)",
@@ -116,7 +61,7 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-07-23",
+      "data": "2026-07-30",
       "hora_brt": "09:30",
       "regiao": "US",
       "evento": "EUA — Novos pedidos de seguro-desemprego",
@@ -127,91 +72,69 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-07-23",
-      "hora_brt": "19:15",
-      "regiao": "EU",
-      "evento": "BCE — Decisão de juros na Zona do Euro",
-      "evento_en": "ECB — Eurozone Rate Decision",
-      "descricao": "Decisão do European Central Bank sobre as três taxas de juro de referência (deposit facility, MRO, MLF). A presidente Christine Lagarde concede coletiva às 14:45 CET. Impacto direto no euro (EUR/USD) e nos juros soberanos da Zona do Euro.",
-      "descricao_en": "ECB decision on the three key interest rates (deposit facility, MRO, MLF). President Lagarde holds press conference at 14:45 CET. Direct impact on EUR/USD and Eurozone sovereign yields.",
-      "fonte": "ECB",
+      "data": "2026-07-30",
+      "hora_brt": "15:00",
+      "regiao": "US",
+      "evento": "FOMC — Decisão de juros (07/2026)",
+      "evento_en": "FOMC — Rate Decision (07/2026)",
+      "descricao": "Decisão do Federal Reserve sobre os Fed Funds. Impacto direto no diferencial Brasil–EUA e no real.",
+      "descricao_en": "Federal Reserve decision on the Fed Funds rate. Direct impact on the Brazil–US rate differential and BRL.",
+      "fonte": "Fed",
       "relevancia": "alta"
     },
     {
-      "data": "2026-07-24",
-      "hora_brt": "03:00",
+      "data": "2026-07-30",
+      "hora_brt": "16:00",
       "regiao": "UK",
-      "evento": "Reino Unido — Vendas no varejo",
-      "evento_en": "UK — Retail Sales",
-      "descricao": "Vendas no varejo do Reino Unido (variação mensal e anual). Termômetro do consumo das famílias e da atividade econômica britânica.",
-      "descricao_en": "UK monthly and annual retail sales. Household consumption gauge for the British economy.",
-      "fonte": "ONS",
+      "evento": "BoE — Decisão de juros no Reino Unido (MPC)",
+      "evento_en": "BoE — UK Rate Decision (MPC)",
+      "descricao": "O Monetary Policy Committee do Bank of England divulga a decisão sobre a Bank Rate e a ata da reunião simultaneamente. Impacto direto na GBP e nos gilts. Quatro das oito reuniões incluem o Monetary Policy Report com projeções macro.",
+      "descricao_en": "The MPC announces the Bank Rate decision and minutes simultaneously. Four meetings per year include the Monetary Policy Report with macro projections. Direct impact on GBP and gilt yields.",
+      "fonte": "Bank of England",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-07-30",
+      "hora_brt": "18:30",
+      "regiao": "BR",
+      "evento": "COPOM — Decisão de juros (07/2026)",
+      "evento_en": "COPOM — Rate Decision (07/2026)",
+      "descricao": "O BCB divulga a decisão sobre a Selic ao final do segundo dia de reunião. O comunicado e a ata subsequente moldam a curva de juros doméstica e o câmbio.",
+      "descricao_en": "BCB releases the Selic decision at the end of day two. The statement and subsequent minutes shape the domestic rate curve and BRL.",
+      "fonte": "BCB",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-07-31",
+      "hora_brt": "06:00",
+      "regiao": "EU",
+      "evento": "Zona do Euro — IPC Flash",
+      "evento_en": "Eurozone — CPI Flash Estimate",
+      "descricao": "Estimativa preliminar da inflação ao consumidor na Zona do Euro (índice cheio e núcleo). Divulgado pelo Eurostat. Principal dado de inflação para o BCE antes da decisão de juros seguinte.",
+      "descricao_en": "Preliminary Eurozone CPI estimate (headline and core) by Eurostat. Key inflation data point ahead of ECB rate decisions.",
+      "fonte": "Eurostat",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-07-31",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação",
+      "evento_en": "Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação",
+      "descricao": "Divulgação programada do IBGE: Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação.",
+      "descricao_en": "Scheduled IBGE release: Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação.",
+      "fonte": "IBGE",
       "relevancia": "media"
     },
     {
-      "data": "2026-07-24",
-      "hora_brt": "05:00",
-      "regiao": "EU",
-      "evento": "Zona do Euro — PMI Industrial e Serviços (Flash)",
-      "evento_en": "Zona do Euro — Manufacturing & Services PMI (Flash)",
-      "descricao": "Índice de Gerentes de Compras (Zona do Euro) — leitura preliminar (flash) da indústria e serviços. Abaixo de 50 indica contração. Impacto direto em expectativas de PIB, juros e moedas.",
-      "descricao_en": "Zona do Euro flash PMI for manufacturing and services. Below 50 signals contraction.",
-      "fonte": "S&P Global Eurozone",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-24",
-      "hora_brt": "05:00",
-      "regiao": "UK",
-      "evento": "Reino Unido — PMI Industrial e Serviços (Flash)",
-      "evento_en": "Reino Unido — Manufacturing & Services PMI (Flash)",
-      "descricao": "Índice de Gerentes de Compras (Reino Unido) — leitura preliminar (flash) da indústria e serviços. Abaixo de 50 indica contração. Impacto direto em expectativas de PIB, juros e moedas.",
-      "descricao_en": "Reino Unido flash PMI for manufacturing and services. Below 50 signals contraction.",
-      "fonte": "S&P Global UK",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-24",
-      "hora_brt": "05:00",
-      "regiao": "DE",
-      "evento": "Alemanha — PMI Industrial e Serviços (Flash)",
-      "evento_en": "Alemanha — Manufacturing & Services PMI (Flash)",
-      "descricao": "Índice de Gerentes de Compras (Alemanha) — leitura preliminar (flash) da indústria e serviços. Abaixo de 50 indica contração. Impacto direto em expectativas de PIB, juros e moedas.",
-      "descricao_en": "Alemanha flash PMI for manufacturing and services. Below 50 signals contraction.",
-      "fonte": "S&P Global Germany",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-24",
-      "hora_brt": "10:45",
-      "regiao": "US",
-      "evento": "EUA — PMI Industrial e Serviços (Flash)",
-      "evento_en": "EUA — Manufacturing & Services PMI (Flash)",
-      "descricao": "Índice de Gerentes de Compras (EUA) — leitura preliminar (flash) da indústria e serviços. Abaixo de 50 indica contração. Impacto direto em expectativas de PIB, juros e moedas.",
-      "descricao_en": "EUA flash PMI for manufacturing and services. Below 50 signals contraction.",
-      "fonte": "S&P Global US",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-24",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "EUA — Vendas de imóveis novos",
-      "evento_en": "US — New Home Sales",
-      "descricao": "Vendas de imóveis residenciais novos nos EUA (annualized rate). Indicador do mercado imobiliário e da saúde do consumo americano.",
-      "descricao_en": "US new single-family home sales. Housing market and consumer health indicator.",
-      "fonte": "Census Bureau",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-07-24",
-      "hora_brt": "20:30",
+      "data": "2026-07-31",
+      "hora_brt": "23:30",
       "regiao": "JP",
-      "evento": "Japão — IPC nacional (CPI)",
-      "evento_en": "Japan — National Consumer Price Index",
-      "descricao": "Inflação ao consumidor no Japão (cheia e núcleo, excluindo alimentos frescos). Dado essencial para a trajetória da taxa do BoJ. Impacto em USD/JPY, Nikkei 225 e JGBs.",
-      "descricao_en": "Japan headline and core CPI. Key data point for BoJ rate trajectory. Impacts USD/JPY, Nikkei 225 and JGBs.",
-      "fonte": "Statistics Bureau of Japan",
+      "evento": "BoJ — Decisão de juros no Japão",
+      "evento_en": "BoJ — Japan Rate Decision",
+      "descricao": "O Bank of Japan divulga a decisão sobre a policy rate e publica o Outlook Report trimestral (jan, abr, jul, out). Impacto no USD/JPY, Nikkei 225 e JGBs. Divulgação ocorre de madrugada no horário brasileiro (11:30 JST = 23:30 BRT do dia anterior).",
+      "descricao_en": "The BoJ announces its policy rate decision and publishes the quarterly Outlook Report (Jan, Apr, Jul, Oct). Impact on USD/JPY, Nikkei 225 and JGBs.",
+      "fonte": "Bank of Japan",
       "relevancia": "alta"
     }
   ]
