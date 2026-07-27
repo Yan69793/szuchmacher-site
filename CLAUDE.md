@@ -8,6 +8,12 @@
 
 ## Portão de verificação
 
-SEM LOOP DE VERIFICAÇÃO. O projeto é multi-subprojeto (PHP/HostGator, Python, Node) sem comando único de aceite.
-O que falta: health check HTTP público para `szuchmacher.com.br` que valide as páginas principais, e smoke test que cubra as 3 contas FTP.
-Enquanto não houver: validar manualmente cada subprojeto afetado e declarar o que foi e o que não foi verificado.
+Antes de declarar qualquer tarefa concluída, execute:
+```powershell
+cd site-producao; .\scripts\validar-producao.ps1
+```
+28 verificações em szuchmacher.com.br + multi-assets.com (páginas, assets, endpoints, redirects). Checagem de conteúdo, não só status HTTP.
+
+Checagem nova neste script só entra **depois** que a mudança correspondente já está em produção. `publicar-com-rollback.ps1` roda este gate, e a rotina automática da agenda (domingo, segunda e quinta às 08:00) usa esse script: uma checagem vermelha ali dispara rollback e e-mail de alerta.
+
+O FTP é legado desde a migração para Cloudflare Workers (2026-06-17). O deploy primário é `.\scripts\deploy-cloudflare.ps1`.

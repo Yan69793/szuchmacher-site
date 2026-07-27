@@ -1,0 +1,589 @@
+OBJETIVO
+
+Plano: Me diga o que acha desse plano para expansao do site. O que voce mudaria? O que acrescentaria? O que tiraria, pesquise na internet para deixar o produto hiperprofissional porem mais vendavel. /somente-melhorar 
+ano: Expansao de Ativos do multi-assets.com
+
+ Contexto
+
+lti-assets.com e um simulador de 4 ativos (ouro, prata, platina, bitcoin) com portfolio allocation de 7 itens (NTN-B, CDI, ouro, prata, platina, bitcoin, reserva). O usuario quer expandir para mais ivos, usando o aprendizado de 4 projetos irmaos: MultiAsset-Supabase (engine de Monte Carlo + Supabase), multi-assets-radar (catalogo de 9 ativos com 6 classes), BTC Radar (18 sinais, 6 estrategias, RecommendationPanel, briefing IA, visual comercial), e VIX Radar (monitoramento de 103 emissores de credito).
+
+ Projetos analisados e suas contribuicoes:
+
+ ┌─────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+ │       Projeto       │                                                                                   O que traz                                                                                    │
+ ├─────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+ │ multi-assets-radar  │ Catalogo de 9 ativos com 6 classes (metal, crypto, indice, moeda, commodity, renda-fixa), multi-source data (Yahoo Finance, OKX, AwesomeAPI), OHLCV historico, padrao de        │
+ │                     │ handler Cloudflare                                                                                                                                                              │
+ ├─────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+ │ BTC Radar           │ Signal engine (6 estrategias x 3 horizontes), RecommendationPanel agregador, briefing IA diario, alertas, backtesting, visual comercial Higgsfield, integracao server-side com  │
+ │                     │ multi-assets.com (btc-scenarios.js)                                                                                                                                             │
+ ├─────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+ │ MultiAsset-Supabase │ Motor de Monte Carlo, PERFIS com validacao dual (client + server CHECK constraint), curvas de juros brasileiras (Selic/IPCA), Edge Function de validacao, monetizacao Stripe    │
+ │                     │ desenhada                                                                                                                                                                       │
+ ├─────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+ │ VIX Radar           │ Monitoramento de 103 emissores de renda fixa, pipeline de verificacao com IA (Sonnet + Fable 5 shadow mode), deteccao de eventos de credito, Analytics Engine — util para       │
+ │                     │ adicionar debentures/credito corporativo como classe de ativo                                                                                                                   │
+ └─────────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+ O que existe hoje no multi-assets.com
+
+ Simuladores (4 ativos): Ouro, Prata, Platina, Bitcoin
+ Alocacao (7 itens): NTN-B, CDI, Ouro, Prata, Platina, Bitcoin, Reserva
+ Indicadores exibidos (nao simulativeis): Ibovespa, S&P 500, WTI, Treasury 10Y, USD/BRL
+ Dados ao vivo: prices.php (metais+BTC), market-data.php (indices+WTI+bonds), macro_api.php (LLM), btc-scenarios.js (taxas dinamicas BTC)
+ Arquitetura: HTML vanilla 351KB + Cloudflare Worker (sz-sites) + KV cache
+
+ Ativos a adicionar
+
+ Tier 1 — Essenciais (maximo impacto comercial, minimo esforco)
+
+ 1. S&P 500 (SPX-USD) — Indice
+ - Justificativa: Benchmark universal de equities. Esperado em qualquer plataforma multi-asset. Ja exibido (market-data.js), falta so o simulador.
+ - Fonte: Yahoo Finance ^GSPC (ja implementado em market-data.js e multi-assets-radar/lib/market-data.ts)
+ - Cenario pessimista: ~4% a.a. (bear market prolongado, recessao)
+ - Cenario base: ~10% a.a. (media historica nominal)
+ - Cenario otimista: ~18% a.a. (bull market, expansao de multiplos)
+ - Volatilidade: 18% anual
+ - Esforco: Baixo — copiar padrao do ouro, reaproveitar fetch Yahoo Finance existente
+
+ 2. Ibovespa (IBOV-BRL) — Indice
+ - Justificativa: Mercado local do investidor brasileiro. Diferencial vs plataformas internacionais. Ja exibido.
+ - Fonte: Yahoo Finance ^BVSP (ja implementado)
+ - Cenario pessimista: ~2% a.a. (Brasil em crise, Selic alta estrutural)
+ - Cenario base: ~12% a.a. (media historica nominal em BRL)
+ - Cenario otimista: ~22% a.a. (ciclo de commodities, reformas, upgrade de rating)
+ - Volatilidade: 28% anual
+ - Esforco: Baixo
+
+ 3. WTI Crude Oil (WTI-USD) — Commodity
+ - Justificativa: Diversificador de ciclo economico, hedge de inflacao. Ja exibido no market-data.js. Commodity real com dinamica propria, descorrelacionada de metais e indices.
+ - Fonte: Yahoo Finance CL=F (ja implementado em market-data.js)
+ - Cenario pessimista: ~-8% a.a. (recessao global, demanda fraca)
+ - Cenario base: ~6% a.a. (equilibrio oferta-demanda)
+ - Cenario otimista: ~25% a.a. (choque de oferta, conflito no Oriente Medio)
+ - Volatilidade: 35% anual
+ - Esforco: Baixo — fonte ja implementada, so adicionar simConfigs + painel
+
+ 4. USD/BRL — Moeda
+ - Justificativa: Essencial para alocacao internacional. Ja em market data. Impacto direto no retorno em BRL de ativos dolarizados.
+ - Fonte: AwesomeAPI (ja implementado)
+ - Cenario pessimista: ~-8% a.a. (BRL se fortalece para 4.50)
+ - Cenario base: ~+5% a.a. (depreciacao estrutural do BRL)
+ - Cenario otimista: ~+18% a.a. (BRL colapsa para 7.00+)
+ - Volatilidade: 16% anual
+ - Esforco: Baixo
+
+ Tier 1b — ETFs diversificados (baixo esforco, alto poder de cenario)
+
+ ETFs sao o veiculo real que investidores usam. Adicionar os principais ETFs globais permite simular carteiras que existem de verdade no mercado, nao apenas indices teoricos.
+
+ 5. QQQ (Nasdaq-100) — ETF
+ - Justificativa: ETF mais popular depois do SPY. Tech mega-cap (Apple, Microsoft, Nvidia, Alphabet, Amazon, Meta, Tesla). Perfil de retorno diferente do S&P 500: mais concentrado, maior volatilidade, maior crescimento. Essencial para qualquer simulador de portfolio.
+ - Fonte: Yahoo Finance QQQ (ETF listado na NASDAQ)
+ - Cenario pessimista: ~-5% a.a. (tech winter, regulacao antitruste, rotacao para value)
+ - Cenario base: ~14% a.a. (crescimento de earnings tech + AI)
+ - Cenario otimista: ~28% a.a. (boom de IA, expansao de multiplos tech)
+ - Volatilidade: 24% anual
+ - Cor: #e040fb (roxo magenta, cor associada a tech/inovacao)
+ - Esforco: Baixo — Yahoo Finance, mesmo padrao do SPX
+
+ 6. IWM (Russell 2000) — ETF
+ - Justificativa: US small caps. Comportamento diferente de large caps (SPX/QQQ): mais sensivel a juros domesticos, menos exposta a receita global. Excelente diversificador. Essencial para cenarios de rotacao de mercado.
+ - Fonte: Yahoo Finance IWM
+ - Cenario pessimista: ~-8% a.a. (recessao nos EUA, credito apertado para small caps)
+ - Cenario base: ~9% a.a. (crescimento economico domestico, desregulamentacao)
+ - Cenario otimista: ~22% a.a. (corte de juros forte, re-shoring, M&A boom)
+ - Volatilidade: 26% anual
+ - Cor: #ffab40 (laranja)
+ - Esforco: Baixo
+
+ 7. EEM (iShares MSCI Emerging Markets) — ETF
+ - Justificativa: Cesta de mercados emergentes (China, India, Brasil, Coreia, Taiwan). Para o investidor brasileiro, oferece exposicao a pares emergentes sem concentrar em Brasil (que ja tem via IBOV). Permite simular cenarios de crescimento global vs local.
+ - Fonte: Yahoo Finance EEM
+ - Cenario pessimista: ~-10% a.a. (crise de divida em mercados emergentes, dolar forte, China desacelera)
+ - Cenario base: ~8% a.a. (crescimento populacional, urbanizacao, catching-up)
+ - Cenario otimista: ~20% a.a. (commodity super-cycle, dolar fraco, reformas estruturais em emergentes)
+ - Volatilidade: 25% anual
+ - Cor: #26c6da (ciano/teal, cor associada a mercados emergentes/global)
+ - Esforco: Baixo
+
+ Nota: IVVB11 nao foi incluido porque e matematicamente reduntante. IVVB11 = S&P 500 (SPX-USD) × USD/BRL. O simulador ja permite combinar esses dois ativos no portfolio para obter o retorno do S&P 500 em reais. Adicionar IVVB11 seria duplicar a exposicao.
+
+ Tier 2 — Diferenciadores (medio esforco, alto impacto)
+
+ 8. CDI / Selic — Renda Fixa
+ - Justificativa: Taxa livre de risco brasileira. Hoje so existe na alocacao, sem simulador proprio. E o ativo mais importante para o investidor brasileiro.
+ - Fonte: Curva de juros interna (macroLive.selic + forward curve). Sem API externa.
+ - Cenario pessimista: ~8% a.a. (Selic cai para 8%)
+ - Cenario base: ~12% a.a. (Selic media do ciclo)
+ - Cenario otimista: ~15% a.a. (Selic permanece elevada)
+ - Volatilidade: 0.5% anual (essencialmente risk-free)
+ - Esforco: Baixo — deterministico, sem fonte externa
+
+ 9. NTN-B — Renda Fixa
+ - Justificativa: Titulo indexado a inflacao. Core do fixed income brasileiro. Hoje so na alocacao.
+ - Fonte: Curva de juros interna (IPCA + spread). Sem API externa.
+ - Cenario pessimista: IPCA + 4% a.a.
+ - Cenario base: IPCA + 7.5% a.a.
+ - Cenario otimista: IPCA + 10% a.a. (abertura de spreads)
+ - Volatilidade: 8% anual (duration risk)
+ - Esforco: Baixo
+
+ Tier 3 — Avancados (maior esforco, poder de diferenciacao)
+
+ 10. Treasury 10Y (TNX-USD) — Renda Fixa Global
+ - Justificativa: Benchmark global de renda fixa. Ja exibido. Completa o par com CDI/NTN-B.
+ - Fonte: Yahoo Finance ^TNX (ja implementado)
+ - Esforco: Baixo
+
+ 11. Debentures / Credito Corporativo (do VIX Radar)
+ - Justificativa: O VIX Radar monitora 103 emissores brasileiros. Adicionar uma categoria de "credito corporativo" com score de risco seria um diferencial institucional que nenhuma plataforma de varejo tem.
+ - Abordagem: Na pratica, adicionar um asset "Debentures (IPCA+)" com spread variavel baseado em indice de risco agregado. Nao simular emissores individuais — complexo demais.
+ - Cenario pessimista: IPCA + 3% (defaults, spreads explodem)
+ - Cenario base: IPCA + 8% (credito corporativo medio)
+ - Cenario otimista: IPCA + 12% (compressao de spreads)
+ - Volatilidade: 12% anual
+ - Esforco: Medio — criar handler que compute spread medio do VIX Radar
+
+ Resumo da expansao
+
+ ┌─────┬─────────────────────┬────────────┬──────┬───────────────┬─────────┐
+ │  #  │        Ativo        │   Classe   │ Tier │     Fonte     │ Esforco │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 1   │ S&P 500             │ Indice     │ 1    │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 2   │ Ibovespa            │ Indice     │ 1    │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 3   │ WTI Crude Oil       │ Commodity  │ 1    │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 4   │ USD/BRL             │ Moeda      │ 1    │ AwesomeAPI    │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 5   │ QQQ (Nasdaq-100)    │ ETF        │ 1b   │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 6   │ IWM (Russell 2000)  │ ETF        │ 1b   │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 7   │ EEM (Emerging Mkts) │ ETF        │ 1b   │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 8   │ CDI/Selic           │ Renda Fixa │ 2    │ Interno       │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 9   │ NTN-B               │ Renda Fixa │ 2    │ Interno       │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 10  │ Treasury 10Y        │ Renda Fixa │ 3    │ Yahoo Finance │ Baixo   │
+ ├─────┼─────────────────────┼────────────┼──────┼───────────────┼─────────┤
+ │ 11  │ Debentures          │ Credito    │ 3    │ VIX Radar     │ Medio   │
+ └─────┴─────────────────────┴────────────┴──────┴───────────────┴─────────┘
+
+ Total apos expansao: 15 ativos (eram 4) em 8 classes (eram 2)
+
+ Melhorias de funcionalidade (alem dos ativos)
+
+ F1. Taxas dinamicas por ativo (do BTC Radar)
+
+ - Hoje: so BTC tem taxas dinamicas (btc-scenarios.js). Demais sao hardcoded.
+ - Proposta: handler asset-scenarios.js que compute taxas de cenario para cada ativo com base em:
+   - Indices: volatilidade (VIX via Yahoo ^VIX) determina spread entre pess e otim
+   - Moedas: diferencial de juros (Selic - Fed Funds)
+   - Commodities: backwardation/contango + volatilidade
+   - Metais: dollar index (DXY) + volatilidade
+ - Cache KV 4h. Fallback hardcoded.
+
+ F2. Cross-asset portfolio Monte Carlo (do MultiAsset-Supabase)
+
+ - Hoje: ativos simulam independentemente. O portfolio MC usa retornos descorrelacionados.
+ - Proposta: adicionar matriz de correlacao (Cholesky decomposition) ao MC de portfolio.
+ - Dados de correlacao: 5Y rolling window das fontes Yahoo/OKX.
+
+ F3. Per-asset signal/recommendation panel (do BTC Radar)
+
+ - Hoje: nao existe. BTC Radar tem RecommendationPanel com 18 sinais agregados.
+ - Proposta: para cada ativo, calcular 3 sinais simples (RSI, SMA cross, volatilidade percentil) e mostrar veredito COMPRAR/AGUARDAR/VENDER.
+ - Visual: 3 cards por ativo (curto/medio/longo prazo), pill de contagem.
+
+ F4. Briefing multi-asset (do BTC Radar)
+
+ - Hoje: macro_api.php gera narrativa macro. BTC Radar tem briefing diario com DeepSeek.
+ - Proposta: briefing semanal que cobre os 13 ativos, gerado pelo macro_api handler existente com prompt expandido.
+
+ Skills e MCPs relevantes
+
+ MCPs para desenvolvimento (pesquisa e validacao)
+
+ ┌─────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬──────────────────┐
+ │                 MCP                 │                                                        Uso                                                        │      Custo       │
+ ├─────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────────────┤
+ │ TradingView MCP (ja conectado)      │ Visualizar ativos, capturar screenshots, testar indicadores tecnicos antes de implementar                         │ Gratuito (local) │
+ ├─────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────────────┤
+ │ filesystem MCP (ja ativo no Jarvis) │ Ler/escrever arquivos do projeto                                                                                  │ Gratuito (local) │
+ ├─────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────────────┤
+ │ Yahoohoo MCP (npx yahoohoo)         │ Yahoo Finance + CoinGecko direto no Claude. Buscar precos historicos para calibrar cenarios. Zero API keys.       │ Gratuito         │
+ ├─────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────────────┤
+ │ FinanceKit MCP                      │ Stock quotes, technical analysis, portfolio analysis. 100 calls/mes free, sem API key.                            │ Freemium         │
+ ├─────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────────────┤
+ │ Alpha Vantage MCP                   │ Dados fundamentalistas, technical indicators (50+), forex, crypto, commodities. API key gratuita.                 │ Freemium         │
+ ├─────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────────────┤
+ │ World Intel MCP                     │ 113 tools, 30+ dominios incluindo commodities, bonds, forex, stocks, crypto. Totalmente gratuito (APIs publicas). │ Gratuito         │
+ └─────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────┘
+
+ MCPs NAO aplicaveis ao Worker (runtime e Cloudflare, nao local)
+
+ MCPs rodam no contexto do Claude Code (maquina local). O Worker do multi-assets.com usa fetch() direto para APIs gratuitas. MCPs sao uteis para:
+ - Calibrar cenarios: usar TradingView MCP + Yahoohoo para extrair retornos historicos e volatilidades
+ - Validar visualmente: TradingView MCP para confirmar se o ativo faz sentido
+ - Pesquisar fundamentos: Alpha Vantage para P/E, dividend yield do S&P 500
+
+ Nao para runtime de producao.
+
+ Skills do workspace aplicaveis
+
+ ┌────────────────────────────────┬───────────────────────────────────────────────────────────┐
+ │             Skill              │                     Uso neste projeto                     │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ prompt-refinery                │ Refinar prompts do macro_api.js e do briefing multi-asset │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ prompt-master                  │ Estruturar prompts de geracao de cenario                  │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ humanizer                      │ Texto final do briefing e descricoes de cenario           │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ financial-analysis-agent       │ Validar premissas de retorno e volatilidade               │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ szuchmacher-audit              │ Auditar o codigo antes do deploy                          │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ verification-before-completion │ Gate de qualidade                                         │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ frontend-design                │ Refinar UI dos novos paineis de ativo                     │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ webapp-testing                 │ Testar a UI apos deploy                                   │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ backtesting-trading-strategies │ Validar sinais tecnicos por ativo                         │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ technical-analyst              │ Analise tecnica dos ativos para calibrar cenarios         │
+ ├────────────────────────────────┼───────────────────────────────────────────────────────────┤
+ │ chart-analysis                 │ Validar graficos TradingView                              │
+ └────────────────────────────────┴───────────────────────────────────────────────────────────┘
+
+ Ordem de implementacao
+
+ Fase 1 — Tier 1 (4 ativos) + Tier 1b ETFs (3 ativos) = 7 ativos novos (1 sessao)
+
+ 1. Adicionar S&P 500, Ibovespa, WTI ao market-data.js handler (ja existem, verificar campos)
+ 2. Adicionar QQQ, IWM, EEM ao market-data.js (Yahoo Finance, mesmo padrao)
+ 3. Adicionar USD/BRL ao prices.js (AwesomeAPI, ja usado em market-data.js)
+ 4. Criar simConfigs para os 7 ativos no HTML
+ 5. Criar paineis simuladores (HTML + JS) para cada um (~90 linhas x 7 paineis)
+ 6. Atualizar PERFIS com todos os novos ativos (recalibrar %)
+ 7. Atualizar comparador, share, PDF, loadLivePrices e demais mapeamentos
+ 8. Validar: validar-producao.ps1 + testar cada simulador no browser
+
+ Fase 2 — Tier 2 + features (1 sessao)
+
+ 9. CDI, NTN-B: adicionar ao simConfigs + paineis (curvas internas, sem APIs novas)
+ 10. Handler asset-scenarios.js com taxas dinamicas para todos os ativos (VIX, juros, etc.)
+ 11. F3. Signal panel simplificado por ativo (RSI + SMA cross + volatilidade percentil)
+ 12. Validar
+
+ Fase 3 — Tier 3 + features avancadas (1 sessao)
+
+ 13. Treasury 10Y + Debentures (handler VIX Radar para spread de credito)
+ 14. F2. Cross-asset MC com matriz de correlacao (Cholesky)
+ 15. F4. Briefing multi-asset (prompt expandido no macro_api.js)
+ 16. Validar + deploy
+
+ Verificacao
+
+ Por fase
+
+ # Fase 1
+ cd site-producao
+ .\scripts\validar-producao.ps1  # adicionar verificacoes para novos endpoints
+ # Abrir multi-assets.com e testar cada simulador novo:
+ # - S&P 500, Ibovespa, WTI, USD/BRL, QQQ, IWM, EEM
+- Mudar cenario, verificar grafico e Monte Carlo em cada um
+- Verificar alocacao PERFIS com 11+1 itens (soma 100%)
+
+Fase 2
+scripts\validar-producao.ps1
+Testar CDI/NTN-B com curvas internas
+Verificar taxas dinamicas no console (fetch /api/scenarios)
+Verificar signal panel (3 cards por ativo com vereditos)
+
+Fase 3
+scripts\validar-producao.ps1
+ # Testar MC cross-asset (portfolio com correlacao)
+ # Testar briefing multi-asset
+ # Playwright Node em 6 viewports
+
+ Fase 2
+
+ .\scripts\validar-producao.ps1
+ Testar CDI/NTN-B/WTI
+
+ Verificar taxas dinamicas no console (fetch /api/asset-scenarios)
+
+ Fase 3
+
+ .\scripts\validar-producao.ps1
+ Testar MC cross-asset (portfolio com correlacao)
+
+ Testar briefing multi-asset
+
+ Playwright Node em 6 viewports
+
+
+ ### Gate final
+ - `validar-producao.ps1` 100% passando
+ - Playwright Node: zero pageerror, zero console error em 6 viewports
+ - `grep` por strings hardcoded de API keys ou dados sensiveis no HTML → zero matches
+ - Todos os novos handlers com cache KV e fallback hardcoded
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+Fazer uma critica tecnica e comercial do plano de expansao de ativos do
+multi-assets.com colado nesta conversa, e devolver um plano revisado que
+sirva a estrategia declarada: produto gratuito como isca de lead para a
+consultoria hoje, assinatura depois. Nao implementar nada. Entrega e um
+documento de analise mais plano revisado, em modo somente leitura do
+repositorio.
+
+A critica deve responder, item a item:
+1. O que muda (premissa errada, escopo mal dimensionado, ordem errada)
+2. O que entra (o que falta para o produto ficar hiperprofissional e mais
+   vendavel)
+3. O que sai (o que nao paga o custo de manutencao e deve ser cortado ou
+   adiado)
+
+CONTEXTO
+Produto: multi-assets.com, simulador de cenarios de investimento com
+alocacao de portfolio. Hoje tem 4 ativos simulaveis (ouro, prata, platina,
+bitcoin) e alocacao de 7 itens (NTN-B, CDI, ouro, prata, platina, bitcoin,
+reserva). Indicadores exibidos sem simulador: Ibovespa, S&P 500, WTI,
+Treasury 10Y, USD/BRL.
+
+Stack: HTML vanilla de 351KB servido por Cloudflare Worker (sz-sites) com
+cache KV. Fontes de dados atuais: prices.php, market-data.php,
+macro_api.php, btc-scenarios.js. Deploy primario:
+site-producao/scripts/deploy-cloudflare.ps1. FTP e legado desde a migracao
+para Cloudflare em 2026-06-17. Portao de verificacao do projeto:
+site-producao/scripts/validar-producao.ps1 (27 verificacoes).
+
+Projetos irmaos citados como fonte de reuso: MultiAsset-Supabase (Monte
+Carlo, curvas de juros BR, Stripe desenhado), multi-assets-radar (catalogo
+de 9 ativos, multi-source, OHLCV), BTC Radar (signal engine, briefing IA,
+visual comercial, integracao server-side ja existente), VIX Radar (103
+emissores de credito privado).
+
+Publico-alvo, os tres simultaneamente, com papeis distintos:
+a) Investidor pessoa fisica, trafego frio, primeiro contato. Metrica:
+   ativacao e captura de e-mail.
+b) Cliente e prospect de consultoria. Metrica: qualificacao e agendamento.
+c) Vitrine institucional, prova de capacidade tecnica para parceiros,
+   imprensa e clientes maiores. Metrica: credibilidade percebida.
+   O plano revisado precisa dizer explicitamente como uma mesma pagina
+   atende os tres sem virar tres produtos, ou justificar por que precisa
+   se dividir.
+
+Monetizacao em duas fases:
+Fase A, agora: acesso gratuito, o produto e isca de lead para a consultoria
+de investimentos do dono. O objetivo nao e receita direta, e volume e
+qualidade de lead que vira conversa comercial.
+Fase B, depois: assinatura paga. Precisa ser desenhada agora no nivel de
+arquitetura para nao exigir reescrita, mesmo sem ser ligada.
+
+Orcamento de esforco: indefinido. Deve ser derivado da pesquisa de mercado,
+nao arbitrado. A entrega precisa propor tres niveis (minimo viavel,
+recomendado, completo) com esforco em sessoes e retorno esperado de cada
+um, para o dono escolher.
+
+ENTRADAS
+1. O plano completo colado nesta conversa, incluindo Tier 1, Tier 1b,
+   Tier 2, Tier 3, features F1 a F4, tabela de MCPs, tabela de skills,
+   ordem de implementacao em 3 fases e secao de verificacao.
+2. Codigo e configuracao reais em E:\Diretorio\Claude\Site (site-producao/,
+   cloudflare-workers/sz-sites/), lidos antes de opinar. Nao concluir nada
+   sobre o estado atual sem abrir o arquivo.
+3. Pesquisa externa, obrigatoria, com fontes primarias.
+
+RESTRICOES
+- Portugues do Brasil. Tom direto e tecnico. Sem emojis, sem icones, sem
+  caixas ASCII. Sem travessao e sem ponto medio como separador, usar
+  virgula.
+- Somente leitura. Nao editar arquivo, nao rodar deploy, nao criar branch,
+  nao alterar producao.
+- Nao inventar dado, cotacao, retorno historico, volatilidade, endpoint,
+  preco de concorrente, tamanho de mercado ou fonte. Se um numero nao tiver
+  fonte verificavel, marcar como nao verificado em vez de estimar.
+- Marcar cada afirmacao com [Fato], [Hipotese], [Risco], [Recomendacao] ou
+  [Validar].
+- Pesquisa externa: priorizar documentacao oficial, sites dos proprios
+  concorrentes, reguladores (CVM, ANBIMA, B3), dados publicos de mercado e
+  repositorios oficiais. Citar URL e data de acesso. Descartar blog de SEO
+  sem fonte primaria.
+- LGPD: captura de lead exige base legal, consentimento registrado,
+  politica de privacidade e opt-out. Qualquer proposta de formulario deve
+  vir com esse tratamento, nao como detalhe posterior.
+- Nao ampliar escopo alem de critica, pesquisa e replanejamento. Nao
+  comecar a codificar.
+
+ETAPAS
+1. Leitura do estado real
+   Abrir o HTML de producao, os handlers do Worker (incluindo
+   macro-panel.js e btc-scenarios.js) e o validar-producao.ps1. Levantar:
+   quantos ativos existem de fato, como simConfigs esta estruturado, onde
+   as taxas de cenario estao hardcoded, peso atual da pagina, como PERFIS
+   soma 100%, e principalmente o que ja existe de captura de lead,
+   analytics, autenticacao, paywall ou integracao de pagamento. Registrar o
+   delta entre o que o plano afirma e o que o codigo mostra.
+
+2. Auditoria interna do plano
+   Apontar, com citacao do trecho:
+   a) Inconsistencias numericas e estruturais. Conferir ao menos: F4 fala
+      em 13 ativos e a tabela resumo fala em 15, a secao de verificacao tem
+      Fase 2 e Fase 3 duplicadas e fora de ordem, a Fase 1 promete 7
+      paineis de cerca de 90 linhas sem estimar o impacto no HTML de 351KB.
+   b) Premissas nao sustentadas. Cada taxa de cenario (pessimista, base,
+      otimista) e cada volatilidade proposta deve ser classificada em: tem
+      fonte, plausivel mas sem fonte, ou incorreta. Nao aceitar numero
+      redondo como se fosse dado.
+   c) O argumento de exclusao do IVVB11 por redundancia matematica com
+      SPX x USD/BRL. Avaliar se e verdadeiro na pratica considerando
+      tracking error, taxa de administracao, tributacao e o fato de que o
+      investidor brasileiro compra o ETF, nao a sintese. Avaliar tambem o
+      custo comercial de nao listar um ticker que o publico procura por
+      nome.
+   d) Custo recorrente de manutencao de 11 ativos novos: quebra de fonte,
+      rate limit, dado stale, matriz de correlacao a recalibrar, PERFIS a
+      rebalancear.
+   e) O plano nao contem nenhum item de captura de lead, funil, analytics
+      ou preparacao para assinatura, embora esse seja o objetivo declarado
+      do produto. Dimensionar essa lacuna.
+
+3. Riscos tecnicos e regulatorios a investigar e nomear
+   - Yahoo Finance como fonte nao oficial: termos de uso, rate limit,
+     estabilidade, risco de bloqueio de IP de datacenter Cloudflare,
+     licenca de redistribuicao. Comparar alternativas com contrato (Stooq,
+     Alpha Vantage, Twelve Data, Financial Modeling Prep, B3 e ANBIMA para
+     dado local) por custo, limite gratuito e direito de exibicao publica.
+     Se o produto vira pago na Fase B, verificar se a licenca da fonte
+     permite uso comercial. Esse ponto e bloqueante para assinatura.
+   - Peso da pagina e Core Web Vitals com 15 simuladores em HTML unico.
+     Avaliar se cabe uma refatoracao antes da expansao, e o efeito de tempo
+     de carregamento sobre taxa de conversao de lead.
+   - Monte Carlo com matriz de correlacao (F2): viabilidade de Cholesky no
+     browser no volume atual de simulacoes, e o que ocorre quando a matriz
+     nao e positiva definida.
+   - F3 (sinais tecnicos com veredito COMPRAR, AGUARDAR, VENDER) sob a
+     otica da CVM. Verificar no texto das resolucoes sobre analista de
+     valores mobiliarios e consultor de valores mobiliarios se isso expoe o
+     site a enquadramento como recomendacao ou consultoria irregular.
+     Verificar tambem o que muda quando o conteudo passa a ser pago por
+     assinatura, que e o cenario da Fase B. Trazer o texto da norma, nao
+     interpretacao de terceiro.
+   - Disclaimers, rastreabilidade metodologica e pagina de metodologia: o
+     que precisa estar visivel para um simulador de retorno nao ser lido
+     como promessa de rentabilidade.
+
+4. Pesquisa de mercado, dimensionamento
+   Levantar com fonte primaria:
+   - Tamanho e perfil do publico investidor pessoa fisica no Brasil (dados
+     B3, ANBIMA, CVM, pesquisas de investidor). Quantos investem em renda
+     variavel, cripto, ativos internacionais.
+   - Volume de busca e interesse pelos termos que o produto atende
+     (simulador de carteira, alocacao de ativos, quanto rende, carteira
+     recomendada), se houver fonte publica confiavel.
+   - Faixa de preco praticada por servicos comparaveis: assinaturas de
+     plataformas de analise e consolidacao no Brasil, e honorarios de
+     consultoria de investimentos (percentual sobre patrimonio, fee fixo,
+     hora).
+   - Referencia de custo de aquisicao de lead qualificado no setor
+     financeiro brasileiro, se houver dado publico.
+   A partir disso, estimar o valor economico de um lead para este negocio e
+   usar esse numero como base para dimensionar o orcamento de esforco. Se
+   algum insumo nao existir com fonte confiavel, dizer isso e mostrar o
+   calculo com a variavel em aberto, nao preencher com chute.
+
+5. Pesquisa externa, benchmark de produto
+   Comparar simuladores e plataformas de alocacao, brasileiros e
+   internacionais. Para cada um: o que fazem melhor, o que cobram, onde
+   fica o gate de e-mail ou pagamento, como apresentam incerteza, qual a
+   qualidade visual. Cobrir no minimo Portfolio Visualizer, Curvo, Real
+   Valor, Gorila, Kinvo, Status Invest, Investidor10, Trademap, e o que a
+   pesquisa apontar como referencia atual. Extrair padroes concretos e
+   replicaveis, nao adjetivos.
+
+6. Funil e conversao
+   Desenhar o funil completo para os tres publicos, do trafego frio ate a
+   reuniao de consultoria, e responder:
+   - O que fica 100% livre, o que exige e-mail, o que fica reservado para a
+     Fase B paga. Justificar cada gate com evidencia do benchmark.
+   - Qual e a isca. Avaliar candidatos concretos: relatorio em PDF com
+     marca do cenario simulado, link de cenario compartilhavel, briefing
+     periodico por e-mail, comparativo da carteira do usuario contra os
+     PERFIS. Ranquear por atrito versus valor percebido.
+   - Que instrumentacao precisa existir para medir (evento de ativacao,
+     taxa de captura, origem, atribuicao), respeitando privacidade.
+   - Que prova de credibilidade sustenta o publico institucional: pagina de
+     metodologia, fonte de dado declarada, data de atualizacao visivel,
+     historico de acerto quando aplicavel.
+   - Que arquitetura minima a Fase B exige (identidade de usuario, limite
+     de uso, cobranca) e o que precisa ser decidido agora para nao
+     retrabalhar depois. Reaproveitamento do que ja existe em
+     MultiAsset-Supabase deve ser avaliado, nao assumido.
+
+7. Confronto e replanejamento
+   Comparar o plano original com os achados das etapas 4 a 6. Responder
+   explicitamente: adicionar 11 ativos e a acao de maior retorno por hora
+   de trabalho para gerar lead qualificado, ou existe caminho melhor
+   (profundidade analitica, credibilidade, conversao, performance,
+   distribuicao). Se existir, apresentar o caminho alternativo com o corte
+   declarado.
+
+8. Plano revisado
+   Entregar o plano que voce recomenda de fato, em tres niveis de orcamento
+   (minimo viavel, recomendado, completo), cada um com fases, dependencias,
+   esforco em sessoes, criterio de saida por fase, rollback e ponto de
+   decisao com a metrica que precisa ser medida antes de seguir adiante.
+
+CRITERIOS DE ACEITACAO
+- Cada critica aponta o trecho do plano a que se refere.
+- Cada recomendacao vem com custo estimado, risco e como validar.
+- Existe lista explicita de itens cortados ou adiados, com motivo. Plano
+  revisado que so cresce nao atende.
+- Toda afirmacao sobre o codigo atual tem arquivo e linha.
+- Toda afirmacao sobre concorrente, norma, preco ou tamanho de mercado tem
+  URL e data de acesso.
+- Nenhum numero de retorno, volatilidade, preco ou mercado aparece sem
+  fonte ou sem a marca de nao verificado.
+- Os tres publicos aparecem explicitamente no plano revisado, com o que
+  cada um ve e qual metrica mede.
+- A questao regulatoria de F3 e da Fase B paga esta respondida com citacao
+  de norma, ou declarada como pendencia para advogado, nunca resolvida por
+  achismo.
+- Os tres niveis de orcamento estao quantificados em sessoes e ligados a
+  retorno esperado.
+- Nenhum arquivo do repositorio foi modificado.
+
+TESTES
+- Conferir por leitura de arquivo que os endpoints e handlers citados
+  existem de fato.
+- Conferir que cada URL externa citada abre e sustenta a afirmacao.
+- Reler a entrega procurando afirmacao sem marcacao [Fato] ou [Hipotese].
+- Confirmar via git status que a arvore de trabalho nao mudou.
+
+FORMATO DA ENTREGA
+Documento unico em markdown, na resposta do chat, nesta ordem:
+1. Veredito em ate 10 linhas: o plano se sustenta, se sustenta com ajuste,
+   ou precisa ser refeito.
+2. Erros e inconsistencias do plano atual, em tabela (trecho, problema,
+   correcao).
+3. Riscos tecnicos e regulatorios, priorizados de P0 a P3.
+4. Pesquisa de mercado: tamanho, precos praticados, valor estimado do lead,
+   com fontes.
+5. Benchmark de concorrentes, em tabela (produto, o que faz melhor, preco,
+   onde fica o gate, o que copiar aqui).
+6. Funil dos tres publicos e desenho do gate gratuito versus assinatura.
+7. Tabela de decisao final: manter, mudar, acrescentar, remover, adiar, um
+   item por linha, com motivo.
+8. Plano revisado em tres niveis de orcamento, com criterio de saida e
+   rollback.
+9. Perguntas em aberto que so o dono do produto decide.
+
+Depois de apresentar o documento, perguntar se deve salvar em
+site-producao/diagnosticos/. Nao salvar antes da autorizacao.
