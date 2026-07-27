@@ -16,6 +16,8 @@ Write-Host "`nTarefas ativas:" -ForegroundColor Green
 schtasks /Query /FO TABLE | Select-String 'Szuchmacher'
 
 Write-Host "`nResumo:" -ForegroundColor Cyan
-Write-Host "  Szuchmacher-AgendaAgent  seg+qui 08:00  agenda-data.json + deploy FTP"
-Write-Host "  Szuchmacher-MacroCron    segunda 09:00  macro_api.php?cron=1 no servidor"
-Write-Host "  YanOS_Briefing           sexta 18:30     briefing YanOS (separado)"
+Write-Host "  Szuchmacher-AgendaAgent  dom+seg+qui 08:00  agenda-data.json + publicar-com-rollback"
+Write-Host "  Szuchmacher-MacroCron    segunda 09:00      macro_api.php?cron=1 no Worker"
+Write-Host ""
+Write-Host "Domingo publica a semana seguinte; segunda e quinta so refrescam a mesma janela." -ForegroundColor DarkGray
+Write-Host "Deploy e Cloudflare Workers desde 17/06/2026. O FTP sobrou para rollback." -ForegroundColor DarkGray

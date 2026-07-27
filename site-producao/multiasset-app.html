@@ -3689,7 +3689,8 @@ function rebuildTaxasCenario() {
 // retorno, e sim faixa de alocação ("8-12% do patrimônio"). O regex capturava o segundo
 // número da faixa junto com o hífen, então ouro no cenário base virava -12% a.a.
 // Premissa de retorno de projeção exibida a cliente não vem mais de string de LLM:
-// as taxas válidas são apenas as curadas em window.taxasCenario e simConfigs.
+// as taxas válidas são apenas as curadas em simConfigs e as que os feeds
+// server-side gravam lá via applyScenarioRates(). window.taxasCenario deriva delas.
 
 function getSelicAno(y) {
     const base = window.macroLive.selic || 0.145;

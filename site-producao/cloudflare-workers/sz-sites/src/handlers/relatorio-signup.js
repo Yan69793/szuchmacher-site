@@ -11,6 +11,22 @@
 const RATE_LIMIT_WINDOW = 900; // 15 min em segundos
 const RATE_LIMIT_MAX = 3;
 
+// O popup do simulador em multi-assets.com passou a usar este endpoint. Antes o
+// CORS estava fixo em szuchmacher.com.br e a chamada do outro dominio seria
+// barrada pelo browser.
+const DEFAULT_ORIGIN = 'https://szuchmacher.com.br';
+const ALLOWED_ORIGINS = new Set([
+	'https://szuchmacher.com.br',
+	'https://www.szuchmacher.com.br',
+	'https://multi-assets.com',
+	'https://www.multi-assets.com',
+]);
+
+function resolveOrigin(request) {
+	const origin = request.headers.get('Origin');
+	return origin && ALLOWED_ORIGINS.has(origin) ? origin : DEFAULT_ORIGIN;
+}
+
 function validateEmail(email) {
 	if (!email || typeof email !== 'string') return false;
 	// RFC 5322 simplificado: usuario@dominio.ext
@@ -52,13 +68,17 @@ async function getLatestReportUrl(env) {
 	}
 }
 
-async function storeSubscriber(env, email) {
+// source distingue a origem do lead (pagina de relatorios x popup do simulador),
+// senao os dois funis viram um balde so no KV e nao da para medir conversao.
+const VALID_SOURCES = new Set(['relatorio-signup', 'multiasset_exit_popup']);
+
+async function storeSubscriber(env, email, source) {
 	const key = `subscriber:${email.toLowerCase().trim()}`;
 	try {
 		await env.CACHE.put(key, JSON.stringify({
 			email: email.toLowerCase().trim(),
 			signed_up_at: new Date().toISOString(),
-			source: 'relatorio-signup',
+			source: VALID_SOURCES.has(source) ? source : 'relatorio-signup',
 		}), { expirationTtl: 86400 * 365 }); // 1 ano
 		return true;
 	} catch {
@@ -193,42 +213,46 @@ Szuchmacher Consultoria
 Material informativo, nao constitui recomendacao de investimento.`;
 }
 
-function jsonResponse(data, status = 200) {
+function jsonResponse(data, status = 200, origin = DEFAULT_ORIGIN) {
 	return new Response(JSON.stringify(data), {
 		status,
 		headers: {
 			'Content-Type': 'application/json; charset=utf-8',
 			'Cache-Control': 'no-store',
-			'Access-Control-Allow-Origin': 'https://szuchmacher.com.br',
+			'Access-Control-Allow-Origin': origin,
 			'Access-Control-Allow-Methods': 'POST, OPTIONS',
 			'Access-Control-Allow-Headers': 'Content-Type',
+			Vary: 'Origin',
 		},
 	});
 }
 
 export async function handleRelatorioSignup(request, env) {
+	const origin = resolveOrigin(request);
+
 	// CORS preflight
 	if (request.method === 'OPTIONS') {
 		return new Response(null, {
 			status: 204,
 			headers: {
-				'Access-Control-Allow-Origin': 'https://szuchmacher.com.br',
+				'Access-Control-Allow-Origin': origin,
 				'Access-Control-Allow-Methods': 'POST, OPTIONS',
 				'Access-Control-Allow-Headers': 'Content-Type',
 				'Access-Control-Max-Age': '86400',
+				Vary: 'Origin',
 			},
 		});
 	}
 
 	if (request.method !== 'POST') {
-		return jsonResponse({ ok: false, error: 'Method not allowed' }, 405);
+		return jsonResponse({ ok: false, error: 'Method not allowed' }, 405, origin);
 	}
 
 	// Rate limit por IP
 	const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
 	const allowed = await checkRateLimit(env, ip);
 	if (!allowed) {
-		return jsonResponse({ ok: false, error: 'Muitas tentativas. Tente novamente em 15 minutos.' }, 429);
+		return jsonResponse({ ok: false, error: 'Muitas tentativas. Tente novamente em 15 minutos.' }, 429, origin);
 	}
 
 	// Parse body
@@ -236,13 +260,20 @@ export async function handleRelatorioSignup(request, env) {
 	try {
 		body = await request.json();
 	} catch {
-		return jsonResponse({ ok: false, error: 'JSON invalido' }, 400);
+		return jsonResponse({ ok: false, error: 'JSON invalido' }, 400, origin);
 	}
 
 	const email = (body.email || '').trim();
 	if (!validateEmail(email)) {
-		return jsonResponse({ ok: false, error: 'Email invalido' }, 422);
+		return jsonResponse({ ok: false, error: 'Email invalido' }, 422, origin);
 	}
+
+	// Gravar o inscrito ANTES de tentar enviar. Na ordem anterior o KV so era
+	// escrito depois de um envio bem-sucedido e o handler retornava 500 antes
+	// disso, entao qualquer falha do Resend (chave ausente, quota, timeout)
+	// descartava o lead em silencio. Captar o contato e o objetivo; o e-mail de
+	// boas-vindas e consequencia.
+	await storeSubscriber(env, email, body.source);
 
 	// Buscar ultimo relatorio
 	let reportInfo = null;
@@ -263,16 +294,20 @@ export async function handleRelatorioSignup(request, env) {
 	}
 	if (!sendResult || !sendResult.ok) {
 		const detail = (sendResult && sendResult.error) ? sendResult.error : 'Falha ao enviar email';
-		return jsonResponse({ ok: false, error: detail }, 500);
+		console.error(`[relatorio-signup] inscrito gravado mas envio falhou: ${email} — ${detail}`);
+		// 202: o contato esta salvo, so a entrega do e-mail falhou. Devolver 500
+		// faria o cliente cair no fallback e gravar o mesmo lead duas vezes.
+		return jsonResponse({
+			ok: true,
+			queued: true,
+			message: 'Inscricao registrada. O primeiro envio pode demorar alguns minutos.',
+		}, 202, origin);
 	}
 
-	// Armazenar inscrito no KV
-	await storeSubscriber(env, email);
-
-	console.log(`[relatorio-signup] novo inscrito: ${email}`);
+	console.log(`[relatorio-signup] novo inscrito: ${email} (${body.source || 'relatorio-signup'})`);
 
 	return jsonResponse({
 		ok: true,
 		message: 'Inscricao confirmada. Verifique seu email.',
-	});
+	}, 200, origin);
 }

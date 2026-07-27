@@ -1,0 +1,500 @@
+PROMPTS, SITE SZUCHMACHER + PLATAFORMA MULTIASSET v1.0
+Atualizado em 26/07/2026 contra o Worker sz-sites, validar-producao.ps1 (27 verificacoes)
+e o diagnostico diagnosticos/DIAGNOSTICO-2026-07-26.md
+
+Substitui a versao anterior, que descrevia o Radar de Credito Privado (vixradar.com).
+Projeto, stack, dominios, deploy e modos de falha sao outros.
+
+---
+
+FICHA TECNICA (base factual dos prompts abaixo)
+
+Dominios: szuchmacher.com.br (institucional) e multi-assets.com (plataforma).
+Hosting: Cloudflare Workers, Worker unico `sz-sites`, 4 rotas (apex + www dos dois dominios).
+Conta: 7ac79fb1030e4e81115ef33c21a9b070.
+Zonas: szuchmacher cfe602627bd2ef210d225ee9deeb45d9, multi-assets 8ca066c2dda0d90e475b5c9eb255cbfd.
+Bindings: ASSETS (./public), KV CACHE (fd40efe1057c4c54b3d33277d4665434).
+Vars: BRIEFING_ORIGIN, FROM_EMAIL. Secrets: OPENROUTER_KEY, BRIEFING_FETCH_TOKEN,
+STRIPE_WEBHOOK_SECRET, RESEND_API_KEY.
+Cron do Worker: "0 3 * * 1" (segunda 03:00 UTC), dispara handleMacroApi com forceRefresh.
+
+9 rotas de API em src/index.js (API_ROUTES): /prices.php, /market-data.php, /macro_api.php,
+/assets/macro.php, /assets/agenda.php, /stripe-webhook, /relatorio-signup,
+/api/btc-scenarios, /health.
+
+9 handlers em src/handlers/: prices, market-data, macro-api, macro-panel, agenda,
+fechamento, stripe-webhook, relatorio-signup, btc-scenarios.
+3 utils em src/utils/: cache, headers, http.
+
+Redirects vivos no Worker (sz): /multiasset-app.html e /multiasset.html para multi-assets.com,
+/ebook e /ebook.html para a home, /radar-roic.html e /radar-roic para /assinatura.html,
+www para apex, /sz/* e /multi/* bloqueados em 404. Rota dinamica: /fechamento/:slug
+(slug no formato ^[0-9]{8}-[0-9a-f]{8}$, proxy para o Worker briefing).
+
+Deploy primario: .\scripts\publicar-com-rollback.ps1 (le versao viva, build, deploy, valida,
+reverte se reprovar). deploy-cloudflare.ps1 sozinho nao valida nada e nao tem alvo de reversao.
+Build: scripts\build-cloudflare-public.ps1, monta public/sz e public/multi e reprova saida
+incompleta contra 17 arquivos obrigatorios.
+Gate: .\scripts\validar-producao.ps1, 27 verificacoes de conteudo nos dois dominios.
+FTP HostGator: legado desde 17/06/2026, so rollback.
+
+Tarefas agendadas do Windows: Szuchmacher-AgendaAgent (dom+seg+qui 08:00),
+Szuchmacher-MacroCron (seg 09:00), Szuchmacher-FechamentoDiario (seg-sex 19:00),
+Szuchmacher-FechamentoWatchdog (seg-sex 19:20), Szuchmacher-LeadNurture (diario 10:00),
+Szuchmacher-MacroAgent (sex 18:00), Szuchmacher-AgendaMacro-Claude (desabilitada em 26/07/2026).
+
+Enquadramento regulatorio: registro de consultor de valores mobiliarios (Res. CVM 19/2021).
+Conteudo que ranqueia ativos, publica carteira-modelo ou entrega tese por ativo igual para
+todo assinante e relatorio de analise (Res. CVM 20/2021), exige outro registro. Foi por isso
+que o Radar ROIC saiu do ar em 22/07/2026.
+
+---
+
+Prompt 1, Auditoria semanal completa
+
+Faca a auditoria semanal do site institucional e da plataforma MultiAsset. Siga esta ordem
+sem pular etapas.
+
+Etapa 1, portao de qualidade: rode `cd site-producao; .\scripts\validar-producao.ps1` e cole a
+saida real. Sao 27 verificacoes de conteudo, nao de status. Qualquer falha e bloqueante e
+define o resto da auditoria.
+
+Etapa 2, drift entre git e producao: `git status --porcelain` e `git log --oneline -5`.
+Compare com `npx wrangler deployments status` dentro de cloudflare-workers/sz-sites. Se a versao
+viva no Worker for posterior ao ultimo commit que toca arquivo publicavel, producao esta rodando
+codigo que nao existe em nenhum commit. Isso ja aconteceu em 26/07/2026 com btc-scenarios.js
+untracked. E achado P1, nao observacao.
+
+Etapa 3, relatorios de publicacao: liste `diagnosticos/publicacao_*.md` por data. Todo deploy
+legitimo gera um. Deploy sem relatorio correspondente saiu por fora de publicar-com-rollback.ps1,
+portanto sem validacao e sem alvo de reversao registrado.
+
+Etapa 4, endpoints: os 9 de API_ROUTES, nos dois dominios quando aplicavel. Confirmar schema,
+nao so HTTP 200. Em particular: prices.php e market-data.php com ok=true e valores nao nulos,
+macro_api.php com canais e cenarios_brent preenchidos (vazio e o P1-C recorrente desde 20/07/2026),
+assets/macro.php com selic_meta e cambio_ptax nao nulos (null com fresh:true e cache envenenado,
+P1-B), /health com kv=ok.
+
+Etapa 5, agenda: leia agenda-data.json e confira `janela`. Depois abra a home e leia o rotulo do
+bloco calculado por assets/macro-panel.js (rotuloJanelaAgenda). "Semana de referencia" no ar nao e
+um titulo fixo, e o frontend sinalizando que a janela publicada ja passou. Ver isso significa
+pipeline parado.
+
+Etapa 6, automacao: `schtasks /Query /FO TABLE | Select-String 'Szuchmacher'`. Para cada tarefa,
+ultimo resultado e ultima execucao. Codigo 103 significa interpretador Python morto, nao falha de
+logica: o Python 3.11 base sumiu da maquina em 26/07/2026 e os venv apontados para ele continuam
+existindo como arquivo. Interpretadores vivos: venv-py312, venv-playwright, pythoncore-3.14-64.
+
+Etapa 7, seguranca: headers dos dois dominios via `curl.exe -sI`. Confirmar HSTS,
+X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, CSP e
+X-Served-By: sz-sites-worker. A CSP de producao vem de src/utils/headers.js, o .htaccess so vale
+no legado HostGator. Confirmar tambem que config.php, .env, wrangler.toml e wrangler.jsonc
+respondem 404 por HTTP.
+
+Etapa 8, registro: escreva o diagnostico em diagnosticos/DIAGNOSTICO-<data>.md no mesmo formato do
+de 26/07/2026, com achados classificados P0 a P3, secao "OK sem acao" e proximos passos numerados.
+Nunca com suposicao: cada linha precisa de evidencia colada.
+
+---
+
+Prompt 2, Deploy de nova feature
+
+Preciso implementar a seguinte feature: [DESCREVER AQUI].
+
+Antes de escrever uma linha de codigo, execute na ordem:
+
+1. `git status --porcelain`. Se houver mudanca nao commitada em arquivo que chega a producao,
+   resolva isso primeiro. A guarda de working tree do run-agenda-agent.ps1 aborta a rotina de
+   domingo nesse estado, e voce estaria empilhando trabalho novo sobre trabalho nao rastreado.
+2. Leia src/index.js e liste as 9 rotas de API_ROUTES e os redirects vivos. Confirme que a feature
+   nao colide com rota nem com redirect existente.
+3. Identifique o dominio afetado: sz, multi, ou os dois. O SITE_MAP resolve por hostname e o
+   serveStatic prefixa /sz ou /multi. Feature que serve arquivo novo precisa entrar em
+   build-cloudflare-public.ps1, na lista de copia e na lista de obrigatorios. Arquivo copiado mas
+   fora da lista de obrigatorios passa despercebido se a copia falhar.
+4. Se a feature chama origem externa do navegador, ela precisa entrar em connect-src na CSP de
+   src/utils/headers.js. Se a chamada e server-side (padrao do btc-scenarios.js), nao precisa, e
+   dizer que precisa e ruido.
+5. Se a feature grava em KV, declare a chave, o TTL e o que acontece quando a fonte falha. Payload
+   com KPI nulo nunca pode ser gravado: e exatamente o bug P1-B do macro-panel.js.
+6. Declare antes de codar: arquivos afetados, ponto de insercao, funcoes preservadas, risco de
+   regressao, plano de rollback, como validar.
+
+Deploy na ordem inviolavel: `.\scripts\publicar-com-rollback.ps1`. Nunca deploy-cloudflare.ps1
+direto. O script anota a versao viva antes de publicar, roda o build (que reprova saida incompleta
+e aborta antes do wrangler), publica, espera propagar, valida e reverte sozinho se a validacao
+reprovar. O relatorio sai em diagnosticos/publicacao_<carimbo>.md.
+
+Depois: cole a saida real de validar-producao.ps1 e o caminho do relatorio de publicacao.
+Commite. Producao sem commit correspondente e divida, nao entrega.
+
+Para alteracao nao trivial, delegue a revisao final ao subagente code-reviewer
+(.claude/agents/code-reviewer.md). Releitura propria nao substitui.
+
+---
+
+Prompt 3, Diagnostico de incidente em producao
+
+O site esta apresentando o seguinte comportamento anomalo: [DESCREVER O SINTOMA EXATO, por
+exemplo "Selic aparece como Aguardando BCB na home", "agenda mostrando a semana passada",
+"webhook do Stripe nao envia e-mail de boas-vindas", "video da demo nao roda no iPhone"].
+
+Faca o diagnostico em uma unica passada, sem tentativa e erro. Mapeie as camadas envolvidas:
+Worker sz-sites (roteamento, handler, CSP), binding ASSETS (public/sz e public/multi montados
+pelo build), KV CACHE, fontes externas (BCB SGS e Olinda, Yahoo Finance, gold-api, awesomeapi,
+coingecko, OpenRouter, Resend, Stripe, Worker briefing, Worker btc-radar), assets/sz-config.js no
+cliente, e Task Scheduler do Windows quando o dado vem de rotina agendada.
+
+Liste as causas possiveis usando os modos de falha ja registrados neste projeto:
+
+- Cache KV envenenado: payload gravado com KPI nulo e servido como fresh ate o TTL expirar.
+  macro-panel.js grava com TTL de 1800 s.
+- Build parcial: arquivo sumiu do source, o build copiou o resto e producao ficou com 404 em
+  asset que a pagina referencia. Foi o incidente de 19/07/2026, 8 arquivos, 10 horas no ar.
+- Deploy por fora do portao: producao rodando codigo untracked, sem relatorio de publicacao.
+- Rotina agendada morta: codigo de saida 103, interpretador Python inexistente apesar do
+  python.exe do venv continuar la.
+- Janela de agenda vencida: rotulo "Semana de referencia" no lugar de "Esta semana".
+- Parse do LLM truncado: canais e cenarios_brent vazios em macro_api.php.
+- Range e 206: env.ASSETS.fetch ignora o header Range e devolve o arquivo inteiro; sem o
+  withRangeSupport do index.js o playback quebra no Safari e no iOS.
+- Charset: HTML, JS, CSS ou JSON servido sem charset vira mojibake no browser.
+- Guarda do sz-config.js: link de checkout com buy.stripe.com/test_ e reprovado pela funcao
+  ready() e o botao cai no mailto de fallback, de proposito.
+- Assinatura do webhook Stripe: v1 vem em hexadecimal. Interpretar como base64 nao lanca erro,
+  devolve bytes errados e a verificacao falha em toda entrega. Bug real, corrigido, mas o padrao
+  volta a qualquer refactor de hexToUint8Array.
+
+Execute um unico teste confirmatorio. Prefira `curl.exe -s` com o parametro de bypass de cache
+quando existir (por exemplo `/assets/macro.php?nocache=1`), sabendo que essa chamada reescreve o
+cache KV e portanto altera producao: declare isso antes de rodar. Para latencia use
+`-w "\nHTTP:%{http_code} TEMPO:%{time_total}s"`. Referencia de leitura: endpoints normais abaixo
+de 400 ms; macro_api.php a frio ja levou 32 s, por isso o timeout do validador nessa linha e 90 s.
+
+Entregue: causa raiz confirmada com evidencia colada, correcao aplicada, validacao em producao
+com a saida real de validar-producao.ps1.
+
+---
+
+Prompt 4, Atualizacao de conteudo publicado
+
+Preciso atualizar o seguinte conteudo publicado: [PAGINA e MUDANCA, por exemplo tabela de
+honorarios.html, tiers de assinatura.html, texto institucional do index.html, fallback estatico
+macro_data.json].
+
+Antes de qualquer edicao:
+
+1. Leia o arquivo real em site-producao/, nao a memoria de sessao.
+2. Se o texto descreve produto, entregavel ou metodologia, passe pelo filtro CVM antes de escrever:
+   o registro que existe e de consultor de valores mobiliarios (Res. CVM 19/2021). Conteudo que
+   ranqueia ativos, publica carteira-modelo ou entrega tese por ativo igual para todo assinante e
+   relatorio de analise (Res. CVM 20/2021) e exige registro que nao ha. Foi o motivo da remocao do
+   Radar ROIC em 22/07/2026. Se a mudanca chega perto dessa linha, aponte antes de aplicar.
+3. Preserve o resto do arquivo intacto. Entrega e arquivo completo, nunca diff parcial.
+4. Respeite o design system. Institucional: fundo #f3f1ec, superficie #ebe7e0, navy #0c1524,
+   ouro #8c6b3a (e #c4a46a nas faixas escuras), texto #161c28, secundario #5c6574, hairline em
+   rgba navy. Plataforma: shell dark, fundo #0a0c10, ouro #c4a46a, texto #e8e4d9. Serif em peso
+   400 para display, mono para nav, labels e CTA. border-radius 0. Botao com min-height 48px, mono,
+   uppercase, sem sombra e sem lift. Peso 800 ou 900, pill, glow e bounce sao regressao de craft.
+5. IDs externos ficam so em assets/sz-config.js. Nunca duplicar CLARITY_ID, FORMSPREE_ID ou URL de
+   Stripe dentro de HTML.
+
+Se o arquivo editado estiver na lista de copia do build-cloudflare-public.ps1, o deploy o leva.
+Se for arquivo novo, ele precisa entrar na lista de copia e na de obrigatorios, senao um dia some
+sem ninguem perceber.
+
+Publique com `.\scripts\publicar-com-rollback.ps1` e cole a saida. Nada de deploy direto.
+
+---
+
+Prompt 5, Varredura final ao encerrar sessao
+
+Execute a varredura final desta sessao.
+
+1. `git status --porcelain`. Toda mudanca em arquivo publicavel esta commitada? Se nao, a rotina
+   automatica de domingo 08:00 vai abortar na guarda de working tree e mandar e-mail de alerta.
+2. `npx wrangler deployments status` em cloudflare-workers/sz-sites. A versao viva corresponde ao
+   que esta commitado? Divergencia significa producao sem correspondencia no git.
+3. Existe diagnosticos/publicacao_*.md com carimbo desta sessao? Se houve deploy sem relatorio,
+   o deploy saiu por fora do portao. Registre isso.
+4. `cd site-producao; .\scripts\validar-producao.ps1`. Cole a saida real. 27 verificacoes,
+   0 falha, ou a sessao nao esta encerrada.
+5. Compare o entregue com o que esta no ar: arquivos alterados, handlers tocados, rotas
+   adicionadas, redirects criados.
+6. Se a sessao tocou macro-panel.js, macro-api.js ou qualquer gravacao em KV, confirme que nenhum
+   caminho grava payload com campo nulo.
+7. Se a sessao tocou script agendado, rode a variante de simulacao correspondente
+   (`.\scripts\run-agenda-agent.ps1 -Simular`, `.\scripts\publicar-com-rollback.ps1 -Simular`) e
+   cole a saida. Simular suprime o e-mail de alerta.
+8. Atualize site-producao/CLAUDE.md se a sessao mudou fato canonico do projeto (rota, deploy,
+   automacao, pendencia resolvida). Atualize AI_OPERATING_SYSTEM/11_MEMORIA_DE_SESSAO.md no
+   workspace. Liste o que ficou pendente e por que.
+
+So declarar sessao encerrada apos esses 8 passos, com as saidas coladas.
+
+---
+
+Prompt 6, Anti-erro sistematico: injecao de padroes de falha conhecidos
+
+Antes de escrever qualquer codigo ou diagnostico nesta sessao, leia e internalize esta lista de
+erros que ja ocorreram neste projeto e sao proibidos de se repetir.
+
+ERROS PROIBIDOS, HISTORICO DO SITE:
+
+1. Deploy sem portao: `deploy-cloudflare.ps1` direto em vez de `publicar-com-rollback.ps1`. Sem
+   validacao pos-deploy e sem alvo de reversao. Aconteceu em 26/07/2026, dois deploys.
+2. Producao sem commit: codigo untracked no ar. Se a working tree se perder, producao nao e
+   reproduzivel. Aconteceu com btc-scenarios.js.
+3. Build parcial silencioso: o build antigo imprimia SKIP em amarelo e seguia. Em 19/07/2026
+   publicou public/ pela metade, 8 arquivos em 404 por 10 horas, com o wrangler saindo 0. Hoje o
+   build reprova, mas arquivo novo fora da lista de obrigatorios recria o buraco.
+4. Cache envenenado por OR: `a != null || b != null` deixa payload meio quebrado passar por sao.
+   E o P1-B do macro-panel.js: selic_meta nulo gravado com fresh:true por 30 minutos.
+5. Gravar cache sem recuperacao do valor anterior: quando a fonte volta nula, preservar o ultimo
+   valor bom em vez de publicar vazio.
+6. Test-Path em interpretador: `venv\Scripts\python.exe` continua existindo depois que o Python
+   base some. Test-Path passa e a falha so aparece na execucao, com codigo 103. Resolver por
+   sondagem de execucao, como run-agenda-agent.ps1 passou a fazer.
+7. Regex atravessando camada de shell em verificacao: barra invertida vira falso positivo
+   silencioso. validar-producao.ps1 usa Contains literal de proposito. Check que sempre passa e
+   pior do que nao ter check.
+8. Invoke-WebRequest para validar redirect: lanca "Operation is not valid due to the current state
+   of the object" em 3xx mesmo com -MaximumRedirection 0. Usar HttpClient com
+   AllowAutoRedirect = false.
+9. `.Count` sob Set-StrictMode: Get-ChildItem com resultado unico devolve escalar e o .Count lanca.
+   Envolver em @().
+10. Timeout curto em endpoint de LLM: a cascata a frio ja levou 32 s. 30 s de timeout dava falso
+    negativo. A linha do macro_api.php no validador usa 90 s.
+11. Range ignorado: env.ASSETS.fetch devolve 200 com o arquivo inteiro. Sem o withRangeSupport
+    o video da demo nao toca no Safari nem no iOS.
+12. Charset ausente: HTML, JS, CSS ou JSON sem charset vira mojibake. serveStatic corrige, codigo
+    novo que responde direto precisa fazer o mesmo.
+13. Hex tratado como base64: assinatura do webhook Stripe vem em hexadecimal. atob nao lanca erro,
+    so devolve bytes errados, e a verificacao falha em 100% das entregas sem sinal nenhum.
+14. Checkout de teste em producao: URL buy.stripe.com/test_ sobrescrevendo o CTA. A funcao ready()
+    do sz-config.js reprova, e o validador confere que essa guarda continua no ar apos rollback.
+15. ID externo duplicado em HTML: assets/sz-config.js e o unico lugar. Duplicata em pagina vira
+    divergencia silenciosa.
+16. Agenda vencida no ar: sem o gatilho de domingo, de sexta a noite ate segunda 08:00 o site
+    servia a semana encerrada. "Semana de referencia" na home e o sintoma.
+17. Rotina concorrente: Szuchmacher-AgendaMacro-Claude sobrescrevia agenda-data.json com janela
+    hoje+7 e brigava com a rotina de domingo. Foi desabilitada em 26/07/2026. Nao reativar sem
+    resolver o conflito.
+18. Enquadramento CVM ignorado: publicar ranking de ativo, carteira-modelo ou tese por ativo igual
+    para todo assinante e relatorio de analise, registro que nao existe aqui.
+19. Codigo omitido com "resto igual": entregar parcial e proibido. Arquivo completo sempre.
+20. Multiplos testes para descobrir o erro: proibido. Um teste confirma, nao explora.
+
+Declare: qual destes padroes tem maior probabilidade de ser ativado pela tarefa atual? Qual a
+contramedida especifica? So entao prossiga.
+
+---
+
+Prompt 7, Adversarial self-critique
+
+Para a tarefa a seguir, opere em tres vozes antes de produzir qualquer output final. Nao entregue
+o output intermediario salvo pedido explicito.
+
+VOZ 1, Executor: resolve o problema da forma mais direta e tecnicamente correta. Sem se preocupar
+com critica ainda.
+
+VOZ 2, Adversario: quebre a solucao da Voz 1. Assuma o pior cenario plausivel deste projeto ao
+mesmo tempo: KV vazio depois de um purge, BCB fora do ar durante o ciclo de 15 minutos do painel,
+OpenRouter devolvendo JSON truncado, Yahoo Finance recusando o user-agent, o build rodando com um
+arquivo renomeado no source, a rotina de domingo disparando 08:00 com working tree suja, e um
+visitante em iPhone abrindo multi-assets.com com a demo em video. Onde a solucao colapsa? Qual
+cenario improvavel expoe bug silencioso? Algum caminho grava KV com campo nulo? Algum caminho
+publica sem passar por publicar-com-rollback.ps1? Algum arquivo novo ficou fora da lista de
+obrigatorios do build?
+
+VOZ 3, Arbitro: decide se a solucao da Voz 1 vai como esta, corrigida, ou se falta informacao de
+producao. Se falta, liste o que falta em vez de assumir.
+
+So apos esse ciclo, entregue o output final. Se o Arbitro identificou que falta informacao de
+producao, pare e peca antes de escrever codigo.
+
+A tarefa e: [DESCREVER AQUI]
+
+---
+
+Prompt 8, Pre-mortem invertido: assuma que ja falhou
+
+Vamos fazer um pre-mortem antes de escrever uma linha de codigo.
+
+Assuma que ja e segunda-feira de manha. A mudanca que vou pedir agora foi publicada na sexta,
+quebrou producao no sabado e ficou assim o fim de semana inteiro. Um prospect institucional abriu
+szuchmacher.com.br no domingo antes de uma conversa e viu o site quebrado. A rotina de domingo
+08:00 nao consertou: ou abortou na guarda de working tree, ou publicou o problema de novo.
+
+Escreva o post-mortem dessa falha hipotetica. Seja especifico para o stack atual: Worker sz-sites
+com 9 rotas de API e binding ASSETS montado pelo build, KV CACHE com TTLs de 600 a 900 s e 7 dias
+no macro_api, CSP em src/utils/headers.js, redirects de multiasset, ebook e radar-roic,
+/fechamento/:slug com token, Stripe live com webhook assinado, sete tarefas no Task Scheduler,
+validar-producao.ps1 com 27 verificacoes.
+
+Quais foram as 7 causas mais provaveis? Qual delas eu teria menor chance de antecipar? Qual voce
+teria alucinado em silencio?
+
+So depois do post-mortem, proponha a solucao. Ela deve neutralizar explicitamente cada uma das 7
+causas. Se nao neutralizar alguma, declare qual e por que.
+
+A tarefa e: [DESCREVER AQUI]
+
+---
+
+Prompt 9, Step-back: forcar abstracao antes do codigo
+
+Antes de resolver qualquer coisa tecnica hoje, pare e responda em uma unica passagem.
+
+Qual e o principio mais fundamental deste projeto que a tarefa toca? Nao e sobre o Worker, nem
+sobre o KV, nem sobre o build. E sobre uma regra invariavel que, se violada, quebra a confianca de
+quem chega no site.
+
+Principios invariantes deste projeto:
+
+- O site e a primeira prova de competencia. Um prospect que chega e ve algo quebrado nao volta.
+- Producao e a unica fonte de verdade. Nao a memoria de sessao, nao o CLAUDE.md, nao o diagnostico
+  da semana passada.
+- Nada vai ao ar sem validacao bloqueante e alvo de reversao registrado.
+- Producao precisa ser reproduzivel a partir do git. Codigo no ar sem commit e divida, nao entrega.
+- Dado exibido e dado conferido: melhor mostrar o ultimo valor bom do que publicar vazio com cara
+  de fresco.
+- O enquadramento e de consultoria individualizada. Conteudo que vira relatorio de analise nao
+  entra, por melhor que seja.
+- Craft acima de efeito: espaco, hairline, peso contido. Peso 800, pill, glow e bounce sao
+  regressao, nao estilo.
+
+Identifique qual principio esta em jogo. Derive a solucao de cima para baixo. Se a solucao tecnica
+viola o principio mesmo marginalmente, recuse e proponha outra. Nao aceite trade-off silencioso.
+
+A tarefa e: [DESCREVER AQUI]
+
+---
+
+Prompt 10, Tree of thoughts: tres caminhos, um vencedor
+
+Para a decisao tecnica abaixo, entregue tres caminhos distintos.
+
+Galho A, Conservador: reusa ao maximo o que ja existe no Worker sz-sites. Nenhuma rota nova em
+API_ROUTES, nenhum arquivo novo na lista do build, nenhuma chave nova em KV, CSP intocada. Custo,
+prazo e limitacao que essa escolha impoe.
+
+Galho B, Agressivo: a solucao tecnicamente mais correta, mesmo que adicione rota as 9 existentes,
+handler ao src/handlers/, entrada na lista de obrigatorios do build, origem na CSP, ou chave em KV.
+Ganho de capacidade e custo operacional.
+
+Galho C, Hedge: resolve o problema imediato deixando porta aberta para migrar para B. Declare
+explicitamente o que fica para depois e o risco de virar divida permanente.
+
+Avalie os tres sob cinco criterios: risco de quebrar producao nos dois dominios, superficie
+adicional que passa a precisar de verificacao no validar-producao.ps1, tempo ate um prospect ver a
+mudanca, preservacao do principio "producao reproduzivel a partir do git", e alinhamento com as
+pendencias abertas (guarda anti-poison do macro-panel, canais vazios do macro_api, venv morto das
+tarefas agendadas, overflow do MultiAsset em 320 px, sitemap ausente em multi-assets.com,
+Cal.com ainda em _PENDING).
+
+Recomende um. Se os tres tem merito real, diga que a escolha e minha e explique o criterio de
+corte que voce usaria no meu lugar.
+
+A decisao e: [DESCREVER AQUI]
+
+---
+
+Prompt 11, Chain of verification: dossie de evidencias antes de qualquer codigo
+
+Para esta tarefa, construa um dossie de evidencias em 4 etapas antes de qualquer codigo. Mostre o
+resultado de cada etapa antes de prosseguir.
+
+Etapa 1, evidencia de producao: leia o arquivo real que a tarefa toca e cole as 20 linhas ao redor
+do trecho relevante, com caminho e numero de linha. Confirme o estado do git com
+`git status --porcelain` e a versao viva com `npx wrangler deployments status`. Se a tarefa toca
+endpoint, cole a resposta real do endpoint. Se toca cache, cole o que o KV esta servindo agora.
+Se toca automacao, cole a linha do `schtasks /Query` correspondente. Sem isso, Etapa 2 e proibida.
+
+Etapa 2, afirmacoes derivadas: liste em bullets numerados cada afirmacao que a solucao vai fazer.
+Ao lado de cada uma, a fonte: "confirmado pela Etapa 1", "vem do CLAUDE.md do projeto", "vem do
+diagnostico de <data>", "inferencia minha nao confirmada", "vem da conversa anterior". Inferencia
+nao entra no codigo sem virar confirmado ou ser removida.
+
+Etapa 3, lacunas: liste tudo que falta para resolver com rigor. Se falta confirmacao de producao,
+pare e peca.
+
+Etapa 4, solucao: codigo ou diagnostico, cada decisao amarrada a bullet numerado da Etapa 2.
+Decisao sem amarracao e proibida.
+
+A tarefa e: [DESCREVER AQUI]
+
+---
+
+Prompt 12, Self-consistency: tres engenheiros independentes
+
+Para a tarefa a seguir, simule tres passadas independentes. Cada passada comeca do zero.
+
+Passada 1, o Cetico: o codigo do Worker esta correto. O problema esta em outra camada: cache do
+edge da Cloudflare ainda servindo a versao antiga, KV com payload velho dentro do TTL, build que
+nao copiou o arquivo, cache do navegador do visitante, CSP bloqueando um recurso sem que ninguem
+tenha olhado o console, ou tarefa agendada que nao rodou. Onde procuraria primeiro?
+
+Passada 2, o Pragmatico: ja houve bug parecido antes. Candidatos historicos por frequencia neste
+projeto: cache envenenado com campo nulo, build parcial deixando 404, deploy por fora do portao,
+interpretador Python morto com codigo 103, parse do LLM truncado no macro_api, janela de agenda
+vencida. Qual hipotese e mais barata de testar primeiro?
+
+Passada 3, o Arquiteto: o bug e sintoma de falha estrutural. Candidatos estruturais atuais:
+dependencia de uma unica maquina Windows ligada para toda a automacao, validacao que so roda no
+deploy e nao em intervalo, ausencia de alerta quando o KV serve payload degradado, fallback
+estatico (macro_data.json) que envelhece sem ninguem notar, lista de obrigatorios do build mantida
+a mao. Qual a falha estrutural mais provavel?
+
+Compare os tres diagnosticos. Se convergem, entregue com alta confianca. Se divergem, ranqueie por
+custo de teste e diga qual testaria primeiro. Proibido escolher a hipotese mais interessante em vez
+da mais provavel.
+
+O problema e: [DESCREVER AQUI]
+
+---
+
+Prompt 13, Sales-Ready Mode: cada pixel vende
+
+Antes de executar qualquer tarefa, ative o modo Sales-Ready. Inegociavel, aplica-se a todo output
+visivel: paginas, plataforma, e-mails transacionais, copy, correcao de bug.
+
+Premissa operacional: assuma que hoje a tarde um prospect institucional abre szuchmacher.com.br
+depois de uma indicacao. Amanha cedo alguem abre multi-assets.com no celular durante um
+deslocamento. A qualquer momento pode chegar um pedido de conversa. O site precisa estar sempre em
+estado de venda, nunca em estado de obra.
+
+Padrao visual inegociavel. Institucional: fundo #f3f1ec, superficie #ebe7e0 e #f8f6f2, navy #0c1524
+e #172338, ouro #8c6b3a com #a88850 e #c4a46a, texto #161c28, secundario #5c6574, hairline em rgba
+navy 0.09 e 0.14. Plataforma: shell dark, fundo #0a0c10, ouro #c4a46a, texto #e8e4d9. Cor fora
+desses conjuntos e proibida. Tipografia: serif em peso 400 no display (Prata no site, Playfair na
+plataforma), sans no corpo (Public Sans, DM Sans), mono em nav, labels, metricas e CTA (JetBrains
+Mono, DM Mono). Largura maxima 1120 px no site e 1280 px na plataforma. border-radius 0. Secao com
+112 px de respiro vertical. Eyebrow em mono 0.64rem, letter-spacing 0.14 a 0.16em, peso 500, ouro.
+Botao mono uppercase com min-height 48px, sem sombra e sem lift. Preferir grid com gap de 1 px a
+caixa com sombra. Zero emoji, zero icone decorativo, zero gradiente sem proposito.
+
+Padrao comercial inegociavel. Nenhum artefato tecnico chega ao visitante: nada de nome de provedor,
+stack trace, codigo HTTP ou mensagem de biblioteca. Endpoint que falha responde com JSON e mensagem
+em pt-BR institucional, com o detalhe tecnico em campo separado. Degradacao e graciosa: melhor o
+ultimo valor bom com marcacao discreta do que travessao vazio ou "Aguardando". Formulario que nao
+pode enviar cai em fallback de e-mail, nunca em erro cru. CTA de assinatura sem link live cai no
+mailto, e isso e comportamento correto, nao bug. Copy sempre em pt-BR institucional, sem promessa
+de retorno, sem superlativo, dentro do enquadramento de consultoria individualizada.
+
+Checklist pre-entrega obrigatorio:
+
+1. Um prospect que entra agora fica mais propenso a conversar? Se igual ou menos, refazer.
+2. A pagina passa a impressao de trabalho caro e cuidadoso? Se nao, refazer.
+3. A mudanca quebrou o tom minimalista ou introduziu desvio de craft? Se sim, refazer.
+4. Algum artefato tecnico ficou exposto? Se sim, refazer.
+5. Funciona em 390 px e em 320 px sem overflow horizontal? Se quebra, refazer.
+6. O copy esta em pt-BR institucional e dentro do enquadramento CVM? Se nao, refazer.
+7. A mudanca entra no build e no validar-producao.ps1? Arquivo novo que ninguem verifica e um 404
+   esperando acontecer.
+
+Regra de bloqueio: se a tarefa viola Sales-Ready em troca de velocidade, aponte o conflito antes de
+executar. Proibido entregar algo menos que vendavel. Eu posso estar focado no aspecto tecnico. Sua
+funcao e lembrar que cada pixel vende.
+
+A tarefa atual e: [DESCREVER AQUI]

@@ -120,6 +120,49 @@ curl.exe -sI "https://multi-assets.com/prices.php"
 - Secrets no Worker: `OPENROUTER_KEY`, `BRIEFING_FETCH_TOKEN` (proxy fechamento)
 - DNS: zonas CF ativas; custom domains no Worker via `attach-worker-domains.ps1`
 
+### Automação semanal da agenda
+
+Task do Windows `Szuchmacher-AgendaAgent`, **domingo + segunda + quinta às 08:00**, executa
+`scripts/run-agenda-agent.ps1`.
+
+Domingo é o gatilho que importa. `agenda_agent.py` (`janela_seg_sex`) devolve a segunda
+**seguinte** quando roda no fim de semana, então a execução de domingo publica a semana que vai
+começar. Segunda e quinta regeram a mesma janela com o calendário do IBGE atualizado e cobrem o
+domingo em que a máquina estiver desligada. Sem o domingo, de sexta à noite até segunda 08:00 o
+site servia a semana encerrada.
+
+O rótulo do bloco na home é calculado no cliente por `assets/macro-panel.js`
+(`rotuloJanelaAgenda`), comparando a janela com a data de hoje: `Esta semana`, `Próxima semana`
+ou `Semana de referência`. **`Semana de referência` não é um título fixo: é o frontend
+sinalizando que a janela publicada já passou.** Ver isso no ar significa pipeline parado.
+
+Sequência do runner, parando no primeiro passo que falhar:
+
+1. **Guarda de working tree** — aborta se houver mudança não commitada em arquivo que chega a
+   produção. Ignora o que o build não copia (`scripts/`, `docs/`, `diagnosticos/`, `design/`,
+   `multiasset-platform/`, `*.md`) e permite os dois `agenda-data.json` que a própria rotina
+   reescreve. Denylist de diretório, não allowlist de arquivo: arquivo deployável novo cai no
+   caso conservador, que é abortar.
+2. **Interpretador** — resolve o Python por sondagem, não por `Test-Path`. Ordem: `venv`,
+   `venv-py312`, `pythoncore-3.14-64`. Em 26/07/2026 o Python 3.11 base sumiu da máquina e
+   `venv\Scripts\python.exe` continuou existindo como arquivo, só que morto; `Test-Path` passava
+   e a rotina quebrava depois.
+3. **Geração** — `agenda_agent.py --dry-run` grava `agenda-data.json`.
+4. **Asserção de janela** — reprova se `janela.fim` for anterior a hoje.
+5. **Publicação** — `scripts/publicar-com-rollback.ps1`, não `deploy-cloudflare.ps1`. O deploy
+   direto não valida nada depois e não tem alvo de reversão.
+
+Falha dispara `scripts/send-alert-email.ps1`. Log em
+`automacao-yan-os/logs/agenda_scheduled_<data>.log`, relatório de publicação em
+`diagnosticos/publicacao_<data>.md`.
+
+```powershell
+.\scripts\register-agenda-task.ps1            # registra ou atualiza a task
+.\scripts\run-agenda-agent.ps1 -Simular       # guarda + geração + asserção, sem publicar
+```
+
+`-Simular` também suprime o e-mail de alerta.
+
 ### Legado FTP (rollback apenas)
 
 ```powershell

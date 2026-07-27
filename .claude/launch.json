@@ -9,6 +9,13 @@
       "port": 8787
     },
     {
+      "name": "sz-sites (wrangler dev, sem build)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["wrangler", "dev", "--port", "8788"],
+      "cwd": "site-producao/cloudflare-workers/sz-sites",
+      "port": 8788
+    },
+    {
       "name": "leads-webhook (qualificador)",
       "runtimeExecutable": "python",
       "runtimeArgs": ["qualificador_leads.py"],
