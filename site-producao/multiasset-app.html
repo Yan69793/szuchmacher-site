@@ -3634,21 +3634,12 @@ window.taxasCenario = {
     otimista:   { ouro: 0.15, prata: 0.18, platina: 0.20, btc: 1.20, cdi: 0.165, ntnb: 0.16, usdbrl: 0.10, gold: 0.15, silver: 0.18, platinum: 0.20 }
 };
 
-function parseTaxaMacro(str) {
-    if (!str) return null;
-    const s = String(str).toLowerCase().replace(/\s+/g, ' ').trim();
-    const totalMatch = s.match(/([+\-−]?\d+[,.]?\d*)\s*%?\s*total/);
-    if (totalMatch) {
-        const n = parseFloat(totalMatch[1].replace('−', '-').replace(',', '.'));
-        if (!isNaN(n)) return { type: 'total', multiplier: Math.max(0, 1 + n / 100) };
-    }
-    const annualMatch = s.match(/([+\-−]?\d+[,.]?\d*)\s*%/);
-    if (annualMatch) {
-        const n = parseFloat(annualMatch[1].replace('−', '-').replace(',', '.'));
-        if (!isNaN(n)) return { type: 'annual', value: n / 100 };
-    }
-    return null;
-}
+// REMOVIDO em 27/07/2026: parseTaxaMacro convertia texto livre do payload macro em
+// premissa de retorno. O campo `ativos[x][perfil].taxa` do /macro_api.php nunca foi
+// retorno, e sim faixa de alocação ("8-12% do patrimônio"). O regex capturava o segundo
+// número da faixa junto com o hífen, então ouro no cenário base virava -12% a.a.
+// Premissa de retorno de projeção exibida a cliente não vem mais de string de LLM:
+// as taxas válidas são apenas as curadas em window.taxasCenario e simConfigs.
 
 function getSelicAno(y) {
     const base = window.macroLive.selic || 0.145;
@@ -3686,60 +3677,18 @@ function updateBenchAssumptionsUI() {
     if (ipcaEl) ipcaEl.textContent = i0 + '% → ' + iT + '% a.a.';
 }
 
-function syncSimConfigsFromAtivos(ativos) {
-    const assetMap = { ouro: 'gold', prata: 'silver', platina: 'platinum', bitcoin: 'btc' };
-    const perfMap = { conservador: 'pess', moderado: 'base', agressivo: 'otim' };
-    Object.keys(assetMap).forEach(function (key) {
-        const simKey = assetMap[key];
-        const ativo = ativos[key];
-        if (!ativo || !simConfigs[simKey]) return;
-        ['conservador', 'moderado', 'agressivo'].forEach(function (perfil) {
-            const taxaStr = ativo[perfil] && ativo[perfil].taxa;
-            const parsed = parseTaxaMacro(taxaStr);
-            if (!parsed) return;
-            if (simKey === 'btc' && perfil === 'conservador' && parsed.type === 'total') {
-                simConfigs.btc.pess = null;
-                window.btcPessMultiplier = parsed.multiplier;
-                return;
-            }
-            if (parsed.type === 'annual') simConfigs[simKey][perfMap[perfil]] = parsed.value;
-        });
-    });
-}
-
-function syncTaxasCenarioFromAtivos(ativos) {
-    const mapCenario = { conservador: 'pessimista', moderado: 'base', agressivo: 'otimista' };
-    const mapAsset = { ouro: 'ouro', prata: 'prata', platina: 'platina', bitcoin: 'btc' };
-    const prazo = typeof benchPrazo === 'number' ? benchPrazo : 10;
-    Object.keys(mapCenario).forEach(function (perfil) {
-        const cenario = mapCenario[perfil];
-        Object.keys(mapAsset).forEach(function (k) {
-            const ativoKey = k;
-            const taxaStr = ativos[ativoKey] && ativos[ativoKey][perfil] && ativos[ativoKey][perfil].taxa;
-            const parsed = parseTaxaMacro(taxaStr);
-            if (!parsed) return;
-            let val;
-            if (parsed.type === 'total') {
-                val = Math.pow(parsed.multiplier, 1 / Math.max(prazo, 1)) - 1;
-                if (ativoKey === 'bitcoin' && perfil === 'conservador') window.btcPessMultiplier = parsed.multiplier;
-            } else {
-                val = parsed.value;
-            }
-            window.taxasCenario[cenario][ativoKey] = val;
-            const en = { ouro: 'gold', prata: 'silver', platina: 'platinum', bitcoin: 'btc' }[ativoKey];
-            if (en) window.taxasCenario[cenario][en] = val;
-        });
-    });
-}
+// REMOVIDO em 27/07/2026: syncSimConfigsFromAtivos e syncTaxasCenarioFromAtivos
+// sobrescreviam as premissas de retorno de ouro, prata, platina e BTC com o parse do
+// campo `taxa` do payload macro, que é faixa de alocação. Efeito medido em produção:
+// os quatro ativos de risco projetavam retorno negativo em todos os cenários, com o
+// otimista pior que o pessimista (ouro -8% / -12% / -15% a.a.), e a carteira aparecia
+// abaixo do CDI e da NTN-B em qualquer combinação de perfil e cenário. Moderado x Base
+// em 5 anos mostrava +28,4% contra +74,5% da NTN-B, quando a premissa curada dá +92,5%.
 
 function syncAutomationFromMacro(d) {
     if (!d) return;
     if (d.premissas_cenarios) window.cenarioDescricoes = Object.assign({}, window.cenarioDescricoes, d.premissas_cenarios);
-    if (d.ativos) {
-        syncSimConfigsFromAtivos(d.ativos);
-        syncTaxasCenarioFromAtivos(d.ativos);
-        Object.keys(simConfigs).forEach(function (asset) { recalcSim(asset); });
-    }
+    Object.keys(simConfigs).forEach(function (asset) { recalcSim(asset); });
     updateBenchAssumptionsUI();
     if (typeof desenharBenchmark === 'function') desenharBenchmark();
     if (portfolioMCOpen && typeof _runPortfolioMC === 'function') _runPortfolioMC();
@@ -6016,8 +5965,11 @@ function renderMacro(d) {
             ['conservador', 'moderado', 'agressivo'].forEach(perfil => {
                 const p = ativo[perfil];
                 if (!p) return;
-                const [rateId, descId] = ids[perfil];
-                if (p.taxa) { const el = document.getElementById(rateId); if (el) el.textContent = p.taxa; }
+                // p.taxa não alimenta mais o .sc-rate: o payload traz faixa de alocação
+                // ("8-12% do patrimônio") e o card exibe retorno anual esperado. Em produção
+                // o card do ouro exibia "8-12% do patrimônio" no lugar de "+9,3% a.a.".
+                // O retorno mostrado é o curado no HTML, coerente com simConfigs.
+                const [, descId] = ids[perfil];
                 if (p.desc)  { const el = document.getElementById(descId);  if (el) el.textContent = p.desc; }
             });
         });
