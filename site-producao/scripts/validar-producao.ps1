@@ -11,9 +11,11 @@
 # paginas em 200 enquanto 8 assets respondiam 404: checagem de status sozinha
 # nao teria pegado nada.
 #
-# Contem e comparacao LITERAL, nao regex. Regex com barra invertida vira uma
-# fonte de falso positivo silencioso quando o padrao atravessa camadas de shell,
-# e um check que sempre passa e pior do que nao ter check.
+# Contem e NaoContem sao comparacao LITERAL, nao regex. Regex com barra
+# invertida vira uma fonte de falso positivo silencioso quando o padrao
+# atravessa camadas de shell, e um check que sempre passa e pior do que nao ter
+# check. Pela mesma razao, uma checagem aqui pode ficar sensivel a formatacao:
+# quebrar ruidosamente numa reformatacao e preferivel a passar em silencio.
 
 param(
     [switch]$Json,
@@ -72,6 +74,29 @@ $checks = @(
     # /privacidade.html, entao esta pagina nao pode sumir de novo em silencio.
     @{ Url = "$MULTI/privacidade.html"; Status = 200; Contem = 'Privacidade';
        Rotulo = 'multi: politica de privacidade (linkada no popup de lead)' }
+    # Premissa de retorno da projecao nao pode voltar a vir do payload macro.
+    # Em 27/07/2026 o campo `ativos[x][perfil].taxa` do /macro_api.php, que e
+    # faixa de alocacao ("8-12% do patrimonio"), era parseado como taxa anual e
+    # o segundo numero da faixa entrava com o hifen: ouro projetava -8% / -12% /
+    # -15% a.a., com o cenario otimista pior que o pessimista, e a carteira
+    # aparecia abaixo do CDI e da NTN-B em qualquer combinacao de perfil e
+    # cenario. Como a projecao e calculada no cliente, o gate nao consegue
+    # recalcula-la por HTTP: checa a ausencia do mecanismo que a corrompeu.
+    #
+    # O parentese e obrigatorio na ancora. Sem ele a checagem reprova a propria
+    # producao correta, porque os comentarios que documentam a remocao citam os
+    # tres nomes. Com ele, so casa definicao ou chamada. Testado nos dois
+    # sentidos contra o HTML servido: as tres ausentes, e `desenharBenchmark(`
+    # presente como controle de que a busca com parentese funciona.
+    @{ Url = "$MULTI/"; Status = 200;
+       NaoContem = @('parseTaxaMacro(', 'syncTaxasCenarioFromAtivos(', 'syncSimConfigsFromAtivos(');
+       Rotulo = 'multi: premissa de retorno nao vem do payload macro' }
+    # Assinatura direta do mesmo bug, independente do mecanismo: no cenario base
+    # o ouro tem que ser positivo. Tolera revisao legitima da premissa (0.093
+    # para 0.10 continua passando) e reprova qualquer valor negativo.
+    @{ Url = "$MULTI/"; Status = 200; Contem = 'base:       { ouro: 0.';
+       Rotulo = 'multi: cenario base com premissa de ouro positiva' }
+
     @{ Url = "$MULTI/og-cover.jpg";                     Status = 200; MinBytes = 10000 }
     @{ Url = "$MULTI/prices.php";                       Status = 200; Contem = '"ok"' }
     @{ Url = "$MULTI/assets/video/demo-multiasset.mp4"; Status = 200; MinBytes = 100000 }
@@ -111,15 +136,22 @@ function Test-Url([hashtable]$c) {
         $esperados = if ($c.Status -is [array]) { $c.Status } else { @($c.Status) }
         if ($status -notin $esperados) { return & $falha "HTTP $status, esperado $($esperados -join ' ou ')" }
 
-        if ($c.ContainsKey('MinBytes') -or $c.ContainsKey('Contem')) {
+        if ($c.ContainsKey('MinBytes') -or $c.ContainsKey('Contem') -or $c.ContainsKey('NaoContem')) {
             $buf = $resp.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult()
 
             if ($c.ContainsKey('MinBytes') -and $buf.Length -lt $c.MinBytes) {
                 return & $falha "$($buf.Length) bytes, minimo $($c.MinBytes)"
             }
-            if ($c.ContainsKey('Contem')) {
+            if ($c.ContainsKey('Contem') -or $c.ContainsKey('NaoContem')) {
                 $texto = [System.Text.Encoding]::UTF8.GetString($buf)
-                if (-not $texto.Contains($c.Contem)) { return & $falha "nao contem: $($c.Contem)" }
+                if ($c.ContainsKey('Contem') -and -not $texto.Contains($c.Contem)) {
+                    return & $falha "nao contem: $($c.Contem)"
+                }
+                if ($c.ContainsKey('NaoContem')) {
+                    foreach ($proibido in @($c.NaoContem)) {
+                        if ($texto.Contains($proibido)) { return & $falha "contem o que nao devia: $proibido" }
+                    }
+                }
             }
         }
         return @{ Rotulo = $rotulo; Url = $c.Url; Ok = $true; Motivo = "HTTP $status" }
