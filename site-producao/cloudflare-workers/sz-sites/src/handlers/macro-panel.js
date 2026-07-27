@@ -1,5 +1,6 @@
 import { fetchJson, jsonResponse } from '../utils/http.js';
 import { readCache, writeCache } from '../utils/cache.js';
+import { bcbSgs } from '../utils/market.js';
 
 const CACHE_KEY = 'macro-panel';
 const CACHE_TTL = 900; // 15 min — alinhado ao macro.php
@@ -40,14 +41,6 @@ function parseFocusRow(row, indicador, anoRef) {
     maximo: row.Maximo != null ? Number(row.Maximo) : null,
     respondentes: row.numeroRespondentes ?? row.NumeroRespondentes ?? null,
   };
-}
-
-async function bcbSgs(serie) {
-  const j = await fetchJson(
-    `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${serie}/dados/ultimos/1?formato=json`,
-    { timeout: 10000 },
-  );
-  return Array.isArray(j) && j[0] ? j[0] : null;
 }
 
 async function bcbFocusAnnual(indicador, anoRef) {

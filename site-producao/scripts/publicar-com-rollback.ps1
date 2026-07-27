@@ -102,8 +102,14 @@ if ($Simular) {
 }
 
 # --- 2 e 3. build e deploy ---------------------------------------------------
-# O build reprova saida incompleta e o deploy-cloudflare.ps1 aborta antes de
-# chamar o wrangler, entao um build quebrado nunca chega a virar deploy.
+# Um build quebrado nunca chega a virar deploy: o build reprova saida incompleta
+# e o deploy-cloudflare.ps1 aborta antes de chamar o wrangler.
+#
+# Mas o inverso nao vale. O deploy-cloudflare.ps1 executa passos DEPOIS do
+# wrangler deploy (set-openrouter-secret.ps1 e invalidate-worker-cache.ps1), e uma
+# falha em qualquer um deles cai no mesmo catch — com producao ja publicada. A
+# versao anterior deste script anunciava "intocada" nesse caso, que era o oposto
+# do estado real: versao nova no ar, sem validacao e sem rollback.
 Registrar "## Build e deploy"
 $deployOk = $true
 try {
@@ -121,7 +127,12 @@ if (-not $deployOk) {
     # bem-sucedido (ex.: purge de cache falhou). Nesse caso a versao nova ja
     # esta no ar, e afirmar "intocada" e mentir. Conferir.
     $posFalha = (Get-VersaoViva).Id
-    if ($posFalha -and $posFalha -ne $versaoAnterior) {
+    if (-not $posFalha) {
+        # Sem leitura da versao viva nao da para afirmar nem que mudou nem que
+        # ficou. Dizer "intocada" aqui seria chute com cara de fato.
+        Registrar "FALHOU e nao consegui reler a versao viva do Worker." 'Red'
+        Registrar "NAO da para afirmar se producao mudou. Verificar manualmente antes de republicar." 'Red'
+    } elseif ($posFalha -ne $versaoAnterior) {
         Registrar "FALHOU. Versao $posFalha detectada no ar (anterior era $versaoAnterior)." 'Red'
         Registrar "O deploy parcial foi ao ar. Tentando rollback..." 'Red'
         # Tenta rollback. Se falhar, producao fica na versao nao validada.
@@ -138,7 +149,7 @@ if (-not $deployOk) {
             Registrar "Producao pode estar em $posFalha, sem validacao." 'Red'
         }
     } else {
-        Registrar "FALHOU. Versao viva continua $versaoAnterior, producao intocada." 'Red'
+        Registrar "FALHOU antes de publicar. Versao viva continua $versaoAnterior, producao intocada." 'Red'
     }
     $linhas | Set-Content -Path $LOG -Encoding utf8
     exit 1

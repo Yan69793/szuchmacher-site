@@ -412,10 +412,11 @@
               <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">política de privacidade</a>.</span>
             </label>
             <input type="hidden" name="_subject" value="Nova solicitação — Contato via relatorios.html" />
+            <input type="hidden" name="_next" value="https://szuchmacher.com.br/relatorios.html?obrigado=1" />
             <input type="hidden" name="_origem" value="relatorios.html#contato" />
             <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
             <button type="submit" class="btn" style="width:100%" data-ga="cta_contato" data-ga-location="form_contato_relatorios">Solicitar contato</button>
-            <div class="form-note">Retorno em até 24 horas úteis.</div>
+            <div class="form-note" id="contactFormNote">Retorno em até 24 horas úteis.</div>
           </form>
         </div>
       </div>
@@ -549,10 +550,13 @@
           return res.json();
         })
         .then(applyReport)
-        .then(function () { fetchLiveMarketPrices(); })
         .catch(function (err) {
           console.warn('[Relatorio] Usando conteudo estatico:', err.message);
         });
+
+      // Independente do relatorio_cache.json: encadeado no .then anterior, um 404
+      // no cache (que hoje e opcional no build) tambem derrubava as cotacoes.
+      fetchLiveMarketPrices();
     });
   }());
   </script>
@@ -617,6 +621,29 @@
       el.href = 'mailto:' + e;
       el.textContent = e;
     }
+
+    /* O formulario tinha data-formspree mas nenhuma chamada a bindFormspree — era
+     * o unico dos quatro do site nessa situacao. Como sz-config.js preenche o
+     * action de todo form[data-formspree], o submit virava navegacao nativa: o
+     * visitante saia do site para a pagina generica do Formspree e
+     * appendAttribution() nunca rodava, entao a atribuicao UTM se perdia. */
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.getElementById('contactForm');
+      if (!form || !window.SZ || !window.SZ.bindFormspree) return;
+
+      window.SZ.bindFormspree(form, {
+        onSuccess: function () {
+          var campos = form.querySelectorAll('input, select, textarea, button, label.consent, .form-row');
+          campos.forEach(function (n) { n.style.display = 'none'; });
+          var nota = document.getElementById('contactFormNote');
+          if (nota) {
+            nota.textContent = 'Recebido. Retorno em até 24 horas úteis.';
+            nota.setAttribute('role', 'status');
+            nota.setAttribute('aria-live', 'polite');
+          }
+        }
+      });
+    });
   </script>
 </body>
 </html>

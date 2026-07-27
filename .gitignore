@@ -21,12 +21,24 @@ agenda-corrigida.png
 *.pem
 .env
 .env.*
+!.env.example
 *[Ss]enha*
 *[Ss]ecret*
 *credencia*
-*[Aa]pi?[Kk]ey*
+# O `?` casa exatamente um caractere, então o padrão antigo (*[Aa]pi?[Kk]ey*)
+# pegava api_key e api-key mas deixava passar apikey.
+*[Aa]pi*[Kk]ey*
 .devin/
 graphify-out/
+
+# Dados pessoais de leads (LGPD). Estes caminhos são escritos em runtime pelo
+# qualificador e pelo agente de nurture: nome, e-mail, telefone e faixa de
+# patrimônio de pessoa física. Estavam versionados — hoje só com o fixture de
+# teste, mas o primeiro lead real entraria no histórico para sempre.
+automacao-yan-os/logs/
+automacao-yan-os/data/leads_nurture_state.json
+leads*.json
+leads*.jsonl
 
 # Cache regenerado automaticamente
 site-producao/relatorio_cache.json

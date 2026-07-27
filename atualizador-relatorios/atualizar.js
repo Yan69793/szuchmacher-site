@@ -237,14 +237,17 @@ async function uploadFtp(nomePdf) {
   client.ftp.verbose = false;
 
   try {
+    // FTPS explicito: com secure:false, usuario e senha do HostGator iam em
+    // texto claro pela rede. 'true' faz o basic-ftp negociar AUTH TLS na mesma
+    // porta 21 e cifrar tambem o canal de dados.
     await client.access({
       host:     FTP.host,
       user:     FTP.user,
       password: FTP.password,
       port:     FTP.port,
-      secure:   false,
+      secure:   true,
     });
-    console.log('🔌 FTP conectado.');
+    console.log('🔌 FTP conectado (TLS).');
 
     const arquivos = [
       { local: path.join(__dirname, 'index.html'),      remoto: `${FTP.remoteDir}/index.html` },

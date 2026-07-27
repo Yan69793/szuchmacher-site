@@ -1,8 +1,13 @@
-# CLAUDE.md — Site (hardened 2026-07-25)
+# CLAUDE.md — Site (hardened 2026-07-25, deploy corrigido 2026-07-26)
 
 ## Deploy
 
-- HostGator via FTP: `cd site-producao && bash scripts/deploy.sh [agenda|index|relatorios|multiasset|logo|all]`
+- **Destino primário: Cloudflare Workers.** `cd site-producao && .\scripts\deploy-cloudflare.ps1` (ou
+  `publicar-com-rollback.ps1`, com validação bloqueante e reversão automática). Detalhe completo em
+  `site-producao/CLAUDE.md`.
+- **HostGator via FTP é legado, só rollback:** `bash scripts/deploy.sh [index|relatorios|multiasset|multiasset-app|agenda-data|logo|all]`.
+  O alvo `agenda` foi removido — subia `agenda-server.php`, arquivo que não existe mais desde que a rota
+  virou handler no Worker. Publicar por FTP não muda o que o site serve enquanto o Worker estiver ativo.
 - Três contas FTP distintas: `deploy@`, `caude@`, `[USER-FTP-YAN-OS]`. Senha rotacionada em 2026-06-14.
 - Nunca deployar sem especificar o alvo.
 

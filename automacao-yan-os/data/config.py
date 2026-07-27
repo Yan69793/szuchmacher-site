@@ -35,15 +35,20 @@ MODELO_CLAUDE     = os.environ.get("MODELO_CLAUDE", "claude-sonnet-4-6")
 # ─── Servidor (HostGator — dados pré-preenchidos) ──────────────────────────
 SITE_METHOD      = os.environ.get("SITE_METHOD", "ftp")
 SITE_HOST        = os.environ.get("SITE_HOST", "szuchmacher.com.br")
-SITE_FTP_HOST    = os.environ.get("SITE_FTP_HOST", "69.6.212.94")   # IP direto (mais estável)
-SITE_USER        = os.environ.get("SITE_USER", "hg545631")
+# IP de origem, usuário cPanel e docroot absoluto saíram dos defaults: compõem
+# metade do par de credenciais e revelam a topologia do servidor. O .env.example
+# já pedia esses campos; agora o config concorda com ele.
+SITE_FTP_HOST    = os.environ.get("SITE_FTP_HOST", "")               # preencher no .env
+SITE_USER        = os.environ.get("SITE_USER", "")                   # preencher no .env
 SITE_PASS        = os.environ.get("SITE_PASS", "")                   # preencher no .env
-SITE_REMOTE_DIR  = os.environ.get("SITE_REMOTE_DIR", "/home1/hg545631/public_html/")
+SITE_REMOTE_DIR  = os.environ.get("SITE_REMOTE_DIR", "/public_html/")
 SITE_URL         = os.environ.get("SITE_URL", "https://szuchmacher.com.br")
 
 # Webhook (alternativa ao FTP)
 SITE_WEBHOOK_URL    = os.environ.get("SITE_WEBHOOK_URL", "")
-SITE_WEBHOOK_SECRET = os.environ.get("SITE_WEBHOOK_SECRET", "yan_os_webhook_2026")
+# Sem valor literal de fallback: um default versionado neste repositorio nao e
+# segredo nenhum. Vazio aqui, validado no ponto de uso (atualizador_site.py).
+SITE_WEBHOOK_SECRET = os.environ.get("SITE_WEBHOOK_SECRET", "")
 
 # ─── Notificações ──────────────────────────────────────────────────────────
 # Telegram (recomendado — gratuito, sem limite de mensagens)
@@ -77,7 +82,8 @@ MONITOR_HORARIO_FIM    = os.environ.get("MONITOR_FIM",    "18:45")
 
 # ─── Qualificador de leads ──────────────────────────────────────────────────
 LEAD_WEBHOOK_PORT   = int(os.environ.get("LEAD_PORT", "8765"))
-LEAD_WEBHOOK_SECRET = os.environ.get("LEAD_SECRET", "yan_os_leads_2026")
+# Idem: vazio, e iniciar_servidor_webhook() recusa subir sem ele.
+LEAD_WEBHOOK_SECRET = os.environ.get("LEAD_SECRET", "")
 
 # ─── Helpers ───────────────────────────────────────────────────────────────
 def is_interativo() -> bool:

@@ -9,7 +9,6 @@ $ErrorActionPreference = 'Stop'
 $ROOT = Split-Path -Parent $PSScriptRoot
 $WORKER = Join-Path $ROOT 'cloudflare-workers\sz-sites'
 $BUILD = Join-Path $PSScriptRoot 'build-cloudflare-public.ps1'
-$CONFIG = Join-Path $ROOT 'config.php'
 
 Write-Host "`n=== DEPLOY CLOUDFLARE (sz-sites) ===" -ForegroundColor Cyan
 

@@ -14,15 +14,20 @@
 const WELCOME_SUBJECT = 'Bem-vindo — Szuchmacher Consultoria';
 const WELCOME_PREHEADER = 'Seu acesso ao Fechamento de Mercado';
 
-// Stripe envia v1= em hexadecimal (RFC 2104, secao 2). Base64 nao funciona:
-// todo caractere hex tambem e valido em base64, entao atob nao lanca erro —
-// devolve bytes errados e crypto.subtle.verify retorna false em toda entrega.
+// O Stripe assina em HMAC-SHA256 e envia o digest em HEXADECIMAL no campo v1= do
+// header stripe-signature. Decodificar como base64 nao lancava erro — todo char
+// hex tambem e valido em base64 — mas produzia 48 bytes de lixo em vez dos 32
+// corretos, e crypto.subtle.verify devolvia false em TODA entrega legitima.
 // Bug em producao desde o Stripe live (19/07/2026).
+//
+// Devolve null em entrada nao-hex em vez de coagir: parseInt de lixo daria NaN,
+// que o Uint8Array grava como 0 silenciosamente.
 function hexToUint8Array(hex) {
-	if (hex.length % 2 !== 0) hex = '0' + hex;
-	const bytes = new Uint8Array(hex.length / 2);
+	const clean = hex.trim();
+	if (clean.length % 2 !== 0 || !/^[0-9a-f]+$/i.test(clean)) return null;
+	const bytes = new Uint8Array(clean.length / 2);
 	for (let i = 0; i < bytes.length; i++) {
-		bytes[i] = parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+		bytes[i] = parseInt(clean.substr(i * 2, 2), 16);
 	}
 	return bytes;
 }
@@ -56,6 +61,7 @@ async function verifyStripeSignature(rawBody, signatureHeader, secret) {
 
 	for (const sig of sigs.split(' ')) {
 		const sigBytes = hexToUint8Array(sig);
+		if (!sigBytes) continue;
 		const ok = await crypto.subtle.verify(
 			'HMAC',
 			key,
@@ -253,16 +259,19 @@ export async function handleStripeWebhook(request, env, ctx) {
 		return new Response('Method not allowed', { status: 405 });
 	}
 
+	// Sem secret configurado nao ha como verificar assinatura. Falhar fechado:
+	// aceitar um fallback literal versionado permitiria a qualquer leitor do
+	// repositorio forjar um evento e disparar email pela conta Resend.
+	const secret = env.STRIPE_WEBHOOK_SECRET;
+	if (!secret) {
+		console.error('[stripe-webhook] STRIPE_WEBHOOK_SECRET ausente no Worker — webhook desabilitado');
+		return new Response('Webhook not configured', { status: 503 });
+	}
+
 	const signature = request.headers.get('stripe-signature');
 	const rawBody = await request.text();
 
-	// Verificar assinatura. Sem secret configurado, devolve 503 em vez de
-	// cair no literal '[STRIPE_WEBHOOK_SECRET]' que estava publicado no repo.
-	if (!env.STRIPE_WEBHOOK_SECRET) {
-		console.error('[stripe-webhook] STRIPE_WEBHOOK_SECRET nao configurado no Worker');
-		return new Response('Webhook secret not configured', { status: 503 });
-	}
-	const valid = await verifyStripeSignature(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
+	const valid = await verifyStripeSignature(rawBody, signature, secret);
 	if (!valid) {
 		console.error('[stripe-webhook] assinatura invalida ou ausente');
 		return new Response('Invalid signature', { status: 401 });

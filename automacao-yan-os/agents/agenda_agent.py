@@ -31,6 +31,7 @@ Uso:
 import argparse
 import gzip
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -1121,14 +1122,28 @@ def anti_regressao(nova: dict) -> tuple[dict, str | None]:
 
 
 def salvar_local(payload: dict) -> bool:
+    # Escrita atomica (tmp + os.replace). A escrita direta deixava o arquivo
+    # truncado se o processo morresse no meio — Ctrl+C, timeout do Task Scheduler,
+    # queda de energia. E isso anulava a protecao deste proprio modulo:
+    # _agenda_vigente() devolve None ao ler JSON corrompido, e entao
+    # anti_regressao() aceita a nova agenda sem comparar com nada, que e
+    # exatamente a regressao do incidente de 2026-07-13.
+    tmp = _AGENDA_PATH.with_suffix(_AGENDA_PATH.suffix + ".tmp")
     try:
         _AGENDA_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(_AGENDA_PATH, "w", encoding="utf-8") as f:
+        with open(tmp, "w", encoding="utf-8") as f:
             json.dump(payload, f, ensure_ascii=False, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, _AGENDA_PATH)
         log(f"Salvo: {_AGENDA_PATH}")
         return True
     except Exception as e:
         log(f"ERRO ao salvar: {e}")
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
         return False
 
 

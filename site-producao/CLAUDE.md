@@ -14,33 +14,45 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 
 ## Mapa de arquivos
 
+> **Rota ≠ arquivo.** As rotas terminadas em `.php` são atendidas por handlers
+> JavaScript no Worker; os `.php` de mesmo nome não são executados nem publicados.
+> Ao mexer num endpoint, edite o handler em `cloudflare-workers/sz-sites/src/handlers/`.
+
 | Arquivo | Função |
 |---------|--------|
-| `index.html` | Home institucional (~54 KB) |
-| `relatorios.html` | Página de relatórios e PDFs |
-| `multiasset.html` | Landing legada — em szuchmacher.com.br responde 301 para multi-assets.com |
+| `index.html` | Home institucional (~35 KB) |
+| `relatorios.html` | Página de relatórios, cotações ao vivo e inscrição no fechamento |
+| `multiasset.html` | Landing legada — 301 para multi-assets.com; **não entra no build** |
 | `consultoria.html` | Página de consultoria patrimonial — servida em `multi-assets.com/consultoria` |
-| `multiasset-app.html` | App completo da plataforma (~275 KB) |
+| `multiasset-app.html` | App completo da plataforma (~343 KB) |
 | `honorarios.html` | Tabela de honorários |
 | `assinatura.html` | Página de assinatura |
 | `privacidade.html` | Política de privacidade |
-| `.htaccess` | Headers de segurança (CSP, HSTS, GZIP, redirects) |
-| `prices.php` | Endpoint: ouro, prata, platina, BTC ao vivo |
-| `macro_api.php` | Endpoint LLM via OpenRouter — 200, secret `OPENROUTER_KEY` no Worker |
-| `macro_data.json` | Fallback estático do macro quando `macro_api.php` falha |
-| `agenda-server.php` | Endpoint: agenda de eventos econômicos |
-| `agenda-data.json` | Cache local da agenda |
-| `market-data.php` | Endpoint: Ibovespa, S&P 500, WTI, Treasury 10y via Yahoo Finance |
-| `market_data_cache.json` | Cache local do market-data.php (TTL 10 min, gerado automaticamente) |
-| `macro-panel-live.js` | Script que popula o painel macro no `index.html` |
-| `assets/sz-config.js` | Configuração central: GA4_ID, CLARITY_ID, FORMSPREE_ID |
-| `assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX) — funcional |
-| `assets/agenda.php` | Agenda ao vivo — funcional |
+| `.htaccess` | Headers do legado HostGator. **Não vale em produção** — ver protocolo 5 |
+| `macro_data.json` | Fallback estático do macro quando o LLM falha |
+| `agenda-data.json` | Fonte da agenda — servida a partir do bundle, muda só com deploy |
+| `relatorio_cache.json` | Conteúdo do último fechamento. Gerado por pipeline externo, **gitignored** e opcional no build |
+| `assets/sz-config.js` | Configuração central: CLARITY_ID, FORMSPREE_ID, Stripe, WhatsApp, Cal.com |
 | `_arquivo/` | Backups e snapshots históricos — **não editar**, ignorado pelo git (só existe em disco) |
-| `diagnosticos/` | Registros de diagnóstico de produção |
+| `diagnosticos/` | Registros de diagnóstico de produção (gitignored) |
 | `scripts/` | Scripts de deploy e manutenção |
-| `cloudflare-workers/sz-sites/` | Worker de produção (HTML estático + APIs PHP portadas) |
-| `cloudflare-workers/sz-sites/src/handlers/fechamento.js` | Proxy `/fechamento/:slug` → Worker briefing (leitura via site) |
+| `cloudflare-workers/sz-sites/` | Worker de produção (HTML estático + endpoints em JS) |
+
+### Handlers do Worker (`cloudflare-workers/sz-sites/src/`)
+
+| Handler | Rota | Função |
+|---------|------|--------|
+| `handlers/prices.js` | `/prices.php` | Ouro, prata, platina, BTC |
+| `handlers/market-data.js` | `/market-data.php` | IBOV, S&P 500, WTI, Treasury 10y, NTN-B |
+| `handlers/relatorio-prices.js` | `/relatorio-prices.php` | Cotações dos cards de `relatorios.html` (formato plano, inclui `usd_brl` via PTAX) |
+| `handlers/macro-api.js` | `/macro_api.php` | Narrativa macro via OpenRouter, cache 7d em KV |
+| `handlers/macro-panel.js` | `/assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX, PIB) |
+| `handlers/agenda.js` | `/assets/agenda.php` | Serve `agenda-data.json` do bundle |
+| `handlers/fechamento.js` | `/fechamento/:slug` | Proxy para o Worker briefing, com token |
+| `handlers/stripe-webhook.js` | `/stripe-webhook` | `checkout.session.completed` → e-mail de boas-vindas |
+| `handlers/relatorio-signup.js` | `/relatorio-signup` | Inscrição no fechamento (KV + Resend) |
+| `utils/market.js` | — | `fetchYahoo` e `bcbSgs` compartilhados |
+| `utils/headers.js` | — | CSP e cabeçalhos de segurança de **toda** resposta |
 
 ---
 
@@ -117,16 +129,29 @@ curl.exe -sI "https://multi-assets.com/prices.php"
 
 - Worker: `cloudflare-workers/sz-sites` (`wrangler.jsonc`, conta `7ac79fb1030e4e81115ef33c21a9b070`)
 - Build de assets: `scripts/build-cloudflare-public.ps1` (copia HTML/JS para `public/sz` e `public/multi`)
-- Secrets no Worker: `OPENROUTER_KEY`, `BRIEFING_FETCH_TOKEN` (proxy fechamento)
+- Cron do Worker: `0 3 * * 1` (`wrangler.jsonc`) → `scheduled()` recarrega o macro via OpenRouter.
+  **Não cobre a agenda:** `agenda-data.json` sai do bundle, então só muda com `wrangler deploy`.
 - DNS: zonas CF ativas; custom domains no Worker via `attach-worker-domains.ps1`
+
+### Secrets no Worker (`wrangler secret put <nome>`)
+
+| Secret | Sem ele |
+|--------|---------|
+| `OPENROUTER_KEY` | `/macro_api.php` cai no fallback `macro_data.json` |
+| `BRIEFING_FETCH_TOKEN` | `/fechamento/:slug` responde 503 |
+| `RESEND_API_KEY` | `/relatorio-signup` responde 500 em **toda** inscrição |
+| `STRIPE_WEBHOOK_SECRET` | `/stripe-webhook` responde 503 e nenhum comprador recebe o e-mail |
 
 ### Legado FTP (rollback apenas)
 
-```powershell
-.\scripts\deploy-all.ps1 -FtpOnly   # se existir flag; senão deploy-all sem -Cloudflare
+```bash
+bash scripts/deploy.sh [index|relatorios|multiasset|multiasset-app|agenda-data|logo|all]
 ```
 
-- HostGator `sh00110.hostgator.com.br` — não usar para mudanças rotineiras após migração 17/06/2026
+- HostGator — não usar para mudanças rotineiras após a migração de 17/06/2026.
+- Publicar por FTP **não muda o que o site serve** enquanto o Worker estiver ativo.
+  A verificação do script é opt-in via `LEGACY_VERIFY_BASE` justamente porque checar
+  `szuchmacher.com.br` daria um verde falso, vindo do Cloudflare.
 
 ---
 
@@ -153,29 +178,40 @@ curl.exe -sI "https://multi-assets.com/prices.php"
 
 ## Endpoints
 
-| Endpoint | HTTP | Descrição |
-|----------|------|-----------|
-| `/assets/macro.php` | 200 ✅ | BCB SGS + Focus: Selic, IPCA, PTAX |
-| `/assets/agenda.php` | 200 ✅ | Agenda de eventos econômicos da semana |
-| `/prices.php` | 200 ✅ | Ouro, prata, platina, Bitcoin |
-| `/macro_api.php` | 200 ✅ | Narrativa macro via LLM. Cascata a frio chega a ~30 s; `macro_data.json` é o fallback |
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/assets/macro.php` | GET | BCB SGS + Focus: Selic, IPCA, PTAX, PIB |
+| `/assets/agenda.php` | GET | Agenda de eventos econômicos da semana |
+| `/prices.php` | GET | Ouro, prata, platina, Bitcoin |
+| `/market-data.php` | GET | IBOV, S&P 500, WTI, Treasury 10y, NTN-B |
+| `/relatorio-prices.php` | GET | Cotações dos cards de `relatorios.html` |
+| `/macro_api.php` | GET | Narrativa macro via LLM. Cascata a frio chega a ~30 s; `macro_data.json` é o fallback |
+| `/fechamento/:slug` | GET | Proxy para o Worker briefing. Slug fora do padrão → 404 |
+| `/relatorio-signup` | POST | Inscrição no fechamento. Rate limit 3/15 min por IP |
+| `/stripe-webhook` | POST | Eventos do Stripe. Sem `STRIPE_WEBHOOK_SECRET`, responde 503 |
+| `/health` | GET | Estado do KV e frescor do cache macro |
 
 ---
 
 ## Configuração central — `assets/sz-config.js`
 
 Único arquivo que contém IDs externos. Propagado automaticamente para todas as páginas.
+Após editar, basta publicar `assets/sz-config.js` — nenhum HTML precisa ser tocado.
 
-Para ativar GA4 e Clarity, substituir as linhas:
+| Variável | Estado |
+|----------|--------|
+| `SZ_CLARITY_ID` | `x89me5cgm8` — ativo |
+| `SZ_FORMSPREE_ID` | `mojrayrl` — ativo |
+| `SZ_STRIPE_CARTA_URL` / `SZ_STRIPE_PRO_URL` | Payment Links **live** desde 19/07 |
+| `SZ_WHATSAPP` | ativo |
+| `SZ_CALCOM_URL` | **`_PENDING`** — `[data-sz-cal]` cai no WhatsApp |
+| `SZ_PLAUSIBLE_DOMAIN` | vazio, desligado por decisão |
 
-```js
-window.SZ_GA_ID      = 'G-XXXXXXXXXX';   // Google Analytics 4 Measurement ID
-window.SZ_CLARITY_ID = 'XXXXXXXXXX';     // Microsoft Clarity Project ID
-// Formspree já configurado:
-window.SZ_FORMSPREE_ID = 'mojrayrl';
-```
-
-Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser tocado.
+**Não existe `SZ_GA_ID`.** O GA4 foi removido por decisão de arquitetura e o
+tracking vai para o Clarity. Se encontrar instrução para recriá-lo, é resíduo:
+ignore. A guarda `ready()` (linhas 30-35) reprova `_PENDING` e
+`buy.stripe.com/test_`, e o `validar-producao.ps1` confirma em produção que ela
+sobreviveu ao deploy — não remover.
 
 ---
 
@@ -186,8 +222,21 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 3. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
 4. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
 5. **Sitemap do multi-assets.com** — o domínio não serve `/sitemap.xml` (404). O de szuchmacher lista só URL própria e não pode cobrir outro domínio
-6. **`wrangler` 4.101.0 com 4 vulnerabilidades altas** — `undici`, `ws` e `esbuild` entram transitivamente por ele. É `devDependency` única do Worker, não vai para o edge, então a exposição é a máquina de build, não produção. Correção real é subir para 4.112.0+ e revalidar, não `npm audit fix`. Fora da janela de domingo por decisão da rotina
+6. **Rotina `szuchmacher-domingo` publica por FTP** — o doc de controle remoto descreve a rotina gerando `macro_data.json` e `agenda-data.json` e subindo por FTP no HostGator. O Worker lê os dois do bundle de assets, então FTP não muda o que o site serve, e a verificação da rotina responde 200 pelo Worker de qualquer forma (falso verde). Ler o prompt da rotina e migrá-la para `deploy-cloudflare.ps1` se for o caso
 7. **Enquadramento CVM, texto remanescente** — com o Radar ROIC fora (ver "Resolvidas em 2026-07-22"), o disclaimer genérico "research impessoal" que descreve a Carta (FAQ "Assinatura é a mesma coisa que consultoria?" e o rodapé de `assinatura.html`) passou a valer só para conteúdo macro e fechamentos, o que reduz bastante o risco original. Essas linhas em si não foram reescritas nem revisadas por advogado hoje, só deixaram de descrever um produto que rankeava ativos. Validar se ainda precisa de ajuste de texto à parte
+
+### Resolvidas em 2026-07-26 (auditoria completa do sistema)
+
+- **Webhook do Stripe nunca funcionou** — `verifyStripeSignature` decodificava a assinatura como base64, mas o Stripe envia o `v1=` em hexadecimal. Como todo char hex também é válido em base64, o `atob` não lançava: devolvia 48 bytes de lixo em vez dos 32 corretos, e `crypto.subtle.verify` retornava `false` em toda entrega. Desde o Stripe live (19/07) nenhum comprador recebeu o e-mail de boas-vindas. No mesmo handler, o secret caía para o literal `'[STRIPE_WEBHOOK_SECRET]'`, publicado no repositório — a assimetria deixava o atacante escolher a codificação e passar onde o Stripe falhava. Corrigidos juntos: hex, e 503 sem o secret
+- **Deploy impossível a partir de clone limpo** — `build-cloudflare-public.ps1` exigia `relatorio_cache.json` em `$obrigatorios`, mas o commit `3befcb0` removeu o arquivo do tracking e o pôs no `.gitignore`. Ele vem de um pipeline em outro repositório, então só existe na máquina do Yan. Passou a ser cópia opcional; `validar-producao.ps1` aceita 404 nesse check
+- **`publicar-com-rollback.ps1` afirmava "produção intocada" quando ela já mudara** — o `catch` tratava qualquer exceção como falha anterior ao wrangler, mas `deploy-cloudflare.ps1` roda `set-openrouter-secret.ps1` e a invalidação de KV **depois** do deploy, e aquele script lia `config.php`, que é gitignored e não existe fora da máquina do Yan. Agora o `catch` relê a versão viva antes de afirmar qualquer coisa
+- **`deploy-all.ps1` não deployava** — a linha de invocação tinha a entidade HTML `&amp;` no lugar do operador `&`, então chamava um comando `amp` inexistente e podia sair 0 sem publicar nada
+- **`/relatorio-prices.php` dava 404** — a rota era chamada por `relatorios.html` mas nunca foi portada do PHP. O `.catch()` silencioso escondia a falha e os cards nunca mostravam "Cotação atual". Handler novo em `handlers/relatorio-prices.js`
+- **Formulário de contato de `relatorios.html` vazava o lead** — tinha `data-formspree` sem `bindFormspree`, o único dos quatro do site nessa situação: o submit virava navegação nativa para o Formspree e a atribuição UTM se perdia
+- **Dados pessoais de lead versionados** — `logs/leads.jsonl` e `data/leads_nurture_state.json` eram tracked e são caminhos de escrita em runtime. Removidos do index (só continham o fixture de teste) e cobertos pelo `.gitignore`
+- **Política de privacidade desalinhada da infraestrutura** — omitia Cloudflare, Resend e Stripe como operadores e declarava HostGator como a hospedagem. Minuta reescrita, **pendente de revisão jurídica**
+- **Automações** — a qualificação por IA estava morta (chaves não escapadas no prompt derrubavam o lead com HTTP 500), o alerta de mercado quebrava quando faltava um ativo, os dois segredos HMAC tinham fallback literal versionado, o servidor de leads subia em `0.0.0.0`, e o FTP ia sem TLS nos dois pipelines
+- **`wrangler` 4.101.0** — pendência já resolvida antes desta auditoria; `package.json` está em `^4.112.0`. Baixada da lista
 
 ### Resolvidas em 2026-07-22
 

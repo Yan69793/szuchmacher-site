@@ -58,7 +58,7 @@ LEAD_VAZIO = {
 PROMPT_QUALIFICACAO = """Você é assistente de um wealth advisor brasileiro especializado em clientes UHNW (Ultra High Net Worth).
 
 Analise o lead abaixo e produza um briefing de qualificação em JSON com exatamente esta estrutura:
-{
+{{
   "fit_score": <1-10, onde 10 é fit perfeito para UHNW>,
   "urgencia": <"alta" | "media" | "baixa">,
   "perfil_resumido": "<1 frase sobre quem é o lead>",
@@ -69,7 +69,7 @@ Analise o lead abaixo e produza um briefing de qualificação em JSON com exatam
   "tempo_resposta_ideal": "<imediato | em 2h | no dia | em 24h>",
   "gancho_conversa": "<frase de abertura sugerida para o contato>",
   "observacoes": "<qualquer insight adicional relevante>"
-}
+}}
 
 Responda APENAS com o JSON, sem texto antes ou depois.
 
@@ -95,7 +95,12 @@ def qualificar_com_qwen(lead: dict) -> dict:
         return _qualificacao_simples(lead)
 
     try:
+        # Dentro do try de proposito: a montagem do prompt ficava fora dele, entao
+        # um defeito no template escapava ate a rota Flask e derrubava o lead com
+        # HTTP 500, sem nem gravar em leads.jsonl. Degradar para a regra fixa e
+        # sempre melhor do que perder o lead.
         prompt = PROMPT_QUALIFICACAO.format(**{k: lead.get(k, "—") for k in LEAD_VAZIO})
+
         from openai import OpenAI
         client = OpenAI(api_key=QWEN_API_KEY, base_url=QWEN_BASE_URL)
         resp = client.chat.completions.create(
@@ -113,6 +118,11 @@ def qualificar_com_qwen(lead: dict) -> dict:
         return _qualificacao_simples(lead)
     except json.JSONDecodeError as e:
         print(f"[leads] JSON inválido do Qwen: {e}")
+        return _qualificacao_simples(lead)
+    except KeyError as e:
+        # Defeito de template, nao indisponibilidade da API. Distinguir importa:
+        # a mensagem generica de "Qwen indisponivel" mandava investigar o provedor.
+        print(f"[leads] ERRO de template no PROMPT_QUALIFICACAO (chave {e}) — corrigir o codigo")
         return _qualificacao_simples(lead)
     except Exception as e:
         print(f"[leads] ERRO Qwen: {e}")
@@ -309,6 +319,18 @@ def iniciar_servidor_webhook():
     import hmac
     import hashlib
 
+    # O segredo tinha fallback literal versionado ("yan_os_leads_2026"), e o
+    # .env.example deixava LEAD_SECRET vazio. As duas pontas eram ruins: com o
+    # literal, qualquer leitor deste repo forjava o X-Sig; vazio, o `if
+    # LEAD_WEBHOOK_SECRET` abaixo pulava a validacao inteira e o endpoint ficava
+    # aberto. Agora nao sobe sem segredo, e a verificacao e incondicional.
+    if not LEAD_WEBHOOK_SECRET:
+        print("[leads] ERRO: LEAD_SECRET nao configurado no .env.")
+        print("  O endpoint recebe dados pessoais e nao sobe sem assinatura.")
+        print("  Gere um segredo forte, por exemplo:")
+        print("    python -c \"import secrets; print(secrets.token_urlsafe(32))\"")
+        sys.exit(1)
+
     app = Flask(__name__)
 
     @app.route("/health", methods=["GET"])
@@ -317,14 +339,13 @@ def iniciar_servidor_webhook():
 
     @app.route("/lead", methods=["POST"])
     def receber_lead():
-        # Valida assinatura se configurada
-        if LEAD_WEBHOOK_SECRET:
-            sig_recebida = request.headers.get("X-Sig", "")
-            sig_esperada = hmac.new(
-                LEAD_WEBHOOK_SECRET.encode(), request.data, hashlib.sha256
-            ).hexdigest()
-            if not hmac.compare_digest(sig_recebida, sig_esperada):
-                return jsonify({"error": "Assinatura inválida"}), 403
+        # Assinatura sempre exigida — a garantia vem da checagem no boot acima.
+        sig_recebida = request.headers.get("X-Sig", "")
+        sig_esperada = hmac.new(
+            LEAD_WEBHOOK_SECRET.encode(), request.data, hashlib.sha256
+        ).hexdigest()
+        if not hmac.compare_digest(sig_recebida, sig_esperada):
+            return jsonify({"error": "Assinatura inválida"}), 403
 
         try:
             dados = request.get_json(force=True) or {}
@@ -340,7 +361,9 @@ def iniciar_servidor_webhook():
     print(f"  Para expor à internet: ngrok http {LEAD_WEBHOOK_PORT}")
     print(f"\n  Pressione Ctrl+C para parar.\n")
 
-    app.run(host="0.0.0.0", port=LEAD_WEBHOOK_PORT, debug=False)
+    # 127.0.0.1 e nao 0.0.0.0: o tunel ngrok conecta pelo loopback e nao precisa
+    # que o servico esteja exposto em toda interface da maquina.
+    app.run(host="127.0.0.1", port=LEAD_WEBHOOK_PORT, debug=False)
 
 
 # ─── Modo interativo ──────────────────────────────────────────────────────────

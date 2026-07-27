@@ -21,8 +21,19 @@ function Reset-Dir([string]$Path) {
 # em 19/07/2026. Agora o build falha e o deploy nao chega a rodar.
 $script:Faltando = @()
 
-function Copy-IfExists([string]$Src, [string]$Dst) {
+# -Opcional marca fonte que pode legitimamente nao existir nesta maquina, sem
+# reprovar o build. E o caso do relatorio_cache.json: ele e gerado por um pipeline
+# que vive em outro repositorio (relatorio-diario-szuchmacher), foi removido do
+# tracking em 3befcb0 e esta no .gitignore. Exigi-lo aqui tornava o deploy
+# impossivel a partir de qualquer clone limpo — CI, container ou rotina na nuvem.
+# Os dois consumidores no Worker (relatorio-signup.js, stripe-webhook.js) ja caem
+# para /relatorios.html quando o asset falta.
+function Copy-IfExists([string]$Src, [string]$Dst, [switch]$Opcional) {
     if (-not (Test-Path $Src)) {
+        if ($Opcional) {
+            Write-Host "  SKIP   $Src (opcional)" -ForegroundColor DarkYellow
+            return $false
+        }
         Write-Host "  SKIP   $Src" -ForegroundColor Yellow
         $script:Faltando += $Src
         return $false
@@ -67,7 +78,14 @@ $szFiles = @(
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js')
+# Gerado fora deste repositorio e gitignored: copia se estiver presente, segue se nao.
+$szOpcionais = @('relatorio_cache.json')
+foreach ($f in $szOpcionais) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) -Opcional | Out-Null }
+
+# hero-editorial.{css,js} e hero-switch.js sairam da lista: nenhuma das paginas de
+# szuchmacher.com.br os referencia, entao eram peso morto publicado. Os arquivos
+# continuam em disco (ver design/HERO-REVERT.md) — so nao vao mais para o bundle.
+$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js')
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
