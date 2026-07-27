@@ -1,4 +1,4 @@
-# reenviar-emails-stripe.ps1 — lista compradores desde 19/07 que nao receberam
+﻿# reenviar-emails-stripe.ps1 — lista compradores desde 19/07 que nao receberam
 # o email de boas-vindas (bug hex vs base64 no webhook) e reenvia.
 #
 # Pre-requisitos:
@@ -63,7 +63,7 @@ if ($sessions.Count -eq 0) {
 Write-Host "`nCompradores:" -ForegroundColor Yellow
 foreach ($s in $sessions) {
     $email = $s.customer_details.email
-    $nome  = $s.customer_details.name ?? '(sem nome)'
+    $nome  = if ($s.customer_details.name) { $s.customer_details.name } else { '(sem nome)' }
     $data  = [DateTimeOffset]::FromUnixTimeSeconds($s.created).DateTime.ToString('yyyy-MM-dd HH:mm')
     Write-Host "  $nome <$email> — $data"
 }

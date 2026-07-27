@@ -1,4 +1,4 @@
-# encodar-demo.ps1 — prepara uma gravacao de tela para embed no multi-assets.com
+﻿# encodar-demo.ps1 — prepara uma gravacao de tela para embed no multi-assets.com
 #
 # Uso:
 #   .\scripts\encodar-demo.ps1 -Entrada "C:\caminho\gravacao.mp4"

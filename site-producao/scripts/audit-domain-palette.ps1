@@ -1,4 +1,4 @@
-# audit-domain-palette.ps1
+﻿# audit-domain-palette.ps1
 # Garante separação de design system:
 #   szuchmacher.com.br  → institucional light
 #   multi-assets.com    → produto dark (permitido)
