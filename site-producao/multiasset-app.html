@@ -3645,7 +3645,7 @@ window.cenarioDescricoes = {
 };
 
 // FONTE ÚNICA DE PREMISSA DE RETORNO: window.taxasCenario deriva de simConfigs.
-// Antes eram dois objetos independentes descrevendo a mesma coisa — o retorno anual
+// Antes eram dois objetos independentes descrevendo a mesma coisa, o retorno anual
 // esperado de um ativo num cenário. simConfigs alimenta os cards dos simuladores (o
 // número que o cliente lê como texto) e taxasCenario alimenta o gráfico "Projeção do
 // Portfólio vs Benchmarks", o Monte Carlo da carteira e o overlay geopolítico.
@@ -3667,7 +3667,7 @@ const TAXAS_CENARIO_SEL = { pess: 'pessimista', base: 'base', otim: 'otimista' }
 // Reprojeta taxasCenario a partir de simConfigs. Chamar depois de qualquer escrita
 // em simConfigs, senão a carteira continua projetando a premissa antiga.
 // Nota: cdi, ntnb e reserva são reprojetados aqui por consistência, mas as projeções
-// do portfólio não os leem daqui — usam getSelicAno()/getNtnbAno(), que modelam a
+// do portfólio não os leem daqui, usam getSelicAno()/getNtnbAno(), que modelam a
 // estrutura a termo (Selic caindo para a terminal) em vez de uma taxa plana.
 function rebuildTaxasCenario() {
     Object.keys(TAXAS_CENARIO_SEL).forEach(function (sel) {
@@ -6038,7 +6038,7 @@ function renderMacro(d) {
                 const [, descId] = ids[perfil];
                 // b-desc-cons tem dois escritores: este e o do BTC Radar, que troca a
                 // descrição de perda total pela de taxa anual. Sem esta guarda, quem
-                // resolvesse por último vencia — e o card podia exibir "−10% a.a." com
+                // resolvesse por último vencia, e o card podia exibir "−10% a.a." com
                 // um texto falando em perda de 60% do capital.
                 if (descId === 'b-desc-cons' && window._btcRadarDescAplicada) return;
                 if (p.desc)  { const el = document.getElementById(descId);  if (el) el.textContent = p.desc; }
