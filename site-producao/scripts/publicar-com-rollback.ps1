@@ -123,22 +123,36 @@ try {
 }
 
 if (-not $deployOk) {
-    # Nao afirmar nada sobre producao sem reler o estado dela.
-    $vvFalha = Get-VersaoViva
-    if (-not $vvFalha.Id) {
+    # O deploy-cloudflare.ps1 pode ter saido != 0 DEPOIS de um wrangler deploy
+    # bem-sucedido (ex.: purge de cache falhou). Nesse caso a versao nova ja
+    # esta no ar, e afirmar "intocada" e mentir. Conferir.
+    $posFalha = (Get-VersaoViva).Id
+    if (-not $posFalha) {
+        # Sem leitura da versao viva nao da para afirmar nem que mudou nem que
+        # ficou. Dizer "intocada" aqui seria chute com cara de fato.
         Registrar "FALHOU e nao consegui reler a versao viva do Worker." 'Red'
         Registrar "NAO da para afirmar se producao mudou. Verificar manualmente antes de republicar." 'Red'
-        $linhas | Set-Content -Path $LOG -Encoding utf8
-        exit 1
+    } elseif ($posFalha -ne $versaoAnterior) {
+        Registrar "FALHOU. Versao $posFalha detectada no ar (anterior era $versaoAnterior)." 'Red'
+        Registrar "O deploy parcial foi ao ar. Tentando rollback..." 'Red'
+        # Tenta rollback. Se falhar, producao fica na versao nao validada.
+        Push-Location $WORKER
+        try {
+            $saidaRb = (npx wrangler rollback $versaoAnterior -y -m "Rollback automatico: deploy falhou apos publicacao" 2>&1 | Out-String)
+            $rbOk = ($LASTEXITCODE -eq 0)
+        } finally { Pop-Location }
+        if ($rbOk) {
+            Registrar "Rollback concluido. Producao de volta em $versaoAnterior." 'Yellow'
+        } else {
+            $resumoRb = @($saidaRb -split "`n" | Where-Object { $_ -match 'SUCCESS|ERROR|has been deployed' }) -join ' '
+            Registrar "ROLLBACK FALHOU: $($resumoRb.Trim())" 'Red'
+            Registrar "Producao pode estar em $posFalha, sem validacao." 'Red'
+        }
+    } else {
+        Registrar "FALHOU antes de publicar. Versao viva continua $versaoAnterior, producao intocada." 'Red'
     }
-    if ($vvFalha.Id -eq $versaoAnterior) {
-        Registrar "FALHOU antes de publicar. Producao segue na versao ``$versaoAnterior``, intocada." 'Red'
-        $linhas | Set-Content -Path $LOG -Encoding utf8
-        exit 1
-    }
-    Registrar "Deploy saiu com erro, mas producao JA MUDOU para ``$($vvFalha.Id)``." 'Red'
-    Registrar "A falha foi depois do wrangler deploy. Seguindo para validacao e rollback." 'Yellow'
-    Registrar ""
+    $linhas | Set-Content -Path $LOG -Encoding utf8
+    exit 1
 }
 
 $versaoNova = (Get-VersaoViva).Id

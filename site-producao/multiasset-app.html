@@ -3444,6 +3444,39 @@ const simConfigs = {
     btc:      { ini: 'b-inicial', ap: 'b-aporte', prazo: 'b-prazo', pess: null,  base: 0.40,  otim: 1.20,  prefix: 'b', sel: 'pess' },
 };
 
+// ── BTC Radar: ajuste de cenarios (server-side, sem exposicao de dados) ──
+(function fetchBtcScenarios() {
+    fetch('/api/btc-scenarios')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.ok || !d.rates) return;
+            var r = d.rates;
+            // Atualiza taxas no simConfigs
+            if (r.pess != null) simConfigs.btc.pess = r.pess;
+            if (r.base != null) simConfigs.btc.base = r.base;
+            if (r.otim != null) simConfigs.btc.otim = r.otim;
+            // Atualiza labels visiveis nos cards
+            var labelPess = document.getElementById('b-rate-cons');
+            var labelBase = document.getElementById('b-rate-mod');
+            var labelOtim = document.getElementById('b-rate-agr');
+            if (labelPess) labelPess.textContent = (r.pess >= 0 ? '+' : '') + Math.round(r.pess * 100) + '% a.a.';
+            if (labelBase) labelBase.textContent = (r.base >= 0 ? '+' : '') + Math.round(r.base * 100) + '% a.a.';
+            if (labelOtim) labelOtim.textContent = (r.otim >= 0 ? '+' : '') + Math.round(r.otim * 100) + '% a.a.';
+            // Atualiza descricao do cenario conservador (deixa de ser perda total)
+            var descPess = document.getElementById('b-desc-cons');
+            if (descPess && r.pess != null) {
+                descPess.textContent = 'Cenario de stress com dados de mercado atualizados. Fear & Greed Index e sinais de trading de longo prazo indicam ' + (r.pess >= 0 ? 'desaceleracao' : 'correcao') + ' com retorno anual de ' + (r.pess >= 0 ? '+' : '') + Math.round(r.pess * 100) + '%. Drawdowns historicos de 77-84% sao possiveis em eventos extremos (colapso de exchange, vulnerabilidade criptografica, aperto regulatorio severo).';
+            }
+            // Recalcula se o simulador BTC estiver visivel
+            if (document.getElementById('sim-btc') && document.getElementById('sim-btc').classList.contains('active')) {
+                recalcSim('btc');
+            }
+        })
+        .catch(function() {
+            // fallback silencioso: taxas hardcoded permanecem
+        });
+})();
+
 function selectScenario(asset, scenario, el) {
     simConfigs[asset].sel = scenario;
     const selector = document.getElementById('sc-' + asset);
@@ -3464,7 +3497,7 @@ function recalcSim(asset) {
 
     const base = calcFinal(ini, ap, c.base, prz);
     const otim = calcFinal(ini, ap, c.otim, prz);
-    const pess = asset === 'btc' ? totalInv * (window.btcPessMultiplier || 0.40) : calcFinal(ini, ap, c.pess, prz);
+    const pess = (asset === 'btc' && c.pess == null) ? totalInv * (window.btcPessMultiplier || 0.40) : calcFinal(ini, ap, c.pess, prz);
 
     const p = c.prefix;
 

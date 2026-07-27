@@ -59,10 +59,8 @@
     var p = s.split('-');
     // Coluna visual tem 76px: strong = só o dia (ex.: 20). Meta = weekday + DD/MM.
     if (p.length !== 3) return { dia: '—', meta: '' };
-    var rel = relativoDia(s);
     var dataBr = p[2] + '/' + p[1];
     var meta = diaDaSemana(iso) + ', ' + dataBr;
-    if (rel) meta = rel + ', ' + dataBr;
     return { dia: p[2], meta: meta };
   }
 

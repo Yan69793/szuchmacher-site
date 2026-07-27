@@ -14,10 +14,14 @@
 const WELCOME_SUBJECT = 'Bem-vindo — Szuchmacher Consultoria';
 const WELCOME_PREHEADER = 'Seu acesso ao Fechamento de Mercado';
 
-// O Stripe assina em HMAC-SHA256 e envia o digest em HEXADECIMAL (64 chars) no
-// campo v1= do header stripe-signature. Decodificar como base64 nao lancava erro
-// — todo char hex tambem e valido em base64 — mas produzia 48 bytes de lixo em vez
-// dos 32 corretos, e crypto.subtle.verify devolvia false em TODA entrega legitima.
+// O Stripe assina em HMAC-SHA256 e envia o digest em HEXADECIMAL no campo v1= do
+// header stripe-signature. Decodificar como base64 nao lancava erro — todo char
+// hex tambem e valido em base64 — mas produzia 48 bytes de lixo em vez dos 32
+// corretos, e crypto.subtle.verify devolvia false em TODA entrega legitima.
+// Bug em producao desde o Stripe live (19/07/2026).
+//
+// Devolve null em entrada nao-hex em vez de coagir: parseInt de lixo daria NaN,
+// que o Uint8Array grava como 0 silenciosamente.
 function hexToUint8Array(hex) {
 	const clean = hex.trim();
 	if (clean.length % 2 !== 0 || !/^[0-9a-f]+$/i.test(clean)) return null;
@@ -249,7 +253,7 @@ async function sendWelcomeEmail(env, toEmail, reportUrl, dateLabel) {
 	}
 }
 
-export async function handleStripeWebhook(request, env) {
+export async function handleStripeWebhook(request, env, ctx) {
 	// Só aceita POST
 	if (request.method !== 'POST') {
 		return new Response('Method not allowed', { status: 405 });
@@ -283,33 +287,25 @@ export async function handleStripeWebhook(request, env) {
 	const eventType = event.type;
 	console.log(`[stripe-webhook] evento recebido: ${eventType}`);
 
-	// Responder 200 imediatamente — Stripe espera resposta rápida.
-	// O envio de email roda em background (ctx.waitUntil, chamado pelo
-	// routeRequest que nao tem acesso a ctx — usamos Promise.race com
-	// timeout em vez de block).
-	const responsePromise = (async () => {
-		if (eventType === 'checkout.session.completed') {
-			const session = event.data?.object;
-			const customerEmail = session?.customer_details?.email || session?.customer_email;
+	// Stripe espera resposta rapida (<= 20s). O envio de email roda em
+	// background via ctx.waitUntil, que mantem o Worker vivo ate concluir.
+	if (eventType === 'checkout.session.completed') {
+		const session = event.data?.object;
+		const customerEmail = session?.customer_details?.email || session?.customer_email;
 
-			if (customerEmail) {
+		if (customerEmail && ctx) {
+			ctx.waitUntil((async () => {
 				const reportUrl = await getLatestReportFromCache(env);
 				await sendWelcomeEmail(env, customerEmail, reportUrl, null);
-			} else {
-				console.warn('[stripe-webhook] checkout.session.completed sem email detectavel');
-			}
+			})());
+		} else if (customerEmail) {
+			// Sem ctx (caminho de teste): envia sincrono com timeout
+			console.warn('[stripe-webhook] ctx indisponivel, envio sincrono');
+			const reportUrl = await getLatestReportFromCache(env);
+			await sendWelcomeEmail(env, customerEmail, reportUrl, null);
+		} else {
+			console.warn('[stripe-webhook] checkout.session.completed sem email detectavel');
 		}
-		// Outros eventos: ignorar silenciosamente (200)
-	})();
-
-	// Aguarda no maximo 10s para concluir o envio; se estourar, segue em frente
-	try {
-		await Promise.race([
-			responsePromise,
-			new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 10000)),
-		]);
-	} catch (e) {
-		console.warn(`[stripe-webhook] processamento background: ${e?.message ?? e}`);
 	}
 
 	return new Response(JSON.stringify({ received: true }), {

@@ -7,6 +7,7 @@ import { handleAgenda } from './handlers/agenda.js';
 import { handleFechamento } from './handlers/fechamento.js';
 import { handleStripeWebhook } from './handlers/stripe-webhook.js';
 import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
+import { handleBtcScenarios } from './handlers/btc-scenarios.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -17,15 +18,16 @@ const SITE_MAP = {
 };
 
 const API_ROUTES = {
-  '/prices.php': (req, env) => handlePrices(env),
-  '/market-data.php': (req, env) => handleMarketData(env),
-  '/relatorio-prices.php': (req, env) => handleRelatorioPrices(env),
-  '/macro_api.php': (req, env) => handleMacroApi(req, env),
-  '/assets/macro.php': (req, env) => handleMacroPanel(env, req),
-  '/assets/agenda.php': (req, env) => handleAgenda(env, req),
-  '/stripe-webhook': (req, env) => handleStripeWebhook(req, env),
-  '/relatorio-signup': (req, env) => handleRelatorioSignup(req, env),
-  '/health': (req, env) => handleHealth(env),
+  '/prices.php': (req, env, ctx) => handlePrices(env),
+  '/market-data.php': (req, env, ctx) => handleMarketData(env),
+  '/relatorio-prices.php': (req, env, ctx) => handleRelatorioPrices(env),
+  '/macro_api.php': (req, env, ctx) => handleMacroApi(req, env),
+  '/assets/macro.php': (req, env, ctx) => handleMacroPanel(env, req),
+  '/assets/agenda.php': (req, env, ctx) => handleAgenda(env, req),
+  '/stripe-webhook': (req, env, ctx) => handleStripeWebhook(req, env, ctx),
+  '/relatorio-signup': (req, env, ctx) => handleRelatorioSignup(req, env),
+  '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env),
+  '/health': (req, env, ctx) => handleHealth(env),
 };
 
 async function handleHealth(env) {
@@ -172,7 +174,7 @@ async function serveStatic(request, env, siteKey) {
   return withRangeSupport(res, request, path);
 }
 
-async function routeRequest(request, env) {
+async function routeRequest(request, env, ctx) {
   const url = new URL(request.url);
   const host = normalizeHost(url.hostname);
   const siteKey = SITE_MAP[host];
@@ -219,7 +221,7 @@ async function routeRequest(request, env) {
 
   const apiHandler = API_ROUTES[url.pathname];
   if (apiHandler) {
-    const result = await apiHandler(request, env);
+    const result = await apiHandler(request, env, ctx);
     return applySecurityHeaders(result, host);
   }
 
@@ -230,7 +232,7 @@ async function routeRequest(request, env) {
 export default {
   async fetch(request, env, ctx) {
     try {
-      return await routeRequest(request, env);
+      return await routeRequest(request, env, ctx);
     } catch (err) {
       console.error('worker error:', err?.message ?? err);
       const res = new Response(JSON.stringify({ ok: false, error: 'Erro interno do servidor' }), {

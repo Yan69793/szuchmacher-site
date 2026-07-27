@@ -134,7 +134,7 @@
       <li><strong>Dados de identificação:</strong> nome completo, e-mail, telefone ou WhatsApp, informados voluntariamente em formulários do site.</li>
       <li><strong>Dados de perfil profissional:</strong> faixa de patrimônio, objetivo do contato e informações adicionais preenchidas em formulários de diagnóstico.</li>
       <li><strong>Dados de navegação:</strong> dispositivo, sistema operacional, páginas visitadas e interações na página, coletados por meio de cookies analíticos (Microsoft Clarity).</li>
-      <li><strong>Endereço IP:</strong> registrado pela infraestrutura do site para controle de abuso e limitação de requisições, de forma temporária e dissociada do conteúdo dos formulários.</li>
+      <li><strong>Endereço IP:</strong> registrado nos logs de acesso da Cloudflare e usado para controle de abuso e limitação de requisições, de forma temporária e dissociada do conteúdo dos formulários.</li>
       <li><strong>Dados de assinatura:</strong> e-mail e confirmação de pagamento, quando o usuário contrata uma assinatura. Os dados de cartão são tratados exclusivamente pela Stripe (seção 4).</li>
     </ul>
 
@@ -153,12 +153,11 @@
     <h2>4. Compartilhamento</h2>
     <p>Os dados são tratados pela Szuchmacher Consultoria e por operadores contratados, estritamente necessários à operação, a saber:</p>
     <ul>
-      <li><strong>Cloudflare</strong> — hospedagem do site, entrega de conteúdo e armazenamento do e-mail de inscritos na lista do Fechamento de Mercado. Registra também o endereço IP da requisição para controle de abuso.</li>
-      <li><strong>Formspree</strong> — recepção e roteamento dos formulários do site.</li>
-      <li><strong>Resend</strong> — envio dos e-mails transacionais (confirmação de inscrição e boas-vindas).</li>
-      <li><strong>Stripe</strong> — processamento de pagamentos das assinaturas. Os dados de cartão são coletados e armazenados diretamente pela Stripe; a Szuchmacher Consultoria não tem acesso a eles e recebe apenas o e-mail e a confirmação da transação.</li>
+      <li><strong>Formspree</strong> — recepção e roteamento dos formulários de contato do site.</li>
       <li><strong>Microsoft Clarity</strong> — analytics de comportamento e desempenho do site.</li>
-      <li><strong>HostGator</strong> — hospedagem legada, mantida apenas como contingência de restauração.</li>
+      <li><strong>Cloudflare</strong> — hospedagem, distribuição de conteúdo (CDN), logs de acesso e armazenamento dos e-mails de inscritos (KV, retenção de 365 dias).</li>
+      <li><strong>Resend</strong> — envio de e-mails transacionais (confirmação de inscrição, boas-vindas pós-compra).</li>
+      <li><strong>Stripe</strong> — processamento de pagamentos das assinaturas. Os dados de cartão são coletados e armazenados diretamente pela Stripe; a Szuchmacher Consultoria não tem acesso a eles e recebe apenas o e-mail e a confirmação da transação.</li>
     </ul>
     <p>Nenhum dado pessoal é vendido, compartilhado com terceiros para fins comerciais ou utilizado em publicidade direcionada.</p>
 
@@ -166,7 +165,7 @@
     <p>Todos os operadores listados acima são empresas sediadas no exterior e processam os dados em servidores fora do Brasil. A transferência ocorre nos termos do artigo 33 da LGPD, com base na execução do contrato e no consentimento do titular, e está limitada aos dados descritos na seção 1.</p>
 
     <h2>6. Armazenamento e segurança</h2>
-    <p>Os dados são armazenados com criptografia em trânsito (HTTPS/TLS 1.2+) e controle de acesso restrito. Cookies analíticos expiram automaticamente e não armazenam informação sensível. O site aplica cabeçalhos de segurança modernos (HSTS, CSP, X-Frame-Options) para mitigar ataques comuns.</p>
+    <p>Os dados são armazenados na infraestrutura da Cloudflare (CDN global, Workers, KV), com criptografia em trânsito (HTTPS/TLS 1.2+) e em repouso. O acesso é restrito por autenticação e políticas de segurança da plataforma. Cookies analíticos expiram automaticamente e não armazenam informação sensível. O site aplica cabeçalhos de segurança modernos (HSTS, CSP, X-Frame-Options) para mitigar ataques comuns.</p>
 
     <h2>7. Direitos do titular</h2>
     <p>Nos termos do artigo 18 da LGPD, o titular dos dados pode, a qualquer momento, solicitar:</p>
@@ -181,7 +180,7 @@
     <p>Para exercer qualquer desses direitos, envie solicitação para <a href="mailto:yan@szuchmacher.com.br">yan@szuchmacher.com.br</a>. Respondemos em até 15 dias corridos.</p>
 
     <h2>8. Cookies</h2>
-    <p>O site utiliza cookies essenciais à navegação e cookies analíticos de desempenho (Microsoft Clarity). O usuário pode, pelo navegador, recusar ou apagar cookies a qualquer momento, sem impacto nas páginas públicas.</p>
+    <p>O site utiliza cookies essenciais à navegação e cookies analíticos de terceiros (Microsoft Clarity). O usuário pode, pelo navegador, recusar ou apagar cookies a qualquer momento, sem impacto nas páginas públicas.</p>
 
     <h2>9. Retenção</h2>
     <p>Os dados de contato são mantidos enquanto persistir a finalidade que motivou a coleta ou até a solicitação de exclusão pelo titular, observados os prazos mínimos exigidos pela regulação financeira aplicável.</p>
