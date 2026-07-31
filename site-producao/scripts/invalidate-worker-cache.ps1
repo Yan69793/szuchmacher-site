@@ -11,15 +11,40 @@ $KV_ID  = 'fd40efe1057c4c54b3d33277d4665434'
 $KEYS   = @('macro-api', 'macro-panel', 'market-data')
 
 Push-Location $WORKER
+
+# CLOUDFLARE_API_TOKEN existe como variavel de usuario persistida (token cfut_) e
+# tem precedencia sobre o login OAuth do wrangler. Esse token serve para publicar o
+# Worker, mas nao carrega permissao de Workers KV: todo delete daqui voltava
+# 401 Unauthorized em /storage/kv/.../values/<key>, medido em 30/07/2026. O login
+# OAuth gravado em ~/.wrangler/config/default.toml tem workers_kv:write e faz a
+# mesma chamada passar. Tirar a variavel do processo derruba a precedencia e o
+# wrangler cai no OAuth. Mesmo tratamento que attach-worker-domains.ps1 ja aplica
+# pelo mesmo motivo. So o processo atual e afetado, a variavel persistida do
+# usuario continua intacta.
+$tokenAmbiente = $env:CLOUDFLARE_API_TOKEN
+if ($tokenAmbiente) { Remove-Item Env:CLOUDFLARE_API_TOKEN -ErrorAction SilentlyContinue }
+
 try {
+    # O par OK/SKIP abaixo ja foi escrito para tratar falha de delete como nao-fatal,
+    # mas com $ErrorActionPreference = 'Stop' a linha que o wrangler escreve em stderr
+    # vira NativeCommandError terminante e derruba o script antes de chegar no if.
+    # Medido em 30/07/2026: o delete de macro-api falhou na API e o deploy inteiro
+    # parou ali, mesmo com o Worker ja publicado. 'Continue' devolve ao script o
+    # comportamento que o proprio codigo declara.
+    $eapAnterior = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     foreach ($key in $KEYS) {
         Write-Host "  DEL KV  $key" -NoNewline
         npx wrangler kv key delete $key --namespace-id $KV_ID --remote 2>&1 | Out-Null
         if ($LASTEXITCODE -eq 0) { Write-Host " OK" -ForegroundColor Green }
         else { Write-Host " SKIP" -ForegroundColor Yellow }
     }
+    $ErrorActionPreference = $eapAnterior
 }
 finally {
+    # Devolve o token ao processo: este script e chamado com & por
+    # deploy-cloudflare.ps1, e Env: e escopo de processo, nao de script.
+    if ($tokenAmbiente) { $env:CLOUDFLARE_API_TOKEN = $tokenAmbiente }
     Pop-Location
 }
 
