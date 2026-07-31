@@ -1,14 +1,17 @@
 <?php
 /**
- * prices.php — Preços ao vivo (ouro, prata, platina, bitcoin) em USD
+ * prices.php — Preços ao vivo (ouro, prata, platina, cobre, bitcoin) em USD
  *
- * Fonte primária : gold-api.com  (XAU/XAG/XPT/BTC — grátis, sem chave)
- * Fallback       : AwesomeAPI    (XAU-USD/XAG-USD/BTC-USD — não tem platina)
+ * Fonte primária : gold-api.com  (XAU/XAG/XPT/HG/BTC — grátis, sem chave)
+ * Fallback       : AwesomeAPI    (XAU-USD/XAG-USD/BTC-USD — não tem platina nem cobre)
  * Resiliência    : cache em arquivo (TTL 15min) + fallback p/ último valor
  *                  conhecido. Nunca devolve erro ao front; o card nunca quebra.
  *
+ * Cobre é cotado em USD por libra-peso, não por onça troy como os três metais
+ * preciosos. O símbolo no gold-api é HG, o mesmo código do contrato COMEX.
+ *
  * Consumido por multiasset-app.html → loadLivePrices():
- *   espera { ok:true, gold, silver, platinum, bitcoin } como números.
+ *   espera { ok:true, gold, silver, platinum, copper, bitcoin } como números.
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -21,8 +24,9 @@ ini_set('serialize_precision', '-1');
 define('CACHE_FILE', __DIR__ . '/prices_cache.json');
 define('CACHE_TTL',  900); // 15 min — janela de "ao vivo" sem martelar as APIs
 
-// Sementes: último valor conhecido caso APIs e cache falhem (atualizado 14/06/2026)
-$SEED = ['gold' => 4220.0, 'silver' => 68.0, 'platinum' => 1726.0, 'bitcoin' => 63762.0];
+// Sementes: último valor conhecido caso APIs e cache falhem (atualizado 14/06/2026;
+// cobre acrescentado em 30/07/2026, medido em USD 6,27/lb)
+$SEED = ['gold' => 4220.0, 'silver' => 68.0, 'platinum' => 1726.0, 'copper' => 6.27, 'bitcoin' => 63762.0];
 
 // ── HTTP helper ────────────────────────────────────────────────────
 function http_json($url, $timeout = 8) {
@@ -82,13 +86,14 @@ $prev = ($cache && isset($cache['_raw'])) ? $cache['_raw'] : $SEED;
 $gold     = from_goldapi('XAU'); if ($gold     === null) $gold     = from_awesome('XAU-USD');
 $silver   = from_goldapi('XAG'); if ($silver   === null) $silver   = from_awesome('XAG-USD');
 $platinum = from_goldapi('XPT'); // sem fallback de platina
+$copper   = from_goldapi('HG');  // sem fallback de cobre
 $bitcoin  = from_goldapi('BTC'); if ($bitcoin  === null) $bitcoin  = from_awesome('BTC-USD');
 
 $fontes = [];
-if ($gold !== null || $silver !== null || $platinum !== null || $bitcoin !== null) $fontes[] = 'gold-api.com';
+if ($gold !== null || $silver !== null || $platinum !== null || $copper !== null || $bitcoin !== null) $fontes[] = 'gold-api.com';
 
 // Preenche buracos com último valor conhecido (cache anterior ou semente)
-$vals  = ['gold' => $gold, 'silver' => $silver, 'platinum' => $platinum, 'bitcoin' => $bitcoin];
+$vals  = ['gold' => $gold, 'silver' => $silver, 'platinum' => $platinum, 'copper' => $copper, 'bitcoin' => $bitcoin];
 $stale = false;
 foreach ($vals as $k => $v) {
     if ($v === null) {
@@ -102,6 +107,7 @@ $raw = [
     'gold'     => round($vals['gold'], 2),
     'silver'   => round($vals['silver'], 2),
     'platinum' => round($vals['platinum'], 2),
+    'copper'   => round($vals['copper'], 2), // USD/lb, cotado em centavos por libra
     'bitcoin'  => round($vals['bitcoin'], 2),
 ];
 
@@ -110,6 +116,7 @@ $payload = [
     'gold'         => $raw['gold'],
     'silver'       => $raw['silver'],
     'platinum'     => $raw['platinum'],
+    'copper'       => $raw['copper'],
     'bitcoin'      => $raw['bitcoin'],
     'sources'      => $fontes ?: ['cache/seed'],
     'stale'        => $stale,

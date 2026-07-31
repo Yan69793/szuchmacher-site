@@ -19,12 +19,30 @@
   //   STRIPE_WEBHOOK_SECRET   — whsec_... do dashboard Stripe > Developers > Webhooks
   //   RESEND_API_KEY           — re_... do dashboard Resend > API Keys
   //   BRIEFING_FETCH_TOKEN     — token de leitura do Worker briefing (ja existente)
-  "routes": [
-    { "pattern": "szuchmacher.com.br/*", "zone_id": "cfe602627bd2ef210d225ee9deeb45d9" },
-    { "pattern": "www.szuchmacher.com.br/*", "zone_id": "cfe602627bd2ef210d225ee9deeb45d9" },
-    { "pattern": "multi-assets.com/*", "zone_id": "8ca066c2dda0d90e475b5c9eb255cbfd" },
-    { "pattern": "www.multi-assets.com/*", "zone_id": "8ca066c2dda0d90e475b5c9eb255cbfd" }
-  ],
+  // REMOVIDO em 30/07/2026: bloco `routes` com os quatro hostnames.
+  // Os mesmos quatro hostnames ja estao ligados a este Worker como Custom Domain,
+  // criados por scripts/attach-worker-domains.ps1 e confirmados na API em 30/07/2026:
+  //   szuchmacher.com.br, www.szuchmacher.com.br, multi-assets.com, www.multi-assets.com
+  // Cloudflare trata Custom Domain e Route no mesmo hostname como mecanismos
+  // excludentes. Com os dois declarados, o `wrangler deploy` subia o Worker e os
+  // assets e depois morria ao tentar reafirmar as rotas, saindo com codigo != 0.
+  // O site nunca caiu porque quem serve e o Custom Domain, nao a rota.
+  // Quem faz o binding de hostname aqui e o attach-worker-domains.ps1, nao este arquivo.
+  // As rotas ja existentes na conta continuam la; remover do config nao as apaga.
+  //
+  // workers_dev explicito e consequencia direta da remocao acima: sem `routes` no
+  // config, o wrangler passa a habilitar o subdominio workers.dev por padrao e avisa
+  // isso em stderr. Medido em 30/07/2026, o deploy ligou
+  // sz-sites.prospects-intel.workers.dev. O guard de host do Worker devolve 404 em
+  // tudo por la (SITE_MAP em src/index.js nao tem esse hostname), entao nao houve
+  // vazamento, mas e superficie publica sem uso. Alem disso o aviso em stderr, com
+  // $ErrorActionPreference = 'Stop' no deploy-cloudflare.ps1, derruba o script depois
+  // do upload e pula a invalidacao de cache KV.
+  // Mesmo motivo: com workers_dev desligado, o wrangler avisa que vai desabilitar
+  // Preview URLs por padrao. Declarar explicito evita mais um aviso em stderr e deixa
+  // registrado que nao ha URL publica de preview para este Worker.
+  "workers_dev": false,
+  "preview_urls": false,
   "triggers": {
     "crons": ["0 3 * * 1"]
   }

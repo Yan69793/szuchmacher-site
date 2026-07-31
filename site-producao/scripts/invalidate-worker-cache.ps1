@@ -12,12 +12,21 @@ $KEYS   = @('macro-api', 'macro-panel', 'market-data')
 
 Push-Location $WORKER
 try {
+    # O par OK/SKIP abaixo ja foi escrito para tratar falha de delete como nao-fatal,
+    # mas com $ErrorActionPreference = 'Stop' a linha que o wrangler escreve em stderr
+    # vira NativeCommandError terminante e derruba o script antes de chegar no if.
+    # Medido em 30/07/2026: o delete de macro-api falhou na API e o deploy inteiro
+    # parou ali, mesmo com o Worker ja publicado. 'Continue' devolve ao script o
+    # comportamento que o proprio codigo declara.
+    $eapAnterior = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     foreach ($key in $KEYS) {
         Write-Host "  DEL KV  $key" -NoNewline
         npx wrangler kv key delete $key --namespace-id $KV_ID --remote 2>&1 | Out-Null
         if ($LASTEXITCODE -eq 0) { Write-Host " OK" -ForegroundColor Green }
         else { Write-Host " SKIP" -ForegroundColor Yellow }
     }
+    $ErrorActionPreference = $eapAnterior
 }
 finally {
     Pop-Location

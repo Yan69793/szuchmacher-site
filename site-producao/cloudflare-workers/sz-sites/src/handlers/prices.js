@@ -3,7 +3,9 @@ import { readCache, writeCache } from '../utils/cache.js';
 
 const CACHE_KEY = 'prices';
 const CACHE_TTL = 900;
-const SEED = { gold: 4220.0, silver: 68.0, platinum: 1726.0, bitcoin: 63762.0 };
+// Cobre é cotado em USD por libra-peso, não por onça troy. Símbolo HG no gold-api,
+// o mesmo código do contrato COMEX. Semente medida em 30/07/2026.
+const SEED = { gold: 4220.0, silver: 68.0, platinum: 1726.0, copper: 6.27, bitcoin: 63762.0 };
 
 async function fromGoldApi(sym) {
   const j = await fetchJson(`https://api.gold-api.com/price/${sym}`, { timeout: 8000 });
@@ -32,13 +34,14 @@ export async function handlePrices(env) {
   let silver = await fromGoldApi('XAG');
   if (silver == null) silver = await fromAwesome('XAG-USD');
   const platinum = await fromGoldApi('XPT');
+  const copper = await fromGoldApi('HG');
   let bitcoin = await fromGoldApi('BTC');
   if (bitcoin == null) bitcoin = await fromAwesome('BTC-USD');
 
   const fontes = [];
-  if ([gold, silver, platinum, bitcoin].some((v) => v != null)) fontes.push('gold-api.com');
+  if ([gold, silver, platinum, copper, bitcoin].some((v) => v != null)) fontes.push('gold-api.com');
 
-  const vals = { gold, silver, platinum, bitcoin };
+  const vals = { gold, silver, platinum, copper, bitcoin };
   let stale = false;
   for (const k of Object.keys(vals)) {
     if (vals[k] == null) {
@@ -51,6 +54,10 @@ export async function handlePrices(env) {
     gold: Math.round(vals.gold * 100) / 100,
     silver: Math.round(vals.silver * 100) / 100,
     platinum: Math.round(vals.platinum * 100) / 100,
+    // USD/lb, duas casas. Com três, o front formata em en-US e "6.271" passa a ler
+    // como milhar ao lado do "$ 1,664" da platina. Cobre é cotado em centavos por
+    // libra de qualquer forma, duas casas dão granularidade de 0,16%.
+    copper: Math.round(vals.copper * 100) / 100,
     bitcoin: Math.round(vals.bitcoin * 100) / 100,
   };
 
@@ -59,6 +66,7 @@ export async function handlePrices(env) {
     gold: raw.gold,
     silver: raw.silver,
     platinum: raw.platinum,
+    copper: raw.copper,
     bitcoin: raw.bitcoin,
     sources: fontes.length ? fontes : ['cache/seed'],
     stale,
