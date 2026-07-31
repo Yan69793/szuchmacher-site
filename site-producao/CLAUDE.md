@@ -99,7 +99,9 @@ labels, hover sem bounce, grids com gap 1px, `border-radius: 0`.
 4. **Teste único em produção** — com URL, status HTTP e comparação com o esperado.
 5. **CSP em produção vem do Worker `sz-sites`** (`src/utils/headers.js`). `.htaccess` só vale no legado HostGator.
 6. **`assets/sz-config.js` é o único local de IDs externos.** Nunca duplicar GA_ID, CLARITY_ID ou FORMSPREE_ID em HTML.
-7. **Para alterações não triviais, delegar a revisão final ao subagente `code-reviewer`** (`.claude/agents/code-reviewer.md`). O agente implementador não pode substituir essa revisão por uma simples releitura própria. Após receber o parecer, corrigir todos os problemas materiais e rodar de novo as validações.
+7. **Para alterações não triviais, delegar a revisão final ao subagente `code-reviewer`** (`.claude/agents/code-reviewer.md`, **na raiz do repositório**, não em `site-producao/`). O agente implementador não pode substituir essa revisão por uma simples releitura própria. Após receber o parecer, corrigir todos os problemas materiais e rodar de novo as validações.
+
+   O arquivo precisa ficar na raiz para ser descoberto. Até 30/07/2026 ele morava em `site-producao/.claude/agents/` e sessão aberta na raiz do repo ou em worktree não o enxergava, `subagent_type: 'code-reviewer'` respondia `Agent type not found` listando só os agentes globais. Se voltar a falhar assim, confira onde o arquivo está antes de concluir que ele não existe. Se o erro citar modelo inexistente em vez de agente, a causa é outra, `CLAUDE_CODE_SUBAGENT_MODEL` apontando para um modelo que o `ANTHROPIC_BASE_URL` em uso não serve, e aí nenhum subagente roda.
 
 ---
 
