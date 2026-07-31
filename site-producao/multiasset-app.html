@@ -4037,13 +4037,19 @@ function applyScenarioRates(asset, r) {
 // bootstrap de link compartilhado.
 const SC_CARD_CLASS = { pess: '.pessimist', base: '.base-sc', otim: '.optimist' };
 
+// Chave propria, nunca herdada. Valor vindo de URL cai em objeto literal, e
+// SC_CARD_CLASS['toString'] ou simConfigs['constructor'] resolvem na cadeia de
+// prototipo, passando por qualquer checagem de verdade simples.
+function temChave(obj, k) { return Object.prototype.hasOwnProperty.call(obj, k); }
+
 // Espelha no DOM o cenario que esta em simConfigs[asset].sel. Init e bootstrap
 // de link compartilhado chamam isto em vez de fixar o card zero, entao a ordem
 // em que os dois rodam deixa de importar.
 function syncScenarioCards(asset) {
     const selector = document.getElementById('sc-' + asset);
     if (!selector) return;
-    const alvo = selector.querySelector(SC_CARD_CLASS[simConfigs[asset].sel] || SC_CARD_CLASS.pess);
+    const sel  = simConfigs[asset].sel;
+    const alvo = selector.querySelector(temChave(SC_CARD_CLASS, sel) ? SC_CARD_CLASS[sel] : SC_CARD_CLASS.pess);
     selector.querySelectorAll('.sc-card').forEach(c => c.classList.toggle('active-sc', c === alvo));
 }
 
@@ -6751,8 +6757,9 @@ function _applyShareParams() {
         // simConfigs cobre os 8 ativos que shareSim sabe exportar, cobre incluso.
         // A lista fixa de metais que estava aqui deixava CDI, NTN-B e USD/BRL sem
         // nenhum parametro aplicado, e obrigava a lembrar de edita-la a cada ativo
-        // novo. Ler simConfigs direto resolve os dois casos.
-        if (simConfigs[sim]) {
+        // novo. Ler simConfigs direto resolve os dois casos, com temChave em vez de
+        // acesso cru porque `sim` vem da URL.
+        if (temChave(simConfigs, sim)) {
             var c = simConfigs[sim];
 
             var ini   = qs.get('ini');
@@ -6767,7 +6774,7 @@ function _applyShareParams() {
             if (ap    !== null && elAp)  elAp.value  = ap;
             if (prazo !== null && elPz)  elPz.value  = prazo;
 
-            if (sc && SC_CARD_CLASS[sc]) {
+            if (sc && temChave(SC_CARD_CLASS, sc)) {
                 simConfigs[sim].sel = sc;
                 syncScenarioCards(sim);
             }
