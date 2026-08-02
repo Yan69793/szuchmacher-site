@@ -104,19 +104,26 @@ Em "ativos", o campo "alocacao_sugerida" é a faixa de percentual DO PATRIMÔNIO
 
 // Rate limiting: prevent abuse of LLM refresh (costs credits). Uses KV to track
 // last refresh timestamp. Minimum 1h between external refresh requests.
-async function checkRefreshRate(env, request) {
-  const RATE_TTL = 3600; // 1 hour between refreshes
-  const key = 'macro-refresh-rate';
+// IMPORTANT: only CHECK here — markRefreshDone() after successful generation.
+// Putting the key before success caused 429 "ghost" after 503 (audit P1/P2).
+const RATE_TTL = 3600; // 1 hour between refreshes
+const RATE_KEY = 'macro-refresh-rate';
+
+async function checkRefreshRate(env) {
   const now = Math.floor(Date.now() / 1000);
-  const lastRefresh = await env.CACHE.get(key);
+  const lastRefresh = await env.CACHE.get(RATE_KEY);
   if (lastRefresh) {
     const elapsed = now - parseInt(lastRefresh, 10);
     if (elapsed < RATE_TTL) {
       return { allowed: false, retryAfter: RATE_TTL - elapsed };
     }
   }
-  await env.CACHE.put(key, String(now), { expirationTtl: RATE_TTL });
   return { allowed: true };
+}
+
+async function markRefreshDone(env) {
+  const now = Math.floor(Date.now() / 1000);
+  await env.CACHE.put(RATE_KEY, String(now), { expirationTtl: RATE_TTL });
 }
 
 function extractJson(content) {
@@ -219,9 +226,13 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     Vary: 'Origin',
   };
 
-  // Rate limit external refresh requests (scheduled cron passes forceRefreshOpt internally)
-  if (forceRefresh && !forceRefreshOpt) {
-    const rate = await checkRefreshRate(env, request);
+  // Rate limit external refresh. Internal scheduled cron uses forceRefreshOpt=true.
+  // Optional CRON_SECRET header bypasses rate limit for local Task Scheduler.
+  const cronSecret = env.CRON_SECRET ? String(env.CRON_SECRET).trim() : '';
+  const providedSecret = (request.headers.get('X-Cron-Secret') || '').trim();
+  const secretOk = Boolean(cronSecret && providedSecret && providedSecret === cronSecret);
+  if (forceRefresh && !forceRefreshOpt && !secretOk) {
+    const rate = await checkRefreshRate(env);
     if (!rate.allowed) {
       return jsonResponse(
         { ok: false, error: 'Rate limit', retry_after_seconds: rate.retryAfter },
@@ -372,6 +383,15 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   }).format(new Date()) + ' BRT';
 
   await writeCache(env.CACHE, CACHE_KEY, { generated_at, data, ts: Math.floor(Date.now() / 1000) }, CACHE_TTL);
+
+  // Count rate limit only after a successful LLM refresh (not on 503/parse failure).
+  if (forceRefresh && !forceRefreshOpt) {
+    try {
+      await markRefreshDone(env);
+    } catch {
+      /* non-fatal */
+    }
+  }
 
   return jsonResponse({ ok: true, generated_at, cache: false, data }, { headers: { ...cors, 'Cache-Control': 'no-store' } });
 }

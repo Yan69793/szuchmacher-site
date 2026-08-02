@@ -1020,8 +1020,10 @@
         @media (max-width: 480px) {
             .hero h1 { font-size: 30px; }
             .ticker-card { padding: 12px 14px; }
-            .ticker-right.tv-widget-wrap { width: 148px; height: 56px; }
+            .ticker-right.tv-widget-wrap { width: 148px; height: 56px; overflow: hidden; }
             .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.37); top: 6px; }
+            .macro-strip { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .tv-tabs { max-width: 100%; }
             .ticker-name { font-size: 13px; }
             .macro-strip-inner { gap: 0; }
             .macro-item { min-width: 80px; padding: 0 12px; }
@@ -6360,26 +6362,18 @@ async function fetchRFDiario() {
     }
     let ntnbPrice = null, selicRate = null;
 
-    // NTNB11: proxy server-side (market-data.php) — evita CORS Yahoo no browser.
-    // O handler devolve stale[] com os ativos que cairam no SEED hardcoded em vez
-    // de fetch ao vivo. Sem checar isso, o SEED (95) passava no teste p > 0 e
-    // preemptava o fallback brapi.dev abaixo, que funciona. Dado falso ganhava de
-    // dado bom, silenciosamente.
+    // NTNB11: so via market-data.php (Yahoo server-side). Nao chamar brapi.dev no
+    // browser — a API publica passou a exigir token e devolve 401 no console (P2 audit).
+    // Preferir cotacao ao vivo; se ntnb11 vier em stale[], ainda usa o valor (cache/SEED)
+    // em vez de poluir o console com fetch 401.
     try {
         const res = await fetch('/market-data.php', { signal: AbortSignal.timeout(10000), headers: { 'Accept': 'application/json' } });
         if (res.ok) {
             const d = await res.json();
-            const seeded = Array.isArray(d?.stale) && d.stale.indexOf('ntnb11') !== -1;
             const p = d?.ntnb11?.value;
-            if (!seeded && p > 0) ntnbPrice = p;
+            if (p > 0) ntnbPrice = p;
         }
     } catch(e) {}
-    if (!ntnbPrice) {
-        try {
-            const res = await fetch('https://brapi.dev/api/quote/NTNB11', { signal: AbortSignal.timeout(8000) });
-            if (res.ok) { const d = await res.json(); const p = d?.results?.[0]?.regularMarketPrice; if (p > 0) ntnbPrice = p; }
-        } catch(e) {}
-    }
 
     // CDI/Selic: BrasilAPI → BCB série 432
     try {

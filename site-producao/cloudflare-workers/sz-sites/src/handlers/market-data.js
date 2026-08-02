@@ -11,10 +11,10 @@ const SEED = {
   ntnb11: { value: 95.0, change_pct: 0.0 },
 };
 
-async function fetchYahoo(encodedSymbol) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodedSymbol}?interval=1d&range=1d`;
+async function fetchYahoo(encodedSymbol, { range = '1d' } = {}) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodedSymbol}?interval=1d&range=${range}`;
   const j = await fetchJson(url, {
-    timeout: 10000,
+    timeout: 12000,
     headers: {
       Accept: 'application/json',
       'Accept-Language': 'en-US,en;q=0.9',
@@ -25,9 +25,24 @@ async function fetchYahoo(encodedSymbol) {
   if (!meta) return null;
   const price = meta.regularMarketPrice != null ? Number(meta.regularMarketPrice) : null;
   const prev = meta.chartPreviousClose != null ? Number(meta.chartPreviousClose) : null;
-  if (price == null) return null;
+  if (price == null || !(price > 0)) return null;
   const change_pct = prev && prev > 0 ? Math.round(((price - prev) / prev) * 10000) / 100 : 0;
   return { value: Math.round(price * 100) / 100, change_pct };
+}
+
+/** Fallback server-side NTNB11: brapi so com token (evita 401 publico no edge). */
+async function fetchBrapiNtnb(env) {
+  const token = env?.BRAPI_TOKEN ? String(env.BRAPI_TOKEN).trim() : '';
+  if (!token) return null;
+  const url = `https://brapi.dev/api/quote/NTNB11?token=${encodeURIComponent(token)}`;
+  const j = await fetchJson(url, { timeout: 10000 });
+  const p = j?.results?.[0]?.regularMarketPrice;
+  const ch = j?.results?.[0]?.regularMarketChangePercent;
+  if (!(p > 0)) return null;
+  return {
+    value: Math.round(Number(p) * 100) / 100,
+    change_pct: ch != null ? Math.round(Number(ch) * 100) / 100 : 0,
+  };
 }
 
 function fallbackVal(live, key, prevData) {
@@ -46,12 +61,15 @@ export async function handleMarketData(env) {
   }
 
   const prevData = cache?.ibov ? cache : null;
-  const [ibovLive, sp500Live, wtiLive, treasuryLive, ntnbLive] = await Promise.all([
+  // NTNB11: range=5d (mais robusto que 1d em feriado/B3); brapi so com BRAPI_TOKEN.
+  let ntnbLive = await fetchYahoo('NTNB11.SA', { range: '5d' });
+  if (!ntnbLive) ntnbLive = await fetchBrapiNtnb(env);
+
+  const [ibovLive, sp500Live, wtiLive, treasuryLive] = await Promise.all([
     fetchYahoo('%5EBVSP'),
     fetchYahoo('%5EGSPC'),
     fetchYahoo('CL%3DF'),
     fetchYahoo('%5ETNX'),
-    fetchYahoo('NTNB11.SA'),
   ]);
 
   const ibov = fallbackVal(ibovLive, 'ibov', prevData);

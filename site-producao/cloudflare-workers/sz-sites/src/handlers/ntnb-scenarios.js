@@ -101,14 +101,20 @@ export async function handleNtnbScenarios(env) {
     ipcaSpread = DEFAULTS.ipca_spread;
   }
 
-  // Se Yahoo falhou ou retornou stale, tenta brapi.dev como fallback secundario
+  // Se Yahoo falhou ou retornou stale, tenta brapi.dev so com token (API publica = 401).
   if (source === 'defaults') {
-    const brapi = await fetchJson('https://brapi.dev/api/quote/NTNB11', { timeout: 10000 });
-    if (brapi?.results?.[0]?.regularMarketPrice) {
-      const p = parseFloat(brapi.results[0].regularMarketPrice);
-      if (p > 0) {
-        ntnbPrice = p;
-        source = 'brapi';
+    const token = env?.BRAPI_TOKEN ? String(env.BRAPI_TOKEN).trim() : '';
+    if (token) {
+      const brapi = await fetchJson(
+        `https://brapi.dev/api/quote/NTNB11?token=${encodeURIComponent(token)}`,
+        { timeout: 10000 },
+      );
+      if (brapi?.results?.[0]?.regularMarketPrice) {
+        const p = parseFloat(brapi.results[0].regularMarketPrice);
+        if (p > 0) {
+          ntnbPrice = p;
+          source = 'brapi';
+        }
       }
     }
   }

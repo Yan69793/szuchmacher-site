@@ -8,7 +8,8 @@ $ErrorActionPreference = 'Stop'
 
 $WORKER = Join-Path (Split-Path -Parent $PSScriptRoot) 'cloudflare-workers\sz-sites'
 $KV_ID  = 'fd40efe1057c4c54b3d33277d4665434'
-$KEYS   = @('macro-api', 'macro-panel', 'market-data')
+# macro-refresh-rate: limpar evita 429 fantasma apos 503 (rate key gravada antes do sucesso no codigo antigo)
+$KEYS   = @('macro-api', 'macro-panel', 'market-data', 'macro-refresh-rate')
 
 Push-Location $WORKER
 
