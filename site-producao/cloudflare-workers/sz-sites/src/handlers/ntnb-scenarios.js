@@ -16,9 +16,16 @@ const DEFAULTS = {
   ipca_proj: 0.055,    // 5,5% a.a. Focus mediana 2026
 };
 
-async function fetchYahooNtnb() {
-  // Yahoo Finance v8 chart API — mesmo padrao de market-data.js
-  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/NTNB11.SA?interval=1d&range=5d';
+// NTNB11 delistado. Ordem por adequacao (IMA-B 5+ / duration), nao por nome:
+// IB5M11 (IMA-B5+) → IMAB11 (~6a) → NTNS11 (curto, so disponibilidade)
+const NTNB_PROXIES = [
+  { yahoo: 'IB5M11.SA', brapi: 'IB5M11' },
+  { yahoo: 'IMAB11.SA', brapi: 'IMAB11' },
+  { yahoo: 'NTNS11.SA', brapi: 'NTNS11' },
+];
+
+async function fetchYahooSymbol(yahooSymbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?interval=1d&range=5d`;
   const data = await fetchJson(url, {
     timeout: 12000,
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MultiAssetBot/1.0)' },
@@ -27,25 +34,41 @@ async function fetchYahooNtnb() {
 
   const result = data.chart.result[0];
   const meta = result.meta;
-  const quotes = result.indicators?.quote?.[0];
-
-  // Preco atual
   const price = meta.regularMarketPrice;
   if (!price || price <= 0) return null;
 
-  // Verifica se os dados estao frescos (timestamp do ultimo candle < 2 dias uteis)
   const timestamps = result.timestamp || [];
   const lastTs = timestamps.length > 0 ? timestamps[timestamps.length - 1] : 0;
   const nowSec = Math.floor(Date.now() / 1000);
   const ageSec = nowSec - lastTs;
-  const STALE_THRESHOLD = 172800; // 2 dias em segundos
+  const STALE_THRESHOLD = 172800;
 
   return {
     price,
     stale: ageSec > STALE_THRESHOLD,
     currency: meta.currency || 'BRL',
     exchangeName: meta.exchangeName || 'B3',
+    symbol: yahooSymbol,
   };
+}
+
+async function fetchNtnbProxy(env) {
+  for (const p of NTNB_PROXIES) {
+    const yahoo = await fetchYahooSymbol(p.yahoo);
+    if (yahoo && !yahoo.stale && yahoo.price > 0) {
+      return { price: yahoo.price, source: 'yahoo', symbol: p.brapi };
+    }
+    const token = env?.BRAPI_TOKEN ? String(env.BRAPI_TOKEN).trim() : '';
+    if (token) {
+      const brapi = await fetchJson(
+        `https://brapi.dev/api/quote/${p.brapi}?token=${encodeURIComponent(token)}`,
+        { timeout: 10000 },
+      );
+      const price = parseFloat(brapi?.results?.[0]?.regularMarketPrice);
+      if (price > 0) return { price, source: 'brapi', symbol: p.brapi };
+    }
+  }
+  return null;
 }
 
 function computeRates(ipcaSpread, ipcaProj) {
@@ -89,34 +112,13 @@ export async function handleNtnbScenarios(env) {
   const ipcaProj = DEFAULTS.ipca_proj;
   let source = 'defaults';
 
-  const yahoo = await fetchYahooNtnb();
-  if (yahoo && !yahoo.stale && yahoo.price > 0) {
-    ntnbPrice = yahoo.price;
-    source = 'yahoo';
-    // Estimar spread a partir do preco do ETF:
-    // NTNB11 busca replicar o IMA-B 5+. O yield implicito no preco do ETF
-    // e aproximadamente o IPCA + spread do indice subjacente.
-    // Simplificacao: usamos o spread default de 7,5% calibrado no mercado.
-    // Uma estimacao mais precisa exigiria a duration do indice IMA-B 5+.
+  const live = await fetchNtnbProxy(env);
+  let proxySymbol = null;
+  if (live?.price > 0) {
+    ntnbPrice = live.price;
+    source = live.source;
+    proxySymbol = live.symbol;
     ipcaSpread = DEFAULTS.ipca_spread;
-  }
-
-  // Se Yahoo falhou ou retornou stale, tenta brapi.dev so com token (API publica = 401).
-  if (source === 'defaults') {
-    const token = env?.BRAPI_TOKEN ? String(env.BRAPI_TOKEN).trim() : '';
-    if (token) {
-      const brapi = await fetchJson(
-        `https://brapi.dev/api/quote/NTNB11?token=${encodeURIComponent(token)}`,
-        { timeout: 10000 },
-      );
-      if (brapi?.results?.[0]?.regularMarketPrice) {
-        const p = parseFloat(brapi.results[0].regularMarketPrice);
-        if (p > 0) {
-          ntnbPrice = p;
-          source = 'brapi';
-        }
-      }
-    }
   }
 
   const rates = computeRates(ipcaSpread, ipcaProj);
@@ -128,6 +130,7 @@ export async function handleNtnbScenarios(env) {
     ipca_spread: ipcaSpread,
     generated_at: Math.floor(Date.now() / 1000),
     source,
+    proxy: proxySymbol,
   };
 
   await writeCache(env.CACHE, CACHE_KEY, {

@@ -30,11 +30,21 @@ async function fetchYahoo(encodedSymbol, { range = '1d' } = {}) {
   return { value: Math.round(price * 100) / 100, change_pct };
 }
 
-/** Fallback server-side NTNB11: brapi so com token (evita 401 publico no edge). */
-async function fetchBrapiNtnb(env) {
+// NTNB11 delistado (404). Campo API ntnb11 (compat front) — ordem por adequacao ao copy do app
+// (duration ~5–7a, replica IMA-B 5+), nao por nome de ticker:
+// 1) IB5M11 — IMA-B5+ (mesmo indice do texto antigo; duration ~9a, mais proximo do risco)
+// 2) IMAB11 — IMA-B cheio (duration ~6a, bate o "Duration ~6 anos" da UI)
+// 3) NTNS11 — Tesouro IPCA+ 0–4a (duration ~2a; so fallback de disponibilidade)
+const NTNB_PROXIES = [
+  { yahoo: 'IB5M11.SA', brapi: 'IB5M11' },
+  { yahoo: 'IMAB11.SA', brapi: 'IMAB11' },
+  { yahoo: 'NTNS11.SA', brapi: 'NTNS11' },
+];
+
+async function fetchBrapiQuote(env, symbol) {
   const token = env?.BRAPI_TOKEN ? String(env.BRAPI_TOKEN).trim() : '';
   if (!token) return null;
-  const url = `https://brapi.dev/api/quote/NTNB11?token=${encodeURIComponent(token)}`;
+  const url = `https://brapi.dev/api/quote/${symbol}?token=${encodeURIComponent(token)}`;
   const j = await fetchJson(url, { timeout: 10000 });
   const p = j?.results?.[0]?.regularMarketPrice;
   const ch = j?.results?.[0]?.regularMarketChangePercent;
@@ -42,7 +52,36 @@ async function fetchBrapiNtnb(env) {
   return {
     value: Math.round(Number(p) * 100) / 100,
     change_pct: ch != null ? Math.round(Number(ch) * 100) / 100 : 0,
+    proxy: symbol,
   };
+}
+
+/** Um ticker IPCA+ (Yahoo, senao brapi+token). */
+async function fetchOneIpcaEtf(env, p) {
+  const y = await fetchYahoo(p.yahoo, { range: '5d' });
+  if (y) return { ...y, proxy: p.brapi, symbol: p.brapi };
+  const b = await fetchBrapiQuote(env, p.brapi);
+  if (b) return { ...b, symbol: p.brapi };
+  return null;
+}
+
+/** Mapa de todos os ETFs IPCA+ + default (primeiro que responder na ordem de adequacao). */
+async function fetchAllIpcaEtfs(env) {
+  const settled = await Promise.all(NTNB_PROXIES.map((p) => fetchOneIpcaEtf(env, p)));
+  const map = {};
+  let preferred = null;
+  NTNB_PROXIES.forEach((p, i) => {
+    const live = settled[i];
+    if (live) {
+      map[p.brapi] = {
+        value: live.value,
+        change_pct: live.change_pct,
+        symbol: p.brapi,
+      };
+      if (!preferred) preferred = { ...live, proxy: p.brapi };
+    }
+  });
+  return { map, preferred };
 }
 
 function fallbackVal(live, key, prevData) {
@@ -61,22 +100,26 @@ export async function handleMarketData(env) {
   }
 
   const prevData = cache?.ibov ? cache : null;
-  // NTNB11: range=5d (mais robusto que 1d em feriado/B3); brapi so com BRAPI_TOKEN.
-  let ntnbLive = await fetchYahoo('NTNB11.SA', { range: '5d' });
-  if (!ntnbLive) ntnbLive = await fetchBrapiNtnb(env);
 
-  const [ibovLive, sp500Live, wtiLive, treasuryLive] = await Promise.all([
+  const [ibovLive, sp500Live, wtiLive, treasuryLive, ipcaPack] = await Promise.all([
     fetchYahoo('%5EBVSP'),
     fetchYahoo('%5EGSPC'),
     fetchYahoo('CL%3DF'),
     fetchYahoo('%5ETNX'),
+    fetchAllIpcaEtfs(env),
   ]);
+
+  const ntnbLive = ipcaPack.preferred;
+  const ipca_etfs = Object.keys(ipcaPack.map).length
+    ? ipcaPack.map
+    : (prevData?.ipca_etfs || {});
 
   const ibov = fallbackVal(ibovLive, 'ibov', prevData);
   const sp500 = fallbackVal(sp500Live, 'sp500', prevData);
   const wti = fallbackVal(wtiLive, 'wti', prevData);
   const treasury10y = fallbackVal(treasuryLive, 'treasury10y', prevData);
-  const ntnb11 = fallbackVal(ntnbLive, 'ntnb11', prevData);
+  const ntnb11 = { ...fallbackVal(ntnbLive, 'ntnb11', prevData) };
+  if (ntnbLive?.proxy) ntnb11.proxy = ntnbLive.proxy;
 
   // stale lista quais ativos vieram do fallback (cache anterior ou SEED) em vez
   // de fetch ao vivo bem-sucedido — sem isso, 'source' mentia 'ao vivo' mesmo
@@ -95,6 +138,9 @@ export async function handleMarketData(env) {
     wti,
     treasury10y,
     ntnb11,
+    // Catalogo para o front: usuario escolhe o ETF IPCA+ (IB5M11 / IMAB11 / NTNS11)
+    ipca_etfs,
+    ipca_default: ntnbLive?.proxy || 'IB5M11',
     updated_at: brtNow(),
     source: stale.length === 0 ? 'Yahoo Finance · ao vivo' : 'Yahoo Finance · parcial',
     stale,

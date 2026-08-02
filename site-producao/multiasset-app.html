@@ -591,6 +591,20 @@
         .alloc-dot { width: 10px; height: 10px; border-radius: 0; flex-shrink: 0; }
         .alloc-name { font-size: 14px; font-weight: 500; display: block; }
         .alloc-tag { font-size: 10px; color: var(--muted); display: block; margin-top: 1px; }
+        .alloc-etf-pick {
+            display: flex; align-items: center; gap: 8px; margin-top: 8px;
+            font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.55);
+        }
+        .alloc-etf-pick-label { letter-spacing: 0.08em; text-transform: uppercase; flex-shrink: 0; }
+        .alloc-etf-select {
+            flex: 1; min-width: 0; max-width: 280px;
+            background: rgba(255,255,255,0.04); color: #e8e4d9;
+            border: 1px solid rgba(255,255,255,0.12); border-radius: 0;
+            padding: 6px 8px; font-family: 'DM Mono', monospace; font-size: 10px;
+            cursor: pointer;
+        }
+        .alloc-etf-select:focus { outline: 1px solid rgba(201,168,76,0.45); outline-offset: 1px; }
+        .alloc-etf-select option { background: #0a0c10; color: #e8e4d9; }
         .alloc-live-badge { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.58); }
         .alloc-live-dot { width: 5px; height: 5px; border-radius: 0; background: #4caf7d; animation: pulse-dot 2s infinite; }
         .alloc-live-val { font-size: 11px; font-weight: 600; }
@@ -1038,6 +1052,8 @@
             .alloc-left { width: auto; min-width: 0; flex: 0 0 auto; max-width: 135px; gap: 8px; }
             .alloc-dot { width: 8px; height: 8px; }
             .alloc-name { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+            .alloc-etf-pick { flex-wrap: wrap; }
+            .alloc-etf-select { max-width: 100%; font-size: 9px; }
             .alloc-right-wrap { flex: 1; min-width: 0; gap: 6px; }
             .alloc-bar-wrap { display: none; }
             .alloc-nums { gap: 6px; }
@@ -2704,14 +2720,15 @@
                 </div>
             </div>
             <div class="sim-panel-right">
-                <div class="sim-chart-label">NTN-B — Características</div>
+                <div class="sim-chart-label">IPCA+ — Características</div>
                 <div class="sim-info-card">
-                    <div class="sim-info-row"><span class="sim-info-label">Spread IPCA+</span><span class="sim-info-val" style="color:#4caf7d;">~7,5% a.a.</span></div>
-                    <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val">~8% (duration)</span></div>
-                    <div class="sim-info-row"><span class="sim-info-label">Duration (NTNB11)</span><span class="sim-info-val">~6 anos</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">ETF escolhido</span><span class="sim-info-val" id="sim-ntnb-ticker" style="color:#4caf7d;">IB5M11</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Spread IPCA+</span><span class="sim-info-val" id="sim-ntnb-spread" style="color:#4caf7d;">~7,5% a.a.</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val" id="sim-ntnb-vol">~10% (duration)</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Duration</span><span class="sim-info-val" id="sim-ntnb-duration">~9 anos</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Indexador</span><span class="sim-info-val">IPCA (IBGE)</span></div>
-                    <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">D+1 (Tesouro Direto)</span></div>
-                    <div class="sim-info-note">A NTN-B é o principal instrumento de proteção contra inflação no Brasil. O ETF NTNB11 replica o índice IMA-B 5+ da B3. Diferente do CDI, a NTN-B tem risco de duration: se os juros reais sobem, o preço do título cai no curto prazo. O carregamento real (IPCA + spread) compensa esse risco no horizonte de 3-5 anos.</div>
+                    <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">B3 · D+1 tipico</span></div>
+                    <div class="sim-info-note" id="sim-ntnb-note">ETF de Tesouro IPCA+ na B3. Duration longa (IMA-B 5+) implica volatilidade de marcacao: se juros reais sobem, o preco cai no curto prazo. O carregamento real (IPCA + spread) compensa no horizonte de 3–5 anos. Escolha o ETF na alocacao (Ativo).</div>
                 </div>
             </div>
         </div>
@@ -2995,8 +3012,16 @@
                     <div class="alloc-left">
                         <div class="alloc-dot" style="background:#4caf7d"></div>
                         <div>
-                            <span class="alloc-name">NTNB11 <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">ETF IPCA+</span></span>
-                            <span class="alloc-tag">B3 · ETF NTN-B · duration intermediária</span>
+                            <span class="alloc-name"><span id="alloc-ntnb-ticker">IB5M11</span> <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">ETF IPCA+</span></span>
+                            <span class="alloc-tag" id="alloc-ntnb-tag">B3 · IMA-B5+ · duration longa</span>
+                            <label class="alloc-etf-pick" for="ipca-etf-select">
+                                <span class="alloc-etf-pick-label">Ativo</span>
+                                <select id="ipca-etf-select" class="alloc-etf-select" onchange="onIpcaEtfChange(this.value)" aria-label="Escolher ETF IPCA+">
+                                    <option value="IB5M11">IB5M11 · IMA-B5+ (~9a)</option>
+                                    <option value="IMAB11">IMAB11 · IMA-B (~6a)</option>
+                                    <option value="NTNS11">NTNS11 · IPCA+ 0–4a (~2a)</option>
+                                </select>
+                            </label>
                             <span class="alloc-live-badge"><span class="alloc-live-dot" style="background:#4caf7d"></span><span class="alloc-live-val" id="alloc-ntnb-price">—</span><span style="opacity:0.5">R$/cota</span></span>
                         </div>
                     </div>
@@ -3205,7 +3230,7 @@
                 <span class="bench-assume-val" style="color:var(--blue)" id="bench-assume-selic">14,50% → 12% a.a.</span>
             </div>
             <div class="bench-assume-item">
-                <span class="bench-assume-label">NTNB11 (ETF IPCA+)</span>
+                <span class="bench-assume-label" id="bench-assume-ntnb-label">IB5M11 (ETF IPCA+)</span>
                 <span class="bench-assume-val" style="color:var(--green)" id="bench-assume-ntnb">IPCA + 7,5% a.a.</span>
             </div>
             <div class="bench-assume-item">
@@ -6334,8 +6359,97 @@ function renderMacro(d) {
     syncAutomationFromMacro(d);
 }
 
-// ── RENDA FIXA DIÁRIA — NTNB11 + CDI/Selic — cache até 9h BRT ──
+// ── RENDA FIXA DIÁRIA — ETF IPCA+ (escolha do usuario) + CDI/Selic ──
 const RF_CACHE_KEY = 'szuchmacher_rf_diario';
+const IPCA_ETF_KEY = 'szuchmacher_ipca_etf';
+/** Catalogo de ETFs IPCA+ (preco em market-data.ipca_etfs). */
+const IPCA_ETF_CATALOG = {
+    IB5M11: {
+        ticker: 'IB5M11',
+        tag: 'B3 · IMA-B5+ · duration longa',
+        duration: '~9 anos',
+        vol: '~10% (duration)',
+        spread: '~7,5% a.a.',
+        note: 'IT Now IMA-B5+ — melhor proxy do antigo NTNB11 (indice IMA-B 5+). Duration longa: mais sensivel a juros reais. Carregamento IPCA + spread no horizonte de 3–5 anos.'
+    },
+    IMAB11: {
+        ticker: 'IMAB11',
+        tag: 'B3 · IMA-B cheio · duration ~6a',
+        duration: '~6 anos',
+        vol: '~8% (duration)',
+        spread: '~7,0% a.a.',
+        note: 'IT Now IMA-B — duration intermediaria (~6a), mistura vertices curtos e longos do Tesouro IPCA+. Menos volatil que o IMA-B5+ puro.'
+    },
+    NTNS11: {
+        ticker: 'NTNS11',
+        tag: 'B3 · Tesouro IPCA+ curto · ~2a',
+        duration: '~2 anos',
+        vol: '~3–4% (duration)',
+        spread: '~6,0% a.a.',
+        note: 'Investo Teva Tesouro IPCA+ 0 a 4 anos — duration curta, menor risco de marcacao, carregamento real mais estavel. Perfil diferente do IMA-B5+.'
+    }
+};
+
+window._ipcaEtfsLive = window._ipcaEtfsLive || {};
+window._ipcaEtfSelected = (function () {
+    try { return localStorage.getItem(IPCA_ETF_KEY) || 'IB5M11'; } catch (e) { return 'IB5M11'; }
+})();
+
+function getIpcaEtfSelected() {
+    const k = window._ipcaEtfSelected || 'IB5M11';
+    return IPCA_ETF_CATALOG[k] ? k : 'IB5M11';
+}
+
+function onIpcaEtfChange(ticker) {
+    if (!IPCA_ETF_CATALOG[ticker]) return;
+    window._ipcaEtfSelected = ticker;
+    try { localStorage.setItem(IPCA_ETF_KEY, ticker); } catch (e) {}
+    applyIpcaEtfUI();
+    const live = window._ipcaEtfsLive && window._ipcaEtfsLive[ticker];
+    if (live && live.value > 0) {
+        const selicPct = (window.macroLive && window.macroLive.selic) ? (window.macroLive.selic * 100) : null;
+        aplicarRFCache({ ntnb: live.value, selic: selicPct, etf: ticker });
+    } else {
+        try {
+            const raw = localStorage.getItem(RF_CACHE_KEY);
+            if (raw) {
+                const obj = JSON.parse(raw);
+                delete obj.ntnb;
+                delete obj.etf;
+                localStorage.setItem(RF_CACHE_KEY, JSON.stringify(obj));
+            }
+        } catch (e) {}
+        fetchRFDiario(true);
+    }
+}
+
+function applyIpcaEtfUI() {
+    const t = getIpcaEtfSelected();
+    const c = IPCA_ETF_CATALOG[t];
+    if (!c) return;
+    const set = function (id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    };
+    set('alloc-ntnb-ticker', c.ticker);
+    set('alloc-ntnb-tag', c.tag);
+    set('sim-ntnb-ticker', c.ticker);
+    set('sim-ntnb-spread', c.spread);
+    set('sim-ntnb-vol', c.vol);
+    set('sim-ntnb-duration', c.duration);
+    set('sim-ntnb-note', c.note);
+    set('bench-assume-ntnb-label', c.ticker + ' (ETF IPCA+)');
+    const sel = document.getElementById('ipca-etf-select');
+    if (sel && sel.value !== t) sel.value = t;
+    if (window.macroLive) {
+        const m = c.spread.match(/([\d,]+)/);
+        if (m) {
+            const n = parseFloat(m[1].replace(',', '.')) / 100;
+            if (n > 0) window.macroLive.ntnbSpread = n;
+        }
+    }
+    if (typeof updateBenchAssumptionsUI === 'function') updateBenchAssumptionsUI();
+}
 
 function rfCacheValido() {
     try {
@@ -6344,7 +6458,8 @@ function rfCacheValido() {
         const obj = JSON.parse(raw);
         const agora = new Date();
         const nove  = new Date(agora); nove.setHours(9, 0, 0, 0);
-        return obj.ts >= nove.getTime() && agora >= nove;
+        const etfOk = !obj.etf || obj.etf === getIpcaEtfSelected();
+        return etfOk && obj.ts >= nove.getTime() && agora >= nove;
     } catch(e) { return false; }
 }
 
@@ -6355,23 +6470,31 @@ function aplicarRFCache(obj) {
     if (rateEl  && obj.selic) rateEl.textContent  = parseFloat(obj.selic).toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) + '%';
 }
 
-async function fetchRFDiario() {
-    if (rfCacheValido()) {
-        try { aplicarRFCache(JSON.parse(localStorage.getItem(RF_CACHE_KEY))); } catch(e) {}
+async function fetchRFDiario(force) {
+    if (!force && rfCacheValido()) {
+        try {
+            aplicarRFCache(JSON.parse(localStorage.getItem(RF_CACHE_KEY)));
+            applyIpcaEtfUI();
+        } catch(e) {}
         return;
     }
     let ntnbPrice = null, selicRate = null;
+    const chosen = getIpcaEtfSelected();
 
-    // NTNB11: so via market-data.php (Yahoo server-side). Nao chamar brapi.dev no
-    // browser — a API publica passou a exigir token e devolve 401 no console (P2 audit).
-    // Preferir cotacao ao vivo; se ntnb11 vier em stale[], ainda usa o valor (cache/SEED)
-    // em vez de poluir o console com fetch 401.
+    // Precos via market-data.php (server-side). Usuario escolhe o ETF IPCA+.
     try {
         const res = await fetch('/market-data.php', { signal: AbortSignal.timeout(10000), headers: { 'Accept': 'application/json' } });
         if (res.ok) {
             const d = await res.json();
-            const p = d?.ntnb11?.value;
+            if (d.ipca_etfs && typeof d.ipca_etfs === 'object') {
+                window._ipcaEtfsLive = d.ipca_etfs;
+            }
+            const fromMap = d.ipca_etfs && d.ipca_etfs[chosen] && d.ipca_etfs[chosen].value;
+            const p = fromMap > 0 ? fromMap : (d && d.ntnb11 && d.ntnb11.value);
             if (p > 0) ntnbPrice = p;
+            if (d.ipca_default && !localStorage.getItem(IPCA_ETF_KEY) && IPCA_ETF_CATALOG[d.ipca_default]) {
+                window._ipcaEtfSelected = d.ipca_default;
+            }
         }
     } catch(e) {}
 
@@ -6387,8 +6510,10 @@ async function fetchRFDiario() {
         } catch(e) {}
     }
 
+    applyIpcaEtfUI();
+
     if (ntnbPrice || selicRate) {
-        const payload = { ts: Date.now(), ntnb: ntnbPrice, selic: selicRate };
+        const payload = { ts: Date.now(), ntnb: ntnbPrice, selic: selicRate, etf: getIpcaEtfSelected() };
         localStorage.setItem(RF_CACHE_KEY, JSON.stringify(payload));
         aplicarRFCache(payload);
         if (selicRate > 0) {
