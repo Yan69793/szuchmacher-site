@@ -1,0 +1,84 @@
+npm warn exec The following package was not found and will be installed: wrangler@4.116.0
+
+ ⛅️ wrangler 4.116.0
+────────────────────
+Created:     2026-06-17T14:46:34.057Z
+Author:      szuchmacheryan@gmail.com
+Source:      Upload
+Message:     Automatic deployment on upload.
+Version(s):  (100%) 32cbdbfc-0a17-4db8-85ab-0541374fd473
+                 Created:  2026-06-17T14:46:34.057Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-06-17T14:50:20.514Z
+Author:      szuchmacheryan@gmail.com
+Source:      Secret Change
+Message:     -
+Version(s):  (100%) e31f6b91-282e-4877-a525-d84ba6ba64cf
+                 Created:  2026-06-17T14:50:20.514Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-06-17T15:43:14.080Z
+Author:      szuchmacheryan@gmail.com
+Source:      Unknown (deployment)
+Message:     -
+Version(s):  (100%) 237d64a4-612b-46ad-bb3b-30deda375925
+                 Created:  2026-06-17T15:43:13.584Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-06-17T15:43:18.975Z
+Author:      szuchmacheryan@gmail.com
+Source:      Secret Change
+Message:     -
+Version(s):  (100%) 03b35eee-651a-440e-af20-1b469cd22931
+                 Created:  2026-06-17T15:43:18.975Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-07-20T23:03:31.865Z
+Author:      szuchmacheryan@gmail.com
+Source:      Unknown (deployment)
+Message:     -
+Version(s):  (100%) 598d7230-e15a-4e98-ac76-109b5858f1c3
+                 Created:  2026-07-20T23:03:30.982Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-07-20T23:03:56.657Z
+Author:      szuchmacheryan@gmail.com
+Source:      Secret Change
+Message:     -
+Version(s):  (100%) 02ffdf12-6721-4b11-a16a-cd7a089d576c
+                 Created:  2026-07-20T23:03:56.657Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-07-20T23:03:58.946Z
+Author:      szuchmacheryan@gmail.com
+Source:      Secret Change
+Message:     -
+Version(s):  (100%) 50dced1d-38f6-438d-a2a8-151c8dbb2ff2
+                 Created:  2026-07-20T23:03:58.946Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-07-20T23:21:31.795Z
+Author:      szuchmacheryan@gmail.com
+Source:      Unknown (deployment)
+Message:     -
+Version(s):  (100%) 565dcc88-4437-4af9-82f3-39ee0455f11a
+                 Created:  2026-07-20T23:21:30.375Z
+                     Tag:  -
+                 Message:  -
+
+Created:     2026-07-20T23:23:43.358Z
+Author:      szuchmacheryan@gmail.com
+Source:      Unknown (deployment)
+Message:     -
+Version(s):  (100%) c0c4940a-09d8-4e5f-8283-79aa7c6ccbe2
+                 Created:  2026-07-20T23:23:42.043Z
+                     Tag:  -
+                 Message:  -

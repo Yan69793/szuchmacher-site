@@ -1,0 +1,133 @@
+﻿2026-07-29 19:00:04 LAUNCHER: Task Scheduler disparou (PID 10360)
+2026-07-29 19:00:05 TASK START: run_fechamento_claude.ps1 (PID 17604) prompt=E:\Diretorio\Claude\relatorio-diario-szuchmacher\prompt_fechamento.md
+2026-07-29 19:00:05 INICIO: Fechamento diario (OpenRouter primario, Claude Code reserva)
+2026-07-29 19:01:48 FALLBACK_OPENROUTER ENVIADO_OK E:\Diretorio\Claude\relatorio-diario-szuchmacher\outputs\fechamento_szuchmacher_20260729.html
+2026-07-29 19:01:48 ENVIADO OK (fallback OpenRouter) E:\Diretorio\Claude\relatorio-diario-szuchmacher\outputs\fechamento_szuchmacher_20260729.html
+2026-07-29 19:01:48 OPENROUTER: >>> Coletando precos...
+2026-07-29 19:01:48 OPENROUTER: OK: precos coletados
+2026-07-29 19:01:48 OPENROUTER: OK: precos salvos em E:\Diretorio\Claude\relatorio-diario-szuchmacher\logs\precos_20260729.json
+2026-07-29 19:01:48 OPENROUTER: >>> Validando precos criticos contra Yahoo Finance...
+2026-07-29 19:01:48 OPENROUTER: OK: 1 ativo(s) com preco corrigido por fonte externa
+2026-07-29 19:01:48 OPENROUTER: >>> Chamando OpenRouter (google/gemini-2.5-pro:online) via https://openrouter.ai/api/v1/chat/completions...
+2026-07-29 19:01:48 OPENROUTER: OK: HTML gerado (18269 bytes)
+2026-07-29 19:01:48 OPENROUTER: OK: artefato salvo em fechamento_szuchmacher_20260729_190138_gemini-2.5-pro.html
+2026-07-29 19:01:48 OPENROUTER: >>> Injetando grid de mercados...
+2026-07-29 19:01:48 OPENROUTER: OK: grid injetado
+2026-07-29 19:01:48 OPENROUTER: >>> Validando conteudo...
+2026-07-29 19:01:48 OPENROUTER: APROVADO: conte·do passou em todas as checagens.
+2026-07-29 19:01:48 OPENROUTER:   titulos canonicos: 6/6
+2026-07-29 19:01:48 OPENROUTER:   data: 29.07.2026
+2026-07-29 19:01:48 OPENROUTER:   agenda: 3 eventos
+2026-07-29 19:01:48 OPENROUTER:   grid: 6 cards, 18 linhas, conferido contra precos coletado
+2026-07-29 19:01:48 OPENROUTER: 
+2026-07-29 19:01:48 OPENROUTER: APROVADO (google/gemini-2.5-pro:online): conteudo validado
+2026-07-29 19:01:48 OPENROUTER: >>> Enviando...
+2026-07-29 19:01:48 OPENROUTER: OK: enviado em BCC para 10 destinatßrio(s) | https://szuchmacher.com.br/fechamento/20260729-8cb5d372
+2026-07-29 19:01:48 OPENROUTER: 
+2026-07-29 19:01:48 OPENROUTER: OK: enviado via gemini-2.5-pro
+2026-07-29 19:01:48 FIM: ENVIADO OK via OpenRouter
+2026-07-29 19:01:48 FIM: ENVIADO OK confirmado no log
+2026-07-29 19:01:48 SYNC: iniciando sync_relatorio_cache
+2026-07-29 19:02:15 SYNC: OK sync_relatorio_cache: E:\Diretorio\Claude\Site\site-producao\relatorio_cache.json atualizado para 20260729
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: === DEPLOY CLOUDFLARE (sz-sites) ===
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: === BUILD CLOUDFLARE PUBLIC ===
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: -- szuchmacher.com.br --
+2026-07-29 19:02:15 SYNC:   COPY   index.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\index.html
+2026-07-29 19:02:15 SYNC:   COPY   relatorios.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\relatorios.html
+2026-07-29 19:02:15 SYNC:   COPY   honorarios.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\honorarios.html
+2026-07-29 19:02:15 SYNC:   COPY   assinatura.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assinatura.html
+2026-07-29 19:02:15 SYNC:   COPY   privacidade.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\privacidade.html
+2026-07-29 19:02:15 SYNC:   COPY   perfil.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\perfil.html
+2026-07-29 19:02:15 SYNC:   COPY   sitemap.xml -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\sitemap.xml
+2026-07-29 19:02:15 SYNC:   COPY   agenda-data.json -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\agenda-data.json
+2026-07-29 19:02:15 SYNC:   COPY   macro_data.json -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\macro_data.json
+2026-07-29 19:02:15 SYNC:   COPY   relatorio_cache.json -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\relatorio_cache.json
+2026-07-29 19:02:15 SYNC:   COPY   og-cover.jpg -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\og-cover.jpg
+2026-07-29 19:02:15 SYNC:   COPY   logo.png -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\logo.png
+2026-07-29 19:02:15 SYNC:   COPY   favicon.ico -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\favicon.ico
+2026-07-29 19:02:15 SYNC:   COPY   favicon.svg -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\favicon.svg
+2026-07-29 19:02:15 SYNC:   COPY   apple-touch-icon.png -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\apple-touch-icon.png
+2026-07-29 19:02:15 SYNC:   COPY   sz-config.js -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\sz-config.js
+2026-07-29 19:02:15 SYNC:   COPY   sz-design.css -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\sz-design.css
+2026-07-29 19:02:15 SYNC:   COPY   sz-imagery.css -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\sz-imagery.css
+2026-07-29 19:02:15 SYNC:   COPY   sz-site.js -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\sz-site.js
+2026-07-29 19:02:15 SYNC:   COPY   macro-panel.js -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\macro-panel.js
+2026-07-29 19:02:15 SYNC:   COPY   hero-editorial.css -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\hero-editorial.css
+2026-07-29 19:02:15 SYNC:   COPY   hero-editorial.js -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\hero-editorial.js
+2026-07-29 19:02:15 SYNC:   COPY   hero-switch.js -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\hero-switch.js
+2026-07-29 19:02:15 SYNC:   COPY   16 x *.webp -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\sz\assets\img
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: -- multi-assets.com --
+2026-07-29 19:02:15 SYNC:   COPY   multiasset-app.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\index.html
+2026-07-29 19:02:15 SYNC:   COPY   consultoria.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\consultoria.html
+2026-07-29 19:02:15 SYNC:   COPY   consultoria.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\consultoria
+2026-07-29 19:02:15 SYNC:   COPY   macro_data.json -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\macro_data.json
+2026-07-29 19:02:15 SYNC:   COPY   og-cover.jpg -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\og-cover.jpg
+2026-07-29 19:02:15 SYNC:   COPY   sz-config.js -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\sz-config.js
+2026-07-29 19:02:15 SYNC:   COPY   privacidade.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\privacidade.html
+2026-07-29 19:02:15 SYNC: System.Management.Automation.RemoteException
+2026-07-29 19:02:15 SYNC: ERRO sync_relatorio_cache: deploy-cloudflare.ps1 saiu com codigo 1
+2026-07-29 19:02:15 SYNC:   COPY   privacidade.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\privacidade
+2026-07-29 19:02:15 SYNC:   COPY   metodologia.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\metodologia.html
+2026-07-29 19:02:15 SYNC:   COPY   metodologia.html -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\metodologia
+2026-07-29 19:02:15 SYNC:   COPY   16 x *.webp -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\img
+2026-07-29 19:02:15 SYNC:   COPY   1 x *.mp4 -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\video
+2026-07-29 19:02:15 SYNC:   COPY   1 x *.webm -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\video
+2026-07-29 19:02:15 SYNC:   COPY   1 x *.jpg -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\video
+2026-07-29 19:02:15 SYNC:   COPY   1 x *.mp4 -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\media
+2026-07-29 19:02:15 SYNC:   COPY   2 x *.webp -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\assets\media
+2026-07-29 19:02:15 SYNC:   COPY   favicon.ico -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\favicon.ico
+2026-07-29 19:02:15 SYNC:   COPY   favicon.svg -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\favicon.svg
+2026-07-29 19:02:15 SYNC:   COPY   apple-touch-icon.png -> E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public\multi\apple-touch-icon.png
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: 23 arquivos obrigatorios conferidos em public/.
+2026-07-29 19:02:15 SYNC: Build concluido: E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC:  Ôøà´©Å wrangler 4.112.0
+2026-07-29 19:02:15 SYNC: ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+2026-07-29 19:02:15 SYNC: ­ƒîÇ Building list of assets...
+2026-07-29 19:02:15 SYNC: Ô£¿ Read 82 files from the assets directory E:\Diretorio\Claude\Site\site-producao\cloudflare-workers\sz-sites\public
+2026-07-29 19:02:15 SYNC: ­ƒîÇ Starting asset upload...
+2026-07-29 19:02:15 SYNC: ­ƒîÇ Found 1 new or modified static asset to upload. Proceeding with upload...
+2026-07-29 19:02:15 SYNC: + /sz/relatorio_cache.json
+2026-07-29 19:02:15 SYNC: Uploaded 1 of 1 asset
+2026-07-29 19:02:15 SYNC: Ô£¿ Success! Uploaded 1 file (73 already uploaded) (1.64 sec)
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: Total Upload: 71.00 KiB / gzip: 18.00 KiB
+2026-07-29 19:02:15 SYNC: Your Worker has access to the following bindings:
+2026-07-29 19:02:15 SYNC: Binding                                                               Resource                  
+2026-07-29 19:02:15 SYNC: env.CACHE (fd40efe1057c4c54b3d33277d4665434)                          KV Namespace              
+2026-07-29 19:02:15 SYNC: env.ASSETS                                                            Assets                    
+2026-07-29 19:02:15 SYNC: env.BRIEFING_ORIGIN ("https://szuchmacher-briefing.prospect...")      Environment Variable      
+2026-07-29 19:02:15 SYNC: env.FROM_EMAIL ("yan@szuchmacher.com.br")                             Environment Variable      
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: Uploaded sz-sites (10.21 sec)
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: ­ƒôÄ It looks like you are authenticating Wrangler via a custom API token set in an environment variable.
+2026-07-29 19:02:15 SYNC: Please ensure it has the correct permissions for this operation.
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: [31;1m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mA request to the Cloudflare API (/zones/cfe602627bd2ef210d225ee9deeb45d9/workers/routes) failed.[0m[0m
+2026-07-29 19:02:15 SYNC: [31;1m[0m
+2026-07-29 19:02:15 SYNC: [31;1m  Authentication error [code: 10000][0m
+2026-07-29 19:02:15 SYNC: [31;1m[0m
+2026-07-29 19:02:15 SYNC: [31;1m[0m
+2026-07-29 19:02:15 SYNC: Getting User settings...
+2026-07-29 19:02:15 SYNC: ­ƒæï You are logged in with an User API Token. Unable to retrieve email for this user. Are you missing the `User->User Details->Read` permission?
+2026-07-29 19:02:15 SYNC: Ôä╣´©Å  The API Token is read from the CLOUDFLARE_API_TOKEN environment variable.
+2026-07-29 19:02:15 SYNC: ÔöîÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÉ
+2026-07-29 19:02:15 SYNC: Ôöé Account Name                       Ôöé Account ID                       Ôöé
+2026-07-29 19:02:15 SYNC: Ôö£ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöñ
+2026-07-29 19:02:15 SYNC: Ôöé Szuchmacheryan@gmail.com's Account Ôöé 7ac79fb1030e4e81115ef33c21a9b070 Ôöé
+2026-07-29 19:02:15 SYNC: ÔööÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÿ
+2026-07-29 19:02:15 SYNC: ­ƒöô To see token permissions visit https://dash.cloudflare.com/profile/api-tokens
+2026-07-29 19:02:15 SYNC: [31;1m­ƒ¬Á  Logs were written to "C:\Users\User\.wrangler\logs\wrangler-2026-07-29_22-01-57_513.log"[0m
+2026-07-29 19:02:15 SYNC: 
+2026-07-29 19:02:15 SYNC: falhou com codigo 1 (envio ja confirmado; task permanece OK)
+2026-07-29 19:02:16 ALERTA: enviado para szuchmacheryan@gmail.com
+2026-07-29 19:02:16 EXIT 0: envio confirmado
+2026-07-29 19:02:17 LAUNCHER: script principal exit 0
+[2026-07-29 19:20:01] WATCHDOG: fechamento de hoje enviado. Nada a fazer.
+[2026-07-29 19:27:00] ENVIO PONTUAL: fechamento de 29/07 enviado a 1 destinatario novo (adicionado a lista hoje, apos o envio das 19h01). Mesmo slug 20260729-8cb5d372, sem republicacao, sentinela preservado.

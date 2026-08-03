@@ -1,0 +1,4 @@
+branch_atual=fix/validacao-precos-e-janela-de-coleta
+head_atual=4337d27a9ada47b6e3e7a75d4e5cf9350aaac72e
+head_master=48b18657a81464835276f1778238ebd567950cc8
+capturado_em=2026-07-30 15:00:37 -0300

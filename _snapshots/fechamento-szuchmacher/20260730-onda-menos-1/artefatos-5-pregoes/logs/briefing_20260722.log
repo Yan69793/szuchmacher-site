@@ -1,0 +1,30 @@
+﻿2026-07-22 19:00:00 LAUNCHER: Task Scheduler disparou (PID 1012)
+2026-07-22 19:00:00 TASK START: run_fechamento_claude.ps1 (PID 32056) prompt=E:\Diretorio\Claude\relatorio-diario-szuchmacher\prompt_fechamento.md
+2026-07-22 19:00:00 INICIO: Fechamento diario (OpenRouter primario, Claude Code reserva)
+2026-07-22 19:01:28 FALLBACK_OPENROUTER ENVIADO_OK E:\Diretorio\Claude\relatorio-diario-szuchmacher\outputs\fechamento_szuchmacher_20260722.html
+2026-07-22 19:01:28 ENVIADO OK (fallback OpenRouter) E:\Diretorio\Claude\relatorio-diario-szuchmacher\outputs\fechamento_szuchmacher_20260722.html
+2026-07-22 19:01:28 OPENROUTER: >>> Coletando precos...
+2026-07-22 19:01:28 OPENROUTER: OK: precos coletados
+2026-07-22 19:01:28 OPENROUTER: OK: precos salvos em E:\Diretorio\Claude\relatorio-diario-szuchmacher\logs\precos_20260722.json
+2026-07-22 19:01:28 OPENROUTER: >>> Chamando OpenRouter (google/gemini-2.5-pro:online)...
+2026-07-22 19:01:28 OPENROUTER: OK: HTML gerado (17815 bytes)
+2026-07-22 19:01:28 OPENROUTER: OK: artefato salvo em fechamento_szuchmacher_20260722_190122_gemini-2.5-pro.html
+2026-07-22 19:01:28 OPENROUTER: >>> Injetando grid de mercados...
+2026-07-22 19:01:28 OPENROUTER: OK: grid injetado
+2026-07-22 19:01:28 OPENROUTER: >>> Validando conteudo...
+2026-07-22 19:01:28 OPENROUTER: APROVADO: conte·do passou em todas as checagens.
+2026-07-22 19:01:28 OPENROUTER:   titulos canonicos: 6/6
+2026-07-22 19:01:28 OPENROUTER:   data: 22.07.2026
+2026-07-22 19:01:28 OPENROUTER:   agenda: 3 eventos
+2026-07-22 19:01:28 OPENROUTER:   grid: 6 cards, 18 linhas, conferido contra precos coletado
+2026-07-22 19:01:28 OPENROUTER: 
+2026-07-22 19:01:28 OPENROUTER: APROVADO (google/gemini-2.5-pro:online): conteudo validado
+2026-07-22 19:01:28 OPENROUTER: >>> Enviando...
+2026-07-22 19:01:28 OPENROUTER: OK: enviado em BCC para 4 destinatßrio(s) | https://szuchmacher.com.br/fechamento/20260722-6465d0a1
+2026-07-22 19:01:28 OPENROUTER: 
+2026-07-22 19:01:28 OPENROUTER: OK: enviado via gemini-2.5-pro
+2026-07-22 19:01:28 FIM: ENVIADO OK via OpenRouter
+2026-07-22 19:01:28 FIM: ENVIADO OK confirmado no log
+2026-07-22 19:01:28 SYNC: iniciando sync_relatorio_cache
+2026-07-22 19:01:29 LAUNCHER: script principal exit 1
+[2026-07-22 19:20:00] WATCHDOG: fechamento de hoje enviado. Nada a fazer.

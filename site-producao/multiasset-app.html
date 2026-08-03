@@ -690,6 +690,66 @@
         .alloc-cenario-desc { font-size: 12px; color: var(--muted); line-height: 1.6; padding: 10px 14px; background: rgba(255,255,255,0.02); border-radius: 0; border-left: 2px solid rgba(91,156,246,0.3); }
         .alloc-perfil-desc { font-size: 12px; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; }
 
+        /* MODE TOGGLE (Preset/Custom) */
+        .alloc-mode-toggle {
+            display: flex;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+        .alloc-mode-btn {
+            padding: 7px 16px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .alloc-mode-btn.active {
+            background: var(--gold-dim);
+            color: var(--gold);
+        }
+        .alloc-mode-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.03); }
+
+        /* BAR SLIDER (custom mode) */
+        .alloc-bar-slider {
+            display: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+            position: absolute;
+            top: 0; left: 0;
+        }
+        .alloc-bar-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            border: 2px solid var(--text);
+            background: var(--surface2);
+        }
+        .alloc-bar-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            border: 2px solid var(--text);
+            background: var(--surface2);
+            border-radius: 0;
+        }
+        .alloc-bar-wrap { position: relative; }
+        .alloc-item.custom-mode .alloc-bar-slider { display: block; }
+        .alloc-item.custom-mode .alloc-bar { opacity: 0.25; }
+        .alloc-item.custom-mode .alloc-pct-val { color: var(--gold); }
+
         /* DONUT */
         .alloc-donut-wrap {
             background: rgba(255,255,255,0.02);
@@ -2983,6 +3043,12 @@
                 </div>
 
                 <!-- SELETOR DE CENÁRIO MACRO — dimensão independente do perfil -->
+                <!-- TOGGLE PRESET/CUSTOM -->
+                <div class="alloc-mode-toggle" id="alloc-mode-toggle">
+                    <button class="alloc-mode-btn active" data-mode="preset">Preset</button>
+                    <button class="alloc-mode-btn" data-mode="custom">Custom</button>
+                </div>
+
                 <div class="alloc-cenario-selector">
                     <div class="alloc-perfil-label" style="margin-bottom:10px;">Cenário macro</div>
                     <div class="alloc-cenario-btns" id="alloc-cenario-btns">
@@ -3026,7 +3092,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-ntnb" style="background:#4caf7d;width:27%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-ntnb" style="background:#4caf7d;width:27%"></div><input type="range" class="alloc-bar-slider" data-key="ntnb" min="0" max="100" step="0.5" value="27"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-ntnb">27%</span>
                             <span class="alloc-value mono" id="val-ntnb" style="color:#4caf7d">R$ 135.000</span>
@@ -3044,7 +3110,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-cdi" style="background:#5b9cf6;width:21%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-cdi" style="background:#5b9cf6;width:21%"></div><input type="range" class="alloc-bar-slider" data-key="cdi" min="0" max="100" step="0.5" value="21"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-cdi">21%</span>
                             <span class="alloc-value mono" id="val-cdi" style="color:#5b9cf6">R$ 105.000</span>
@@ -3062,7 +3128,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-gold" style="background:#c9a84c;width:15%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-gold" style="background:#c9a84c;width:15%"></div><input type="range" class="alloc-bar-slider" data-key="gold" min="0" max="100" step="0.5" value="15"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-gold">15%</span>
                             <span class="alloc-value mono" id="val-gold" style="color:#c9a84c">R$ 75.000</span>
@@ -3079,7 +3145,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-silver" style="background:#c0c0c0;width:5%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-silver" style="background:#c0c0c0;width:5%"></div><input type="range" class="alloc-bar-slider" data-key="silver" min="0" max="100" step="0.5" value="5"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-silver">5%</span>
                             <span class="alloc-value mono" id="val-silver" style="color:#c0c0c0">R$ 25.000</span>
@@ -3096,7 +3162,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-platinum" style="background:#8ecfdd;width:5%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-platinum" style="background:#8ecfdd;width:5%"></div><input type="range" class="alloc-bar-slider" data-key="platinum" min="0" max="100" step="0.5" value="5"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-platinum">5%</span>
                             <span class="alloc-value mono" id="val-platinum" style="color:#8ecfdd">R$ 25.000</span>
@@ -3114,7 +3180,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-copper" style="background:#b87333;width:2%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-copper" style="background:#b87333;width:2%"></div><input type="range" class="alloc-bar-slider" data-key="copper" min="0" max="100" step="0.5" value="2"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-copper">2%</span>
                             <span class="alloc-value mono" id="val-copper" style="color:#b87333">R$ 10.000</span>
@@ -3132,7 +3198,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-btc" style="background:#f07a40;width:10%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-btc" style="background:#f07a40;width:10%"></div><input type="range" class="alloc-bar-slider" data-key="btc" min="0" max="100" step="0.5" value="10"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-btc">10%</span>
                             <span class="alloc-value mono" id="val-btc" style="color:#f07a40">R$ 50.000</span>
@@ -3150,7 +3216,7 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-reserva" style="background:rgba(201,168,76,0.4);width:15%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-reserva" style="background:rgba(201,168,76,0.4);width:15%"></div><input type="range" class="alloc-bar-slider" data-key="reserva" min="0" max="100" step="0.5" value="15"></div>
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-reserva" style="color:var(--gold)">15%</span>
                             <span class="alloc-value mono" id="val-reserva" style="color:var(--gold)">R$ 75.000</span>
@@ -4324,148 +4390,235 @@ function initSimulators() {
 setTimeout(initSimulators, 500);
 
 // ── ALOCAÇÃO — portfólio por perfil de investidor ──
+// Agora delegado ao PortfolioStore (preset/custom unificados).
 
-// Perfis: conservador (pessimista), moderado (base), arrojado (otimista)
-// Soma sempre 100%
-// Cada perfil agora tem tres tabelas de peso, uma por cenario macro
-// (pessimista/base/otimista), nao mais uma unica. Cobre e o dial que varia
-// por cenario dentro de cada perfil (0 a 5%, minimo no pessimista, maximo no
-// otimista); Bitcoin varia junto, em 2x a amplitude do cobre, mesma direcao,
-// por ser o ativo de maior volatilidade da carteira (VOL_PORT.btc = 0,85
-// contra 0,21 do cobre). Ouro, prata e platina ficam fixos em qualquer
-// cenario dentro do mesmo perfil, ouro por ser protecao monetaria e
-// geopolitica, prata e platina por nao terem regra de tilt definida.
-// NTN-B e CDI absorvem toda a diferenca: no base, financiam a entrada do
-// cobre; no pessimista, recebem o que sai de cobre e Bitcoin; no otimista,
-// cedem para financiar o aumento de cobre e Bitcoin, CDI primeiro, NTN-B so
-// se CDI nao bastar. Reserva nunca muda dentro do mesmo perfil, e
-// dimensionada para liquidez, nao para leitura de mercado.
-// As nove tabelas foram calculadas e conferidas em script (soma = 100,00 nas
-// nove, sem excecao) antes de virar literal aqui.
-const PERFIS = {
+/* ── PortfolioStore (inline) ── */
+const ASSET_CATALOG = {
+  ntnb:     { color: '#4caf7d',             label: 'NTN-B'   },
+  cdi:      { color: '#5b9cf6',             label: 'CDI'     },
+  gold:     { color: '#c9a84c',             label: 'Ouro'    },
+  silver:   { color: '#c0c0c0',             label: 'Prata'   },
+  platinum: { color: '#8ecfdd',             label: 'Platina' },
+  copper:   { color: '#b87333',             label: 'Cobre'   },
+  btc:      { color: '#f07a40',             label: 'Bitcoin' },
+  reserva:  { color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+};
+
+const _PERFIS = {
     conservador: {
-        desc: 'Perfil de máxima proteção: prioriza renda fixa real e liquidez, com exposição mínima a ativos de risco. Concentração maior em NTN-B e CDI, participação marginal em metais, cobre e cripto.',
+        desc: 'Perfil de máxima proteção: prioriza renda fixa real e liquidez, com exposição mínima a ativos de risco.',
         items: {
             pessimista: [
-                { key: 'ntnb',     pct: 44.5, color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct: 28.5, color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 10,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  2,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct:  2,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  0,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct:  1,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 12,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 44.5 }, { key: 'cdi', pct: 28.5 }, { key: 'gold', pct: 10 },
+                { key: 'silver', pct: 2 }, { key: 'platinum', pct: 2 }, { key: 'copper', pct: 0 },
+                { key: 'btc', pct: 1 }, { key: 'reserva', pct: 12 },
             ],
             base: [
-                { key: 'ntnb',     pct: 42.5, color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct: 27.5, color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 10,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  2,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct:  2,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  1,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct:  3,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 12,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 42.5 }, { key: 'cdi', pct: 27.5 }, { key: 'gold', pct: 10 },
+                { key: 'silver', pct: 2 }, { key: 'platinum', pct: 2 }, { key: 'copper', pct: 1 },
+                { key: 'btc', pct: 3 }, { key: 'reserva', pct: 12 },
             ],
             otimista: [
-                { key: 'ntnb',     pct: 42.5, color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct: 24.5, color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 10,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  2,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct:  2,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  2,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct:  5,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 12,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 42.5 }, { key: 'cdi', pct: 24.5 }, { key: 'gold', pct: 10 },
+                { key: 'silver', pct: 2 }, { key: 'platinum', pct: 2 }, { key: 'copper', pct: 2 },
+                { key: 'btc', pct: 5 }, { key: 'reserva', pct: 12 },
             ],
         }
     },
     moderado: {
-        desc: 'Perfil balanceado: divide o portfólio entre proteção real (NTN-B, CDI) e ativos de crescimento (metais, cobre, Bitcoin), sem concentração extrema em nenhuma ponta.',
+        desc: 'Perfil balanceado: divide o portfólio entre proteção real e ativos de crescimento.',
         items: {
             pessimista: [
-                { key: 'ntnb',     pct: 29.5, color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct: 23,   color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 15,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  5,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct:  5,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  0.5, color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct:  7,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 29.5 }, { key: 'cdi', pct: 23 }, { key: 'gold', pct: 15 },
+                { key: 'silver', pct: 5 }, { key: 'platinum', pct: 5 }, { key: 'copper', pct: 0.5 },
+                { key: 'btc', pct: 7 }, { key: 'reserva', pct: 15 },
             ],
             base: [
-                { key: 'ntnb',     pct: 27,   color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct: 21,   color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 15,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  5,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct:  5,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  2,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct: 10,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 27 }, { key: 'cdi', pct: 21 }, { key: 'gold', pct: 15 },
+                { key: 'silver', pct: 5 }, { key: 'platinum', pct: 5 }, { key: 'copper', pct: 2 },
+                { key: 'btc', pct: 10 }, { key: 'reserva', pct: 15 },
             ],
             otimista: [
-                { key: 'ntnb',     pct: 27,   color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct: 15,   color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 15,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  5,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct:  5,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  4,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct: 14,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 27 }, { key: 'cdi', pct: 15 }, { key: 'gold', pct: 15 },
+                { key: 'silver', pct: 5 }, { key: 'platinum', pct: 5 }, { key: 'copper', pct: 4 },
+                { key: 'btc', pct: 14 }, { key: 'reserva', pct: 15 },
             ],
         }
     },
     arrojado: {
-        desc: 'Perfil de maior tolerância a risco: prioriza metais, cobre e Bitcoin em busca de crescimento, com renda fixa reduzida ao mínimo necessário de estabilidade.',
+        desc: 'Perfil de maior tolerância a risco: prioriza metais, cobre e Bitcoin.',
         items: {
             pessimista: [
-                { key: 'ntnb',     pct: 14.5, color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct:  9.5, color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 22,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  7,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct: 10,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  1,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct: 21,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 14.5 }, { key: 'cdi', pct: 9.5 }, { key: 'gold', pct: 22 },
+                { key: 'silver', pct: 7 }, { key: 'platinum', pct: 10 }, { key: 'copper', pct: 1 },
+                { key: 'btc', pct: 21 }, { key: 'reserva', pct: 15 },
             ],
             base: [
-                { key: 'ntnb',     pct: 11,   color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct:  7,   color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 22,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  7,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct: 10,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  3,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct: 25,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 11 }, { key: 'cdi', pct: 7 }, { key: 'gold', pct: 22 },
+                { key: 'silver', pct: 7 }, { key: 'platinum', pct: 10 }, { key: 'copper', pct: 3 },
+                { key: 'btc', pct: 25 }, { key: 'reserva', pct: 15 },
             ],
             otimista: [
-                { key: 'ntnb',     pct: 11,   color: '#4caf7d',             label: 'NTN-B'   },
-                { key: 'cdi',      pct:  1,   color: '#5b9cf6',             label: 'CDI'     },
-                { key: 'gold',     pct: 22,   color: '#c9a84c',             label: 'Ouro'    },
-                { key: 'silver',   pct:  7,   color: '#c0c0c0',             label: 'Prata'   },
-                { key: 'platinum', pct: 10,   color: '#8ecfdd',             label: 'Platina' },
-                { key: 'copper',   pct:  5,   color: '#b87333',             label: 'Cobre'   },
-                { key: 'btc',      pct: 29,   color: '#f07a40',             label: 'Bitcoin' },
-                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+                { key: 'ntnb', pct: 11 }, { key: 'cdi', pct: 1 }, { key: 'gold', pct: 22 },
+                { key: 'silver', pct: 7 }, { key: 'platinum', pct: 10 }, { key: 'copper', pct: 5 },
+                { key: 'btc', pct: 29 }, { key: 'reserva', pct: 15 },
             ],
         }
     },
 };
 
-let perfilAtivo = 'moderado';
+const PortfolioStore = (function () {
+  var _mode = 'preset';
+  var _presetProfile = 'moderado';
+  var _presetScenario = 'base';
+  var _customWeights = null;
+  var _listeners = [];
+
+  function _validateSum(items) {
+    var sum = items.reduce(function (s, i) { return s + i.pct; }, 0);
+    if (Math.abs(sum - 100) > 0.01) throw new Error('Soma deve ser 100%. Atual: ' + sum.toFixed(1) + '%');
+  }
+  function _resolveMeta(item) {
+    var meta = ASSET_CATALOG[item.key];
+    if (!meta) return { key: item.key, pct: item.pct, color: '#888', label: item.key };
+    return { key: item.key, pct: item.pct, color: meta.color, label: meta.label };
+  }
+  function _notify() {
+    var w = getActiveWeights();
+    _listeners.forEach(function (fn) { try { fn(w); } catch (e) {} });
+  }
+
+  function getActiveWeights() {
+    var items;
+    if (_mode === 'custom' && _customWeights && _customWeights.length) {
+      items = _customWeights;
+    } else {
+      var p = _PERFIS[_presetProfile] && _PERFIS[_presetProfile].items;
+      items = (p && p[_presetScenario]) || [];
+    }
+    return items.map(_resolveMeta);
+  }
+
+  function getMode() { return _mode; }
+  function getPresetProfile() { return _presetProfile; }
+  function getPresetScenario() { return _presetScenario; }
+
+  function setCustomWeights(items) {
+    var stripped = items.map(function (i) { return { key: i.key, pct: i.pct }; });
+    _validateSum(stripped);
+    _customWeights = stripped;
+    _mode = 'custom';
+    _notify();
+  }
+
+  function resetToPreset(profile, scenario) {
+    if (profile && _PERFIS[profile]) _presetProfile = profile;
+    if (scenario) _presetScenario = scenario;
+    _mode = 'preset';
+    _customWeights = null;
+    _notify();
+  }
+
+  function setPresetScenario(scenario) {
+    if (!scenario) return;
+    _presetScenario = scenario;
+    if (_mode === 'preset') _notify();
+  }
+
+  function setPresetProfile(profile) {
+    if (!profile || !_PERFIS[profile]) return;
+    _presetProfile = profile;
+    if (_mode === 'preset') _notify();
+  }
+
+  function getPerfilDesc(p) { return (_PERFIS[p] && _PERFIS[p].desc) || ''; }
+
+  function exportState() {
+    return { version: 1, mode: _mode, presetProfile: _presetProfile, presetScenario: _presetScenario, customWeights: _customWeights, updatedAt: new Date().toISOString() };
+  }
+
+  function importState(state) {
+    if (!state || state.version !== 1) return false;
+    try {
+      if (state.mode === 'custom' && state.customWeights && state.customWeights.length) {
+        _validateSum(state.customWeights);
+        _customWeights = state.customWeights; _mode = 'custom';
+      } else { _mode = 'preset'; _customWeights = null; }
+      if (state.presetProfile && _PERFIS[state.presetProfile]) _presetProfile = state.presetProfile;
+      if (state.presetScenario) _presetScenario = state.presetScenario;
+      _notify(); return true;
+    } catch (e) { return false; }
+  }
+
+  function onChange(fn) { _listeners.push(fn); }
+
+  return { getActiveWeights: getActiveWeights, getMode: getMode, getPresetProfile: getPresetProfile, getPresetScenario: getPresetScenario, setCustomWeights: setCustomWeights, resetToPreset: resetToPreset, setPresetScenario: setPresetScenario, setPresetProfile: setPresetProfile, getPerfilDesc: getPerfilDesc, exportState: exportState, importState: importState, onChange: onChange };
+})();
+
+/* ── Persistência (inline) ── */
+var PortfolioPersistence = (function () {
+  var KEY = 'multiasset-portfolio-v1';
+  var _timer = null;
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(PortfolioStore.exportState())); } catch (e) {}
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return false;
+      return PortfolioStore.importState(JSON.parse(raw));
+    } catch (e) { return false; }
+  }
+  function auto() {
+    PortfolioStore.onChange(function () {
+      if (_timer) clearTimeout(_timer);
+      _timer = setTimeout(save, 500);
+    });
+  }
+  function getShareUrl() {
+    var state = PortfolioStore.exportState();
+    delete state.updatedAt;
+    var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(state)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    var base = window.location.origin + window.location.pathname;
+    return base + '?c=' + b64;
+  }
+  function applyFromUrl() {
+    var p = new URLSearchParams(window.location.search);
+    var e = p.get('c');
+    if (!e) return false;
+    try {
+      var b = e.replace(/-/g, '+').replace(/_/g, '/');
+      while (b.length % 4) b += '=';
+      var state = JSON.parse(decodeURIComponent(escape(atob(b))));
+      var ok = PortfolioStore.importState(state);
+      if (ok) { var u = new URL(window.location); u.searchParams.delete('c'); window.history.replaceState({}, '', u.toString()); save(); }
+      return ok;
+    } catch (x) { return false; }
+  }
+  return { save: save, load: load, autoPersist: auto, getShareUrl: getShareUrl, applyFromUrl: applyFromUrl };
+})();
+
+// Compatibilidade: estas variáveis eram globais, agora delegam ao store.
+// Mantidas para não quebrar referências em Monte Carlo e outras funções.
+var perfilAtivo = PortfolioStore.getPresetProfile();
+var benchCenario = PortfolioStore.getPresetScenario();
 
 function setPerfilAlocacao(perfil, btn) {
+    PortfolioStore.setPresetProfile(perfil);
     perfilAtivo = perfil;
     document.querySelectorAll('.alloc-perfil-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const descEl = document.getElementById('alloc-perfil-desc');
-    if (descEl) descEl.textContent = PERFIS[perfil].desc;
+    if (descEl) descEl.textContent = PortfolioStore.getPerfilDesc(perfil);
     const val = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
     atualizarAlocacao(val);
-    desenharBenchmark(); // recalcula benchmark com novo perfil
+    desenharBenchmark();
     _refreshPortfolioMC();
     _refreshGeoPortfolioMC();
 }
 
-function getAllocItems() { return PERFIS[perfilAtivo].items[benchCenario] || PERFIS[perfilAtivo].items.base; }
+function getAllocItems() { return PortfolioStore.getActiveWeights(); }
 
 // Formata percentual de alocacao em PT-BR. Precisa existir porque o
 // rebalanceamento por cenario introduziu casos com meio ponto (ex.: cobre em
@@ -4493,14 +4646,23 @@ function atualizarAlocacao(val) {
     document.getElementById('total-alocado').textContent = 'R$ ' + fmt(val, 0);
 
     const items = getAllocItems();
+    const isCustom = PortfolioStore.getMode() === 'custom';
+
     items.forEach(item => {
         const v = (val * item.pct) / 100;
         const elVal = document.getElementById('val-' + item.key);
         const elPct = document.getElementById('pct-' + item.key);
         const elBar = document.getElementById('bar-' + item.key);
+        const elSlider = document.querySelector('.alloc-bar-slider[data-key="' + item.key + '"]');
         if (elVal) elVal.textContent = 'R$ ' + fmt(v, 0);
         if (elPct) elPct.textContent = fmtPct(item.pct);
         if (elBar) elBar.style.width = item.pct + '%';
+        if (elSlider) elSlider.value = item.pct;
+    });
+
+    // Toggle custom-mode class nos alloc-item
+    document.querySelectorAll('.alloc-item').forEach(function (el) {
+        el.classList.toggle('custom-mode', isCustom);
     });
 
     const centerEl = document.getElementById('donut-center-val');
@@ -4570,7 +4732,7 @@ let donutChart = null;
 // ── BENCHMARK CHART ──
 let benchPrazo = 5;
 let benchChart = null;
-let benchCenario = 'base'; // pessimista | base | otimista
+// benchCenario declarado acima via var (compat PortfolioStore)
 
 function setBenchPrazo(anos, btn) {
     benchPrazo = anos;
@@ -4582,6 +4744,7 @@ function setBenchPrazo(anos, btn) {
 
 function setBenchCenario(cenario, btn) {
     benchCenario = cenario;
+    PortfolioStore.setPresetScenario(cenario);
     document.querySelectorAll('.bench-cenario-group .comp-toggle').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     // Sincronizar com seletor de alocação
@@ -4599,6 +4762,7 @@ function setBenchCenario(cenario, btn) {
 
 function setAllocCenario(cenario, btn) {
     benchCenario = cenario;
+    PortfolioStore.setPresetScenario(cenario);
     document.querySelectorAll('.alloc-cenario-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     // Sincronizar com seletor do benchmark
@@ -4639,7 +4803,7 @@ function desenharBenchmark() {
 
     const perfil     = perfilAtivo || 'moderado';
     const taxasAtivo = window.taxasCenario[benchCenario] || window.taxasCenario.base;
-    const itens      = PERFIS[perfil].items[benchCenario] || PERFIS[perfil].items.base;
+    const itens = getAllocItems();
     const pNtnb  = (itens.find(i => i.key === 'ntnb')?.pct     || 0) / 100;
     const pCdi   = (itens.find(i => i.key === 'cdi')?.pct      || 0) / 100;
     const pOuro  = (itens.find(i => i.key === 'gold')?.pct     || 0) / 100;
@@ -4878,7 +5042,7 @@ function _runPortfolioMC() {
         }
     }
 
-    const itens = PERFIS[perfil].items[benchCenario] || PERFIS[perfil].items.base;
+    const itens = getAllocItems();
 
     // Roda N simulações
     const paths = [];
@@ -5336,7 +5500,7 @@ function _runPortfolioMCGeo() {
     var prazo = benchPrazo;
     var perfil = perfilAtivo || 'moderado';
     var N = 2000;
-    var itens = PERFIS[perfil].items[benchCenario] || PERFIS[perfil].items.base;
+    var itens = getAllocItems();
     var taxasAtivo = window.taxasCenario[benchCenario] || window.taxasCenario.base;
 
     function _baseTaxa(key, y) {
@@ -6826,18 +6990,14 @@ function shareSim(asset, btnEl) {
 function sharePortfolio(btnEl) {
     var slider = document.getElementById('portfolio-slider');
     var total  = slider ? parseInt(slider.value) : 500000;
-    var perfil  = (typeof perfilAtivo  !== 'undefined') ? perfilAtivo  : 'moderado';
-    var cenario = (typeof benchCenario !== 'undefined') ? benchCenario : 'base';
-    var prazo   = (typeof benchPrazo   !== 'undefined') ? benchPrazo   : 5;
+    var perfil  = PortfolioStore.getPresetProfile();
+    var cenario = PortfolioStore.getPresetScenario();
+    var prazo   = (typeof benchPrazo !== 'undefined') ? benchPrazo : 5;
 
-    var qs = new URLSearchParams({
-        sim: 'portfolio',
-        total: String(total),
-        perfil: perfil,
-        cenario: cenario,
-        prazo: String(prazo),
-    });
-    var url = location.origin + location.pathname + '?' + qs.toString() + '#alocacao';
+    // Usa o novo sistema de share do PortfolioStore (compatível com custom weights)
+    var shareUrl = PortfolioPersistence.getShareUrl();
+    // Adiciona total e prazo como params extras
+    var url = shareUrl + '&total=' + total + '&prazo=' + prazo + '#alocacao';
     if (window.SZ && window.SZ.appendUTM) {
         url = window.SZ.appendUTM(url, { utm_content: 'portfolio_' + perfil + '_' + cenario });
     }
@@ -6973,6 +7133,140 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(_applyShareParams, 200);
 }
+
+/* ── PortfolioStore init: carrega persistência + URL share + bind events ── */
+(function initPortfolioStore() {
+    // 1. Tenta URL share primeiro (tem precedência sobre localStorage)
+    var fromUrl = PortfolioPersistence.applyFromUrl();
+
+    // 2. Se não veio share, carrega localStorage
+    if (!fromUrl) {
+        PortfolioPersistence.load();
+    }
+
+    // 3. Ativa autopersistência (debounce 500ms)
+    PortfolioPersistence.autoPersist();
+
+    // 4. Sincroniza variáveis compat
+    perfilAtivo = PortfolioStore.getPresetProfile();
+    benchCenario = PortfolioStore.getPresetScenario();
+
+    // 5. Sincroniza UI de perfil
+    var activeProfile = PortfolioStore.getPresetProfile();
+    document.querySelectorAll('.alloc-perfil-btn').forEach(function (b) {
+        b.classList.toggle('active', b.dataset.perfil === activeProfile);
+    });
+    var descEl = document.getElementById('alloc-perfil-desc');
+    if (descEl) descEl.textContent = PortfolioStore.getPerfilDesc(activeProfile);
+
+    // 6. Sincroniza toggle mode
+    var mode = PortfolioStore.getMode();
+    document.querySelectorAll('.alloc-mode-btn').forEach(function (b) {
+        b.classList.toggle('active', b.dataset.mode === mode);
+    });
+
+    // 7. Bind: mode toggle
+    document.getElementById('alloc-mode-toggle').addEventListener('click', function (e) {
+        var btn = e.target.closest('.alloc-mode-btn');
+        if (!btn) return;
+        var newMode = btn.dataset.mode;
+        if (newMode === PortfolioStore.getMode()) return;
+
+        if (newMode === 'preset') {
+            PortfolioStore.resetToPreset(
+                document.querySelector('.alloc-perfil-btn.active')?.dataset?.perfil,
+                document.querySelector('.alloc-cenario-btn.active')?.dataset?.cenario
+            );
+            perfilAtivo = PortfolioStore.getPresetProfile();
+            benchCenario = PortfolioStore.getPresetScenario();
+            document.getElementById('perfil-select') && (document.getElementById('perfil-select').value = perfilAtivo);
+            document.getElementById('cenario-select') && (document.getElementById('cenario-select').value = benchCenario);
+            var d = document.getElementById('alloc-perfil-desc');
+            if (d) { d.textContent = PortfolioStore.getPerfilDesc(perfilAtivo); d.style.display = ''; }
+        } else {
+            // Modo custom: congela pesos atuais
+            var current = PortfolioStore.getActiveWeights();
+            PortfolioStore.setCustomWeights(current);
+            var d2 = document.getElementById('alloc-perfil-desc');
+            if (d2) d2.style.display = 'none';
+        }
+
+        document.querySelectorAll('.alloc-mode-btn').forEach(function (b) {
+            b.classList.toggle('active', b.dataset.mode === newMode);
+        });
+
+        var val = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+        atualizarAlocacao(val);
+        desenharBenchmark();
+        if (typeof _refreshPortfolioMC === 'function') _refreshPortfolioMC();
+        if (typeof _refreshGeoPortfolioMC === 'function') _refreshGeoPortfolioMC();
+    });
+
+    // 8. Bind: bar sliders (redistribuição proporcional)
+    document.getElementById('alocacao').addEventListener('input', function (e) {
+        var slider = e.target.closest('.alloc-bar-slider');
+        if (!slider) return;
+        var key = slider.dataset.key;
+        if (!key) return;
+
+        var newPct = parseFloat(slider.value);
+        if (isNaN(newPct)) return;
+
+        var items = PortfolioStore.getActiveWeights().map(function (i) {
+            return { key: i.key, pct: i.pct };
+        });
+
+        var changed = items.find(function (i) { return i.key === key; });
+        if (!changed) return;
+
+        var oldPct = changed.pct;
+        var delta = newPct - oldPct;
+        changed.pct = newPct;
+
+        var others = items.filter(function (i) { return i.key !== key; });
+        var sumOthers = others.reduce(function (s, i) { return s + i.pct; }, 0);
+
+        if (sumOthers > 0) {
+            others.forEach(function (i) {
+                var share = i.pct / sumOthers;
+                i.pct = Math.max(0, i.pct - delta * share);
+            });
+        } else if (delta > 0) {
+            changed.pct = oldPct;
+        }
+
+        // Normaliza
+        var total = items.reduce(function (s, i) { return s + i.pct; }, 0);
+        if (total > 0) {
+            items.forEach(function (i) { i.pct = Math.round(i.pct / total * 10000) / 100; });
+        }
+
+        // Corrige arredondamento
+        var finalSum = items.reduce(function (s, i) { return s + i.pct; }, 0);
+        if (Math.abs(finalSum - 100) > 0.01) {
+            var largest = items.reduce(function (a, b) { return a.pct > b.pct ? a : b; });
+            largest.pct += (100 - finalSum);
+            largest.pct = Math.round(largest.pct * 100) / 100;
+        }
+
+        PortfolioStore.setCustomWeights(items);
+        perfilAtivo = PortfolioStore.getPresetProfile();
+        benchCenario = PortfolioStore.getPresetScenario();
+
+        var val = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+        atualizarAlocacao(val);
+        desenharBenchmark();
+        if (typeof _refreshPortfolioMC === 'function') _refreshPortfolioMC();
+    });
+
+    // 9. Atualiza UI inicial se modo custom
+    if (PortfolioStore.getMode() === 'custom') {
+        var perfilDesc = document.getElementById('alloc-perfil-desc');
+        if (perfilDesc) perfilDesc.style.display = 'none';
+        var val2 = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+        atualizarAlocacao(val2);
+    }
+})();
 
 </script>
 

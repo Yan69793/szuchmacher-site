@@ -1,0 +1,115 @@
+// ═══════════════════════════════════════════════════════════════════
+// MÓDULO: MVRV Z-SCORE EMBUTIDO
+// Para enxertar no "Macro Dashboard v7.2" / RMF Confluence
+// Custo no limite do plano: 0 slots (roda dentro do study existente)
+// Pine v6 · compatível com indicator(overlay=true)
+// ═══════════════════════════════════════════════════════════════════
+
+
+// ───────────────────────────────────────────────────────────────────
+// 1. INPUTS — colar junto aos demais grupos de input do script
+// ───────────────────────────────────────────────────────────────────
+
+grp_onchain = "=== ON-CHAIN ==="
+
+i_mvrv_on   = input.bool(true, "Mostrar MVRV Z-Score",      group=grp_onchain)
+i_mvrv_sym  = input.symbol("INTOTHEBLOCK:BTC_MVRV", "Fonte MVRV", group=grp_onchain,
+     tooltip="Feed on-chain do IntoTheBlock. Só existe para BTC. Em outros símbolos a linha mostra 's/ dados'.")
+i_mvrv_len  = input.int(730, "Janela do Z-Score (barras diárias)", minval=90, maxval=2000, group=grp_onchain,
+     tooltip="730 = 2 anos. Janela curta reage rápido mas gera falso extremo; janela longa é mais estável.")
+i_mvrv_hi   = input.float(2.0,  "Z de sobrevalorização", step=0.1, group=grp_onchain)
+i_mvrv_lo   = input.float(-1.0, "Z de subvalorização",   step=0.1, group=grp_onchain)
+
+
+// ───────────────────────────────────────────────────────────────────
+// 2. CÁLCULO — colar no bloco de cálculos principais
+// ───────────────────────────────────────────────────────────────────
+
+// ignore_invalid_symbol=true impede que o script inteiro quebre quando
+// o símbolo do gráfico não for BTC. Sem isso, um erro aqui derruba tudo.
+mvrv_raw = request.security(i_mvrv_sym, "D", close,
+     lookahead             = barmerge.lookahead_off,
+     ignore_invalid_symbol = true)
+
+mvrv_mean = ta.sma(mvrv_raw,   i_mvrv_len)
+mvrv_sd   = ta.stdev(mvrv_raw, i_mvrv_len)
+
+mvrv_valid = not na(mvrv_raw) and not na(mvrv_sd) and mvrv_sd > 0
+mvrv_z     = mvrv_valid ? (mvrv_raw - mvrv_mean) / mvrv_sd : na
+
+// Texto e cor prontos para a tabela
+mvrv_txt = not mvrv_valid ? "s/ dados"
+     : str.tostring(mvrv_z, "#.##") + "σ"
+
+mvrv_lbl = not mvrv_valid       ? "—"
+     : mvrv_z >= i_mvrv_hi      ? "caro"
+     : mvrv_z <= i_mvrv_lo      ? "barato"
+     :                            "neutro"
+
+mvrv_col = not mvrv_valid       ? color.gray
+     : mvrv_z >= i_mvrv_hi      ? color.new(color.red,  0)
+     : mvrv_z <= i_mvrv_lo      ? color.new(color.lime, 0)
+     :                            color.silver
+
+
+// ───────────────────────────────────────────────────────────────────
+// 3. LINHA NA TABELA — adaptar aos nomes reais do seu script
+// ───────────────────────────────────────────────────────────────────
+//
+// Sua tabela hoje tem 7 linhas (RSI, MACD, Tendência, Fib 61.8%,
+// Viés, Stop ATR, Alvo ATR). Esta vira a 8ª.
+//
+// Trocar `tbl` pelo nome real da variável table.new() do seu script
+// e `7` pelo próximo índice livre. Se a tabela foi criada com
+// table.new(..., rows=8), aumentar para rows=9 primeiro — senão a
+// linha é escrita fora dos limites e não aparece (falha silenciosa).
+
+if i_mvrv_on and barstate.islast
+    table.cell(tbl, 0, 7, "MVRV Z",
+         text_color = color.silver,
+         text_size  = size.small,
+         bgcolor    = color.new(color.black, 0))
+    table.cell(tbl, 1, 7, mvrv_txt + " " + mvrv_lbl,
+         text_color = mvrv_col,
+         text_size  = size.small,
+         bgcolor    = color.new(color.black, 0))
+
+
+// ───────────────────────────────────────────────────────────────────
+// 4. ALERTA OPCIONAL
+// ───────────────────────────────────────────────────────────────────
+
+alertcondition(mvrv_valid and ta.crossover(mvrv_z, i_mvrv_hi),
+     title   = "MVRV Z entrou em zona cara",
+     message = "MVRV Z-Score cruzou acima do limite de sobrevalorização")
+
+alertcondition(mvrv_valid and ta.crossunder(mvrv_z, i_mvrv_lo),
+     title   = "MVRV Z entrou em zona barata",
+     message = "MVRV Z-Score cruzou abaixo do limite de subvalorização")
+
+
+// ═══════════════════════════════════════════════════════════════════
+// RESSALVAS — ler antes de operar com base nisso
+// ═══════════════════════════════════════════════════════════════════
+//
+// [CERTO] Isto NÃO é o MVRV Z-Score canônico.
+//   O canônico é (market cap − realized cap) / stdev(market cap).
+//   Aqui é o Z-score do *ratio* MVRV. As duas séries são altamente
+//   correlacionadas, mas não são a mesma coisa.
+//
+// [CERTO] Por consequência, as faixas clássicas do MVRV Z-Score
+//   (>7 = topo de ciclo, <0.1 = fundo) NÃO SE APLICAM a esta série.
+//   Os defaults 2.0 / −1.0 são limites de desvio-padrão genéricos.
+//   Calibre olhando o histórico do próprio ativo antes de confiar.
+//
+// [CERTO] O feed INTOTHEBLOCK:BTC_MVRV só existe para Bitcoin.
+//   Em ETH, ações ou índices a linha mostra "s/ dados" — comportamento
+//   correto, não bug.
+//
+// [PROVÁVEL] Repaint na barra corrente: com lookahead_off o valor da
+//   barra em formação ainda pode mudar até o fechamento diário. Para
+//   sinal travado, usar mvrv_z[1] nos alertcondition.
+//
+// [HIPÓTESE] Não consegui confirmar se o feed do IntoTheBlock exige
+//   plano pago para request.security(). Se a linha aparecer como
+//   "s/ dados" mesmo em BTCUSD, é essa a causa mais provável.

@@ -1,0 +1,38 @@
+{
+    "generated_at": "2026-07-29 19:01:48",
+    "date_label": "Fechamento de quarta, 29 jul 2026",
+    "eyebrow": "Fechamento do dia",
+    "h2": "Leitura diária dos vetores que movem preços",
+    "prices": {
+        "ibovespa": {
+            "value": "173.885",
+            "change_pct": "-1,52%",
+            "label": "Quarta · -1,52%"
+        },
+        "usd_brl": {
+            "value": "5,1171",
+            "change_pct": "-0,16%",
+            "label": "Quarta · -0,16%"
+        },
+        "sp500": {
+            "value": "7.316,15",
+            "change_pct": "-1,52%",
+            "label": "Quarta · -1,52%"
+        },
+        "wti": {
+            "value": "84,46",
+            "change_pct": "+6,56%",
+            "label": "Quarta · +6,56%"
+        }
+    },
+    "report": {
+        "headline": "Ibovespa fecha quarta em baixa de 1,52%, aos 173.885 pontos; dólar recua a R$ 5,12 e petróleo (WTI) sobe a US$ 84,46",
+        "paragraph1": "O Ibovespa encerrou em forte queda de 1,52%, aos 173.885 pontos, pressionado pelo desempenho negativo do setor bancário após a divulgação de resultados trimestrais fracos do Santander. A performance negativa dos bancos ofuscou a alta das ações da Petrobras, que avançaram com o anúncio de produção recorde e limitaram perdas maiores do índice.",
+        "paragraph2": "As bolsas americanas registraram perdas expressivas, com investidores adotando um tom de cautela antes da decisão de política monetária do Federal Reserve. A expectativa de manutenção dos juros foi acompanhada pelo temor de uma sinalização mais dura para o controle da inflação, levando o S&P 500 a cair 1,52% e o Dow Jones a recuar 2,19%.",
+        "paragraph3": "Os preços do petróleo saltaram mais de 6%, com o contrato WTI superando os US$ 84 por barril. A alta foi impulsionada por uma nova escalada de tensões no Oriente Médio, que renovou as preocupações sobre a oferta global da commodity e adicionou uma camada de risco geopolítico aos mercados.",
+        "next_week": "08h00, Brasil, Entrevista do Ministro da Fazenda, Dario Durigan. 10h00, Brasil, Teleconferência de resultados do Santander (SANB11) com analistas. Pós-fechamento, EUA, Repercussão dos balanços de Microsoft (MSFT) e Meta Platforms (META).",
+        "source_note": "Relatório interno Szuchmacher Consultoria, dados TradingView e fontes públicas validadas, referentes ao pregão de 29 jul 2026."
+    },
+    "latest_slug": "20260729-8cb5d372",
+    "latest_url": "https://szuchmacher.com.br/fechamento/20260729-8cb5d372"
+}

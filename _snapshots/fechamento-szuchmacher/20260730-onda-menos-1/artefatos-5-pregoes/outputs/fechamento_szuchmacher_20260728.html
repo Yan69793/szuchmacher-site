@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fechamento de Mercado, Szuchmacher Consultoria, 28.07.2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef0f4;
+    --surface-soft: #f7f8fa;
+    --navy: #0a1428;
+    --navy-soft: #152238;
+    --gold: #92703a;
+    --gold-soft: #b8925a;
+    --gold-bright: #d4b87a;
+    --text: #1a2030;
+    --muted: #5a6272;
+    --white: #ffffff;
+    --green: #1a8a5c;
+    --red: #b33a3a;
+    --line: rgba(10, 20, 40, 0.10);
+    --radius: 2px;
+    --max: 1160px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Public Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  .hero {
+    background: linear-gradient(165deg, var(--navy) 0%, var(--navy-soft) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 48px 40px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .hero-logo {
+    font-family: 'Prata', Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .hero-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .hero-site {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--gold-bright);
+    text-decoration: none;
+    margin-top: 12px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(212, 184, 122, 0.45);
+  }
+  .hero-site:hover { border-bottom-color: var(--gold-bright); }
+  .hero-date-block { text-align: right; color: var(--white); }
+  .hero-date-block .day {
+    font-family: 'Prata', serif;
+    font-size: 3.25rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--gold-soft);
+  }
+  .hero-date-block .month-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    margin-top: 6px;
+  }
+  .hero-gold-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.35;
+  }
+  .hero-ticker {
+    background: rgba(0,0,0,0.22);
+    padding: 12px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+  }
+  .ticker-item .label { color: var(--gold-bright); font-weight: 500; }
+  .ticker-item .val { font-weight: 600; color: var(--white); font-variant-numeric: tabular-nums; }
+  .ticker-item .chg { font-weight: 500; font-size: 0.62rem; padding: 2px 6px; border-radius: var(--radius); }
+  .up { color: #5aea9a; background: rgba(90,234,154,0.12); }
+  .down { color: #ff7b7b; background: rgba(255,123,123,0.12); }
+
+  .main { max-width: var(--max); margin: 0 auto; padding: 0 40px 56px; }
+  .section { margin-top: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .section-number {
+    font-family: 'Prata', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 28px;
+  }
+  .section-title {
+    font-family: 'Prata', serif;
+    font-size: 1.2rem;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0.28;
+  }
+  .section-body {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    max-width: 72ch;
+    text-align: left;
+    text-wrap: pretty;
+    hyphens: none;
+  }
+  .section-body p { margin-bottom: 10px; }
+  .section-body p:last-child { margin-bottom: 0; }
+  .section-body strong { font-weight: 600; color: var(--navy); }
+
+  .card {
+    background: var(--surface-soft);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    padding: 26px 30px;
+  }
+
+  .radar-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .radar-list li {
+    font-size: 13.5px;
+    line-height: 1.65;
+    padding-left: 18px;
+    position: relative;
+  }
+  .radar-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .markets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .market-card {
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .market-card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .market-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 12.5px;
+  }
+  .market-row:not(:last-child) { border-bottom: 1px solid rgba(10,20,40,0.05); }
+  .market-row .name { font-weight: 500; }
+  .market-row .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+    font-size: 11.5px;
+  }
+  .market-row .change {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 11px;
+    min-width: 58px;
+    text-align: right;
+  }
+  .market-row .change.pos { color: var(--green); }
+  .market-row .change.neg { color: var(--red); }
+  .market-row .feriado { font-style: italic; color: var(--muted); font-size: 11px; }
+
+  .trame-card {
+    background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+    color: #f5f0e8;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .trame-text {
+    font-family: 'Prata', serif;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.92);
+    position: relative;
+    z-index: 2;
+  }
+  .trame-text::before {
+    content: '\201C';
+    font-size: 64px;
+    font-style: normal;
+    color: var(--gold);
+    opacity: 0.22;
+    position: absolute;
+    top: -22px;
+    left: -6px;
+    line-height: 1;
+  }
+
+  .agenda-list { display: flex; flex-direction: column; gap: 14px; }
+  .agenda-item { display: flex; align-items: flex-start; gap: 14px; }
+  .agenda-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius);
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .agenda-icon svg { width: 15px; height: 15px; fill: var(--gold-soft); }
+  .agenda-text { font-size: 13px; line-height: 1.55; padding-top: 2px; }
+  .agenda-text strong { color: var(--navy); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  .disclaimer {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 9.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    text-align: center;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner { flex-direction: column; align-items: flex-start; padding: 28px 22px 24px; }
+    .hero-date-block { text-align: left; }
+    .hero-ticker { padding: 10px 18px; gap: 14px; }
+    .main { padding: 0 20px 36px; }
+    .markets-grid { grid-template-columns: 1fr; }
+    .card { padding: 18px; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    body { background: #fff; }
+    .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card, .market-card, .trame-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <div class="hero-logo">Szuchmacher Consultoria</div>
+      <div class="hero-subtitle">Fechamento de Mercado</div>
+      <a href="https://www.szuchmacher.com.br" class="hero-site">www.szuchmacher.com.br</a>
+    </div>
+    <div class="hero-date-block">
+      <div class="day">28</div>
+      <div class="month-year">Julho 2026 · Terça-feira</div>
+    </div>
+  </div>
+  <div class="hero-gold-line"></div>
+  <div class="hero-ticker">
+    <div class="ticker-item">
+      <span class="label">IBOV</span>
+      <span class="val">176.564,75</span>
+      <span class="chg up">+0,70%</span>
+    </div>
+    <div class="ticker-item">
+      <span class="label">USD/BRL</span>
+      <span class="val">5,1251</span>
+      <span class="chg up">+0,24%</span>
+    </div>
+    <div class="ticker-item">
+      <span class="label">S&P 500</span>
+      <span class="val">7.428,78</span>
+      <span class="chg up">+0,21%</span>
+    </div>
+    <div class="ticker-item">
+      <span class="label">WTI</span>
+      <span class="val">79,26</span>
+      <span class="chg down">-4,06%</span>
+    </div>
+    <div class="ticker-item">
+      <span class="label">OURO</span>
+      <span class="val">4.026,30</span>
+      <span class="chg down">-1,18%</span>
+    </div>
+    <div class="ticker-item">
+      <span class="label">UST 10Y</span>
+      <span class="val">4,606%</span>
+      <span class="chg down">-0,88%</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">I</div>
+      <span class="section-title">Destaques do Pregão</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card section-body">
+      <p><strong>O Ibovespa encerrou em alta de 0,70%, aos 176.564 pontos, na contramão das bolsas asiáticas e das commodities de energia.</strong> O dólar comercial subiu 0,24%, a R$ 5,1251, e o IFIX avançou 0,24%, aos 3.807 pontos. Na curva local, a taxa para janeiro de 2030 fechou em 14,39%, oito pontos-base abaixo do pregão anterior.</p>
+      <p>Nos Estados Unidos, os índices fecharam em direções opostas. O Dow Jones subiu 1,03% e o S&amp;P 500 avançou 0,21%, enquanto o Nasdaq recuou 0,98%. No mercado de juros, o rendimento do Treasury de 10 anos cedeu quatro pontos-base, a 4,606%.</p>
+      <p>O petróleo foi o destaque negativo do dia. O WTI recuou 4,06%, a US$ 79,26, e o Brent caiu 4,83%, a US$ 84,09, no segundo pregão seguido de queda forte para os dois contratos. O ouro cedeu 1,18%, a US$ 4.026,30.</p>
+      <p>Na Ásia, o Nikkei 225 caiu 3,95%, aos 62.364,70 pontos, a maior variação registrada no dia entre os índices deste relatório. O Xangai recuou 1,16% e o Hang Seng subiu 0,41%. Na Europa, o fechamento foi positivo nas três praças acompanhadas, com FTSE 100 em alta de 0,83%, DAX de 0,41% e Euro Stoxx 50 de 0,12%.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">II</div>
+      <span class="section-title">No Radar</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <ul class="radar-list">
+        <li>O Federal Reserve anuncia a decisão de juros nesta quarta-feira, no segundo dia da reunião de 28 e 29 de julho, seguida da entrevista coletiva do presidente do comitê.</li>
+        <li>O relatório semanal de estoques de petróleo dos Estados Unidos sai na quarta-feira pela manhã, primeiro dado de oferta divulgado depois da queda de 4,06% do WTI e de 4,83% do Brent nesta terça.</li>
+        <li>A abertura dos mercados asiáticos na quarta-feira mostra se a queda de 3,95% do Nikkei 225 teve continuidade.</li>
+        
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">III</div>
+      <span class="section-title">Mercados</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="markets-grid">
+      <div class="market-card">
+        <div class="market-card-title">Brasil</div>
+        <div class="market-row"><span class="name">Ibovespa</span><span class="value">176.565 pts</span><span class="change pos">+0,70%</span></div>
+        <div class="market-row"><span class="name">Dólar</span><span class="value">R$ 5,1251</span><span class="change pos">+0,24%</span></div>
+        <div class="market-row"><span class="name">IFIX</span><span class="value">3.807 pts</span><span class="change pos">+0,24%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Estados Unidos</div>
+        <div class="market-row"><span class="name">S&P 500</span><span class="value">7.428,78</span><span class="change pos">+0,21%</span></div>
+        <div class="market-row"><span class="name">Nasdaq</span><span class="value">27.763,13</span><span class="change neg">−0,98%</span></div>
+        <div class="market-row"><span class="name">Dow Jones</span><span class="value">52.747,32</span><span class="change pos">+1,03%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Europa</div>
+        <div class="market-row"><span class="name">Euro Stoxx 50</span><span class="value">6.289,52</span><span class="change pos">+0,12%</span></div>
+        <div class="market-row"><span class="name">DAX</span><span class="value">25.464,01</span><span class="change pos">+0,41%</span></div>
+        <div class="market-row"><span class="name">FTSE 100</span><span class="value">10.871,01</span><span class="change pos">+0,83%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Ásia</div>
+        <div class="market-row"><span class="name">Nikkei 225</span><span class="value">62.364,70</span><span class="change neg">−3,95%</span></div>
+        <div class="market-row"><span class="name">Hang Seng</span><span class="value">25.310,86</span><span class="change pos">+0,41%</span></div>
+        <div class="market-row"><span class="name">Shanghai</span><span class="value">3.813,31</span><span class="change neg">−1,16%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Yields</div>
+        <div class="market-row"><span class="name">Treasury 10Y</span><span class="value">4,61%</span><span class="change neg">−4 bps</span></div>
+        <div class="market-row"><span class="name">JGB 10Y</span><span class="value">2,77%</span><span class="change neg">−1 bp</span></div>
+        <div class="market-row"><span class="name">Taxa de Juros Brasil 2030</span><span class="value">14,39%</span><span class="change neg">−8 bps</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Commodities</div>
+        <div class="market-row"><span class="name">WTI</span><span class="value">US$ 79,26</span><span class="change neg">−4,06%</span></div>
+        <div class="market-row"><span class="name">Brent</span><span class="value">US$ 84,09</span><span class="change neg">−4,83%</span></div>
+        <div class="market-row"><span class="name">Ouro</span><span class="value">US$ 4.026,30</span><span class="change neg">−1,18%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">IV</div>
+      <span class="section-title">Drivers do Dia</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card section-body">
+      <p>A maior variação do dia entre os ativos acompanhados veio da energia. O WTI recuou 4,06%, a US$ 79,26, e o Brent caiu 4,83%, a US$ 84,09. Foi o segundo pregão consecutivo de queda forte, depois de 27 de julho, quando o WTI cedeu 7,50% e o Brent 8,70%. Somadas as duas sessões, o WTI acumula perda de 11,3% e o Brent de 13,1%.</p>
+      <p>Nos Estados Unidos, a distância entre o Dow Jones e o Nasdaq chegou a dois pontos percentuais no fechamento, com o Dow em alta de 1,03% e o Nasdaq em queda de 0,98%. O S&amp;P 500 ficou entre os dois, com alta de 0,21%.</p>
+      <p>Na Ásia, o Nikkei 225 caiu 3,95% enquanto o Hang Seng subiu 0,41% no mesmo pregão. O Ibovespa fechou em alta de 0,70%, sem acompanhar nem a queda das bolsas asiáticas nem a das commodities de energia. Os juros longos cederam nas três referências acompanhadas, com o Treasury de 10 anos a 4,606%, o JGB de 10 anos a 2,77% e a taxa brasileira para 2030 a 14,39%.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">V</div>
+      <span class="section-title">La Trame du Jour</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card trame-card">
+      <p class="trame-text">O dia separou os mercados por geografia e por classe de ativo. Em Tóquio, o Nikkei 225 perdeu 3,95%, a maior variação entre os índices deste relatório, enquanto Hong Kong fechou em alta de 0,41%. Em Nova York, o Dow Jones e o Nasdaq terminaram em lados opostos, com dois pontos percentuais entre um e outro, e o S&amp;P 500 ficou no meio, com alta de 0,21%. Na Europa, as três praças acompanhadas subiram. No Brasil, o Ibovespa avançou 0,70% e a curva de juros cedeu oito pontos-base no vencimento de 2030. A energia foi o único bloco com queda uniforme, com WTI e Brent recuando pelo segundo pregão seguido e acumulando 11,3% e 13,1% de perda em duas sessões. O ouro caiu 1,18% e o rendimento do Treasury de 10 anos cedeu quatro pontos-base, a 4,606%.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">VI</div>
+      <span class="section-title">Agenda do Próximo Dia Útil</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <div class="agenda-list">
+        <div class="agenda-item">
+          <div class="agenda-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+          </div>
+          <div class="agenda-text"><strong>11h30, EUA,</strong> Estoques semanais de petróleo (EIA)</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+          </div>
+          <div class="agenda-text"><strong>15h00, EUA,</strong> Decisão da Taxa de Juros (FOMC)</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+          </div>
+          <div class="agenda-text"><strong>15h30, EUA,</strong> Entrevista coletiva do presidente do Federal Reserve</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    Este material tem caráter exclusivamente informativo e não constitui recomendação de investimento, compra ou venda de qualquer ativo financeiro. As informações refletem dados disponíveis na data de publicação. <strong>Szuchmacher Consultoria</strong>, Yan Szuchmacher, Analista de Mercados, 28.07.2026
+  </div>
+</main>
+</body>
+</html>

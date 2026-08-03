@@ -1,156 +1,154 @@
 {
-  "generated_at": "26/07/2026 às 14:40 BRT",
+  "generated_at": "02/08/2026 às 20:30 BRT",
   "data": {
-    "eyebrow": "Cenário Macro Brasil · Julho 2026",
-    "alert_title": "Selic em 14.25% | Câmbio R$ 5.07 | COPOM em Pausa Estratégica",
-    "alert_text": "O Banco Central mantém a taxa Selic em 14.25% a.a., sinalizando fim do ciclo de aperto em contexto de inflação persistente (FOCUS: 5.15% para 2026) e atividade econômica moderada (PIB: 1.99%). O mercado precifica Selic em 14% ao final do ano, sugerindo estabilização. O câmbio opera em R$ 5.07, refletindo prêmio de risco elevado e fluxos externos cautelosos. A dinâmica de juros reais elevados (8%+) permanece como âncora de ativos de renda fixa, enquanto a depreciação do Real limita ganhos em moeda local para investidores em dólar.",
-    "alert_badge": "COPOM 05/AGO",
+    "eyebrow": "Cenário Brasil · Agosto 2026",
+    "alert_title": "Selic em 14,25% a.a. | COPOM 4-5/ago esperado para cortar a 14% | Câmbio em R$ 5,09 | Petróleo Brent a US$ 90 com risco Irã",
+    "alert_text": "O Banco Central se reúne neste 4 e 5 de agosto com expectativa majoritária de corte de 0,25 p.p. na Selic, de 14,25% para 14,00% a.a., o quarto corte consecutivo desde março. A inflação ao consumidor deu alívio: o IPCA-15 de julho subiu apenas 0,06%, a menor taxa para o mês desde 2023, e o IPCA de junho veio em 0,16% com queda de alimentos pela primeira vez desde novembro de 2025. O Focus recuou pela quarta semana seguida, de 5,33% para 5,12% na projeção do IPCA 2026. Mas o petróleo Brent fechou julho acima de US$ 90, com alta de 24% no mês, pressionado pelo risco de bloqueio no Estreito de Ormuz e pela escalada entre EUA e Irã. O Fed manteve os Fed Funds em 3,50-3,75% em 29 de julho, com três dissidentes a favor de alta, e o chair Warsh reafirmou que a inflação 'segue elevada'. O cenário externo limita o espaço para cortes mais agressivos no Brasil e mantém o câmbio sob pressão.",
+    "alert_badge": "COPOM AGOSTO 2026",
     "canais": [
       {
         "variavel": "Petróleo (WTI/Brent)",
-        "direcao": "neutral",
-        "mecanismo": "Preços de energia global impactam inflação de serviços e transportes no Brasil, afetando a trajetória do IPCA. Pressões geopolíticas e dinâmica de oferta OPEC+ mantêm volatilidade, com transmissão para combustíveis domésticos e custos de produção. Cenário de estabilização em USD 75-85/bbl reduz pressão inflacionária, favorecendo eventual flexibilização futura do BC."
+        "direcao": "up",
+        "mecanismo": "Brent fechou julho a US$ 90,12 com alta de ~24% no mês, o maior ganho mensal desde março. Tensão entre EUA e Irã reduz o tráfego de petroleiros no Estreito de Ormuz (~21 milhões de barris/dia). Risco de sanções e de ataque a infraestrutura energética iraniana mantém prêmio de risco elevado. Para o Brasil, contamina inflação de combustíveis, frete, insumos petroquímicos e expectativas, e limita o espaço para cortes adicionais da Selic além de agosto."
       },
       {
         "variavel": "Inflação Global",
-        "direcao": "down",
-        "mecanismo": "Desaceleração gradual em economias desenvolvidas (EUA, Zona Euro) reduz pressão sobre commodities e importações brasileiras. Ancoragem de expectativas inflacionárias globais em 2-3% limita pass-through para preços domésticos. Contudo, inflação de serviços persiste, mantendo vigilância do BC sobre núcleo."
+        "direcao": "neutral",
+        "mecanismo": "CPI dos EUA em junho surpreendeu com queda mensal de 0,4% (maior desde 2020) e núcleo em 2,6% a.a., mas o colapso do cessar-fogo EUA-Irã em 8 de julho reverteu a tendência de energia. O CPI de julho enfrenta pressão renovada do petróleo. PCE cheio ainda roda em 3,7%, e o Fed mantém o discurso duro. Para o Brasil, a inflação externa mais comportada em bens industriais ajuda, mas a volatilidade do petróleo é um risco de contaminação via cadeias de produção."
       },
       {
         "variavel": "Juros (Fed / BCB)",
         "direcao": "neutral",
-        "mecanismo": "Fed em pausa após ciclo de cortes, operando em 4.5-5.0% a.a. BCB mantém Selic em 14.25%, gerando diferencial de 900-950 bps. Prêmio de risco Brasil permanece elevado, sustentando demanda por ativos de renda fixa local. Eventual flexibilização do Fed em 2027 pode reduzir atratividade relativa de DI longo."
+        "mecanismo": "Fed manteve os Fed Funds em 3,50-3,75% em 29 de julho, a quinta pausa consecutiva, mas com dissidência inédita: três presidentes regionais votaram por alta, não por corte. Chair Warsh abandonou o forward guidance e recusou tratar um CPI frio como virada. Mercado precifica ~65% de chance de alta em setembro. BCB caminha na direção oposta: quarto corte consecutivo esperado para 5 de agosto (14,25% → 14,00%). Diferencial de juros Brasil-EUA permanece elevado (~10 p.p.), mas a convergência entre os ciclos reduz a atratividade relativa do carry trade no médio prazo."
       },
       {
         "variavel": "PIB Global",
         "direcao": "neutral",
-        "mecanismo": "Crescimento global moderado (2.5-3.0%) limita demanda por commodities e exportações brasileiras. Atividade em EUA e China desacelera, reduzindo impulso externo. Brasil segue com PIB de 1.99%, refletindo juros altos e consumo contido, com pouco suporte de investimento privado."
+        "mecanismo": "Crescimento global rodando entre 2,5% e 3,0% a.a., com desaceleração ordenada. China cresce abaixo do esperado no 2º tri, Europa estagnada, EUA resilientes com payroll de julho esperado entre 60k e 100k vagas. Para o Brasil, demanda por commodities permanece moderada, sem impulso adicional. O PIB doméstico projetado em 1,99% (Focus) reflete juros reais ainda restritivos e atividade industrial em desaceleração."
       },
       {
         "variavel": "Dólar (DXY)",
         "direcao": "up",
-        "mecanismo": "Índice do dólar mantém força em 103-105, sustentado por diferenciais de juros EUA-Zona Euro e fluxos de risco-off. Pressão sobre moedas emergentes persiste, com BRL refletindo prêmio de risco elevado e incerteza fiscal doméstica. Apreciação do dólar reduz competitividade de exportações brasileiras."
+        "mecanismo": "Índice do dólar se fortaleceu após o Fed hawkish de 29 de julho, sustentado por yields longos dos Treasuries (10Y em 4,7%, 30Y acima de 5,28%, máxima desde 2007). Fluxos para mercados emergentes seguem moderados, com viés negativo para moedas de países com risco fiscal elevado. O real se valorizou nas últimas semanas (~8,5% abaixo da máxima de 52 semanas), ajudado pelo carry trade, mas a força do dólar e o risco geopolítico limitam apreciação adicional."
       },
       {
         "variavel": "Real (BRL)",
-        "direcao": "down",
-        "mecanismo": "PTAX em R$ 5.07 reflete depreciação acumulada de ~8% no ano, impulsionada por saídas de portfólio e prêmio de risco elevado. Déficit em conta corrente (~2% do PIB) e incerteza sobre trajetória fiscal ampliam pressão. Juros reais altos não compensam risco cambial percebido, mantendo BRL fraco."
+        "direcao": "neutral",
+        "mecanismo": "Real opera em R$ 5,09, valorizado em relação à máxima de 52 semanas (R$ 5,59). Diferencial de juros de ~10 p.p. sustenta o carry trade, e a desaceleração da inflação doméstica melhora a perspectiva de política monetária. Focus projeta R$ 5,20 no fim de 2026. Risco de depreciação persiste se o petróleo escalar, o Fed subir juros em setembro ou o cenário fiscal doméstico se deteriorar."
       },
       {
         "variavel": "Ouro",
         "direcao": "up",
-        "mecanismo": "Demanda por ativos de segurança aumenta em contexto de volatilidade geopolítica e incerteza macro. Juros reais globais em patamares moderados (1-2%) reduzem custo de oportunidade do ouro. Depreciação do Real amplifica ganhos em moeda local para investidores brasileiros, tornando ouro hedge eficaz."
+        "mecanismo": "Ouro opera acima de US$ 4.000/oz, tendo tocado US$ 4.115 durante a semana do Fed, com primeiro ganho mensal desde fevereiro. Demanda sustentada por três vetores: (1) risco geopolítico (Irã/Estreito de Ormuz), (2) compras de bancos centrais (diversificação de reservas), e (3) juros reais ainda elevados mas com expectativa de queda no Brasil e eventual flexibilização global. O nível de US$ 4.000 funciona como piso técnico e psicológico."
       },
       {
         "variavel": "Bitcoin",
-        "direcao": "up",
-        "mecanismo": "Aprovação de ETFs de Bitcoin em mercados desenvolvidos e adoção institucional sustentam demanda. Cenário de juros globais em pausa favorece ativos de risco. Volatilidade elevada e correlação com risco-off mantêm perfil especulativo, com ganhos em BRL amplificados pela depreciação cambial."
+        "direcao": "neutral",
+        "mecanismo": "Bitcoin entre US$ 62.700 e US$ 63.500, lateralizado após o Fed. Subiu 3% com o CPI frio de junho mas não rompeu os US$ 66.000. ETFs spot nos EUA seguem com inflows positivos (~US$ 233M em 30 de julho). O Crypto Fear & Greed Index está em 29 (Medo). Yields reais elevados (10Y em 4,7%) competem com ativos sem fluxo de caixa. Para o investidor brasileiro, o BTC em reais se beneficia de eventual depreciação cambial, mas o carry trade em 14,25% ao ano oferece concorrência direta."
       }
     ],
     "brasil": [
       {
         "label": "SELIC e COPOM",
-        "text": "O Banco Central mantém Selic em 14.25% a.a., sinalizando fim do ciclo de aperto após 11 aumentos consecutivos. Mercado precifica estabilização em 14% até dezembro, com possível início de cortes em 2027 caso inflação converja para meta. Expectativas de inflação para 2027 em 4.5% sugerem espaço futuro, mas núcleo persistente (5.8%) exige cautela. Próxima reunião (05/08) deve manter taxa, com comunicação focada em dados de atividade e dinâmica de preços."
+        "text": "O COPOM se reúne em 4 e 5 de agosto com expectativa majoritária de corte de 0,25 p.p., levando a Selic de 14,25% para 14,00% a.a. Seria o quarto corte consecutivo desde março (15% → 14,75% → 14,50% → 14,25% → 14,00%). O Focus projeta Selic em 14,00% no fim de 2026, 12,00% em 2027 e 10,50% em 2028. Há divisão no mercado: o Itaú projeta decisão unânime pelo corte, mas o Copom de junho já citou a incerteza geopolítica e a volatilidade de commodities como fatores de cautela. Uma ala mais hawkish pode defender pausa após agosto para avaliar o repasse do petróleo à inflação. A ata será publicada na terça-feira seguinte (12 de agosto)."
       },
       {
         "label": "Câmbio e Contas Externas",
-        "text": "PTAX em R$ 5.07 reflete depreciação acumulada do Real, com mercado precificando R$ 5.20 para fim de ano. Déficit em conta corrente (~2% do PIB) e saídas de portfólio ampliam pressão cambial. Reservas internacionais em USD 330 bi oferecem colchão, mas insuficiente para reverter tendência. Prêmio de risco Brasil em 350-400 bps acima de emergentes pares reflete incerteza fiscal e política."
+        "text": "PTAX em R$ 5,09, com o real acumulando valorização de ~8,5% em relação à máxima de 52 semanas (R$ 5,59). O carry trade (diferencial de juros Brasil-EUA de ~10 p.p.) continua atraindo fluxo de curto prazo. A Focus projeta câmbio de fim de ano em R$ 5,20, indicando depreciação moderada. O risco principal é externo: se o Fed subir juros em setembro (65% de probabilidade no FedWatch) e o petróleo continuar pressionado pelo Irã, o real pode devolver parte dos ganhos recentes. No front doméstico, o cenário fiscal segue como risco estrutural."
       },
       {
         "label": "Renda Fixa — Prêmio em NTN-B e DI longo",
-        "text": "Juros reais em DI longo (8%+ a.a.) permanecem atraentes para investidores de longo prazo. NTN-B oferece proteção inflacionária com cupom real de 5.5-6%, adequado para portfólios defensivos. Curva de DI invertida em prazos curtos (até 2 anos) reflete expectativa de cortes futuros, enquanto prazos longos (5-10 anos) precificam estabilização. Spread de crédito corporativo em 250-300 bps oferece oportunidades seletivas em emissores de qualidade."
+        "text": "Curva de DI precifica Selic em 14,00% após agosto, com cortes graduais até 12,00% em 2027. NTN-B oferece cupom real atrativo (IPCA + 7,5% em duration de ~6 anos) com proteção contra a inflação ainda acima da meta. O carregamento real permanece elevado (~8-9% ex-ante), favorecendo extensão de duration. O risco é a marcação a mercado: se o petróleo forçar o BCB a interromper os cortes, os yields longos sobem e o preço dos títulos cai no curto prazo. Estratégia de carregamento (hold to maturity) mitiga esse risco para horizontes de 3 a 5 anos."
       },
       {
         "label": "Atividade e Fiscal",
-        "text": "PIB de 1.99% reflete desaceleração após crescimento de 2.9% em 2024, impulsionado por juros altos e consumo contido. Investimento privado permanece fraco (-1.5% a.a.), com incerteza sobre retorno. Resultado fiscal deteriora-se, com déficit primário em ~1.5% do PIB, alimentando preocupações sobre sustentabilidade. Reforma tributária e revisão de gastos permanecem em agenda, mas com implementação lenta, mantendo prêmio de risco elevado."
+        "text": "PIB real projetado em 1,99% para 2026 (Focus), com viés de baixa após a produção industrial de junho esperada em nova queda. A publicação sai na terça-feira 4 de agosto. Consumo desacelerado, investimento comprimido por juros reais de 8-9%. O Ministério da Fazenda projeta 2,3%, mas o mercado considera a estimativa oficial otimista. No front fiscal, a despesa cresce acima da receita e a dívida bruta ronda 60% do PIB. O risco fiscal é moderado mas crescente: uma piora nas expectativas de solvência contaminaria a curva de juros longa e o câmbio, reduzindo a eficácia da política monetária."
       }
     ],
     "beneficiados": [
-      "<strong>NTN-B (Tesouro Direto)</strong> — proteção inflacionária com cupom real de 5.5-6% a.a. em contexto de inflação persistente",
-      "<strong>DI Longo (5-10 anos)</strong> — juros reais de 8%+ oferecem retorno atrativo para investidores de horizonte estendido",
-      "<strong>Ouro</strong> — hedge cambial eficaz com depreciação do Real e demanda por ativos de segurança",
-      "<strong>Ações de Exportadores (Vale, JBS)</strong> — depreciação do Real melhora competitividade e margens em moeda estrangeira",
-      "<strong>Crédito Corporativo (BBB+)</strong> — spread de 250-300 bps oferece oportunidades seletivas em emissores de qualidade"
+      "<strong>Renda Fixa (NTN-B, DI longo)</strong> — juros reais elevados com IPCA ainda acima da meta; carregamento real de 8-9% a.a. é raro e favorece duration",
+      "<strong>Ouro</strong> — tripla função: hedge contra inflação persistente, proteção cambial (depreciação do real) e ativo refúgio em cenário de escalada geopolítica no Oriente Médio",
+      "<strong>Setores defensivos (Utilities, Consumo Essencial)</strong> — demanda resiliente com juros altos e crescimento fraco; energia elétrica e saneamento oferecem previsibilidade de fluxo de caixa",
+      "<strong>Dólar (posição comprada)</strong> — proteção cambial contra depreciação esperada do real até R$ 5,20 no fim de 2026; risco de salto maior se Fed subir juros ou Irã escalar"
     ],
     "penalizados": [
-      "<strong>Ações de Consumo Discricionário</strong> — juros altos e depreciação cambial reduzem poder de compra e margens",
-      "<strong>Imóveis Residenciais</strong> — Selic em 14.25% eleva custo de financiamento e reduz demanda por crédito imobiliário",
-      "<strong>Dólar Futuro</strong> — apreciação do Real em cenário de melhora fiscal ou cortes de juros futuros",
-      "<strong>Ações de Bancos (Juros Reais Altos)</strong> — compressão de spread de crédito e redução de volume de operações",
-      "<strong>Commodities Agrícolas</strong> — demanda global fraca e oferta abundante pressionam preços em dólar"
+      "<strong>Ações cíclicas (Construção, Varejo)</strong> — crescimento de 1,99% e juros reais de 8-9% comprimem margens e demanda; recuperação depende de ciclo de cortes além de agosto",
+      "<strong>Empresas com dívida em dólar</strong> — depreciação esperada do real até R$ 5,20 e risco de salto adicional com Fed hawkish ou choque do petróleo elevam custo de serviço da dívida externa",
+      "<strong>Bonds corporativos de menor rating</strong> — spread de crédito sobe em cenário de atividade fraca; empresas alavancadas sofrem com rolagem de dívida a taxas elevadas",
+      "<strong>Bitcoin e criptoativos (curto prazo)</strong> — yields reais dos Treasuries em 4,7% a.a. competem diretamente com ativos sem fluxo de caixa; Fear & Greed em 29 (Medo) sinaliza aversão a risco"
     ],
     "cenarios_brent": [
-      "<strong>Cenário 1 — Estabilização em USD 75-85/bbl:</strong> Oferta OPEC+ controlada e demanda global moderada mantêm preços em faixa neutra. Inflação de energia recua, favorecendo eventual flexibilização do BC em 2027. Câmbio estabiliza em R$ 5.10-5.15, reduzindo pressão sobre importações.",
-      "<strong>Cenário 2 — Choque de Oferta (USD 95-105/bbl):</strong> Tensões geopolíticas ou redução de produção OPEC+ elevam preços. Inflação de combustíveis e transportes ressurge, forçando BC a manter Selic elevada por mais tempo. Real deprecia para R$ 5.30-5.40, amplificando pressão inflacionária.",
-      "<strong>Cenário 3 — Recessão Global (USD 55-65/bbl):</strong> Desaceleração acentuada em EUA e China reduz demanda por energia. Preços caem, favorecendo desinflação global e cortes de juros. Brasil beneficia-se com redução de pressão inflacionária, permitindo cortes de Selic em 2027, mas exportações sofrem com demanda fraca."
+      "<strong>Cenário 1 — Estabilidade tensa (Probabilidade: 45%):</strong> Petróleo Brent oscila entre US$ 85-95/bbl. Tensão no Estreito de Ormuz persiste sem interrupção total do tráfego. Diplomacia contém escalada militar aberta entre EUA e Irã. Inflação de combustíveis no Brasil se estabiliza em patamar elevado mas sem choque adicional. COPOM corta em agosto e sinaliza cautela para setembro. Câmbio opera entre R$ 5,05 e R$ 5,20.",
+      "<strong>Cenário 2 — Escalada no Golfo (Probabilidade: 30%):</strong> Conflito militar direto entre EUA e Irã, com ameaça ou interrupção parcial do tráfego no Estreito de Ormuz. Brent dispara para US$ 105-130/bbl. Choque de oferta contamina inflação global, força o Fed a subir juros em setembro e obriga o BCB a interromper o ciclo de cortes. Câmbio deprecia para R$ 5,30-5,60. Recessão global se torna risco material.",
+      "<strong>Cenário 3 — Cessar-fogo e normalização (Probabilidade: 25%):</strong> Acordo diplomático entre EUA e Irã restabelece tráfego normal no Estreito de Ormuz. Brent recua para US$ 70-80/bbl. Alívio inflacionário permite que o Fed mantenha a pausa e o BCB acelere cortes para 0,50 p.p. a partir de setembro. Câmbio aprecia para R$ 4,80-5,00. Ouro perde atratividade relativa, ações cíclicas e crédito corporativo se recuperam."
     ],
     "ativos": {
       "ouro": {
         "conservador": {
           "taxa": "5-8% do portfólio",
-          "desc": "Hedge inflacionário e cambial em ambiente de juros reais comprimidos; liquidez elevada e volatilidade moderada"
+          "desc": "Hedge inflacionário e cambial em ambiente de juros reais elevados e risco geopolítico no Oriente Médio; liquidez máxima e volatilidade moderada"
         },
         "moderado": {
           "taxa": "8-12% do portfólio",
-          "desc": "Proteção contra depreciação do real e inflação persistente; diversificação de risco em cenário de incerteza macro"
+          "desc": "Proteção tripla: inflação acima da meta (IPCA 5,12%), depreciação esperada do real (R$ 5,20) e risco de escalada no Estreito de Ormuz; diversificação de cauda"
         },
         "agressivo": {
           "taxa": "10-15% do portfólio",
-          "desc": "Aposta em flight-to-safety e possível aceleração de depreciação do real; potencial de ganho cambial amplificado"
+          "desc": "Aposta em flight-to-safety com escalada geopolítica e possível aceleração de depreciação do real; US$ 4.000/oz é piso técnico, upside em cenário de choque do petróleo"
         }
       },
       "prata": {
         "conservador": {
           "taxa": "2-4% do portfólio",
-          "desc": "Exposição a metais preciosos com maior volatilidade; demanda industrial oferece suporte de preço"
+          "desc": "Exposição a metais preciosos com componente industrial; demanda de energia solar e eletrônicos oferece suporte de preço, mas volatilidade é maior que ouro"
         },
         "moderado": {
           "taxa": "4-7% do portfólio",
-          "desc": "Diversificação dentro de metais preciosos; correlação parcial com ouro oferece benefício de portfólio"
+          "desc": "Diversificação dentro de metais preciosos; correlação parcial com ouro oferece benefício de portfólio; demanda industrial resiliente em transição energética"
         },
         "agressivo": {
           "taxa": "6-10% do portfólio",
-          "desc": "Aposta em recuperação de demanda industrial com possível melhora de crescimento global; maior volatilidade"
+          "desc": "Aposta em recuperação de demanda industrial com possível melhora de crescimento global; maior sensibilidade ao ciclo econômico que ouro"
         }
       },
       "platina": {
         "conservador": {
           "taxa": "1-3% do portfólio",
-          "desc": "Exposição a metal industrial com aplicações em catalisadores; liquidez menor que ouro, requer paciência"
+          "desc": "Exposição a metal industrial com aplicações em catalisadores e hidrogênio verde; liquidez menor que ouro, requer horizonte de 3-5 anos"
         },
         "moderado": {
           "taxa": "2-5% do portfólio",
-          "desc": "Diversificação em metais preciosos com potencial de ganho em cenário de recuperação industrial"
+          "desc": "Diversificação em metais preciosos com potencial de ganho em cenário de aceleração da transição energética e recuperação industrial"
         },
         "agressivo": {
           "taxa": "3-8% do portfólio",
-          "desc": "Aposta em normalização de demanda industrial e possível melhora de crescimento global; maior risco de volatilidade"
+          "desc": "Aposta em normalização de demanda industrial e possível disrupção de oferta (África do Sul, Rússia); maior risco de volatilidade e menor liquidez"
         }
       },
       "bitcoin": {
         "conservador": {
           "taxa": "0-2% do portfólio",
-          "desc": "Exposição mínima a criptoativos; juros reais elevados reduzem atratividade; considerar apenas como hedge cambial"
+          "desc": "Exposição mínima a criptoativos; yields reais elevados (10Y em 4,7%) reduzem atratividade; considerar apenas como hedge cambial de longo prazo"
         },
         "moderado": {
           "taxa": "2-5% do portfólio",
-          "desc": "Exposição moderada a narrativa de hedge inflacionário; volatilidade elevada requer tolerância a drawdowns"
+          "desc": "Exposição moderada com catalisadores estruturais (ETFs spot, halving 2028); volatilidade elevada (drawdowns de 77-84% em ciclos passados) requer tolerância"
         },
         "agressivo": {
           "taxa": "5-10% do portfólio",
-          "desc": "Aposta em depreciação do real e possível flight-to-safety para ativos descorrelacionados; aceita volatilidade extrema"
+          "desc": "Aposta em adoção institucional e soberana com supply shock do halving de 2028; risco de correlação com Nasdaq em cenário de aversão a risco global"
         }
       }
     },
     "premissas_perfis": {
-      "conservador": "Preservação de capital com foco em renda fixa prefixada (DI longo), NTN-B e ouro; exposição mínima a risco cambial e criptoativos.",
-      "moderado": "Equilíbrio entre renda fixa (60-70%) e ativos reais (ouro, prata); hedge cambial via ouro; exposição seletiva a ações defensivas.",
-      "arrojado": "Alocação diversificada em renda fixa, metais preciosos, criptoativos e ações cíclicas; aposta em depreciação do real e possível melhora de crescimento."
+      "conservador": "Preservação de capital com foco em renda fixa real (NTN-B 42,5%, CDI 27,5%) e ouro (10%); exposição mínima a risco cambial e criptoativos. Adequado para quem prioriza proteção contra inflação com baixa volatilidade.",
+      "moderado": "Equilíbrio entre renda fixa (48%) e ativos reais: ouro (15%), prata (5%), platina (5%), cobre (2%), Bitcoin (10%) e reserva (15%). Combina proteção real com exposição controlada a crescimento.",
+      "arrojado": "Maior tolerância a volatilidade com exposição relevante a metais (39%), Bitcoin (25%) e cobre (3%); renda fixa reduzida a 18%. Adequado para horizontes de 5+ anos e capacidade de suportar drawdowns intermediários."
     },
     "premissas_cenarios": {
-      "pessimista": "Inflação não cede, Selic permanece em 14,25% até fim de 2026, real deprecia para R$ 5,40, PIB cresce apenas 0,5%, crédito corporativo sofre deterioração.",
-      "base": "Inflação converge gradualmente para meta, Selic reduz para 13,75%, real deprecia para R$ 5,20, PIB cresce 1,96%, ambiente de renda fixa atrativa com ganho de capital.",
-      "otimista": "Inflação cede rapidamente, Selic reduz para 12,5%, real se estabiliza em R$ 5,00, PIB cresce 2,8%, ações cíclicas se recuperam, crédito corporativo normaliza."
+      "pessimista": "Petróleo Brent acima de US$ 105 com escalada militar no Estreito de Ormuz. Fed sobe juros em setembro para 4,00-4,25%. BCB interrompe cortes e mantém Selic em 14,25% até fim de 2026. Real deprecia para R$ 5,40. PIB cresce apenas 0,8%. Crédito corporativo sofre deterioração, spreads sobem. Ouro sobe para US$ 4.300+.",
+      "base": "Brent entre US$ 85-95 com tensão contida no Golfo. Fed mantém pausa, primeiro corte no 1º tri de 2027. BCB corta Selic para 14,00% em agosto e sinaliza mais um corte em 2026, fechando o ano em 13,75%. Real deprecia ordenadamente para R$ 5,20. IPCA converge para 5,12% em 2026 e 4,22% em 2027. PIB cresce 1,99%. Renda fixa real segue como melhor risco-retorno.",
+      "otimista": "Cessar-fogo EUA-Irã restabelece tráfego no Estreito de Ormuz. Brent recua para US$ 70-80. Inflação global cede, Fed corta juros no 4º tri de 2026. BCB acelera cortes para 0,50 p.p., Selic fecha 2026 em 13,00%. Real se estabiliza em R$ 5,00. PIB cresce 2,5%+. Ações cíclicas, crédito corporativo e criptoativos se recuperam. Ouro perde atratividade relativa com queda dos juros reais."
     }
   }
 }

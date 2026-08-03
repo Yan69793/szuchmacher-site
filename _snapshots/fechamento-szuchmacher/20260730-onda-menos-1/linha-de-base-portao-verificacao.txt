@@ -1,0 +1,43 @@
+# Linha de base do portao de verificacao, capturada em 2026-07-30 15:01:29 -0300
+# Roda sobre os 5 ultimos pregoes, ANTES de qualquer mudanca deste plano
+
+=== 20260722 ===
+APROVADO: conteúdo passou em todas as checagens.
+  titulos canonicos: 6/6
+  data: 22.07.2026
+  agenda: 3 eventos
+  grid: 6 cards, 18 linhas, conferido contra precos coletado
+EXIT_CODE=0
+
+=== 20260724 ===
+APROVADO: conteúdo passou em todas as checagens.
+  titulos canonicos: 6/6
+  data: 24.07.2026
+  agenda: 3 eventos
+  grid: 6 cards, 18 linhas, conferido contra precos coletado
+EXIT_CODE=0
+
+=== 20260727 ===
+APROVADO: conteúdo passou em todas as checagens.
+  titulos canonicos: 6/6
+  data: 27.07.2026
+  agenda: 3 eventos
+  grid: 6 cards, 18 linhas, conferido contra precos coletado
+EXIT_CODE=0
+
+=== 20260728 ===
+APROVADO: conteúdo passou em todas as checagens.
+  titulos canonicos: 6/6
+  data: 28.07.2026
+  agenda: 3 eventos
+  grid: 6 cards, 18 linhas, conferido contra precos coletado
+EXIT_CODE=0
+
+=== 20260729 ===
+APROVADO: conteúdo passou em todas as checagens.
+  titulos canonicos: 6/6
+  data: 29.07.2026
+  agenda: 3 eventos
+  grid: 6 cards, 18 linhas, conferido contra precos coletado
+EXIT_CODE=0
+

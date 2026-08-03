@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Sliders — Sandbox MultiAsset</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portfolio-sliders.css">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Simulador de Carteira</h1>
+    <span class="header-badge">Sandbox</span>
+  </div>
+
+  <!-- Perfil + Cenário + Mode Toggle -->
+  <div class="controls">
+    <div class="control-group">
+      <label class="control-label" for="perfil-select">Perfil</label>
+      <select id="perfil-select" class="control-select">
+        <option value="conservador">Conservador</option>
+        <option value="moderado" selected>Moderado</option>
+        <option value="arrojado">Arrojado</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="cenario-select">Cenário</label>
+      <select id="cenario-select" class="control-select">
+        <option value="pessimista">Pessimista</option>
+        <option value="base" selected>Base</option>
+        <option value="otimista">Otimista</option>
+      </select>
+    </div>
+
+    <div class="mode-toggle" id="mode-toggle">
+      <button class="mode-btn active" data-mode="preset">Preset</button>
+      <button class="mode-btn" data-mode="custom">Custom</button>
+    </div>
+  </div>
+
+  <div class="perfil-desc" id="perfil-desc"></div>
+
+  <!-- Main: sliders + donut -->
+  <div class="main-grid">
+    <div class="sliders-panel">
+      <div class="sliders-header">
+        <span class="sliders-title">Alocação</span>
+        <span class="sliders-total mono" id="sum-display">Soma: 100%</span>
+      </div>
+
+      <div id="sliders-container"><!-- JS-populated --></div>
+
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span class="total-sum mono valid" id="total-sum">100%</span>
+      </div>
+
+      <div class="value-slider-row">
+        <span class="value-slider-label">Valor total</span>
+        <input type="range" class="value-slider" id="value-slider" min="10000" max="5000000" step="10000" value="500000">
+        <span class="value-display mono" id="value-display">R$ 500.000</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btn-reset" onclick="handleReset()">Restaurar preset</button>
+        <button class="btn primary" id="btn-share" onclick="handleShare()">Copiar link</button>
+      </div>
+    </div>
+
+    <div class="donut-panel">
+      <div class="donut-wrap">
+        <canvas id="chart-donut"></canvas>
+        <div class="donut-center">
+          <span class="donut-center-label">Total</span>
+          <span class="donut-center-val mono" id="donut-center-val">R$ 500K</span>
+        </div>
+      </div>
+      <div class="donut-legend" id="donut-legend"><!-- JS-populated --></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="PortfolioStore.js"></script>
+<script src="portfolio-persistence.js"></script>
+
+<script>
+/* =============================================================
+ * portfolio-sliders.html — controlador do sandbox
+ * ============================================================= */
+
+(function () {
+  'use strict';
+
+  var portfolioValue = 500000;
+  var donutChart = null;
+
+  /* ── Formatação ── */
+
+  function fmt(v, dec) {
+    if (v == null || isNaN(v)) return '—';
+    return Number(v).toFixed(dec != null ? dec : 0).replace('.', ',');
+  }
+
+  function fmtBRL(v) {
+    if (v >= 1e6) return 'R$ ' + (v / 1e6).toFixed(2).replace('.', ',') + ' M';
+    return 'R$ ' + fmt(v, 0);
+  }
+
+  function fmtBRLShort(v) {
+    if (v >= 1e6) return 'R$ ' + (v / 1e6).toFixed(1).replace('.', ',') + 'M';
+    if (v >= 1e3) return 'R$ ' + Math.round(v / 1000) + 'K';
+    return 'R$ ' + Math.round(v);
+  }
+
+  function fmtPct(n) {
+    return (n % 1 === 0 ? n : n.toFixed(1).replace('.', ',')) + '%';
+  }
+
+  /* ── Toast ── */
+
+  var toastTimer = null;
+  function showToast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2000);
+  }
+
+  /* ── Sliders ── */
+
+  function buildSliders() {
+    var container = document.getElementById('sliders-container');
+    if (!container) return;
+
+    var weights = PortfolioStore.getActiveWeights();
+    var catalog = PortfolioStore.getAssetCatalog();
+    var isCustom = PortfolioStore.getMode() === 'custom';
+
+    container.innerHTML = weights.map(function (item) {
+      return (
+        '<div class="slider-row">' +
+          '<div class="slider-dot" style="background:' + item.color + '"></div>' +
+          '<div class="slider-name">' + item.label + '<small>' + item.key + '</small></div>' +
+          '<div class="slider-input-wrap">' +
+            '<input type="range" class="slider-input" ' +
+              'data-key="' + item.key + '" ' +
+              'min="0" max="100" step="0.5" value="' + item.pct + '" ' +
+              (isCustom ? '' : 'disabled') +
+            '>' +
+          '</div>' +
+          '<span class="slider-pct" data-pct="' + item.key + '">' + fmtPct(item.pct) + '</span>' +
+          '<span class="slider-value mono" data-val="' + item.key + '">' + fmtBRL(portfolioValue * item.pct / 100) + '</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    /* Bind events */
+    container.querySelectorAll('.slider-input').forEach(function (slider) {
+      slider.addEventListener('input', onSliderInput);
+    });
+  }
+
+  function refreshSliderValues() {
+    var weights = PortfolioStore.getActiveWeights();
+    var catalog = PortfolioStore.getAssetCatalog();
+    var isCustom = PortfolioStore.getMode() === 'custom';
+
+    weights.forEach(function (item) {
+      var pctEl = document.querySelector('[data-pct="' + item.key + '"]');
+      var valEl = document.querySelector('[data-val="' + item.key + '"]');
+      var slider = document.querySelector('.slider-input[data-key="' + item.key + '"]');
+      if (pctEl) pctEl.textContent = fmtPct(item.pct);
+      if (valEl) valEl.textContent = fmtBRL(portfolioValue * item.pct / 100);
+      if (slider) {
+        slider.value = item.pct;
+        slider.disabled = !isCustom;
+      }
+    });
+  }
+
+  /* ── Redistribuição proporcional ── */
+
+  function redistribute(changedKey, newPct) {
+    var items = PortfolioStore.getActiveWeights().map(function (i) {
+      return { key: i.key, pct: i.pct };
+    });
+
+    var changed = items.find(function (i) { return i.key === changedKey; });
+    if (!changed) return;
+
+    var oldPct = changed.pct;
+    var delta = newPct - oldPct;
+
+    changed.pct = newPct;
+
+    // Soma dos outros
+    var others = items.filter(function (i) { return i.key !== changedKey; });
+    var sumOthers = others.reduce(function (s, i) { return s + i.pct; }, 0);
+
+    if (sumOthers > 0) {
+      others.forEach(function (i) {
+        // Proporção do excedente que este ativo absorve
+        var share = i.pct / sumOthers;
+        i.pct = i.pct - delta * share;
+        // Não deixa cair abaixo de 0
+        if (i.pct < 0) i.pct = 0;
+      });
+    } else if (delta > 0) {
+      // Todos os outros estão em 0 e estamos subindo — não pode
+      changed.pct = oldPct;
+      return;
+    }
+
+    // Normaliza para garantir soma 100
+    var total = items.reduce(function (s, i) { return s + i.pct; }, 0);
+    if (total > 0) {
+      items.forEach(function (i) {
+        i.pct = Math.round((i.pct / total) * 10000) / 100;
+      });
+    }
+
+    // Corrige último dígito por arredondamento
+    var finalSum = items.reduce(function (s, i) { return s + i.pct; }, 0);
+    if (Math.abs(finalSum - 100) > 0.01) {
+      var largest = items.reduce(function (a, b) { return a.pct > b.pct ? a : b; });
+      largest.pct += (100 - finalSum);
+      largest.pct = Math.round(largest.pct * 100) / 100;
+    }
+
+    PortfolioStore.setCustomWeights(items);
+  }
+
+  /* ── Event handlers ── */
+
+  function onSliderInput(e) {
+    var key = e.target.dataset.key;
+    if (!key) return;
+
+    var newPct = parseFloat(e.target.value);
+    if (isNaN(newPct)) return;
+
+    redistribute(key, newPct);
+    refreshAll();
+  }
+
+  function handleReset() {
+    PortfolioStore.resetToPreset();
+    document.getElementById('mode-toggle').querySelector('[data-mode="preset"]').classList.add('active');
+    document.getElementById('mode-toggle').querySelector('[data-mode="custom"]').classList.remove('active');
+    document.getElementById('perfil-select').value = PortfolioStore.getPresetProfile();
+    document.getElementById('cenario-select').value = PortfolioStore.getPresetScenario();
+    updatePerfilDesc();
+    refreshAll();
+    showToast('Restaurado para o preset');
+  }
+
+  function handleShare() {
+    var url = PortfolioPersistence.getShareUrl();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function () {
+        showToast('Link copiado');
+      }).catch(function () {
+        prompt('Copie o link:', url);
+      });
+    } else {
+      prompt('Copie o link:', url);
+    }
+  }
+
+  /* ── Mode toggle ── */
+
+  document.getElementById('mode-toggle').addEventListener('click', function (e) {
+    var btn = e.target.closest('.mode-btn');
+    if (!btn) return;
+    var mode = btn.dataset.mode;
+    if (mode === PortfolioStore.getMode()) return;
+
+    this.querySelectorAll('.mode-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    if (mode === 'preset') {
+      PortfolioStore.resetToPreset(
+        document.getElementById('perfil-select').value,
+        document.getElementById('cenario-select').value
+      );
+    }
+    // Se for 'custom', mantém os pesos atuais (que são os do preset se nunca editou)
+    if (mode === 'custom') {
+      var current = PortfolioStore.getActiveWeights();
+      PortfolioStore.setCustomWeights(current);
+    }
+
+    refreshAll();
+  });
+
+  /* ── Perfil/Cenário selectors ── */
+
+  document.getElementById('perfil-select').addEventListener('change', function () {
+    PortfolioStore.setPresetProfile(this.value);
+    updatePerfilDesc();
+    refreshAll();
+  });
+
+  document.getElementById('cenario-select').addEventListener('change', function () {
+    PortfolioStore.setPresetScenario(this.value);
+    refreshAll();
+  });
+
+  /* ── Value slider ── */
+
+  document.getElementById('value-slider').addEventListener('input', function () {
+    portfolioValue = parseInt(this.value);
+    document.getElementById('value-display').textContent = fmtBRL(portfolioValue);
+    document.getElementById('donut-center-val').textContent = fmtBRLShort(portfolioValue);
+    refreshSliderValues();
+    drawDonut();
+  });
+
+  /* ── Donut ── */
+
+  function drawDonut() {
+    var canvas = document.getElementById('chart-donut');
+    if (!canvas) return;
+
+    var weights = PortfolioStore.getActiveWeights();
+
+    if (donutChart) donutChart.destroy();
+    donutChart = new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        labels: weights.map(function (d) { return d.label + ' ' + fmtPct(d.pct); }),
+        datasets: [{
+          data: weights.map(function (d) { return d.pct; }),
+          backgroundColor: weights.map(function (d) { return d.color; }),
+          borderColor: '#0a0c10',
+          borderWidth: 3,
+          hoverBorderWidth: 4,
+          hoverBorderColor: '#1a1a1a',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#111',
+            borderColor: '#2a2a2a',
+            borderWidth: 1,
+            titleColor: '#aaa',
+            bodyColor: '#e8e8e8',
+            bodyFont: { family: 'DM Mono', size: 12 },
+            callbacks: {
+              label: function (ctx) {
+                var v = (portfolioValue * ctx.raw) / 100;
+                return ' ' + ctx.raw + '% · ' + fmtBRL(v);
+              }
+            }
+          }
+        },
+        animation: { animateRotate: true, duration: 500 }
+      }
+    });
+
+    /* Legend */
+    var legEl = document.getElementById('donut-legend');
+    if (legEl) {
+      legEl.innerHTML = weights.map(function (i) {
+        return (
+          '<div class="donut-leg-item">' +
+            '<span class="donut-leg-dot" style="background:' + i.color + '"></span>' +
+            '<span>' + i.label + ' ' + fmtPct(i.pct) + '</span>' +
+          '</div>'
+        );
+      }).join('');
+    }
+  }
+
+  /* ── Total sum ── */
+
+  function updateTotalSum() {
+    var weights = PortfolioStore.getActiveWeights();
+    var sum = weights.reduce(function (s, i) { return s + i.pct; }, 0);
+    var sumEl = document.getElementById('total-sum');
+    if (sumEl) {
+      sumEl.textContent = fmtPct(Math.round(sum * 100) / 100);
+      sumEl.className = 'total-sum mono ' + (Math.abs(sum - 100) < 0.05 ? 'valid' : 'invalid');
+    }
+    var sumDisplay = document.getElementById('sum-display');
+    if (sumDisplay) {
+      sumDisplay.textContent = 'Soma: ' + fmtPct(Math.round(sum * 100) / 100);
+    }
+  }
+
+  /* ── Perfil description ── */
+
+  function updatePerfilDesc() {
+    var descEl = document.getElementById('perfil-desc');
+    if (!descEl) return;
+    var descs = PortfolioStore.getPerfilDescriptions();
+    var profile = PortfolioStore.getPresetProfile();
+    var desc = descs[profile] || '';
+    // Só mostra descrição no modo preset
+    if (PortfolioStore.getMode() === 'preset') {
+      descEl.textContent = desc;
+      descEl.style.display = '';
+    } else {
+      descEl.style.display = 'none';
+    }
+  }
+
+  /* ── Full refresh ── */
+
+  function refreshAll() {
+    buildSliders();
+    updateTotalSum();
+    updatePerfilDesc();
+    drawDonut();
+  }
+
+  /* ── Init ── */
+
+  function init() {
+    // 1. Tenta carregar do URL share
+    var fromUrl = PortfolioPersistence.applyFromUrl();
+
+    // 2. Se não veio da URL, tenta localStorage
+    if (!fromUrl) {
+      PortfolioPersistence.load();
+    }
+
+    // 3. Ativa autopersistência
+    PortfolioPersistence.autoPersist();
+
+    // 4. Sincroniza UI com estado inicial
+    document.getElementById('perfil-select').value = PortfolioStore.getPresetProfile();
+    document.getElementById('cenario-select').value = PortfolioStore.getPresetScenario();
+
+    var mode = PortfolioStore.getMode();
+    if (mode === 'custom') {
+      document.getElementById('mode-toggle').querySelector('[data-mode="preset"]').classList.remove('active');
+      document.getElementById('mode-toggle').querySelector('[data-mode="custom"]').classList.add('active');
+    }
+
+    // 5. Render
+    updatePerfilDesc();
+    refreshAll();
+
+    console.log('Portfolio Sliders sandbox pronto. Store mode:', PortfolioStore.getMode());
+    console.log('Pesos ativos:', PortfolioStore.getActiveWeights());
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>

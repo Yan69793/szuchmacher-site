@@ -1,0 +1,144 @@
+{
+  "timestamp": "22/07/2026 19:00 BRT",
+  "prices": {
+    "IBOV": {
+      "close": 177547.57,
+      "change_abs": 4221.92,
+      "change_pct": 2.44,
+      "ticker_tv": "BMFBOVESPA:IBOV"
+    },
+    "USDBRL": {
+      "close": 5.0575,
+      "change_abs": -0.0165,
+      "change_pct": -0.33,
+      "ticker_tv": "FX_IDC:USDBRL"
+    },
+    "IFIX": {
+      "close": 3814.78,
+      "change_abs": -12.94,
+      "change_pct": -0.34,
+      "ticker_tv": "BMFBOVESPA:IFIX"
+    },
+    "DI1F28": {
+      "close": 14.205,
+      "change_abs": 0.07,
+      "change_pct": 0.5,
+      "ticker_tv": "BMFBOVESPA:DI1F2028"
+    },
+    "DI1F30": {
+      "close": 14.61,
+      "change_abs": 0.06,
+      "change_pct": 0.41,
+      "ticker_tv": "BMFBOVESPA:DI1F2030"
+    },
+    "SPX": {
+      "close": 7498.96,
+      "change_abs": -10.24,
+      "change_pct": -0.14,
+      "ticker_tv": "SP:SPX"
+    },
+    "NDX": {
+      "close": 28998.1005,
+      "change_abs": -157.0783,
+      "change_pct": -0.54,
+      "ticker_tv": "NASDAQ:NDX"
+    },
+    "DJI": {
+      "close": 52218.58,
+      "change_abs": -6.06,
+      "change_pct": -0.01,
+      "ticker_tv": "DJ:DJI"
+    },
+    "STOXX50": {
+      "close": 6317.0,
+      "change_abs": 31.37,
+      "change_pct": 0.5,
+      "ticker_tv": "TVC:SX5E"
+    },
+    "DAX": {
+      "close": 25155.41,
+      "change_abs": 144.06,
+      "change_pct": 0.58,
+      "ticker_tv": "XETR:DAX"
+    },
+    "CAC": {
+      "close": 8437.89,
+      "change_abs": 74.75,
+      "change_pct": 0.89,
+      "ticker_tv": "EURONEXT:PX1"
+    },
+    "FTSE": {
+      "close": 10716.98,
+      "change_abs": 131.07,
+      "change_pct": 1.24,
+      "ticker_tv": "TVC:UKX"
+    },
+    "NKY": {
+      "close": 66115.38,
+      "change_abs": -116.81,
+      "change_pct": -0.18,
+      "ticker_tv": "TVC:NI225"
+    },
+    "HSI": {
+      "close": 24892.67,
+      "change_abs": -239.63,
+      "change_pct": -0.95,
+      "ticker_tv": "TVC:HSI"
+    },
+    "SHCO": {
+      "close": 3867.0336,
+      "change_abs": 2.6665,
+      "change_pct": 0.07,
+      "ticker_tv": "SSE:000001"
+    },
+    "US02Y": {
+      "close": 4.304,
+      "change_abs": 0.043,
+      "change_pct": 1.01,
+      "ticker_tv": "TVC:US02Y"
+    },
+    "US10Y": {
+      "close": 4.659,
+      "change_abs": 0.033,
+      "change_pct": 0.71,
+      "ticker_tv": "TVC:US10Y"
+    },
+    "DE10Y": {
+      "close": 3.1836,
+      "change_abs": 0.0109,
+      "change_pct": 0.34,
+      "ticker_tv": "TVC:DE10Y"
+    },
+    "JP10Y": {
+      "close": 2.741,
+      "change_abs": 0.02,
+      "change_pct": 0.74,
+      "ticker_tv": "TVC:JP10Y"
+    },
+    "WTI": {
+      "close": 86.83,
+      "change_abs": 2.49,
+      "change_pct": 2.95,
+      "ticker_tv": "NYMEX:CL1!"
+    },
+    "BRENT": {
+      "close": 94.07,
+      "change_abs": 3.06,
+      "change_pct": 3.36,
+      "ticker_tv": "NYMEX:BZ1!"
+    },
+    "GOLD": {
+      "close": 4151.9,
+      "change_abs": 75.5,
+      "change_pct": 1.85,
+      "ticker_tv": "COMEX:GC1!"
+    },
+    "IRON": {
+      "close": 98.25,
+      "change_abs": 0.05,
+      "change_pct": 0.05,
+      "ticker_tv": "SGX:FEF1!"
+    }
+  },
+  "missing": []
+}

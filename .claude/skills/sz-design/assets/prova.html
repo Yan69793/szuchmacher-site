@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="tema-papel">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sistema de design Szuchmacher, folha de prova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Playfair+Display:wght@400&family=Libre+Baskerville:wght@400&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="sz-tokens.css" />
+<link rel="stylesheet" href="sz-base.css" />
+<style>
+  .sheet { display: grid; gap: 1px; background: var(--line-strong); border-top: 1px solid var(--line-strong); }
+  @media (min-width: 1000px) { .sheet { grid-template-columns: repeat(3, 1fr); } }
+
+  .panel { background: var(--bg); color: var(--text); padding: 40px 32px; }
+  .panel h2, .panel h3 { color: var(--text); }
+  .panel p { color: var(--muted); }
+
+  .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin: 24px 0; }
+  .sw { background: var(--surface-soft); padding: 0; }
+  .sw i { display: block; height: 46px; }
+  .sw span { display: block; font-family: var(--sz-font-mono); font-size: 0.56rem; letter-spacing: 0.08em; color: var(--muted); padding: 7px 8px; text-transform: uppercase; }
+
+  .contrast { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .contrast div { display: flex; justify-content: space-between; gap: 12px; font-family: var(--sz-font-mono); font-size: 0.66rem; color: var(--muted); padding: 5px 0; }
+  .contrast b { font-weight: 500; font-variant-numeric: tabular-nums; }
+  .pass { color: var(--accent); }
+  .fail { color: #c0392b; }
+
+  .head { padding: 56px 32px 32px; max-width: 900px; }
+  .head h1 { font-size: clamp(1.9rem, 3vw, 2.6rem); margin-bottom: 14px; }
+  .head p { max-width: 62ch; }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <span class="eyebrow">Folha de prova</span>
+  <h1>Um vocabulário, três papéis</h1>
+  <hr class="rule" aria-hidden="true" />
+  <p>
+    Os mesmos componentes renderizados sob os três temas. Nenhuma regra de
+    componente muda entre as colunas: o que muda é o mapeamento dos nove papéis
+    semânticos sobre os primitivos. A razão de contraste é calculada ao vivo
+    contra o fundo de cada tema.
+  </p>
+</div>
+
+<div class="sheet">
+
+  <section class="panel tema-papel">
+    <span class="eyebrow">tema-papel</span>
+    <h2>Szuchmacher</h2>
+    <p>Display em Prata. Fundo papel, dourado escuro para vencer o contraste sobre claro.</p>
+
+    <div class="swatches" data-swatches>
+      <div class="sw"><i style="background:var(--bg)"></i><span>bg</span></div>
+      <div class="sw"><i style="background:var(--surface)"></i><span>surface</span></div>
+      <div class="sw"><i style="background:var(--accent)"></i><span>accent</span></div>
+    </div>
+
+    <div class="hairline-grid" data-cols="2">
+      <div class="metric">
+        <div class="metric-value">99,9%</div>
+        <div class="metric-label">Disponibilidade</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">3,2M</div>
+        <div class="metric-label">Decisões</div>
+      </div>
+    </div>
+
+    <div class="btn-group" style="margin-top:24px">
+      <a href="#" class="btn">Agendar</a>
+      <a href="#" class="btn btn-outline">Ver mais</a>
+    </div>
+
+    <p class="compliance-note" style="margin-top:24px">
+      Nota de conformidade, com fundo e borda derivados do acento do tema.
+    </p>
+
+    <div class="contrast" data-contrast></div>
+  </section>
+
+  <section class="panel tema-carvao">
+    <span class="eyebrow">tema-carvao</span>
+    <h2>MultiAsset</h2>
+    <p>Display em Playfair. Quase preto neutro, e o dourado claro passa a ser o acento base.</p>
+
+    <div class="swatches">
+      <div class="sw"><i style="background:var(--bg)"></i><span>bg</span></div>
+      <div class="sw"><i style="background:var(--surface)"></i><span>surface</span></div>
+      <div class="sw"><i style="background:var(--accent)"></i><span>accent</span></div>
+    </div>
+
+    <div class="hairline-grid" data-cols="2">
+      <div class="metric">
+        <div class="metric-value">99,9%</div>
+        <div class="metric-label">Disponibilidade</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">3,2M</div>
+        <div class="metric-label">Decisões</div>
+      </div>
+    </div>
+
+    <div class="btn-group" style="margin-top:24px">
+      <a href="#" class="btn">Agendar</a>
+      <a href="#" class="btn btn-outline">Ver mais</a>
+    </div>
+
+    <p class="compliance-note" style="margin-top:24px">
+      Nota de conformidade, com fundo e borda derivados do acento do tema.
+    </p>
+
+    <div class="contrast" data-contrast></div>
+  </section>
+
+  <section class="panel tema-navy">
+    <span class="eyebrow">tema-navy</span>
+    <h2>VIX Radar</h2>
+    <p>Display em Libre Baskerville. Navy saturado, calibrado para densidade alta de dado.</p>
+
+    <div class="swatches">
+      <div class="sw"><i style="background:var(--bg)"></i><span>bg</span></div>
+      <div class="sw"><i style="background:var(--surface)"></i><span>surface</span></div>
+      <div class="sw"><i style="background:var(--accent)"></i><span>accent</span></div>
+    </div>
+
+    <div class="hairline-grid" data-cols="2">
+      <div class="metric">
+        <div class="metric-value">99,9%</div>
+        <div class="metric-label">Disponibilidade</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">3,2M</div>
+        <div class="metric-label">Decisões</div>
+      </div>
+    </div>
+
+    <div class="btn-group" style="margin-top:24px">
+      <a href="#" class="btn">Agendar</a>
+      <a href="#" class="btn btn-outline">Ver mais</a>
+    </div>
+
+    <p class="compliance-note" style="margin-top:24px">
+      Nota de conformidade, com fundo e borda derivados do acento do tema.
+    </p>
+
+    <div class="contrast" data-contrast></div>
+  </section>
+
+</div>
+
+<script>
+/* Razão de contraste WCAG, calculada sobre os valores realmente computados */
+(function () {
+  function parse(c) {
+    var m = c.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    var p = m[1].split(',').map(parseFloat);
+    return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+  }
+  function over(fg, bg) {           /* achata alfa sobre o fundo */
+    if (fg.a >= 1) return fg;
+    return {
+      r: fg.r * fg.a + bg.r * (1 - fg.a),
+      g: fg.g * fg.a + bg.g * (1 - fg.a),
+      b: fg.b * fg.a + bg.b * (1 - fg.a), a: 1
+    };
+  }
+  function lum(c) {
+    var v = [c.r, c.g, c.b].map(function (x) {
+      x /= 255;
+      return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+  }
+  function ratio(a, b) {
+    var l1 = lum(a), l2 = lum(b);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  }
+
+  document.querySelectorAll('[data-contrast]').forEach(function (box) {
+    var panel = box.closest('.panel');
+    var cs = getComputedStyle(panel);
+    var bg = parse(cs.backgroundColor);
+    var pares = [
+      ['texto', cs.color],
+      ['secundário', getComputedStyle(panel.querySelector('p')).color],
+      ['acento', getComputedStyle(panel.querySelector('.eyebrow')).color]
+    ];
+    box.innerHTML = pares.map(function (p) {
+      var fg = over(parse(p[1]), bg);
+      var r = ratio(fg, bg);
+      var ok = r >= 4.5;
+      return '<div><span>' + p[0] + ' sobre bg</span>' +
+             '<b class="' + (ok ? 'pass' : 'fail') + '">' +
+             r.toFixed(2) + ':1 ' + (ok ? 'AA' : 'reprova') + '</b></div>';
+    }).join('');
+  });
+})();
+</script>
+</body>
+</html>

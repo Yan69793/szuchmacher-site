@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fechamento de Mercado, Szuchmacher Consultoria, 27.07.2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef0f4;
+    --surface-soft: #f7f8fa;
+    --navy: #0a1428;
+    --navy-soft: #152238;
+    --gold: #92703a;
+    --gold-soft: #b8925a;
+    --gold-bright: #d4b87a;
+    --text: #1a2030;
+    --muted: #5a6272;
+    --white: #ffffff;
+    --green: #1a8a5c;
+    --red: #b33a3a;
+    --line: rgba(10, 20, 40, 0.10);
+    --radius: 2px;
+    --max: 1160px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Public Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  .hero {
+    background: linear-gradient(165deg, var(--navy) 0%, var(--navy-soft) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 48px 40px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .hero-logo {
+    font-family: 'Prata', Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .hero-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .hero-site {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--gold-bright);
+    text-decoration: none;
+    margin-top: 12px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(212, 184, 122, 0.45);
+  }
+  .hero-site:hover { border-bottom-color: var(--gold-bright); }
+  .hero-date-block { text-align: right; color: var(--white); }
+  .hero-date-block .day {
+    font-family: 'Prata', serif;
+    font-size: 3.25rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--gold-soft);
+  }
+  .hero-date-block .month-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    margin-top: 6px;
+  }
+  .hero-gold-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.35;
+  }
+  .hero-ticker {
+    background: rgba(0,0,0,0.22);
+    padding: 12px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+  }
+  .ticker-item .label { color: var(--gold-bright); font-weight: 500; }
+  .ticker-item .val { font-weight: 600; color: var(--white); font-variant-numeric: tabular-nums; }
+  .ticker-item .chg { font-weight: 500; font-size: 0.62rem; padding: 2px 6px; border-radius: var(--radius); }
+  .up { color: #5aea9a; background: rgba(90,234,154,0.12); }
+  .down { color: #ff7b7b; background: rgba(255,123,123,0.12); }
+
+  .main { max-width: var(--max); margin: 0 auto; padding: 0 40px 56px; }
+  .section { margin-top: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .section-number {
+    font-family: 'Prata', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 28px;
+  }
+  .section-title {
+    font-family: 'Prata', serif;
+    font-size: 1.2rem;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0.28;
+  }
+  .section-body {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    max-width: 72ch;
+    text-align: left;
+    text-wrap: pretty;
+    hyphens: none;
+  }
+  .section-body p { margin-bottom: 10px; }
+  .section-body p:last-child { margin-bottom: 0; }
+  .section-body strong { font-weight: 600; color: var(--navy); }
+
+  .card {
+    background: var(--surface-soft);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    padding: 26px 30px;
+  }
+
+  .radar-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .radar-list li {
+    font-size: 13.5px;
+    line-height: 1.65;
+    padding-left: 18px;
+    position: relative;
+  }
+  .radar-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .markets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .market-card {
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .market-card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .market-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 12.5px;
+  }
+  .market-row:not(:last-child) { border-bottom: 1px solid rgba(10,20,40,0.05); }
+  .market-row .name { font-weight: 500; }
+  .market-row .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+    font-size: 11.5px;
+  }
+  .market-row .change {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 11px;
+    min-width: 58px;
+    text-align: right;
+  }
+  .market-row .change.pos { color: var(--green); }
+  .market-row .change.neg { color: var(--red); }
+  .market-row .feriado { font-style: italic; color: var(--muted); font-size: 11px; }
+
+  .trame-card {
+    background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+    color: #f5f0e8;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .trame-text {
+    font-family: 'Prata', serif;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.92);
+    position: relative;
+    z-index: 2;
+  }
+  .trame-text::before {
+    content: '\201C';
+    font-size: 64px;
+    font-style: normal;
+    color: var(--gold);
+    opacity: 0.22;
+    position: absolute;
+    top: -22px;
+    left: -6px;
+    line-height: 1;
+  }
+
+  .agenda-list { display: flex; flex-direction: column; gap: 14px; }
+  .agenda-item { display: flex; align-items: flex-start; gap: 14px; }
+  .agenda-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius);
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .agenda-icon svg { width: 15px; height: 15px; fill: var(--gold-soft); }
+  .agenda-text { font-size: 13px; line-height: 1.55; padding-top: 2px; }
+  .agenda-text strong { color: var(--navy); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  .disclaimer {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 9.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    text-align: center;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner { flex-direction: column; align-items: flex-start; padding: 28px 22px 24px; }
+    .hero-date-block { text-align: left; }
+    .hero-ticker { padding: 10px 18px; gap: 14px; }
+    .main { padding: 0 20px 36px; }
+    .markets-grid { grid-template-columns: 1fr; }
+    .card { padding: 18px; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    body { background: #fff; }
+    .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card, .market-card, .trame-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <div class="hero-logo">Szuchmacher Consultoria</div>
+      <div class="hero-subtitle">Fechamento de Mercado</div>
+      <a href="https://www.szuchmacher.com.br" class="hero-site">www.szuchmacher.com.br</a>
+    </div>
+    <div class="hero-date-block">
+      <div class="day">27</div>
+      <div class="month-year">Julho 2026, Segunda-feira</div>
+    </div>
+  </div>
+  <div class="hero-gold-line"></div>
+  <div class="hero-ticker">
+    <div class="ticker-item"><span class="label">IBOV</span> <span class="val">175.334</span> <span class="chg up">+0,74%</span></div>
+    <div class="ticker-item"><span class="label">USD/BRL</span> <span class="val">5,1130</span> <span class="chg up">+0,62%</span></div>
+    <div class="ticker-item"><span class="label">S&P 500</span> <span class="val">7.413</span> <span class="chg up">+0,02%</span></div>
+    <div class="ticker-item"><span class="label">WTI</span> <span class="val">82,61</span> <span class="chg down">-7,50%</span></div>
+    <div class="ticker-item"><span class="label">OURO</span> <span class="val">4.075</span> <span class="chg up">+0,17%</span></div>
+    <div class="ticker-item"><span class="label">UST 10Y</span> <span class="val">4,647%</span> <span class="chg down">-0,73%</span></div>
+  </div>
+</header>
+
+<main class="main">
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">I</div>
+      <span class="section-title">Destaques do Pregão</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card section-body">
+      <p><strong>O Ibovespa encerrou a segunda-feira em alta de 0,74%, aos 175.334 pontos,</strong> puxado pelos grandes bancos e pela Vale, que compensaram a queda das petroleiras. Santander liderou os ganhos do setor financeiro, com alta de 3,87%, seguido por Itau Unibanco e Bradesco. O volume financeiro ficou em R$ 19,2 bilhoes, abaixo da media do ano.</p>
+      <p>O dia foi marcado pelo alivio nas tensoes geopoliticas entre Estados Unidos e Ira. O presidente Donald Trump anunciou uma pausa nos ataques aereos para dar espaco a diplomacia, com a China atuando como mediadora, e o Ira sinalizou que tambem suspenderia suas acoes. O efeito mais direto foi o colapso do petroleo, com o WTI despencando 7,50% para US$ 82,61 e o Brent cedendo 8,70% para US$ 88,36 no fechamento, a maior queda diaria desde abril de 2026.</p>
+      <p>Em Wall Street, os indices fecharam sem direcao unica. O Dow Jones subiu 0,51%, o S&P 500 teve leve alta de 0,02%, enquanto o Nasdaq recuou 0,32%. Os rendimentos dos Treasuries cederam, com a taxa de 10 anos em 4,647%, refletindo a menor pressao inflacionaria vinda da energia e expectativas de que o Fed pode ter espaco para flexibilizar a politica monetaria.</p>
+      <p>No mercado de cambio, o dolar comercial fechou cotado a R$ 5,1160, com leve alta de 0,06% frente ao real. O indice DXY, que mede o dolar contra uma cesta de moedas fortes, recuou 0,18%, pressionado pelo apetite por risco global e pela queda dos rendimentos dos titulos americanos.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">II</div>
+      <span class="section-title">No Radar</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <ul class="radar-list">
+        <li>A evolucao das negociacoes entre Estados Unidos e Ira permanece como foco central. A pausa nos ataques abre uma janela diplomatica, mas o cenario segue fragil e qualquer escalada pode reverter o alivio nos mercados de energia e risco.</li>
+        <li>A semana traz decisoes de politica monetaria do Federal Reserve e do Banco Central Europeu, com a atencao voltada para os comunicados e projecoes. No Brasil, o mercado monitora a ata do Copom e dados de inflacao.</li>
+        <li>A temporada de balancos do segundo trimestre acelera nesta semana, com numeros de gigantes de tecnologia como Apple, Microsoft e Amazon, que devem ditar o tom para o setor e para os indices americanos.</li>
+        <li>No front domestico, o governo retoma a discussao sobre o arcabouco fiscal no Congresso, com possiveis impactos sobre a curva de juros e o cambio nos proximos dias.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">III</div>
+      <span class="section-title">Mercados</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="markets-grid">
+      <div class="market-card">
+        <div class="market-card-title">Brasil</div>
+        <div class="market-row"><span class="name">Ibovespa</span><span class="value">175.334 pts</span><span class="change pos">+0,74%</span></div>
+        <div class="market-row"><span class="name">Dólar</span><span class="value">R$ 5,1130</span><span class="change pos">+0,62%</span></div>
+        <div class="market-row"><span class="name">IFIX</span><span class="value">3.798 pts</span><span class="change neg">−0,18%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Estados Unidos</div>
+        <div class="market-row"><span class="name">S&P 500</span><span class="value">7.413,18</span><span class="change pos">+0,02%</span></div>
+        <div class="market-row"><span class="name">Nasdaq</span><span class="value">28.039,21</span><span class="change neg">−0,32%</span></div>
+        <div class="market-row"><span class="name">Dow Jones</span><span class="value">52.210,08</span><span class="change pos">+0,51%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Europa</div>
+        <div class="market-row"><span class="name">Euro Stoxx 50</span><span class="value">6.282,22</span><span class="change pos">+0,02%</span></div>
+        <div class="market-row"><span class="name">DAX</span><span class="value">25.361,03</span><span class="change pos">+1,04%</span></div>
+        <div class="market-row"><span class="name">FTSE 100</span><span class="value">10.781,76</span><span class="change pos">+0,42%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Ásia</div>
+        <div class="market-row"><span class="name">Nikkei 225</span><span class="value">64.930,97</span><span class="change pos">+0,50%</span></div>
+        <div class="market-row"><span class="name">Hang Seng</span><span class="value">25.207,19</span><span class="change pos">+0,98%</span></div>
+        <div class="market-row"><span class="name">Shanghai</span><span class="value">3.858,24</span><span class="change pos">+1,15%</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Yields</div>
+        <div class="market-row"><span class="name">Treasury 10Y</span><span class="value">4,65%</span><span class="change neg">−3 bps</span></div>
+        <div class="market-row"><span class="name">JGB 10Y</span><span class="value">2,78%</span><span class="change neg">−2 bps</span></div>
+        <div class="market-row"><span class="name">Taxa de Juros Brasil 2030</span><span class="value">14,47%</span><span class="change neg">−12 bps</span></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-title">Commodities</div>
+        <div class="market-row"><span class="name">WTI</span><span class="value">US$ 82,61</span><span class="change neg">−7,50%</span></div>
+        <div class="market-row"><span class="name">Brent</span><span class="value">US$ 88,36</span><span class="change neg">−8,70%</span></div>
+        <div class="market-row"><span class="name">Ouro</span><span class="value">US$ 4.074,50</span><span class="change pos">+0,17%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">IV</div>
+      <span class="section-title">Drivers do Dia</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card section-body">
+      <p>O principal vetor da sessao foi a descompressao geopolitica no Oriente Medio. A confirmacao de que os Estados Unidos suspenderam os ataques aereos contra o Ira e de que Teera tambem interrompeu suas hostilidades, com a China atuando como mediadora, reduziu o premio de risco que vinha sustentando os precos do petroleo nas ultimas semanas. O alivio permitiu que os mercados de risco respirassem, com as bolsas europeias e americanas operando em territorio positivo durante boa parte do dia.</p>
+      <p>Esse movimento favoreceu a Bolsa brasileira, com destaque para os setores que se beneficiam de juros mais baixos, como bancos e consumo. Por outro lado, as acoes de petroleiras, como Petrobras e Prio, lideraram as perdas do Ibovespa, refletindo a queda das commodities energeticas. O real, porem, nao acompanhou o otimismo externo, mantendo-se praticamente estavel frente ao dolar, em um sinal de que o risco fiscal domestico segue no radar dos investidores.</p>
+      <p>A queda dos rendimentos dos Treasuries, com a taxa de 10 anos recuando para 4,647%, tambem ajudou a sustentar os ativos de risco globais. A leitura do mercado e de que uma energia mais barata reduz a pressao inflacionaria de curto prazo e da espaco para que os bancos centrais, especialmente o Fed, adotem um tom mais dovish nos comunicados desta semana.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">V</div>
+      <span class="section-title">La Trame du Jour</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card trame-card">
+      <p class="trame-text">O dia foi de alivio, mas alivio contido, daquele tipo em que o mercado sobe olhando para o retrovisor. A trégua entre Washington e Teerä interrompeu a escalada que vinha pressionando o petroleo e intoxicando o calculo de risco, e o alivio foi imediato, as bolsas subiram, os yields cederam, o petroleo recuou. Mas ninguem confunde uma pausa tatica com uma solucao diplomatica, e o premio de risco geopolitico nao desapareceu, so foi recalibrado para um patamar menos urgente. Enquanto isso, a semana que comeca guarda decisoes de Fed e BCE, uma leva de balancos das big techs e, no Brasil, a retomada da discussao fiscal. O mercado respirou hoje, mas a agenda dos proximos dias nao da folga.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">VI</div>
+      <span class="section-title">Agenda do Próximo Dia Útil</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <div class="agenda-list">
+        <div class="agenda-item">
+          <div class="agenda-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+          </div>
+          <div class="agenda-text"><strong>10h00, Alemanha,</strong> Clima do Consumidor GfK (Agosto)</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+          </div>
+          <div class="agenda-text"><strong>11h00, EUA,</strong> Confianca do Consumidor (Conference Board) (Julho)</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+          </div>
+          <div class="agenda-text"><strong>20h50, Japao,</strong> Vendas no Varejo (Junho)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    Este material tem caráter exclusivamente informativo e não constitui recomendação de investimento, compra ou venda de qualquer ativo financeiro. As informações refletem dados disponíveis na data de publicação. <strong>Szuchmacher Consultoria</strong>, Yan Szuchmacher, Analista de Mercados, 27.07.2026
+  </div>
+</main>
+</body>
+</html>

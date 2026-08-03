@@ -1,0 +1,184 @@
+/* ══════════════════════════════════════════════════════════════════════
+   sz-tokens.css — Sistema de design Szuchmacher
+   Camada 1: primitivos (valor bruto, nunca consumido por componente)
+   Camada 2: papéis semânticos (o que todo componente consome)
+   Camada 3: três temas que mapeiam papel sobre primitivo
+
+   Valores extraídos de produção:
+     szuchmacher.com.br/assets/sz-design.css
+     multi-assets.com  (bloco :root inline)
+     vixradar.com      (bloco :root inline)
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Camada 1, primitivos ───────────────────────────────────────── */
+
+  /* papel, claro */
+  --sz-paper-100: #f8f6f2;
+  --sz-paper-200: #f3f1ec;
+  --sz-paper-300: #ebe7e0;
+
+  /* tinta, escuro */
+  --sz-ink-800: #172338;   /* navy suave, institucional */
+  --sz-ink-900: #0c1524;   /* navy, institucional */
+  --sz-ink-930: #10141a;   /* superfície MultiAsset */
+  --sz-ink-950: #0a0c10;   /* quase preto, MultiAsset */
+  --sz-ink-970: #001830;   /* navy 2, Radar */
+  --sz-ink-990: #001020;   /* navy, Radar */
+
+  /* dourado */
+  --sz-gold-400: #c4a46a;  /* acento sobre fundo escuro */
+  --sz-gold-450: #b7985d;  /* acento Radar */
+  --sz-gold-500: #8c6b3a;  /* acento sobre fundo claro */
+  --sz-gold-550: #886839;  /* texto pequeno sobre papel, ver nota AA abaixo */
+  --sz-gold-600: #a88850;  /* hover */
+  --sz-gold-700: #8a6f3a;  /* pressionado */
+
+  /* Nota de contraste
+     #8c6b3a sobre #f3f1ec rende 4.35:1 e reprova em WCAG AA para texto
+     pequeno, que é o caso do .eyebrow e do .section-date. #886839 rende
+     4.55:1 e é visualmente indistinguível, 4 pontos de RGB de diferença.
+     Por isso --accent segue idêntico a produção, para filete, marcador e
+     borda, e --accent-text existe para todo dourado que carrega texto. */
+
+  /* texto sobre papel */
+  --sz-text-900: #161c28;
+  --sz-text-500: #5c6574;
+
+  /* texto sobre escuro */
+  --sz-cream-100: #ede9e1;
+  --sz-cream-200: #e8e4d9;
+  --sz-cream-300: #d8d0c0;
+  --sz-slate-400: #8b93a0;
+  --sz-slate-500: #8896a0;
+
+  /* semáforo, uso restrito a dado */
+  --sz-pos: #5aad86;
+  --sz-neg: #e08f8f;
+  --sz-info: #6a96d4;
+  --sz-warn: #d4885a;
+
+  /* ── Tipografia ─────────────────────────────────────────────────── */
+  --sz-font-body: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sz-font-mono: 'JetBrains Mono', 'Consolas', ui-monospace, monospace;
+
+  /* display, um por produto; o tema sobrescreve --font-display */
+  --sz-display-institucional: 'Prata', Georgia, 'Times New Roman', serif;
+  --sz-display-multiasset: 'Playfair Display', Georgia, serif;
+  --sz-display-radar: 'Libre Baskerville', Georgia, serif;
+
+  /* ── Escalas, iguais nos três ───────────────────────────────────── */
+  --radius: 0px;
+  --max: 1120px;
+  --tracking-display: -0.028em;
+  --tracking-label: 0.16em;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --lh-body: 1.65;
+  --lh-title: 1.08;
+
+  --pad-container: 32px;
+  --pad-container-sm: 20px;
+  --pad-section: 112px;
+  --pad-section-sm: 74px;
+
+  /* camadas */
+  --z-header: 400;
+  --z-nav-mobile: 410;
+  --z-skip: 500;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Camada 2 e 3: papéis semânticos por tema
+   Aplicar a classe do tema em <html> ou <body>.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── tema-papel · Szuchmacher Consultoria ───────────────────────────
+   Fundo claro. O dourado precisa ser o escuro (500) para ter contraste. */
+.tema-papel {
+  --font-display: var(--sz-display-institucional);
+
+  --bg: var(--sz-paper-200);
+  --surface: var(--sz-paper-300);
+  --surface-soft: var(--sz-paper-100);
+
+  --text: var(--sz-text-900);
+  --muted: var(--sz-text-500);
+
+  --accent: var(--sz-gold-500);
+  --accent-text: var(--sz-gold-550);   /* dourado que carrega texto pequeno */
+  --accent-strong: var(--sz-gold-400);
+  --accent-hover: var(--sz-gold-600);
+
+  --line: rgba(12, 21, 36, 0.09);
+  --line-strong: rgba(12, 21, 36, 0.14);
+
+  /* inversão para faixas escuras dentro de página clara */
+  --invert-bg: var(--sz-ink-900);
+  --invert-bg-soft: var(--sz-ink-800);
+  --invert-text: var(--sz-cream-100);
+  --invert-muted: rgba(255, 255, 255, 0.74);
+  --invert-line: rgba(255, 255, 255, 0.14);
+  --invert-accent: var(--sz-gold-400);
+}
+
+/* ── tema-carvao · MultiAsset ───────────────────────────────────────
+   Fundo quase preto neutro. O mesmo #c4a46a que era acento forte no
+   claro vira o acento base aqui. Mesma tinta, papel diferente. */
+.tema-carvao {
+  --font-display: var(--sz-display-multiasset);
+
+  --bg: var(--sz-ink-950);
+  --surface: var(--sz-ink-930);
+  --surface-soft: #161b22;
+
+  --text: var(--sz-cream-200);
+  --muted: var(--sz-slate-400);
+
+  --accent: var(--sz-gold-400);
+  --accent-text: var(--sz-gold-400);   /* sobre escuro o próprio acento passa */
+  --accent-strong: #d8bc84;
+  --accent-hover: #d8bc84;
+
+  --line: rgba(232, 228, 217, 0.08);
+  --line-strong: rgba(232, 228, 217, 0.14);
+
+  --invert-bg: var(--sz-paper-200);
+  --invert-bg-soft: var(--sz-paper-100);
+  --invert-text: var(--sz-text-900);
+  --invert-muted: var(--sz-text-500);
+  --invert-line: rgba(12, 21, 36, 0.14);
+  --invert-accent: var(--sz-gold-500);
+
+  --max: 1280px;
+}
+
+/* ── tema-navy · VIX Radar ──────────────────────────────────────────
+   Navy saturado, densidade de dado alta. */
+.tema-navy {
+  --font-display: var(--sz-display-radar);
+
+  --bg: var(--sz-ink-990);
+  --surface: var(--sz-ink-970);
+  --surface-soft: #0d2030;
+
+  --text: var(--sz-cream-300);
+  --muted: var(--sz-slate-500);
+
+  --accent: var(--sz-gold-450);
+  --accent-text: var(--sz-gold-450);   /* sobre escuro o próprio acento passa */
+  --accent-strong: #c9a96e;
+  --accent-hover: #c9a96e;
+
+  --line: rgba(183, 152, 93, 0.15);
+  --line-strong: rgba(183, 152, 93, 0.30);
+
+  --invert-bg: var(--sz-paper-200);
+  --invert-bg-soft: var(--sz-paper-100);
+  --invert-text: var(--sz-text-900);
+  --invert-muted: var(--sz-text-500);
+  --invert-line: rgba(12, 21, 36, 0.14);
+  --invert-accent: var(--sz-gold-500);
+
+  --max: 1280px;
+}
