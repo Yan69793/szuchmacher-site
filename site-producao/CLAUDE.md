@@ -224,7 +224,35 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp
+0. **P0 — `CLOUDFLARE_API_TOKEN` perdeu permissão de leitura de deployments (2026-08-04)** — o token
+   `cfut_` persistido em escopo User tem precedência sobre o login OAuth do wrangler e passou a
+   devolver `Authentication error [code: 10000]` em
+   `/accounts/.../workers/scripts/sz-sites/deployments`. Efeito: `Get-VersaoViva` não lia a versão
+   viva, e `publicar-com-rollback.ps1` abortava na etapa 1 sem publicar nada. Evidência:
+   `diagnosticos/publicacao_2026-08-02_0800.md` publicou normal, `publicacao_2026-08-04_2053.md` e
+   `_2101.md` abortaram. Isso mata a rotina `Szuchmacher-AgendaAgent` (dom+seg+qui 08:00), que
+   passa a só disparar e-mail de alerta.
+   **Mitigado, não resolvido:** as três chamadas `npx wrangler` do publicador agora passam por
+   `Invoke-WranglerOAuth`, que tira a variável do processo e cai no OAuth de
+   `~/.wrangler/config/default.toml` (que tem a permissão), restaurando no `finally` porque o
+   `deploy-cloudflare.ps1` roda depois no mesmo processo e usa o token para publicar. Mesmo idioma
+   já usado por `invalidate-worker-cache.ps1` e `attach-worker-domains.ps1`.
+   **Em aberto:** por que o token degradou entre 30/07 e 04/08. Em 30/07 ele publicava e só faltava
+   `workers_kv:write`. Verificar no dashboard se foi rotacionado, editado ou expirado, e se o
+   `deploy-cloudflare.ps1` (que ainda usa o token para `wrangler deploy`) continua com permissão de
+   publicar. Um deploy real não foi testado.
+
+1. **TestSprite desligado no publicar-com-rollback.ps1** — a etapa 5 do script existe e está
+   completa (`Invoke-TestSprite` + `Test-CodigoMudou`), mas a chamada está comentada. Motivo:
+   `testsprite-plans/checkout-assinatura.json` nunca foi executado. Plano não provado reprova por
+   redação do plano tão facilmente quanto por defeito no site, e como uma reprovação aciona
+   `Invoke-Rollback`, ligar antes de validar arriscaria reverter um deploy bom sem ninguém olhando.
+   Para religar: rodar o plano à mão, confirmar exit 0, descomentar as duas linhas.
+   Pendência secundária: existem **dois** projetos no TestSprite, `8b5a2d2c-84f0-46e8-b693-71bb879a387d`
+   (vazio, é para onde o plano aponta) e `cd0e3621-42ed-4ec3-8a38-b6fb053f852c` (3 testes verdes de
+   2026-08-04, planos locais apagados). Consolidar em um só antes de ligar o gate.
+
+2. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp
 2. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
 3. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
 4. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)

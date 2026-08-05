@@ -1,0 +1,57 @@
+{
+  "projectId": "8b5a2d2c-84f0-46e8-b693-71bb879a387d",
+  "type": "frontend",
+  "name": "Checkout assinatura - botoes levam ao checkout certo e retorno confirma",
+  "description": "Verifica que os botoes Assinar a Carta / Assinar o Pro levam a um Stripe Checkout ativo do produto e valor certos, ou ao mailto de fallback quando a guarda esta desligada, e que ?checkout=ok exibe a confirmacao. Nunca preenche nem envia dado de pagamento.",
+  "priority": "p1",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /assinatura.html with a fresh load and no query string."
+    },
+    {
+      "type": "assertion",
+      "description": "Inside the #tiers section there are exactly two subscription links, one with visible text 'Assinar a Carta' and one with visible text 'Assinar o Pro'."
+    },
+    {
+      "type": "assertion",
+      "description": "The 'Assinar a Carta' link's href is either exactly 'mailto:yan@szuchmacher.com.br?subject=Assinatura%20Carta%20Szuchmacher' or starts with 'https://buy.stripe.com/'. It must never be empty, never '#', and must never contain '_PENDING' or '/test_'."
+    },
+    {
+      "type": "assertion",
+      "description": "The 'Assinar o Pro' link's href is either exactly 'mailto:yan@szuchmacher.com.br?subject=Assinatura%20MultiAsset%20Pro' or starts with 'https://buy.stripe.com/'. It must never be empty, never '#', and must never contain '_PENDING' or '/test_'."
+    },
+    {
+      "type": "action",
+      "description": "STRICT SAFETY RULE for every remaining step: never type, paste or submit any card number, CPF, email or any other data into any field on any Stripe page, and never click a pay/subscribe/confirm button on a Stripe page. Only read what is rendered. Violating this would charge real money."
+    },
+    {
+      "type": "action",
+      "description": "Click the 'Assinar a Carta' link and wait for the destination to finish rendering. If it opened a new tab, work in that tab."
+    },
+    {
+      "type": "assertion",
+      "description": "If the destination is a 'https://buy.stripe.com/' URL, the rendered page is a live Stripe Checkout that shows a product name containing 'Carta' and an amount containing '1.970', and it does NOT show any wording meaning the link is inactive, expired or no longer available. If instead the destination was the mailto address, this step passes without a Stripe page."
+    },
+    {
+      "type": "action",
+      "description": "Close the Stripe tab if one was opened, without interacting with it further, and navigate fresh to /assinatura.html (do not use the back button)."
+    },
+    {
+      "type": "action",
+      "description": "Click the 'Assinar o Pro' link and wait for the destination to finish rendering. If it opened a new tab, work in that tab."
+    },
+    {
+      "type": "assertion",
+      "description": "If the destination is a 'https://buy.stripe.com/' URL, the rendered page is a live Stripe Checkout that shows a product name containing 'MultiAsset' and an amount containing '3.970', and it does NOT show any wording meaning the link is inactive, expired or no longer available. If instead the destination was the mailto address, this step passes without a Stripe page."
+    },
+    {
+      "type": "action",
+      "description": "Close the Stripe tab if one was opened, without interacting with it further, and navigate to /assinatura.html?checkout=ok"
+    },
+    {
+      "type": "assertion",
+      "description": "The element with id 'checkout-ok' is visible (its hidden attribute is gone) and its text contains 'Assinatura recebida.'"
+    }
+  ]
+}

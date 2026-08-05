@@ -50,6 +50,16 @@ $checks = @(
     # --- config: a guarda do checkout de teste nao pode se perder num rollback ---
     @{ Url = "$SZ/assets/sz-config.js"; Status = 200; Contem = 'test_/.test(v)) return false';
        Rotulo = 'sz-config.js: guarda de checkout de teste' }
+    # A guarda sozinha nao prova que a URL live sobreviveu: o arquivo pode voltar a
+    # placeholder e continuar servindo a guarda intacta. Ancorado na linha de atribuicao
+    # de proposito, porque 'buy.stripe.com/test_' e '_PENDING' aparecem no proprio codigo
+    # da guarda e no SZ_CALCOM_URL; num substring solto a checagem passaria sempre.
+    @{ Url = "$SZ/assets/sz-config.js"; Status = 200;
+       Contem = "window.SZ_STRIPE_CARTA_URL = 'https://buy.stripe.com/";
+       Rotulo = 'sz-config.js: Payment Link live da Carta' }
+    @{ Url = "$SZ/assets/sz-config.js"; Status = 200;
+       Contem = "window.SZ_STRIPE_PRO_URL = 'https://buy.stripe.com/";
+       Rotulo = 'sz-config.js: Payment Link live do Pro' }
     @{ Url = "$SZ/assets/sz-design.css"; Status = 200; Contem = '--navy' }
 
     # --- endpoints ---
