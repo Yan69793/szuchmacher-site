@@ -6,9 +6,13 @@
     multiasset.html, multiasset-app.html  301 para multi-assets.com
     consultoria.html                      404 aqui; vive em multi-assets.com/consultoria
     ebook.html                            descontinuada em 2026-07-18, 301 para a home
+    conteudo/<slug>                       esqueleto noindex ate o conteudo real ser escrito.
+                                           Entra aqui so quando sair do estado de rascunho
+                                           (ver comentario "ESQUELETO" em cada artigo).
 
   Sitemap com 301 ou 404 gasta orcamento de rastreio e derruba a confianca do
-  arquivo inteiro. URL de outro dominio exige sitemap proprio la, nao aqui.
+  arquivo inteiro. URL de outro dominio exige sitemap proprio la, nao aqui
+  (multi-assets.com usa sitemap-multi.xml, publicado como multi/sitemap.xml).
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -20,6 +24,12 @@
   <url>
     <loc>https://szuchmacher.com.br/relatorios.html</loc>
     <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://szuchmacher.com.br/conteudo</loc>
+    <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

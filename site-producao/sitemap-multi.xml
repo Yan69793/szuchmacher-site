@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap de multi-assets.com. Lista so URL canonica deste dominio que
+  responde 200. Fonte: site-producao/sitemap-multi.xml, copiado como
+  multi/sitemap.xml pelo build (scripts/build-cloudflare-public.ps1).
+
+  lastmod de /, /consultoria, /metodologia e /privacidade vem da data do
+  ultimo commit que tocou o arquivo-fonte correspondente
+  (multiasset-app.html, consultoria.html, metodologia.html, privacidade.html).
+
+  Ficaram de fora, de proposito:
+    /aprenda/<slug>   esqueleto noindex ate o conteudo real ser escrito.
+                       Entra aqui so quando sair do estado de rascunho
+                       (ver comentario "ESQUELETO" em cada artigo).
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://multi-assets.com/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://multi-assets.com/aprenda</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://multi-assets.com/consultoria</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://multi-assets.com/metodologia</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://multi-assets.com/privacidade</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+</urlset>

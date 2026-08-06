@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE CANÔNICO — /aprenda (multi-assets.com)
+  ═══════════════════════════════════════════════════════════════════════
+  Não é publicado. Fica em docs/templates/ de propósito: dentro de
+  site-producao/aprenda/ o Copy-Tree '*.html' do build publicaria como
+  página real.
+
+  Como usar: copiar para site-producao/aprenda/<slug-da-pergunta>.html.
+  URL final: /aprenda/<slug-da-pergunta>. Depois de preencher, seguir os
+  4 passos do comentário "ESQUELETO" abaixo.
+
+  Diferença do template de /conteudo: aqui sempre tem bloco de fonte de
+  dados (.fonte-dados), porque todo artigo desta seção fala de um ativo
+  ou indicador que a plataforma já cota. .dado-proprietario continua
+  opcional, só quando o artigo cita simulação da própria MultiAsset.
+  ═══════════════════════════════════════════════════════════════════════
+-->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[SUBSTITUIR: Pergunta do título] | MultiAsset</title>
+    <meta name="description" content="[SUBSTITUIR: resumo de até 155 caracteres, mesma ideia da resposta direta]" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Passos para sair do estado de rascunho e virar artigo indexável:
+         1. Trocar a linha robots abaixo para "index,follow"
+         2. Atualizar datePublished, dateModified (JSON-LD) e o <time> visível
+            na linha de metadado para a data real de publicação
+         3. Se o corpo final for organizado como pergunta e resposta, descomentar
+            o bloco FAQPage no JSON-LD e preencher com as perguntas reais
+         4. Acrescentar o <url> correspondente em /sitemap-multi.xml
+         ═══════════════════════════════════════════════════════════════════ -->
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href="https://multi-assets.com/aprenda/[SUBSTITUIR: slug]" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="[SUBSTITUIR: Pergunta do título]" />
+    <meta property="og:description" content="[SUBSTITUIR: mesmo resumo]" />
+    <meta property="og:url" content="https://multi-assets.com/aprenda/[SUBSTITUIR: slug]" />
+    <meta property="og:site_name" content="MultiAsset" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content="https://multi-assets.com/og-cover.jpg" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/ma-aprenda.css?v=20260806" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://multi-assets.com/aprenda/[SUBSTITUIR: slug]#breadcrumb",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "MultiAsset", "item": "https://multi-assets.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Aprenda", "item": "https://multi-assets.com/aprenda" },
+            { "@type": "ListItem", "position": 3, "name": "[SUBSTITUIR: Pergunta do título]", "item": "https://multi-assets.com/aprenda/[SUBSTITUIR: slug]" }
+          ]
+        },
+        {
+          "@type": "Article",
+          "@id": "https://multi-assets.com/aprenda/[SUBSTITUIR: slug]#article",
+          "headline": "[SUBSTITUIR: Pergunta do título]",
+          "description": "[SUBSTITUIR: mesmo resumo]",
+          "datePublished": "[SUBSTITUIR: AAAA-MM-DD]",
+          "dateModified": "[SUBSTITUIR: AAAA-MM-DD]",
+          "inLanguage": "pt-BR",
+          "author": { "@type": "Organization", "name": "MultiAsset", "url": "https://multi-assets.com/" },
+          "publisher": { "@type": "Organization", "name": "MultiAsset", "url": "https://multi-assets.com/", "logo": "https://multi-assets.com/og-cover.jpg" },
+          "mainEntityOfPage": "https://multi-assets.com/aprenda/[SUBSTITUIR: slug]",
+          "breadcrumb": { "@id": "https://multi-assets.com/aprenda/[SUBSTITUIR: slug]#breadcrumb" }
+        }
+      ]
+    }
+    </script>
+    <!-- FAQPage, só se o corpo final for pergunta e resposta, com
+         "acceptedAnswer" idêntico ao texto visível na página. Acrescentar
+         como mais um objeto dentro do array @graph acima, não como script
+         separado. Nunca usar comentário /* */ dentro de application/ld+json:
+         quebra o JSON, um parser real (Rich Results Test, JSON.parse)
+         rejeita o bloco inteiro. Formato:
+    {
+      "@type": "FAQPage",
+      "@id": "https://multi-assets.com/aprenda/[SUBSTITUIR: slug]#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "[SUBSTITUIR: pergunta, igual ao h2 correspondente]",
+          "acceptedAnswer": { "@type": "Answer", "text": "[SUBSTITUIR: resposta, idêntica ao texto visível]" }
+        }
+      ]
+    }
+    -->
+</head>
+<body>
+
+    <header class="ap-header">
+        <div class="ap-header-inner">
+            <a href="/" class="ap-logo">Multi<span>Asset</span></a>
+            <a href="/aprenda" class="ap-back">&larr; Voltar para Aprenda</a>
+        </div>
+    </header>
+
+    <div class="article-page">
+        <nav class="breadcrumb" aria-label="Trilha">
+            <a href="/">MultiAsset</a>
+            <span class="sep" aria-hidden="true">/</span>
+            <a href="/aprenda">Aprenda</a>
+            <span class="sep" aria-hidden="true">/</span>
+            <span aria-current="page">[SUBSTITUIR: versão curta do título]</span>
+        </nav>
+
+        <div class="article-head">
+            <span class="eyebrow">[SUBSTITUIR: categoria curta, ex. Renda fixa, Ativos reais]</span>
+            <h1>[SUBSTITUIR: Pergunta do título, idêntica à do &lt;title&gt;]</h1>
+            <hr class="rule" aria-hidden="true" />
+        </div>
+
+        <div class="article-meta">
+            <span>Última atualização <time datetime="[SUBSTITUIR: AAAA-MM-DD]"><strong>[SUBSTITUIR: DD de mês de AAAA]</strong></time></span>
+        </div>
+
+        <div class="resposta-direta">
+            <p data-resposta-direta>[SUBSTITUIR: resposta direta em 40 a 70 palavras. Responde a pergunta do h1 sem rodeio. Escrever por último.]</p>
+        </div>
+
+        <nav id="sumario" aria-label="Sumário do artigo" hidden>
+            <span class="eyebrow">Nesta página</span>
+            <ol data-sumario-lista></ol>
+        </nav>
+
+        <article data-sumario-fonte class="artigo-corpo">
+            <h2 id="[SUBSTITUIR: slug-subpergunta-1]">[SUBSTITUIR: sub-pergunta 1]</h2>
+            <p>[SUBSTITUIR: resposta]</p>
+
+            <h2 id="[SUBSTITUIR: slug-subpergunta-2]">[SUBSTITUIR: sub-pergunta 2, usar lista se houver fatores enumeráveis]</h2>
+            <p>[SUBSTITUIR: parágrafo de transição]</p>
+            <ul>
+                <li>[SUBSTITUIR: fator 1]</li>
+                <li>[SUBSTITUIR: fator 2]</li>
+                <li>[SUBSTITUIR: fator 3]</li>
+            </ul>
+
+            <h2 id="[SUBSTITUIR: slug-subpergunta-3]">[SUBSTITUIR: sub-pergunta 3, usar tabela se for comparação]</h2>
+            <p>[SUBSTITUIR: parágrafo de transição]</p>
+            <table>
+                <thead>
+                    <tr><th>[SUBSTITUIR: critério]</th><th>[SUBSTITUIR: opção A]</th><th>[SUBSTITUIR: opção B]</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>[SUBSTITUIR]</td><td>[SUBSTITUIR]</td><td>[SUBSTITUIR]</td></tr>
+                </tbody>
+            </table>
+        </article>
+
+        <!-- Bloco opcional. Usar só se o artigo citar simulação proprietária
+             da MultiAsset (percentil de Monte Carlo, retorno por cenário).
+             Remover inteiro se não houver. -->
+        <div class="dado-proprietario">
+            <span class="eyebrow">Dado da plataforma</span>
+            <p>[SUBSTITUIR: dado ou simulação, com link para <a href="/metodologia">a metodologia</a> e marcação explícita de que é educacional, não projeção garantida.]</p>
+        </div>
+
+        <!-- Obrigatório nesta seção: todo artigo de /aprenda fala de um
+             ativo ou indicador que a plataforma cota, então cita a fonte. -->
+        <div class="fonte-dados">
+            <strong>Fonte dos dados:</strong> [SUBSTITUIR: fonte específica usada no artigo — World Gold Council, Silver Institute, TradingView, CoinGecko, AwesomeAPI ou Banco Central do Brasil, com link.]
+        </div>
+
+        <div class="artigo-conclusao">
+            <h2>Em resumo</h2>
+            <p>[SUBSTITUIR: conclusão que responde a pergunta do título de novo, em outras palavras. Não copiar a resposta direta.]</p>
+        </div>
+
+        <div class="disclaimer-box">
+            <strong>Aviso de Risco:</strong> Investimentos em metais preciosos, criptomoedas e renda fixa envolvem riscos, incluindo possível perda de capital. As informações apresentadas nesta plataforma têm caráter exclusivamente informativo e educacional, não constituindo oferta, recomendação ou aconselhamento de investimento. Resultados passados não garantem retornos futuros. Consulte um assessor financeiro credenciado antes de tomar decisões de investimento.
+        </div>
+    </div>
+
+    <footer class="ap-footer">
+        &copy; 2026 MultiAsset. <a href="/">multi-assets.com</a> &middot; <a href="/metodologia">Metodologia</a> &middot; <a href="/privacidade">Privacidade</a>
+    </footer>
+
+    <script src="/assets/sz-config.js?v=20260719"></script>
+    <script src="/assets/sumario-artigo.js?v=20260806"></script>
+    <script>
+    // Clarity: [SUBSTITUIR: nome_do_evento_view]
+    (function() {
+        if (window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
+            var t = document.createElement('script');
+            t.async = 1; t.src = 'https://www.clarity.ms/tag/' + window.SZ_CLARITY_ID;
+            document.head.appendChild(t);
+            t.onload = function() {
+                if (window.clarity) {
+                    window.clarity('event', '[SUBSTITUIR: nome_do_evento_view]', { referrer: document.referrer });
+                }
+            };
+        }
+    })();
+    </script>
+</body>
+</html>

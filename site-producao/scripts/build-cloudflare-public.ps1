@@ -61,14 +61,14 @@ New-Item -ItemType Directory -Path (Join-Path $MULTI 'assets') -Force | Out-Null
 Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
-    'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
-    'relatorio_cache.json',
+    'privacidade.html', 'sitemap.xml', 'robots.txt', 'agenda-data.json', 'macro_data.json',
+    'relatorio_cache.json', 'conteudo.html',
     'og-cover.jpg', 'logo.png',
     'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js')
+$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js', 'sz-conteudo.css', 'sumario-artigo.js')
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
@@ -77,6 +77,12 @@ foreach ($f in $szAssets) {
 # sem exigir edicao desta allowlist. Os PNG originais ficam fora da arvore, em
 # ../_fontes-img, e nao sao publicados.
 Copy-Tree (Join-Path $ROOT 'assets\img') (Join-Path $SZ 'assets\img') '*.webp' | Out-Null
+
+# Secao /conteudo. Pasta inteira, plana (sem -Recurse): artigo novo e soltar
+# o arquivo aqui, sem editar este script. hub fica em conteudo.html (acima),
+# nao em conteudo\index.html — serveStatic normaliza /conteudo para
+# /conteudo.html antes de consultar o binding ASSETS.
+Copy-Tree (Join-Path $ROOT 'conteudo') (Join-Path $SZ 'conteudo') '*.html' | Out-Null
 
 Write-Host "`n-- multi-assets.com --" -ForegroundColor Green
 Copy-IfExists (Join-Path $ROOT 'multiasset-app.html') (Join-Path $MULTI 'index.html') | Out-Null
@@ -94,6 +100,21 @@ Copy-IfExists (Join-Path $ROOT 'privacidade.html') (Join-Path $MULTI 'privacidad
 # Pagina de metodologia — fontes, calibracao, limitacoes. Copiada nas duas formas.
 Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologia.html') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologia') | Out-Null
+
+# Secao /aprenda. So a forma com extensao: '/aprenda' resolve para
+# 'aprenda.html' via serveStatic, e um arquivo 'aprenda' sem extensao ao
+# lado da pasta 'aprenda\' quebraria o Copy-Item no Windows.
+Copy-IfExists (Join-Path $ROOT 'aprenda.html') (Join-Path $MULTI 'aprenda.html') | Out-Null
+Copy-Tree (Join-Path $ROOT 'aprenda') (Join-Path $MULTI 'aprenda') '*.html' | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\ma-aprenda.css') (Join-Path $MULTI 'assets\ma-aprenda.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sumario-artigo.js') (Join-Path $MULTI 'assets\sumario-artigo.js') | Out-Null
+
+# Sitemap e robots do multi-assets.com. O dominio nao tinha nenhum dos dois
+# ate 06/08/2026 (sitemap respondia 404). Nomes de origem distintos de
+# sitemap.xml/robots.txt porque site-producao/ e plano e compartilhado —
+# os dois dominios nao podem ter arquivo-fonte homonimo na raiz.
+Copy-IfExists (Join-Path $ROOT 'sitemap-multi.xml') (Join-Path $MULTI 'sitemap.xml') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'robots-multi.txt') (Join-Path $MULTI 'robots.txt') | Out-Null
 
 # Imagética institucional (assets/img/*.webp), tambem usada em consultoria.html.
 # Mesmo diretorio inteiro do bloco sz, sem allowlist propria.
@@ -117,14 +138,17 @@ foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
 # que a copia falhou sem erro, que a contagem de SKIP sozinha nao pegaria.
 $obrigatorios = @(
     'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
-    'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
+    'sz\privacidade.html', 'sz\sitemap.xml', 'sz\robots.txt', 'sz\og-cover.jpg',
     'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
     'sz\relatorio_cache.json',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
+    'sz\conteudo.html', 'sz\assets\sz-conteudo.css', 'sz\assets\sumario-artigo.js',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
     'multi\privacidade.html', 'multi\privacidade',
     'multi\metodologia.html', 'multi\metodologia',
-    'multi\og-cover.jpg', 'multi\assets\sz-config.js'
+    'multi\og-cover.jpg', 'multi\assets\sz-config.js',
+    'multi\aprenda.html', 'multi\sitemap.xml', 'multi\robots.txt',
+    'multi\assets\ma-aprenda.css', 'multi\assets\sumario-artigo.js'
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })
 

@@ -1,0 +1,253 @@
+/* sz-conteudo.css — camada de artigo para /conteudo, sobre sz-design.css.
+ * Carrega depois de sz-design.css e sz-imagery.css. Consome os tokens já
+ * definidos em :root (--bg, --navy, --gold, --line etc.), não redeclara
+ * nenhum. Vale só para as páginas da seção de conteúdo, não é carregado em
+ * index.html, honorarios.html, assinatura.html nem relatorios.html.
+ */
+
+/* ── Filete de abertura ────────────────────────────────────────────────
+   40px de dourado sob o h1. sz-design.css ainda não tem essa classe, só
+   .hero-rule (page-specific); esta é a versão genérica de artigo. */
+.rule {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  border: 0;
+  margin: 0 0 22px;
+}
+
+/* ── Grid de fio de cabelo ──────────────────────────────────────────────
+   Assinatura da casa, ainda não promovida a sz-design.css. Reproduzida
+   aqui com os tokens do tema papel. */
+.hairline-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+}
+.hairline-grid > * { background: var(--surface-soft); }
+.hairline-grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
+.hairline-grid[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 640px) {
+  .hairline-grid[data-cols="2"],
+  .hairline-grid[data-cols="3"] { grid-template-columns: 1fr; }
+}
+
+/* ── Breadcrumb ───────────────────────────────────────────────────────── */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb [aria-current="page"] { color: var(--navy); }
+.breadcrumb .sep { color: var(--line-strong); }
+
+/* ── Página de artigo e de hub ───────────────────────────────────────── */
+.article-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 64px 32px 0;
+}
+
+.hub-page {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 64px 32px 0;
+}
+
+.article-head { margin-bottom: 40px; }
+
+.article-head h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  max-width: 20ch;
+}
+
+/* Metadado mono: data de atualização, tempo de leitura. */
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+.article-meta strong { color: var(--navy); font-weight: 500; }
+
+/* ── Resposta direta ──────────────────────────────────────────────────
+   O parágrafo que responde a pergunta do h1 sem rodeio. Demarcado por fio,
+   não por sombra nem por fundo colorido: mesma lógica de separação do
+   sistema, aplicada a um único bloco em vez de a um grid. */
+.resposta-direta {
+  border: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+  padding: 28px 32px;
+  margin-bottom: 48px;
+}
+.resposta-direta p {
+  color: var(--text);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* ── Sumário ──────────────────────────────────────────────────────────
+   nav#sumario nasce hidden; sumario-artigo.js remove o atributo quando
+   encontra pelo menos um h2. Sem JS, o conteúdo inteiro segue acessível
+   por scroll normal, só o atalho de navegação não aparece. */
+#sumario {
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  padding: 24px 0;
+  margin-bottom: 48px;
+}
+#sumario[hidden] { display: none; }
+#sumario ol {
+  list-style: none;
+  counter-reset: sumario;
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+#sumario li { counter-increment: sumario; }
+#sumario li::before {
+  content: counter(sumario, decimal-leading-zero) ' ';
+  font-family: var(--font-mono);
+  color: var(--gold);
+  margin-right: 6px;
+}
+#sumario a {
+  color: var(--navy);
+  text-decoration: none;
+  font-size: 0.94rem;
+}
+#sumario a:hover { color: var(--gold); }
+
+/* ── Corpo do artigo ──────────────────────────────────────────────────
+   p já herda color: var(--muted) da base; corpo de artigo precisa de
+   contraste de leitura, não de texto secundário. */
+.artigo-corpo h2 {
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  margin-top: 52px;
+  margin-bottom: 16px;
+}
+.artigo-corpo h2:first-child { margin-top: 0; }
+
+.artigo-corpo p {
+  color: var(--text);
+  max-width: 68ch;
+}
+
+.artigo-corpo ul,
+.artigo-corpo ol {
+  margin: 0 0 20px 0;
+  padding-left: 22px;
+  color: var(--text);
+}
+.artigo-corpo li { margin-bottom: 8px; }
+.artigo-corpo ul { list-style: none; }
+.artigo-corpo ul li { position: relative; padding-left: 18px; }
+.artigo-corpo ul li::marker { content: ''; }
+.artigo-corpo ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.artigo-corpo table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 28px;
+  font-size: 0.88rem;
+}
+.artigo-corpo th {
+  text-align: left;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line-strong);
+}
+.artigo-corpo td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  vertical-align: top;
+}
+
+/* Link de corpo: texto legível em navy, dourado só como sublinhado
+   decorativo. --accent puro sobre papel rende 4.35:1 e reprova AA em
+   texto corrido; a cor que carrega leitura fica em --navy. */
+.artigo-corpo a {
+  color: var(--navy);
+  text-decoration: underline;
+  text-decoration-color: var(--gold-soft);
+  text-underline-offset: 3px;
+}
+.artigo-corpo a:hover { text-decoration-color: var(--gold); }
+
+/* ── Dado proprietário ────────────────────────────────────────────────
+   Simulação ou percentil calculado pela plataforma. Rótulo mono, fio
+   superior dourado, link para a metodologia. */
+.dado-proprietario {
+  border: 1px solid var(--line-strong);
+  border-top: 2px solid var(--gold);
+  background: var(--surface-soft);
+  padding: 22px 26px;
+  margin: 8px 0 32px;
+}
+.dado-proprietario .eyebrow { margin-bottom: 10px; }
+.dado-proprietario p:last-child { margin-bottom: 0; }
+
+/* ── Conclusão ────────────────────────────────────────────────────────── */
+.artigo-conclusao {
+  border-top: 1px solid var(--line-strong);
+  padding-top: 32px;
+  margin-top: 48px;
+}
+
+/* ── Hub: cartão de artigo ────────────────────────────────────────────── */
+.article-card {
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 180px;
+}
+.article-card .eyebrow { margin-bottom: 0; }
+.article-card h3 {
+  font-size: 1.15rem;
+  flex-grow: 1;
+}
+.article-card a {
+  color: var(--navy);
+  text-decoration: none;
+}
+.article-card a:hover { color: var(--gold); }
+.article-card .article-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .article-page, .hub-page { padding: 48px 20px 0; }
+  .resposta-direta { padding: 22px 20px; }
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://multi-assets.com/sitemap.xml
