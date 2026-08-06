@@ -32,6 +32,10 @@ $PUBLICAR = Join-Path $PSScriptRoot 'publicar-com-rollback.ps1'
 $ALERT    = Join-Path $PSScriptRoot 'send-alert-email.ps1'
 $LOGDIR   = Join-Path $YAN 'logs'
 $LOG      = Join-Path $LOGDIR ("agenda_scheduled_{0:yyyyMMdd}.log" -f (Get-Date))
+$JSON     = Join-Path $ROOT 'agenda-data.json'
+
+# Preenchido so no caminho -Simular. Ver a copia de seguranca antes da geracao.
+$backupAgenda = $null
 
 # --- interpretador -------------------------------------------------------------
 # Ordem de preferencia. O venv historico vem primeiro: se alguem reinstalar o
@@ -187,6 +191,22 @@ try {
     Write-Log 'Working tree: nenhum arquivo deployavel pendente.'
 
     # --- 2. geracao -----------------------------------------------------------
+    # -Simular nao pode mexer na fonte viva. agenda_agent.py grava
+    # agenda-data.json mesmo com --dry-run, porque salvar_local() roda antes do
+    # teste de args.dry_run; o --dry-run so pula o deploy. Como o Fechamento de
+    # Mercado das 19h le este arquivo em disco, e nao o que esta publicado,
+    # simular encolhia a agenda que o relatorio ia usar.
+    #
+    # Aconteceu em 05/08/2026 as 02:14: a janela caiu de 03->10 com 14 eventos
+    # para 03->07 com 6, e so voltou porque alguem restaurou na mao um minuto
+    # depois. Se ninguem tivesse percebido, o relatorio de sexta 07/08 teria
+    # ficado sem os eventos de segunda 10/08.
+    if ($Simular -and (Test-Path $JSON)) {
+        $backupAgenda = Join-Path $env:TEMP ("agenda-data.simular.{0:yyyyMMddHHmmss}.bak.json" -f (Get-Date))
+        Copy-Item $JSON $backupAgenda -Force
+        Write-Log "SIMULACAO: copia de seguranca da agenda em $backupAgenda"
+    }
+
     $env:YAN_OS_BATCH = '1'
     Push-Location $YAN
     try {
@@ -196,8 +216,8 @@ try {
         Pop-Location
     }
 
-    $json = Join-Path $ROOT 'agenda-data.json'
-    if (-not (Test-Path $json)) { throw "agenda-data.json nao gerado em $json" }
+    if (-not (Test-Path $JSON)) { throw "agenda-data.json nao gerado em $JSON" }
+    $json = $JSON
 
     # --- 3. assercao de janela ------------------------------------------------
     # O agenda_agent nao tem como saber que o resultado dele vai ao ar. Publicar
@@ -252,4 +272,15 @@ try {
                         "Erro: $msg`n`nLog: $LOG")
     }
     exit 1
+} finally {
+    # Restaura a agenda que a simulacao sobrescreveu. Fica no finally e nao no
+    # ramo de sucesso porque a assercao de janela pode lancar depois da geracao,
+    # e nesse caminho o arquivo ja teria sido trocado. Confirmado no PS 5.1 que
+    # o finally roda mesmo com `exit` dentro do try, e sem alterar o codigo de
+    # saida.
+    if ($Simular -and $backupAgenda -and (Test-Path $backupAgenda)) {
+        Copy-Item $backupAgenda $JSON -Force
+        Remove-Item $backupAgenda -Force -ErrorAction SilentlyContinue
+        Write-Log 'SIMULACAO: agenda-data.json restaurado ao estado anterior.'
+    }
 }
