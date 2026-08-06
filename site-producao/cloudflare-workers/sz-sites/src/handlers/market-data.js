@@ -1,5 +1,5 @@
 import { fetchJson, jsonResponse, brtNow } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { readCache, writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'market-data';
 const CACHE_TTL = 600;
@@ -36,15 +36,8 @@ function fallbackVal(live, key, prevData) {
   return SEED[key];
 }
 
-export async function handleMarketData(env) {
+async function revalidate(env) {
   const cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    const cacheSource = cache.stale?.length ? 'Yahoo Finance · cache (parcial)' : 'Yahoo Finance · cache';
-    return jsonResponse({ ...cache, source: cacheSource }, {
-      headers: { 'Cache-Control': 'public, max-age=300' },
-    });
-  }
-
   const prevData = cache?.ibov ? cache : null;
   const [ibovLive, sp500Live, wtiLive, treasuryLive, ntnbLive] = await Promise.all([
     fetchYahoo('%5EBVSP'),
@@ -83,6 +76,30 @@ export async function handleMarketData(env) {
     ts: Math.floor(Date.now() / 1000),
   };
 
-  await writeCache(env.CACHE, CACHE_KEY, payload, CACHE_TTL * 2);
-  return jsonResponse(payload, { headers: { 'Cache-Control': 'public, max-age=300' } });
+  await writeCache(env.CACHE, CACHE_KEY, payload, staleTtl(CACHE_TTL));
+  return payload;
+}
+
+export async function handleMarketData(env, ctx) {
+  const { cached, state } = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    () => revalidate(env)
+  );
+
+  if (cached) {
+    const rotulo = state === 'stale' ? 'cache (revalidando)' : 'cache';
+    const source = cached.stale?.length
+      ? `Yahoo Finance · ${rotulo} (parcial)`
+      : `Yahoo Finance · ${rotulo}`;
+    return jsonResponse({ ...cached, source }, {
+      headers: { 'Cache-Control': 'public, max-age=300' },
+    });
+  }
+
+  return jsonResponse(await revalidate(env), {
+    headers: { 'Cache-Control': 'public, max-age=300' },
+  });
 }

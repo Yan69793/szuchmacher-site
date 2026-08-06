@@ -1,5 +1,5 @@
 import { fetchJson, jsonResponse, brtNow } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { readCache, writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'prices';
 const CACHE_TTL = 900;
@@ -20,23 +20,28 @@ async function fromAwesome(pair) {
   return bid != null && !Number.isNaN(Number(bid)) ? Number(bid) : null;
 }
 
-export async function handlePrices(env) {
+async function revalidate(env) {
   const cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    return jsonResponse({ ...cache, source_state: 'cache' }, {
-      headers: { 'Cache-Control': 'public, max-age=300' },
-    });
-  }
-
   const prev = cache?._raw ?? SEED;
-  let gold = await fromGoldApi('XAU');
-  if (gold == null) gold = await fromAwesome('XAU-USD');
-  let silver = await fromGoldApi('XAG');
-  if (silver == null) silver = await fromAwesome('XAG-USD');
-  const platinum = await fromGoldApi('XPT');
-  const copper = await fromGoldApi('HG');
-  let bitcoin = await fromGoldApi('BTC');
-  if (bitcoin == null) bitcoin = await fromAwesome('BTC-USD');
+
+  // Os cinco símbolos são independentes, e o fallback da AwesomeAPI dispara sempre
+  // — mesmo sem saber ainda se vai ser usado. Encadeado só-se-precisar (fallback
+  // depois do primary) somava dois timeouts de 8s em série, até 16s. Em paralelo
+  // desde o início, o pior caso é um timeout de 8s, não dois.
+  const [goldPrimary, silverPrimary, platinum, copper, bitcoinPrimary, goldAlt, silverAlt, bitcoinAlt] = await Promise.all([
+    fromGoldApi('XAU'),
+    fromGoldApi('XAG'),
+    fromGoldApi('XPT'),
+    fromGoldApi('HG'),
+    fromGoldApi('BTC'),
+    fromAwesome('XAU-USD'),
+    fromAwesome('XAG-USD'),
+    fromAwesome('BTC-USD'),
+  ]);
+
+  const gold = goldPrimary ?? goldAlt;
+  const silver = silverPrimary ?? silverAlt;
+  const bitcoin = bitcoinPrimary ?? bitcoinAlt;
 
   const fontes = [];
   if ([gold, silver, platinum, copper, bitcoin].some((v) => v != null)) fontes.push('gold-api.com');
@@ -75,13 +80,37 @@ export async function handlePrices(env) {
     _raw: raw,
   };
 
-  await writeCache(env.CACHE, CACHE_KEY, payload, CACHE_TTL * 2);
-
+  // Gravar o payload novo aqui carimbava a semente com `generated_at` de agora, e o
+  // handler devolvia preço de 30/07 como se fosse do minuto. `generated_at`/`_raw`
+  // do cache anterior ficam intactos — a idade real continua visível. Mas `ts` tem
+  // que avançar: é o relógio de frescor que o gate de fora usa. Sem isso, toda
+  // request pelo próximo CACHE_TTL cai em 'stale' de novo e dispara uma cascata
+  // de upstream nova a cada uma — o oposto do que o cache existe para evitar.
   if (stale && cache && !fontes.length) {
-    return jsonResponse({ ...cache, ok: true, source_state: 'stale-cache' }, {
+    const carimbado = { ...cache, ts: Math.floor(Date.now() / 1000) };
+    await writeCache(env.CACHE, CACHE_KEY, carimbado, staleTtl(CACHE_TTL));
+    return { ...cache, ok: true, source_state: 'stale-cache' };
+  }
+
+  await writeCache(env.CACHE, CACHE_KEY, payload, staleTtl(CACHE_TTL));
+  return payload;
+}
+
+export async function handlePrices(env, ctx) {
+  const { cached, state } = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    () => revalidate(env)
+  );
+
+  if (cached) {
+    return jsonResponse({ ...cached, source_state: state }, {
       headers: { 'Cache-Control': 'public, max-age=300' },
     });
   }
 
+  const payload = await revalidate(env);
   return jsonResponse(payload, { headers: { 'Cache-Control': 'public, max-age=300' } });
 }

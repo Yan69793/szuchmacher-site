@@ -4,7 +4,7 @@
 // vaza para o cliente. Cache em KV por 2h.
 
 import { fetchJson, jsonResponse } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'btc-scenarios';
 const CACHE_TTL = 7200; // 2 horas
@@ -86,16 +86,7 @@ function computeRates(signals, fgValue) {
   };
 }
 
-export async function handleBtcScenarios(env) {
-  // Tenta cache primeiro
-  const cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    return jsonResponse(
-      { ok: true, rates: cache.rates, generated_at: cache.ts, source: 'cache' },
-      { headers: { 'Cache-Control': 'public, max-age=3600' } }
-    );
-  }
-
+async function revalidate(env) {
   // Busca dados do BTC Radar (server-side, invisivel para o cliente)
   const [signals, fgValue] = await Promise.all([
     fetchSignals(),
@@ -103,16 +94,30 @@ export async function handleBtcScenarios(env) {
   ]);
 
   const rates = computeRates(signals, fgValue);
+  const ts = Math.floor(Date.now() / 1000);
 
-  const payload = {
-    ok: true,
-    rates,
-    generated_at: Math.floor(Date.now() / 1000),
-  };
+  await writeCache(env.CACHE, CACHE_KEY, { rates, ts }, staleTtl(CACHE_TTL));
 
-  await writeCache(env.CACHE, CACHE_KEY, { rates, ts: Math.floor(Date.now() / 1000) }, CACHE_TTL);
+  return { ok: true, rates, generated_at: ts };
+}
 
-  return jsonResponse(payload, {
+export async function handleBtcScenarios(env, ctx) {
+  const { cached, state } = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    () => revalidate(env)
+  );
+
+  if (cached) {
+    return jsonResponse(
+      { ok: true, rates: cached.rates, generated_at: cached.ts, source: state },
+      { headers: { 'Cache-Control': 'public, max-age=3600' } }
+    );
+  }
+
+  return jsonResponse(await revalidate(env), {
     headers: { 'Cache-Control': 'public, max-age=3600' },
   });
 }

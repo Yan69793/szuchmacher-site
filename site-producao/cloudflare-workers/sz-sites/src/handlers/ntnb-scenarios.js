@@ -1,10 +1,11 @@
 // Handler: /api/ntnb-scenarios
 // Busca cotacao do ETF NTNB11 (B3: IPCA+) do Yahoo Finance, extrai yield
 // implicito e calcula cenarios de renda fixa indexada a inflacao.
-// Cache em KV por 2h. Nao aceita dado stale (SEED 95 do market-data.js).
+// TTL de frescor 2h; a entrada em si sobrevive 12h no KV (staleTtl) pra dar
+// margem de revalidacao em background antes de expirar de vez.
 
 import { fetchJson, jsonResponse } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'ntnb-scenarios';
 const CACHE_TTL = 7200; // 2 horas
@@ -66,23 +67,7 @@ function computeRates(ipcaSpread, ipcaProj) {
   return { pess, base, otim };
 }
 
-export async function handleNtnbScenarios(env) {
-  // Tenta cache primeiro
-  const cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    return jsonResponse(
-      {
-        ok: true,
-        rates: cache.rates,
-        ntnb_price: cache.ntnb_price,
-        ipca_spread: cache.ipca_spread,
-        generated_at: cache.ts,
-        source: 'cache',
-      },
-      { headers: { 'Cache-Control': 'public, max-age=3600' } }
-    );
-  }
-
+async function revalidate(env) {
   // Busca cotacao
   let ntnbPrice = DEFAULTS.ntnb_price;
   let ipcaSpread = DEFAULTS.ipca_spread;
@@ -114,24 +99,49 @@ export async function handleNtnbScenarios(env) {
   }
 
   const rates = computeRates(ipcaSpread, ipcaProj);
-
-  const payload = {
-    ok: true,
-    rates,
-    ntnb_price: ntnbPrice,
-    ipca_spread: ipcaSpread,
-    generated_at: Math.floor(Date.now() / 1000),
-    source,
-  };
+  const ts = Math.floor(Date.now() / 1000);
 
   await writeCache(env.CACHE, CACHE_KEY, {
     rates,
     ntnb_price: ntnbPrice,
     ipca_spread: ipcaSpread,
-    ts: Math.floor(Date.now() / 1000),
-  }, CACHE_TTL);
+    ts,
+  }, staleTtl(CACHE_TTL));
 
-  return jsonResponse(payload, {
+  return {
+    ok: true,
+    rates,
+    ntnb_price: ntnbPrice,
+    ipca_spread: ipcaSpread,
+    generated_at: ts,
+    source,
+  };
+}
+
+export async function handleNtnbScenarios(env, ctx) {
+  const { cached, state } = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    () => revalidate(env)
+  );
+
+  if (cached) {
+    return jsonResponse(
+      {
+        ok: true,
+        rates: cached.rates,
+        ntnb_price: cached.ntnb_price,
+        ipca_spread: cached.ipca_spread,
+        generated_at: cached.ts,
+        source: state,
+      },
+      { headers: { 'Cache-Control': 'public, max-age=3600' } }
+    );
+  }
+
+  return jsonResponse(await revalidate(env), {
     headers: { 'Cache-Control': 'public, max-age=3600' },
   });
 }
