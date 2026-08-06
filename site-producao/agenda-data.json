@@ -1,15 +1,18 @@
 {
   "meta": {
-    "version": "2026-08-03",
+    "version": "2026-08-06",
     "curator": "Szuchmacher Consultoria",
     "fontes_primarias": [
-      "BCB",
-      "IBGE",
-      "BLS",
-      "ISM",
-      "S&P Global PMI",
-      "Census Bureau",
-      "DoL"
+      "IBGE — Calendário de divulgações (API v3/calendario)",
+      "BCB — Calendário de divulgações + Boletim Focus/COPOM",
+      "BLS — CPI, PPI, Nonfarm Payrolls (schedule oficial 2026)",
+      "Census Bureau — Advance Retail Sales (schedule oficial 2026)",
+      "Fed — FOMC calendar (federalreserve.gov)",
+      "ECB — Governing Council calendar (ecb.europa.eu)",
+      "Bank of England — MPC calendar (bankofengland.co.uk)",
+      "Bank of Japan — MPM schedule (boj.or.jp)",
+      "NBS China — GDP, CPI, PMI (stats.gov.cn)",
+      "Eurostat — CPI Flash calendar (ec.europa.eu/eurostat)"
     ],
     "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado.",
     "disciplina_en": "Scheduled releases from official sources. No result anticipation.",
@@ -18,10 +21,10 @@
       "en"
     ]
   },
-  "gerado": "2026-08-03T02:48:10-03:00",
+  "gerado": "2026-08-06T11:31:46-03:00",
   "janela": {
     "inicio": "2026-08-03",
-    "fim": "2026-08-10"
+    "fim": "2026-08-07"
   },
   "eventos": [
     {
@@ -30,131 +33,54 @@
       "regiao": "BR",
       "evento": "Boletim Focus",
       "evento_en": "Focus Market Report",
-      "descricao": "Medianas semanais do mercado para Selic, IPCA, câmbio e PIB. Última leitura de expectativas antes da reunião do Copom de 4 e 5 de agosto.",
-      "descricao_en": "Weekly market medians for Selic, CPI, FX and GDP. Final expectations reading before the August 4-5 Copom meeting.",
+      "descricao": "Medianas semanais do mercado para Selic, IPCA, câmbio e PIB — principais referências de expectativas para a curva de juros e decisão do COPOM.",
+      "descricao_en": "Weekly market medians for Selic, CPI, FX and GDP — key forward-guidance inputs for the rate curve and COPOM decisions.",
       "fonte": "BCB",
       "relevancia": "alta"
     },
     {
       "data": "2026-08-03",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "ISM Manufacturing PMI — julho/2026",
-      "evento_en": "ISM Manufacturing PMI — July 2026",
-      "descricao": "Índice de gerentes de compras da indústria americana, divulgado no primeiro dia útil do mês. Abaixo de 50 indica contração. Move Treasuries, dólar e commodities industriais.",
-      "descricao_en": "US manufacturing purchasing managers index, released on the first business day of the month. Below 50 signals contraction. Moves Treasuries, the dollar and industrial commodities.",
-      "fonte": "ISM",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-08-03",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "Gastos com construção — junho/2026",
-      "evento_en": "Construction Spending — June 2026",
-      "descricao": "Valor da construção posta em obra nos EUA, residencial e não residencial. Insumo direto do PIB do segundo trimestre e termômetro do setor imobiliário sob juros altos.",
-      "descricao_en": "US construction put in place, residential and nonresidential. Direct input to Q2 GDP and a gauge of real estate activity under high rates.",
-      "fonte": "Census Bureau",
-      "relevancia": "baixa"
+      "hora_brt": "22:00",
+      "regiao": "CN",
+      "evento": "China — PMI Industrial (NBS)",
+      "evento_en": "China — Manufacturing PMI (NBS)",
+      "descricao": "Índice de Gerentes de Compras da indústria chinesa, compilado pelo NBS. Abaixo de 50 indica contração. Indicador antecedente de atividade industrial e demanda por commodities. Também relevante o Caixin PMI (setor privado, ~2 dias depois).",
+      "descricao_en": "China manufacturing PMI by NBS. Below 50 signals contraction. Leading indicator for industrial activity and commodity demand.",
+      "fonte": "NBS China",
+      "relevancia": "media"
     },
     {
       "data": "2026-08-04",
       "hora_brt": "09:00",
       "regiao": "BR",
-      "evento": "Pesquisa Industrial Mensal: Produção Física — junho/2026",
-      "evento_en": "Monthly Industrial Survey: Physical Output — June 2026",
-      "descricao": "Produção física das indústrias extrativa e de transformação. Fecha a leitura industrial do segundo trimestre e entra no cálculo do PIB.",
-      "descricao_en": "Physical output of Brazilian mining and manufacturing industries. Closes the Q2 industrial reading and feeds the GDP calculation.",
+      "evento": "Pesquisa Industrial Mensal: Produção Física - Brasil",
+      "evento_en": "Pesquisa Industrial Mensal: Produção Física - Brasil",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Industrial Mensal: Produção Física - Brasil.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Industrial Mensal: Produção Física - Brasil.",
       "fonte": "IBGE",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-08-04",
-      "hora_brt": "09:30",
-      "regiao": "US",
-      "evento": "Balança comercial de bens e serviços — junho/2026",
-      "evento_en": "International Trade in Goods and Services — June 2026",
-      "descricao": "Déficit comercial americano do mês. Com tarifas em vigor, a composição de importações e exportações diz mais que o saldo agregado.",
-      "descricao_en": "Monthly US trade deficit. With tariffs in place, the import and export mix matters more than the headline balance.",
-      "fonte": "Census Bureau",
       "relevancia": "media"
     },
     {
-      "data": "2026-08-04",
-      "hora_brt": "11:00",
+      "data": "2026-08-05",
+      "hora_brt": "11:30",
       "regiao": "US",
-      "evento": "JOLTS — vagas em aberto, junho/2026",
-      "evento_en": "JOLTS — Job Openings, June 2026",
-      "descricao": "Vagas em aberto, contratações e desligamentos nos EUA. A razão vagas por desempregado é a métrica que o Fed acompanha para medir aperto no mercado de trabalho.",
-      "descricao_en": "US job openings, hires and separations. The openings-per-unemployed ratio is the Fed's preferred gauge of labor market tightness.",
-      "fonte": "BLS",
+      "evento": "EUA — Estoques de petróleo bruto (EIA)",
+      "evento_en": "US — EIA Crude Oil Inventories",
+      "descricao": "Relatório semanal da Energy Information Administration com a variação dos estoques de petróleo bruto, gasolina e destilados nos EUA. Impacto direto nos preços do WTI/Brent e nas ações de energia.",
+      "descricao_en": "Weekly EIA crude oil inventory report. Direct impact on WTI/Brent and energy equities.",
+      "fonte": "EIA",
       "relevancia": "media"
-    },
-    {
-      "data": "2026-08-04",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "Pedidos à indústria — junho/2026",
-      "evento_en": "Manufacturers' Shipments, Inventories and Orders — June 2026",
-      "descricao": "Relatório completo de pedidos, embarques e estoques da indústria americana, com a revisão dos bens duráveis. Bens de capital sem defesa é o recorte de investimento.",
-      "descricao_en": "Full report on US factory orders, shipments and inventories, including the durable goods revision. Core capital goods is the capex read.",
-      "fonte": "Census Bureau",
-      "relevancia": "baixa"
-    },
-    {
-      "data": "2026-08-05",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "ISM Services PMI — julho/2026",
-      "evento_en": "ISM Services PMI — July 2026",
-      "descricao": "Atividade do setor de serviços americano, cerca de dois terços da economia. O subíndice de preços pagos costuma antecipar a inflação de serviços do CPI.",
-      "descricao_en": "US services activity, roughly two thirds of the economy. The prices paid subindex tends to lead CPI services inflation.",
-      "fonte": "ISM",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-08-05",
-      "hora_brt": "18:30",
-      "regiao": "BR",
-      "evento": "Copom — decisão de Selic (280ª reunião)",
-      "evento_en": "Copom — Selic Rate Decision (280th meeting)",
-      "descricao": "Segundo dia da 280ª reunião do Copom, com o comunicado divulgado após o fechamento dos mercados. Evento de maior impacto da semana para a curva de juros, o câmbio e a bolsa.",
-      "descricao_en": "Second day of the 280th Copom meeting, with the statement released after market close. The week's highest-impact event for the rate curve, FX and equities.",
-      "fonte": "BCB",
-      "relevancia": "alta"
     },
     {
       "data": "2026-08-06",
       "hora_brt": "09:30",
       "regiao": "US",
-      "evento": "Novos pedidos de seguro-desemprego",
-      "evento_en": "Initial Jobless Claims",
-      "descricao": "Série semanal de pedidos iniciais de auxílio-desemprego. Dado de maior frequência do mercado de trabalho americano, lido na véspera do payroll.",
-      "descricao_en": "Weekly initial unemployment claims. The highest-frequency US labor market series, read on the eve of payrolls.",
+      "evento": "EUA — Novos pedidos de seguro-desemprego",
+      "evento_en": "US — Initial Jobless Claims",
+      "descricao": "Número semanal de novos pedidos de auxílio-desemprego nos EUA. Indicador antecedente da saúde do mercado de trabalho americano, com impacto em Treasuries, DXY e expectativas para o FOMC.",
+      "descricao_en": "Weekly initial jobless claims. Leading indicator of US labor market health. Impacts Treasuries, DXY and FOMC expectations.",
       "fonte": "Department of Labor",
       "relevancia": "media"
-    },
-    {
-      "data": "2026-08-06",
-      "hora_brt": "09:30",
-      "regiao": "US",
-      "evento": "Produtividade e custos — 2º trimestre/2026, preliminar",
-      "evento_en": "Productivity and Costs — Q2 2026, Preliminary",
-      "descricao": "Produtividade do trabalho e custo unitário do trabalho no setor não agrícola. Custo unitário em alta com produtividade fraca é o cenário que trava corte de juros nos EUA.",
-      "descricao_en": "Nonfarm labor productivity and unit labor costs. Rising unit costs with weak productivity is the combination that blocks US rate cuts.",
-      "fonte": "BLS",
-      "relevancia": "baixa"
-    },
-    {
-      "data": "2026-08-06",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "Comércio atacadista — junho/2026",
-      "evento_en": "Monthly Wholesale Trade — June 2026",
-      "descricao": "Vendas e estoques do atacado americano. A relação estoque sobre vendas indica se a cadeia está acumulando produto acima da demanda.",
-      "descricao_en": "US wholesale sales and inventories. The inventories-to-sales ratio shows whether the chain is stocking above demand.",
-      "fonte": "Census Bureau",
-      "relevancia": "baixa"
     },
     {
       "data": "2026-08-07",
@@ -162,20 +88,9 @@
       "regiao": "US",
       "evento": "Payroll (Nonfarm Payrolls) — julho/2026",
       "evento_en": "Nonfarm Payrolls — July 2026",
-      "descricao": "Relatório de emprego dos EUA, com criação de vagas, taxa de desemprego e salário médio por hora. Principal dado do mês, move dólar, Treasuries e, por tabela, o real e a curva local.",
-      "descricao_en": "US Employment Situation report, with job creation, unemployment rate and average hourly earnings. The month's key release, moving the dollar, Treasuries and by extension the real and the local curve.",
+      "descricao": "Principal termômetro do mercado de trabalho americano. Surpresas no NFP movem o dólar, os Treasuries e, por extensão, o real e a curva de juros brasileira.",
+      "descricao_en": "Primary US labor market gauge. NFP surprises move the USD, Treasuries, and consequently BRL and the Brazilian rate curve.",
       "fonte": "BLS",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-08-10",
-      "hora_brt": "08:25",
-      "regiao": "BR",
-      "evento": "Boletim Focus",
-      "evento_en": "Focus Market Report",
-      "descricao": "Primeira leitura de expectativas depois da decisão do Copom. Mostra se o comunicado deslocou as projeções de Selic e IPCA para 2026 e 2027.",
-      "descricao_en": "First expectations reading after the Copom decision. Shows whether the statement shifted Selic and CPI projections for 2026 and 2027.",
-      "fonte": "BCB",
       "relevancia": "alta"
     }
   ]
