@@ -5,7 +5,7 @@
 // nao long-only. O investidor aposta na direcao do cambio.
 
 import { fetchJson, jsonResponse } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { readCache, writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'usdbrl-scenarios';
 const CACHE_TTL = 1800; // 30 minutos
@@ -63,41 +63,35 @@ function computeVol(quote) {
   return Math.max(0.08, Math.min(0.25, annualVol));
 }
 
-export async function handleUsdbrlScenarios(env) {
-  // Tenta cache primeiro
-  var cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    return jsonResponse(
-      {
-        ok: true,
-        rates: cache.rates,
-        usdbrl_bid: cache.usdbrl_bid,
-        usdbrl_vol: cache.usdbrl_vol,
-        generated_at: cache.ts,
-        source: 'cache',
-      },
-      { headers: { 'Cache-Control': 'public, max-age=900' } }
-    );
-  }
-
+async function revalidate(env) {
   var quote = await fetchAwesome();
   var source = 'live';
 
   if (!quote) {
-    // Fallback para cache stale se existir
+    // Fallback para cache stale se existir. `ts` e `generated_at` fazem trabalhos
+    // diferentes: `ts` é o relógio de frescor que o gate de fora usa pra decidir
+    // 'cache' vs 'stale' — sem avançá-lo aqui, toda request pelo próximo CACHE_TTL
+    // cairia em 'stale' de novo e disparava uma cascata de upstream a cada uma.
+    // `generated_at` é a idade real da última cotação ao vivo — grudar os dois no
+    // mesmo valor faria uma cotação de horas atrás parecer capturada agora.
+    var cache = await readCache(env.CACHE, CACHE_KEY);
     if (cache) {
-      source = 'stale';
-      return jsonResponse(
-        {
-          ok: true,
-          rates: cache.rates,
-          usdbrl_bid: cache.usdbrl_bid,
-          usdbrl_vol: cache.usdbrl_vol,
-          generated_at: cache.ts,
-          source: 'stale',
-        },
-        { headers: { 'Cache-Control': 'public, max-age=300' } }
-      );
+      var geradoEm = cache.generated_at ?? cache.ts;
+      await writeCache(env.CACHE, CACHE_KEY, {
+        rates: cache.rates,
+        usdbrl_bid: cache.usdbrl_bid,
+        usdbrl_vol: cache.usdbrl_vol,
+        generated_at: geradoEm,
+        ts: Math.floor(Date.now() / 1000),
+      }, staleTtl(CACHE_TTL));
+      return {
+        ok: true,
+        rates: cache.rates,
+        usdbrl_bid: cache.usdbrl_bid,
+        usdbrl_vol: cache.usdbrl_vol,
+        generated_at: geradoEm,
+        source: 'stale',
+      };
     }
     // Sem cache, usa defaults
     quote = { bid: DEFAULTS.bid, ask: DEFAULTS.ask };
@@ -106,24 +100,50 @@ export async function handleUsdbrlScenarios(env) {
 
   var vol = computeVol(quote);
   var rates = computeRates(quote.bid, vol);
+  var ts = Math.floor(Date.now() / 1000);
 
-  var payload = {
+  await writeCache(env.CACHE, CACHE_KEY, {
+    rates,
+    usdbrl_bid: quote.bid,
+    usdbrl_vol: vol,
+    generated_at: ts,
+    ts,
+  }, staleTtl(CACHE_TTL));
+
+  return {
     ok: true,
     rates,
     usdbrl_bid: quote.bid,
     usdbrl_vol: vol,
-    generated_at: Math.floor(Date.now() / 1000),
+    generated_at: ts,
     source,
   };
+}
 
-  await writeCache(env.CACHE, CACHE_KEY, {
-    rates,
-    usdbrl_bid: payload.usdbrl_bid,
-    usdbrl_vol: payload.usdbrl_vol,
-    ts: Math.floor(Date.now() / 1000),
-  }, CACHE_TTL);
+export async function handleUsdbrlScenarios(env, ctx) {
+  var res = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    function () { return revalidate(env); }
+  );
 
-  return jsonResponse(payload, {
+  if (res.cached) {
+    return jsonResponse(
+      {
+        ok: true,
+        rates: res.cached.rates,
+        usdbrl_bid: res.cached.usdbrl_bid,
+        usdbrl_vol: res.cached.usdbrl_vol,
+        generated_at: res.cached.generated_at ?? res.cached.ts,
+        source: res.state,
+      },
+      { headers: { 'Cache-Control': 'public, max-age=900' } }
+    );
+  }
+
+  return jsonResponse(await revalidate(env), {
     headers: { 'Cache-Control': 'public, max-age=900' },
   });
 }

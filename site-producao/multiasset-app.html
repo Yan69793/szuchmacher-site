@@ -6573,11 +6573,23 @@ document.addEventListener('click', function(e) {
 });
 
 // ── PREÇOS AO VIVO — proxy server-side prices.php ─────────────────────────────
+// Contador por ciclo de 15 min, não pela vida da página: sem resetar no
+// setInterval, três falhas nas primeiras horas travavam o card em "$ —" pro
+// resto do dia, porque a escada de retry só disparava uma vez.
+let _pricesFalhas = 0;
+function agendarRetryPrices() {
+    if (_pricesFalhas >= 3) return;
+    _pricesFalhas++;
+    setTimeout(loadLivePrices, _pricesFalhas * 20000);
+}
 async function loadLivePrices() {
     try {
         const res  = await fetch('prices.php', { signal: AbortSignal.timeout(10000) });
         const data = await res.json();
-        if (!data || !data.ok) return;
+        if (!data || !data.ok) {
+            agendarRetryPrices();
+            return;
+        }
         window._livePrices = data;
         // Atualiza o display de preço ao vivo no header de cada ativo
         const map = {
@@ -6593,12 +6605,14 @@ async function loadLivePrices() {
         });
         // Re-renderiza cards para exibir preço atual em todos os *-pess-price
         Object.keys(simConfigs).forEach(asset => recalcSim(asset));
+        _pricesFalhas = 0;
     } catch (e) {
         console.warn('prices.php indisponível:', e.message);
+        agendarRetryPrices();
     }
 }
 loadLivePrices();
-setInterval(loadLivePrices, 15 * 60 * 1000);
+setInterval(() => { _pricesFalhas = 0; loadLivePrices(); }, 15 * 60 * 1000);
 
 // ══════════════════════════════════════════════════════════════════
 // ── SIMULAÇÕES COMPARTILHÁVEIS (URL params + deep link)

@@ -4,7 +4,7 @@
 // CDI e risk-free: spread entre cenarios e fixo e pequeno.
 
 import { fetchJson, jsonResponse } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'cdi-scenarios';
 const CACHE_TTL = 14400; // 4 horas
@@ -45,32 +45,37 @@ function computeRates(cdiRate) {
   };
 }
 
-export async function handleCdiScenarios(env) {
-  // Tenta cache primeiro
-  const cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
-    return jsonResponse(
-      { ok: true, rates: cache.rates, cdi_rate: cache.cdi_rate, generated_at: cache.ts, source: 'cache' },
-      { headers: { 'Cache-Control': 'public, max-age=7200' } }
-    );
-  }
-
+async function revalidate(env) {
   let cdiRate = await fetchBrasilApi();
   if (!cdiRate) cdiRate = await fetchBcbCdi();
   if (!cdiRate) cdiRate = DEFAULTS.rate;
 
   const rates = computeRates(cdiRate);
+  const ts = Math.floor(Date.now() / 1000);
+  const cdi_rate = Math.round(cdiRate * 10000) / 10000;
 
-  const payload = {
-    ok: true,
-    rates,
-    cdi_rate: Math.round(cdiRate * 10000) / 10000,
-    generated_at: Math.floor(Date.now() / 1000),
-  };
+  await writeCache(env.CACHE, CACHE_KEY, { rates, cdi_rate, ts }, staleTtl(CACHE_TTL));
 
-  await writeCache(env.CACHE, CACHE_KEY, { rates, cdi_rate: payload.cdi_rate, ts: Math.floor(Date.now() / 1000) }, CACHE_TTL);
+  return { ok: true, rates, cdi_rate, generated_at: ts };
+}
 
-  return jsonResponse(payload, {
+export async function handleCdiScenarios(env, ctx) {
+  const { cached, state } = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    () => revalidate(env)
+  );
+
+  if (cached) {
+    return jsonResponse(
+      { ok: true, rates: cached.rates, cdi_rate: cached.cdi_rate, generated_at: cached.ts, source: state },
+      { headers: { 'Cache-Control': 'public, max-age=7200' } }
+    );
+  }
+
+  return jsonResponse(await revalidate(env), {
     headers: { 'Cache-Control': 'public, max-age=7200' },
   });
 }
