@@ -50,7 +50,8 @@ $settings = New-ScheduledTaskSettingsSet `
     -StartWhenAvailable `
     -MultipleInstances IgnoreNew `
     -ExecutionTimeLimit (New-TimeSpan -Minutes 30) `
-    -DontStopOnIdleEnd
+    -DontStopOnIdleEnd `
+    -DisallowStartIfOnBatteries $false
 
 # LogonType Interactive de proposito: o wrangler le as credenciais Cloudflare do
 # perfil do usuario. Rodar como SYSTEM registraria a tarefa e quebraria o deploy.
