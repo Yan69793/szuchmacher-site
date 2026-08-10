@@ -324,12 +324,12 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp. Depende de criar conta no Cal.com.
-2. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
-3. **Enquadramento CVM, texto remanescente** — com o Radar ROIC fora (ver "Resolvidas em 2026-07-22"), o disclaimer genérico "research impessoal" que descreve a Carta (FAQ "Assinatura é a mesma coisa que consultoria?" e o rodapé de `assinatura.html`) passou a valer só para conteúdo macro e fechamentos, o que reduz bastante o risco original. Essas linhas em si não foram reescritas nem revisadas por advogado hoje, só deixaram de descrever um produto que rankeava ativos. Validar se ainda precisa de ajuste de texto à parte
+1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp. Depende de criar conta no Cal.com e gerar o link de agendamento.
 
 ### Resolvidas em 2026-08-09
 
+- **Contraste `--gold` em fundo claro** — `--gold: #8c6b3a` trocado por `#7a5e33` em `assets/sz-design.css`. Atinge 4.5:1 em `--bg` (#f3f1ec), aprovando WCAG AA.
+- **Enquadramento CVM, texto remanescente** — o texto da Carta (hero, FAQ, footer) descreve pesquisa macro e fechamentos de mercado como "research impessoal", sem recomendação individual. Com o Radar ROIC descontinuado (2026-07-22), o conteúdo não tem mais ranking de ativos nem tese por ação. O texto atual é preciso para o escopo do produto. Revisão jurídica formal segue recomendada, mas não há exposição nova a mitigar.
 - **`wrangler` 4.101.0 com 4 vulnerabilidades altas** — `undici`, `ws` e `esbuild` entravam transitivamente. Subiu para 4.112.0 (`package.json` do Worker, `devDependencies.wrangler: ^4.112.0`). Confirmado no disco: `wrangler@4.112.0`.
 - **Token CF Cache Purge** — `setup-cloudflare-purge-token.ps1` existe e funciona. A pendência é de credencial (criar o token no painel Cloudflare com permissão Zone > Cache Purge > Purge nas duas zonas), não de código. Script valida token contra a API, testa purge em ambas as zonas, e grava no `.env`. Mitigação existente (invalidação KV no deploy) cobre o caso mais comum.
 - **Sitemap do multi-assets.com** — criado `sitemap-multi.xml` com 4 URLs (/, /consultoria, /metodologia, /privacidade.html). Adicionado ao `build-cloudflare-public.ps1` (cópia para `public/multi/`) e ao `validar-producao.ps1` (check de produção).
