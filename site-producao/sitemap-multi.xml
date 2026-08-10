@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap de multi-assets.com. Lista so URL canonica deste dominio que responde 200.
+
+  O sitemap de szuchmacher.com.br existe em public/sz/sitemap.xml e cobre so
+  aquele dominio. Sitemaps sao por dominio, nao podem listar URLs de outro host.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://multi-assets.com/</loc></url>
+  <url><loc>https://multi-assets.com/consultoria</loc></url>
+  <url><loc>https://multi-assets.com/metodologia</loc></url>
+  <url><loc>https://multi-assets.com/privacidade.html</loc></url>
+</urlset>

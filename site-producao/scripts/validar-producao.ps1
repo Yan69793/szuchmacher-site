@@ -109,6 +109,8 @@ $checks = @(
     @{ Url = "$MULTI/"; Status = 200; Contem = 'function rebuildTaxasCenario(';
        Rotulo = 'multi: taxasCenario derivado de simConfigs (fonte unica)' }
 
+    @{ Url = "$MULTI/sitemap.xml";                      Status = 200; Contem = 'multi-assets.com';
+       Rotulo = 'multi: sitemap (criado 2026-08-09, antes 404)' }
     @{ Url = "$MULTI/og-cover.jpg";                     Status = 200; MinBytes = 10000 }
     @{ Url = "$MULTI/prices.php";                       Status = 200; Contem = '"ok"' }
     @{ Url = "$MULTI/assets/video/demo-multiasset.mp4"; Status = 200; MinBytes = 100000 }

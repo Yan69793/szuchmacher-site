@@ -326,14 +326,14 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp
 2. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
-3. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
-4. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
-5. **Sitemap do multi-assets.com** — o domínio não serve `/sitemap.xml` (404). O de szuchmacher lista só URL própria e não pode cobrir outro domínio
-6. **Enquadramento CVM, texto remanescente** — com o Radar ROIC fora (ver "Resolvidas em 2026-07-22"), o disclaimer genérico "research impessoal" que descreve a Carta (FAQ "Assinatura é a mesma coisa que consultoria?" e o rodapé de `assinatura.html`) passou a valer só para conteúdo macro e fechamentos, o que reduz bastante o risco original. Essas linhas em si não foram reescritas nem revisadas por advogado hoje, só deixaram de descrever um produto que rankeava ativos. Validar se ainda precisa de ajuste de texto à parte
+3. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
+4. **Enquadramento CVM, texto remanescente** — com o Radar ROIC fora (ver "Resolvidas em 2026-07-22"), o disclaimer genérico "research impessoal" que descreve a Carta (FAQ "Assinatura é a mesma coisa que consultoria?" e o rodapé de `assinatura.html`) passou a valer só para conteúdo macro e fechamentos, o que reduz bastante o risco original. Essas linhas em si não foram reescritas nem revisadas por advogado hoje, só deixaram de descrever um produto que rankeava ativos. Validar se ainda precisa de ajuste de texto à parte
 
 ### Resolvidas em 2026-08-09
 
 - **`wrangler` 4.101.0 com 4 vulnerabilidades altas** — `undici`, `ws` e `esbuild` entravam transitivamente. Subiu para 4.112.0 (`package.json` do Worker, `devDependencies.wrangler: ^4.112.0`). Confirmado no disco: `wrangler@4.112.0`.
+- **Token CF Cache Purge** — `setup-cloudflare-purge-token.ps1` existe e funciona. A pendência é de credencial (criar o token no painel Cloudflare com permissão Zone > Cache Purge > Purge nas duas zonas), não de código. Script valida token contra a API, testa purge em ambas as zonas, e grava no `.env`. Mitigação existente (invalidação KV no deploy) cobre o caso mais comum.
+- **Sitemap do multi-assets.com** — criado `sitemap-multi.xml` com 4 URLs (/, /consultoria, /metodologia, /privacidade.html). Adicionado ao `build-cloudflare-public.ps1` (cópia para `public/multi/`) e ao `validar-producao.ps1` (check de produção).
 
 ### Resolvidas em 2026-07-22
 
