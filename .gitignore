@@ -37,3 +37,4 @@ mcp-server-*.log
 # Virtualenv morto: o Python 3.11 base sumiu da máquina em 26/07/2026 e deixou
 # a árvore para trás. 348 MB em 16 mil arquivos, reprodutível. Fora do repositório.
 automacao-yan-os/venv-morto-3.11/
+automacao-yan-os/venv-task/
