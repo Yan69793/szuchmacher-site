@@ -18,7 +18,7 @@ window.SZ_STRIPE_PRO_URL = 'https://buy.stripe.com/eVqaEW1Ma0E75A7djE1RC01';
 
 /* Fase 1 stack — editar após criar contas (ver docs/CALCOM-SETUP.md) */
 window.SZ_WHATSAPP = '5521981088992';
-window.SZ_CALCOM_URL = 'https://cal.com/_PENDING/szuchmacher-diagnostico';
+window.SZ_CALCOM_URL = 'https://cal.com/yan-szuchmacher-bblyrf/30min';
 window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible cloud estiver ativo */
 
 (function () {

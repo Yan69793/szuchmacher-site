@@ -324,9 +324,11 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp. Depende de criar conta no Cal.com e gerar o link de agendamento.
+Nenhuma pendência aberta no momento.
 
 ### Resolvidas em 2026-08-09
+
+- **Cal.com** — conta criada, link de agendamento configurado. `SZ_CALCOM_URL` em `assets/sz-config.js` atualizado para `https://cal.com/yan-szuchmacher-bblyrf/30min`.
 
 - **Contraste `--gold` em fundo claro** — `--gold: #8c6b3a` trocado por `#7a5e33` em `assets/sz-design.css`. Atinge 4.5:1 em `--bg` (#f3f1ec), aprovando WCAG AA.
 - **Enquadramento CVM, texto remanescente** — o texto da Carta (hero, FAQ, footer) descreve pesquisa macro e fechamentos de mercado como "research impessoal", sem recomendação individual. Com o Radar ROIC descontinuado (2026-07-22), o conteúdo não tem mais ranking de ativos nem tese por ação. O texto atual é preciso para o escopo do produto. Revisão jurídica formal segue recomendada, mas não há exposição nova a mitigar.
