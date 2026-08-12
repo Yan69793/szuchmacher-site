@@ -160,28 +160,33 @@
   ];
 
   function renderCadenciaInstitucional() {
-    return [
-      '<li class="mp-evento mp-vazio mp-cadencia-intro">Sem eventos críticos na janela dos próximos 7 dias. Abaixo, a régua de releases recorrentes que organizam o cenário macro.</li>'
-    ].concat(CADENCIA_INSTITUCIONAL.map(function (c) {
-      return (
-        '<li class="mp-evento mp-evento--cadencia">' +
-          '<div class="mp-evento-data">' +
-            '<strong>' + esc(c.regiao) + '</strong>' +
-            '<span>recorrente</span>' +
+    return (
+      '<div class="mp-day">' +
+        '<div class="mp-day-marker">' +
+          '<strong class="mp-day-num" aria-hidden="true">&mdash;</strong>' +
+          '<span class="mp-day-wd">REC</span>' +
+          '<span class="mp-day-mo">ORR</span>' +
+        '</div>' +
+        '<div class="mp-day-body">' +
+          '<div class="mp-ev mp-ev--intro">' +
+            '<p>Sem eventos críticos na janela dos próximos 7 dias. Abaixo, a régua de releases recorrentes que organizam o cenário macro.</p>' +
           '</div>' +
-          '<div class="mp-evento-body">' +
-            '<div class="mp-evento-head">' +
-              '<span class="mp-regiao">' + esc(c.regiao) + '</span>' +
-              '<span class="mp-hora">' + esc(c.cad) + '</span>' +
-              relevanciaBadge('alta') +
-            '</div>' +
-            '<div class="mp-evento-title">' + esc(c.titulo) + '</div>' +
-            '<div class="mp-evento-desc">' + esc(c.desc) + '</div>' +
-            '<div class="mp-evento-src">Fonte: ' + esc(c.fonte) + '</div>' +
-          '</div>' +
-        '</li>'
-      );
-    })).join('');
+          CADENCIA_INSTITUCIONAL.map(function (c) {
+            return (
+              '<div class="mp-ev mp-ev--cadencia">' +
+                '<div class="mp-ev-head">' +
+                  '<span class="mp-ev-time">' + esc(c.cad) + '</span>' +
+                  '<span class="mp-ev-tag">' + esc(c.regiao) + '</span>' +
+                '</div>' +
+                '<div class="mp-ev-title">' + esc(c.titulo) + '</div>' +
+                '<div class="mp-ev-desc">' + esc(c.desc) + '</div>' +
+                '<div class="mp-ev-src">Fonte: ' + esc(c.fonte) + '</div>' +
+              '</div>'
+            );
+          }).join('') +
+        '</div>' +
+      '</div>'
+    );
   }
 
   function pad2(n) {
@@ -277,32 +282,53 @@
     };
   }
 
-  function renderEventoRow(e, idx, quiet) {
-    var cell = fmtAgendaCelula(e.data);
-    var cls = 'mp-evento' + (quiet ? ' mp-evento--quiet' : '');
-    var head = quiet
-      ? '<div class="mp-evento-head"><span class="mp-hora">dia útil</span></div>'
-      : (
-        '<div class="mp-evento-head">' +
-          '<span class="mp-regiao">' + esc(e.regiao || '') + '</span>' +
-          '<span class="mp-hora">' + esc(e.hora_brt || '') + ' BRT</span>' +
-          relevanciaBadge(e.relevancia) +
+  function renderDayGroup(iso, eventos, quiet) {
+    var d = parseISODate(iso);
+    var diaNum = d ? String(d.getDate()) : '—';
+    var meses = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    var mes = d ? meses[d.getMonth()] : '';
+    var wd = diaDaSemana(iso).toUpperCase();
+    var isHoje = iso === hojeBrIso();
+
+    var eventsHtml = eventos.map(function (e) {
+      if (quiet) {
+        return (
+          '<div class="mp-ev mp-ev--quiet">' +
+            '<div class="mp-ev-head">' +
+              '<span class="mp-ev-time">dia útil</span>' +
+            '</div>' +
+            '<div class="mp-ev-title">' + esc(e.evento || '') + '</div>' +
+            (e.descricao ? '<div class="mp-ev-desc">' + esc(e.descricao) + '</div>' : '') +
+          '</div>'
+        );
+      }
+      return (
+        '<div class="mp-ev">' +
+          '<div class="mp-ev-head">' +
+            '<span class="mp-ev-time">' + esc(e.hora_brt || '') + '</span>' +
+            '<span class="mp-ev-tag">' + esc(e.regiao || '') + '</span>' +
+          '</div>' +
+          '<div class="mp-ev-title">' + esc(e.evento || '') + '</div>' +
+          (e.descricao ? '<div class="mp-ev-desc">' + esc(e.descricao) + '</div>' : '') +
+          (e.fonte ? '<div class="mp-ev-src">Fonte: ' + esc(e.fonte) + '</div>' : '') +
         '</div>'
       );
+    }).join('');
+
+    var cls = 'mp-day';
+    if (isHoje) cls += ' mp-day--hoje';
+
     return (
-      '<li class="' + cls + '">' +
-        '<div class="mp-evento-data">' +
-          '<strong>' + esc(cell.dia) + '</strong>' +
-          '<span class="mp-evento-meta">' + esc(cell.meta) + '</span>' +
+      '<div class="' + cls + '">' +
+        '<div class="mp-day-marker">' +
+          '<strong class="mp-day-num">' + esc(diaNum) + '</strong>' +
+          '<span class="mp-day-wd">' + esc(wd) + '</span>' +
+          '<span class="mp-day-mo">' + esc(mes) + '</span>' +
         '</div>' +
-        '<div class="mp-evento-body">' +
-          head +
-          '<div class="mp-evento-title">' + esc(e.evento || '') + '</div>' +
-          (e.descricao ? '<div class="mp-evento-desc">' + esc(e.descricao) + '</div>' : '') +
-          (!quiet && e.fonte ? '<div class="mp-evento-src">Fonte: ' + esc(e.fonte) + '</div>' : '') +
+        '<div class="mp-day-body">' +
+          eventsHtml +
         '</div>' +
-        '<span class="mp-evento-idx">' + pad2(idx) + '</span>' +
-      '</li>'
+      '</div>'
     );
   }
 
@@ -320,8 +346,14 @@
     }
 
     if (!dias.length) {
-      return eventos.map(function (e, i) {
-        return renderEventoRow(e, i + 1, false);
+      var byDataManual = {};
+      eventos.forEach(function (e) {
+        var k = String(e.data || '').slice(0, 10);
+        if (!byDataManual[k]) byDataManual[k] = [];
+        byDataManual[k].push(e);
+      });
+      return Object.keys(byDataManual).sort().map(function (dataKey) {
+        return renderDayGroup(dataKey, byDataManual[dataKey], false);
       }).join('');
     }
 
@@ -332,22 +364,17 @@
       byData[k].push(e);
     });
 
-    var html = [];
-    var idx = 0;
+    var html = '';
     dias.forEach(function (dia) {
       var evts = byData[dia];
       if (evts && evts.length) {
-        evts.forEach(function (e) {
-          idx++;
-          html.push(renderEventoRow(e, idx, false));
-        });
+        html += renderDayGroup(dia, evts, false);
       } else {
-        idx++;
         var ph = placeholderDiaSemEvento(dia);
-        html.push(renderEventoRow(ph, idx, ph._quiet !== false));
+        html += renderDayGroup(dia, [ph], ph._quiet !== false);
       }
     });
-    return html.join('');
+    return html;
   }
 
   function renderDisclaimer(macro, agenda) {
