@@ -45,8 +45,14 @@ async function auditPage(page, name, vp) {
   if (name === "home") {
     try {
       await page.waitForSelector('#macroPanel[data-state="ready"]', { timeout: 35000 });
-      const items = await page.locator(".mp-evento").count();
-      checks = { macro_ready: true, eventos: items };
+      const items = await page.locator(".mp-ev").count();
+      const days = await page.locator(".mp-day").count();
+      const titleEl = page.locator("#agendaTitle");
+      const rotulo = (await titleEl.count()) ? (await titleEl.first().innerText()).trim() : "";
+      checks = { macro_ready: true, eventos: items, dias: days, rotulo: rotulo.substring(0, 80) };
+      if (rotulo.includes("Semana de referência")) {
+        warnings.push("agenda janela no passado (rotulo 'Semana de referencia')");
+      }
     } catch (e) {
       checks = { macro_ready: false, error: e.message.substring(0, 200) };
       warnings.push("macro panel not ready");
