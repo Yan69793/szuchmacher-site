@@ -54,6 +54,12 @@ async function handleHealth(env) {
   } catch {
     checks.macro_cache = 'unavailable';
   }
+  try {
+    const last = await env.CACHE.get('macro-cron-last', { type: 'json' });
+    checks.macro_cron_last = last ?? 'empty';
+  } catch {
+    checks.macro_cron_last = 'unavailable';
+  }
   return new Response(JSON.stringify({
     status: 'ok',
     version: 'sz-sites-worker',
@@ -250,6 +256,53 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(handleMacroApi(new Request('https://cron.local/macro_api.php?cron=1'), env, { forceRefresh: true }));
+    // Await (nao so waitUntil): um Response 503 resolve a promise e o
+    // painel de Cron Events marca sucesso mesmo sem gravar o KV. O throw
+    // depois do registro e o que o runtime observa como falha.
+    await runScheduledMacro(env, event);
   },
 };
+
+export async function runScheduledMacro(env, event = {}) {
+  const started = Date.now();
+  const rec = {
+    ts: Math.floor(Date.now() / 1000),
+    cron: event.cron ?? '0 3 * * 1',
+    ok: false,
+    status: 0,
+    error: null,
+    generated_at: null,
+    ms: 0,
+  };
+  try {
+    const res = await handleMacroApi(
+      new Request('https://cron.local/macro_api.php?cron=1'),
+      env,
+      { forceRefresh: true },
+    );
+    const body = await res.clone().json().catch(() => ({}));
+    rec.status = res.status;
+    rec.ok = !!body.ok;
+    rec.error = body.error ?? null;
+    rec.generated_at = body.generated_at ?? null;
+    rec.ms = Date.now() - started;
+    console.log('[scheduled] macro refresh', rec);
+    try {
+      await env.CACHE.put('macro-cron-last', JSON.stringify(rec), { expirationTtl: 30 * 24 * 3600 });
+    } catch (e) {
+      console.warn('[scheduled] nao gravou macro-cron-last:', e?.message ?? e);
+    }
+    if (!rec.ok) {
+      throw new Error(`macro cron falhou status=${rec.status} error=${rec.error ?? 'sem detalhe'}`);
+    }
+    return rec;
+  } catch (err) {
+    rec.ms = Date.now() - started;
+    if (!rec.error) rec.error = err?.message ?? String(err);
+    console.error('[scheduled] macro refresh threw', rec.error);
+    try {
+      await env.CACHE.put('macro-cron-last', JSON.stringify(rec), { expirationTtl: 30 * 24 * 3600 });
+    } catch { /* ignore */ }
+    throw err;
+  }
+}

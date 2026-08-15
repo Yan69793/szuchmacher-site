@@ -45,5 +45,9 @@
   "preview_urls": false,
   "triggers": {
     "crons": ["0 3 * * 1"]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
   }
 }

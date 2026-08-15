@@ -1,6 +1,7 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleMacroApi, normalizarAtivos } from '../src/handlers/macro-api.js';
+import { handleMacroApi, normalizarAtivos, coerceLlmContent } from '../src/handlers/macro-api.js';
+import { runScheduledMacro } from '../src/index.js';
 
 const realFetch = globalThis.fetch;
 let openRouterCalls = 0;
@@ -48,7 +49,14 @@ function makeEnv({ withStaticFallback = false } = {}) {
       },
     },
     OPENROUTER_KEY: 'sk-teste-123',
+    CRON_SECRET: 'teste-cron-secret',
   };
+}
+
+function cronReq(secret = 'teste-cron-secret') {
+  const headers = { Origin: 'https://szuchmacher.com.br' };
+  if (secret) headers['X-Cron-Secret'] = secret;
+  return new Request('https://szuchmacher.com.br/macro_api.php?cron=1', { headers });
 }
 
 function req() {
@@ -139,7 +147,7 @@ test('SGS fora do ar no refresh forcado: 503 sem dados fabricados e sem OpenRout
     return jsonRes({});
   };
   const env = makeEnv();
-  const r = await handleMacroApi(new Request('https://szuchmacher.com.br/macro_api.php?cron=1'), env);
+  const r = await handleMacroApi(new Request('https://szuchmacher.com.br/macro_api.php?cron=1'), env, { forceRefresh: true });
   const body = await r.json();
   assert.equal(r.status, 503);
   assert.equal(body.ok, false);
@@ -204,4 +212,114 @@ test('normalizarAtivos renomeia taxa para alocacao_sugerida sem sobrescrever o n
   assert.equal(data.ativos.ouro.conservador.alocacao_sugerida, '5-8% do patrimonio');
   assert.equal(data.ativos.ouro.conservador.taxa, undefined);
   assert.equal(data.ativos.ouro.moderado.alocacao_sugerida, '10-15%');
+});
+
+test('cron=1 sem header devolve 403 e nao chama OpenRouter', async () => {
+  const env = makeEnv();
+  const r = await handleMacroApi(cronReq(null), env);
+  const body = await r.json();
+  assert.equal(r.status, 403);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /CRON_SECRET/);
+  assert.equal(openRouterCalls, 0);
+});
+
+test('cron=1 com secret errado devolve 403', async () => {
+  const env = makeEnv();
+  const r = await handleMacroApi(cronReq('errado'), env);
+  assert.equal(r.status, 403);
+  assert.equal(openRouterCalls, 0);
+});
+
+test('cron=1 autenticado respeita o rate limit de 1h', async () => {
+  const env = makeEnv();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 60));
+  const r = await handleMacroApi(cronReq(), env);
+  const body = await r.json();
+  assert.equal(r.status, 429);
+  assert.equal(body.error, 'Rate limit');
+  assert.equal(openRouterCalls, 0);
+});
+
+test('cron=1 autenticado fora da janela grava o KV', async () => {
+  const env = makeEnv();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+  const r = await handleMacroApi(cronReq(), env);
+  const body = await r.json();
+  assert.equal(r.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(body.cache, false);
+  assert.equal(openRouterCalls, 1);
+  const gravado = JSON.parse(await env.CACHE.get('macro-api'));
+  assert.equal(gravado.data.eyebrow, 'Cenário teste');
+});
+
+test('forceRefresh interno nao exige header e nao consome rate limit', async () => {
+  const env = makeEnv();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 60));
+  const r = await handleMacroApi(req(), env, { forceRefresh: true });
+  const body = await r.json();
+  assert.equal(r.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(openRouterCalls, 1);
+});
+
+test('coerceLlmContent aceita array de partes do Anthropic/OpenRouter', () => {
+  assert.equal(coerceLlmContent('{"a":1}'), '{"a":1}');
+  assert.equal(
+    coerceLlmContent([{ type: 'text', text: '{"eyebrow":"x"}' }]),
+    '{"eyebrow":"x"}',
+  );
+  assert.equal(coerceLlmContent(null), '');
+});
+
+test('content em array grava o KV no refresh forcado', async () => {
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes('bcdata.sgs.432')) return jsonRes([{ valor: '14.75', data: '05/08/2026' }]);
+    if (u.includes('bcdata.sgs.1')) return jsonRes([{ valor: '5.20', data: '05/08/2026' }]);
+    if (u.includes('ExpectativasMercadoAnuais')) return jsonRes({ value: [{ Mediana: 14.5 }] });
+    if (u.includes('openrouter.ai')) {
+      openRouterCalls++;
+      return jsonRes({
+        choices: [{
+          finish_reason: 'stop',
+          message: { content: [{ type: 'text', text: JSON.stringify({ eyebrow: 'via-array' }) }] },
+        }],
+      });
+    }
+    return jsonRes({});
+  };
+  const env = makeEnv();
+  const r = await handleMacroApi(req(), env, { forceRefresh: true });
+  const body = await r.json();
+  assert.equal(r.status, 200);
+  assert.equal(body.data.eyebrow, 'via-array');
+  const gravado = JSON.parse(await env.CACHE.get('macro-api'));
+  assert.equal(gravado.data.eyebrow, 'via-array');
+});
+
+test('scheduled registra falha no KV e lanca quando o refresh devolve 503', async () => {
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes('bcdata.sgs')) return jsonRes({}, 500);
+    return jsonRes({});
+  };
+  const env = makeEnv();
+  await assert.rejects(() => runScheduledMacro(env, { cron: '0 3 * * 1' }), /macro cron falhou/);
+  const last = JSON.parse(await env.CACHE.get('macro-cron-last'));
+  assert.equal(last.ok, false);
+  assert.equal(last.status, 503);
+  assert.match(last.error, /BCB SGS/);
+});
+
+test('scheduled grava macro-cron-last e o KV macro-api quando a cascata fecha', async () => {
+  const env = makeEnv();
+  const rec = await runScheduledMacro(env, { cron: '0 3 * * 1' });
+  assert.equal(rec.ok, true);
+  const last = JSON.parse(await env.CACHE.get('macro-cron-last'));
+  assert.equal(last.ok, true);
+  assert.equal(last.status, 200);
+  const gravado = JSON.parse(await env.CACHE.get('macro-api'));
+  assert.equal(gravado.data.eyebrow, 'Cenário teste');
 });

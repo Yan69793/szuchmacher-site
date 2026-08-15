@@ -222,10 +222,52 @@ function resolveOpenRouterKey(env) {
   return String(raw).trim();
 }
 
+const CRON_HEADER = 'X-Cron-Secret';
+
+export function safeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const enc = new TextEncoder();
+  const aa = enc.encode(a);
+  const bb = enc.encode(b);
+  if (aa.byteLength !== bb.byteLength) return false;
+  let out = 0;
+  for (let i = 0; i < aa.byteLength; i++) out |= aa[i] ^ bb[i];
+  return out === 0;
+}
+
+function cronSecretOk(request, env) {
+  const expected = env.CRON_SECRET == null ? '' : String(env.CRON_SECRET).trim();
+  if (!expected) return false;
+  const got = request.headers.get(CRON_HEADER) ?? '';
+  return safeEqual(got, expected);
+}
+
+function httpRefreshRequested(reqUrl) {
+  return reqUrl.searchParams.get('cron') === '1' || reqUrl.searchParams.has('refresh');
+}
+
+// OpenRouter/Anthropic às vezes devolve content como array de partes
+// ({type:'text', text:'...'}). Sem isto, content.trim() estoura e o cron
+// aborta com 503 sem gravar o KV. Medido no GET de 15/08 (warn llm_json_fallback
+// com macro-api ausente).
+export function coerceLlmContent(content) {
+  if (typeof content === 'string') return content;
+  if (Array.isArray(content)) {
+    return content.map((p) => {
+      if (typeof p === 'string') return p;
+      if (p && typeof p.text === 'string') return p.text;
+      return '';
+    }).join('');
+  }
+  if (content && typeof content === 'object' && typeof content.text === 'string') {
+    return content.text;
+  }
+  return '';
+}
+
 export async function handleMacroApi(request, env, { forceRefresh: forceRefreshOpt = false } = {}) {
   const reqUrl = new URL(request.url);
-  const forceRefresh =
-    forceRefreshOpt || reqUrl.searchParams.get('cron') === '1' || reqUrl.searchParams.has('refresh');
+  const httpRefresh = httpRefreshRequested(reqUrl);
 
   const origin = request.headers.get('Origin') || '';
   const cors = {
@@ -234,10 +276,28 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         ? origin
         : 'https://szuchmacher.com.br',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': CRON_HEADER,
     Vary: 'Origin',
   };
 
-  // Rate limit external refresh requests (scheduled cron passes forceRefreshOpt internally)
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: cors });
+  }
+
+  // HTTP cron=1/refresh exige header. O cron nativo passa forceRefreshOpt e
+  // nao depende deste token. Sem secret no Worker, o refresh HTTP fecha.
+  if (httpRefresh && !forceRefreshOpt) {
+    if (!cronSecretOk(request, env)) {
+      return jsonResponse(
+        { ok: false, error: 'Refresh não autorizado: CRON_SECRET ausente ou token inválido' },
+        { status: 403, headers: cors },
+      );
+    }
+  }
+
+  const forceRefresh = forceRefreshOpt || httpRefresh;
+
+  // Rate limit so nas chamadas HTTP manuais. scheduled() nao passa por aqui.
   if (forceRefresh && !forceRefreshOpt) {
     const rate = await checkRefreshRate(env, request);
     if (!rate.allowed) {
@@ -246,10 +306,6 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         { status: 429, headers: { ...cors, 'Retry-After': String(rate.retryAfter) } },
       );
     }
-  }
-
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: cors });
   }
 
   if (!forceRefresh) {
@@ -388,7 +444,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
       model: OPENROUTER_MODEL,
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.2,
-      max_tokens: 4096,
+      max_tokens: 8192,
       response_format: { type: 'json_object' },
     }),
   });
@@ -414,8 +470,11 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   }
 
   const orJson = await orRes.json();
-  const content = orJson?.choices?.[0]?.message?.content;
+  const choice = orJson?.choices?.[0];
+  const finish = choice?.finish_reason ?? choice?.native_finish_reason ?? null;
+  const content = coerceLlmContent(choice?.message?.content);
   if (!content) {
+    console.error('[macro-api] OpenRouter resposta vazia', { finish, status: orRes.status });
     return jsonResponse({ ok: false, error: 'OpenRouter resposta inválida' }, { status: 503, headers: cors });
   }
 
@@ -423,7 +482,11 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   try {
     data = extractJson(content);
   } catch (e) {
-    console.error("LLM JSON parse error:", e?.message ?? e);
+    console.error('[macro-api] LLM JSON parse error', {
+      message: e?.message ?? e,
+      finish,
+      len: content.length,
+    });
     if (!forceRefresh) {
       const fallback = await loadStaticMacro(env, request);
       if (fallback?.data) {

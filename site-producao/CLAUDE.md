@@ -333,11 +333,12 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
 1. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
-2. **Desligar `agenda-cron.php` do cPanel** (alvo inerte desde a migração para
-   Worker em 17/06) e redefinir a rotina remota `szuchmacher-domingo`
-   (FTP não alcança produção; ver `docs/controle-remoto-claude-code.md`).
-3. **CRON_SECRET no Worker** (`macro_api.php?cron=1` segue público, só rate
-   limit KV de 1h). Gatilho único de regeneração já é o cron do Worker.
+2. **cPanel `agenda-cron.php`** ainda não desligado no painel. FTPS `deploy@`
+   devolveu 530 nesta sessão. A rotina remota `szuchmacher-domingo` continua
+   apontando FTP para HostGator (produção serve ASSETS). Sem MCP
+   `Claude_Code_Remote` nesta sessão, o trigger remoto não foi pausado.
+3. **Deploy do Worker** com CRON_SECRET no `?cron=1` (código no repo, ainda
+   não publicado). Até lá o endpoint público segue só com rate limit de 1h.
 4. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
 5. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
    legados (`macro-panel-live.js`, `hero-*`, `multiasset/` duplicada, worktree
@@ -350,6 +351,11 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 - Checagem de `ntnb11` no gate, só depois que o IB5M11 já estava no ar.
 - `Szuchmacher-MacroCron` desabilitada. Um escritor de agenda (Agent local) e
   um gatilho de macro (cron do Worker).
+- Causa raiz do KV `macro-api` vazio: `scheduled()` tratava Response 503 como
+  sucesso, `coerceLlmContent` não existia (content em array virava
+  `llm_json_fallback`) e o refresh de 11/08 22:04 BRT caiu em
+  `clientDisconnected` no meio da cascata (7 subrequests). Código no repo,
+  aguarda deploy.
 
 ### Resolvidas em 2026-08-09
 

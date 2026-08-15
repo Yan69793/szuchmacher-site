@@ -19,6 +19,16 @@ $URL    = 'https://szuchmacher.com.br/macro_api.php?cron=1'
 $CACHE  = 'https://szuchmacher.com.br/macro_data.json'
 $ALERT  = Join-Path $PSScriptRoot 'send-alert-email.ps1'
 
+function Get-CronSecret {
+    $yanEnv = Join-Path $YAN '.env'
+    if (-not (Test-Path -LiteralPath $yanEnv)) { return $null }
+    $line = Get-Content -LiteralPath $yanEnv | Where-Object { $_ -match '^\s*CRON_SECRET=' } | Select-Object -First 1
+    if (-not $line) { return $null }
+    $val = $line.Substring($line.IndexOf('=') + 1).Trim()
+    if (-not $val) { return $null }
+    return $val
+}
+
 # Contador de falhas consecutivas de REGENERACAO. O caminho SOFT-OK sai 0 de
 # proposito (o cache publico esta fresco), mas sem memoria entre execucoes uma
 # semana inteira de falha nao acumulava sinal nenhum: foi exatamente o que
@@ -57,13 +67,20 @@ $refreshOk   = $false
 $lastCode    = $null
 $lastMsg     = $null
 
+$cronSecret = Get-CronSecret
+if (-not $cronSecret) {
+    Write-Log "ERRO: CRON_SECRET ausente no .env do yan-os. Refresh HTTP recusado."
+    Write-Log "=== FIM COM FALHA (sem secret) ==="
+    exit 1
+}
+
 Write-Log "=== INICIO macro cron (HTTP, retry) ==="
-Write-Log "refresh=$URL maxAttempts=$maxAttempts"
+Write-Log "refresh=$URL maxAttempts=$maxAttempts header=X-Cron-Secret"
 
 for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
     Write-Log "tentativa $attempt/$maxAttempts refresh..."
     try {
-        $resp = Invoke-WebRequest -Uri $URL -TimeoutSec 120 -UseBasicParsing
+        $resp = Invoke-WebRequest -Uri $URL -Headers @{ 'X-Cron-Secret' = $cronSecret } -TimeoutSec 120 -UseBasicParsing
         if ($resp.StatusCode -ne 200) {
             $lastCode = $resp.StatusCode
             $lastMsg  = "HTTP $($resp.StatusCode)"

@@ -50,6 +50,16 @@ finally {
     Pop-Location
 }
 
+function Get-CronSecret {
+    $yanEnv = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'automacao-yan-os\.env'
+    if (-not (Test-Path -LiteralPath $yanEnv)) { return $null }
+    $line = Get-Content -LiteralPath $yanEnv | Where-Object { $_ -match '^\s*CRON_SECRET=' } | Select-Object -First 1
+    if (-not $line) { return $null }
+    $val = $line.Substring($line.IndexOf('=') + 1).Trim()
+    if (-not $val) { return $null }
+    return $val
+}
+
 if ($RefreshMacro) {
     # Best-effort: aquecer o cache que acabamos de apagar, para o primeiro visitante
     # nao pagar a regeneracao a frio (~37 s, cascata OpenRouter).
@@ -61,11 +71,16 @@ if ($RefreshMacro) {
     #
     # Continua nao-fatal de proposito: cache frio degrada latencia, nao quebra o
     # site, e a validacao pos-deploy e quem decide se a publicacao vale.
+    $cronSecret = Get-CronSecret
+    if (-not $cronSecret) {
+        Write-Host "  REFRESH pulado: CRON_SECRET ausente no .env do yan-os. Cache fica frio." -ForegroundColor Yellow
+    }
     $tentativas = 3
-    for ($i = 1; $i -le $tentativas; $i++) {
+    for ($i = 1; $i -le $tentativas -and $cronSecret; $i++) {
         Write-Host "  REFRESH macro_api.php?cron=1 (tentativa $i/$tentativas) ..." -ForegroundColor DarkCyan
         try {
-            $r = Invoke-RestMethod -Uri 'https://szuchmacher.com.br/macro_api.php?cron=1' -TimeoutSec 180
+            $hdr = @{ 'X-Cron-Secret' = $cronSecret }
+            $r = Invoke-RestMethod -Uri 'https://szuchmacher.com.br/macro_api.php?cron=1' -Headers $hdr -TimeoutSec 180
             $ok = $r -and ($r.PSObject.Properties.Name -contains 'ok') -and $r.ok
             if ($ok) {
                 Write-Host "  macro_api OK - $($r.generated_at) cache=$($r.cache)" -ForegroundColor Green
