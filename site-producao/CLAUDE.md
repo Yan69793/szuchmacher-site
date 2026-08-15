@@ -324,31 +324,25 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-Fase 2 da auditoria em andamento. Relatório consolidado e tabela de achados:
-`diagnosticos/FASE2-2026-08-15.md`. Em ordem:
+Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
+`b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
+`ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Deploy do pacote da fase 2** — FEITO 15/08 08:17 BRT via
-   `publicar-com-rollback.ps1`: viva `b4c3ba12` → `f08d6f46`, gate 34/34,
-   IB5M11 vivo no ar (R$ 123,09, stale vazio). Relatório em
-   `diagnosticos/publicacao_2026-08-15_0817.md`. Histórico no git: commits na
-   branch + merge em `master` + push (último `f4308a7`).
-2. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
-3. **Desligar `agenda-cron.php` do cPanel** (alvo inerte desde a migração para
+1. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
+2. **Desligar `agenda-cron.php` do cPanel** (alvo inerte desde a migração para
    Worker em 17/06) e redefinir a rotina remota `szuchmacher-domingo`
    (FTP não alcança produção; ver `docs/controle-remoto-claude-code.md`).
-4. **CRON_SECRET no Worker** (`macro_api.php?cron=1` segue público, só rate
+3. **CRON_SECRET no Worker** (`macro_api.php?cron=1` segue público, só rate
    limit KV de 1h) e decisão sobre os 3 gatilhos de regeneração do macro.
-5. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
-6. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
+4. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
+5. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
    legados (`macro-panel-live.js`, `hero-*`, `multiasset/` duplicada, worktree
    prunable), P3-15 (calendários 2026), F5 (cache-busting).
-7. **Commit do pacote** (código em produção desde 15/08 sem commit) e merge
-   para master.
 
 ### Resolvidas em 2026-08-15
 
 - Pacote da fase 2 publicado via `publicar-com-rollback.ps1` (v `f08d6f46`).
-- Commit e merge em master (`cedcdad`, `4a48002`, `c2f69ff`, `07f6621`).
+- Commit e merge em master (`cedcdad`, `4a48002`, `c2f69ff`, `f4308a7`, `11d9a92`).
 - Checagem de `ntnb11` no gate, só depois que o IB5M11 já estava no ar.
 
 ### Resolvidas em 2026-08-09
