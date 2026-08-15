@@ -9,7 +9,7 @@
   --surface-soft: #f8f6f2;
   --navy: #0c1524;
   --navy-soft: #172338;
-  --gold: #8c6b3a;
+  --gold: #7a5e33;
   --gold-soft: #a88850;
   --gold-bright: #c4a46a;
   --text: #161c28;
@@ -955,187 +955,172 @@ header.is-scrolled {
   padding-top: 8px;
 }
 
-.mp-agenda {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+/* ── Agenda timeline ──────────────────────────────────── */
+
+.mp-timeline {
+  position: relative;
 }
 
-.mp-agenda h3 {
-  color: var(--gold-bright);
-  font-size: 0.68rem;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-weight: 500;
-  margin-bottom: 0;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+/* Golden vertical line connecting days */
+.mp-timeline::before {
+  content: '';
+  position: absolute;
+  left: 37px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(196, 164, 106, 0.22);
 }
 
-.mp-agenda ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
+/* ── Day group ──────────────────────────────────────── */
 
-.mp-evento {
+.mp-day {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr) 32px;
-  gap: 16px;
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  align-items: start;
-  isolation: isolate;
+  grid-template-columns: 76px 1fr;
+  gap: 0;
+  position: relative;
+  padding-bottom: 32px;
 }
 
-.mp-evento--cadencia {
-  grid-template-columns: 88px minmax(0, 1fr);
+.mp-day:last-child {
+  padding-bottom: 0;
 }
 
-.mp-evento:last-child {
-  border-bottom: none;
+/* Golden dot on the line */
+.mp-day::after {
+  content: '';
+  position: absolute;
+  left: 32.5px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  background: rgba(196, 164, 106, 0.48);
+  border-radius: 50%;
+  z-index: 1;
 }
 
-.mp-evento-idx {
+/* ── Date marker ────────────────────────────────────── */
+
+.mp-day-marker {
+  text-align: center;
+  padding-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.mp-day-num {
+  font-family: var(--font-serif);
+  color: #fff;
+  font-size: 2.05rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: block;
+}
+
+.mp-day-wd {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: rgba(212, 184, 122, 0.45);
-  letter-spacing: 0.06em;
+  font-size: 0.64rem;
+  color: rgba(196, 164, 106, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   font-weight: 500;
-  padding-top: 4px;
-  text-align: right;
-  white-space: nowrap;
+  display: block;
+  margin-top: 5px;
 }
 
-.mp-evento--quiet .mp-evento-title {
+.mp-day-mo {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: rgba(196, 164, 106, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  display: block;
+  margin-top: 1px;
+}
+
+/* Hoje highlight */
+.mp-day--hoje .mp-day-num {
+  color: #c4a46a;
+}
+
+/* ── Events body ────────────────────────────────────── */
+
+.mp-day-body {
+  padding-left: 26px;
+  min-width: 0;
+}
+
+/* ── Individual event ───────────────────────────────── */
+
+.mp-ev {
+  padding-bottom: 22px;
+}
+
+.mp-ev:last-child {
+  padding-bottom: 0;
+}
+
+.mp-ev--quiet .mp-ev-title {
   color: rgba(255, 255, 255, 0.55);
   font-weight: 500;
 }
 
-.mp-evento--quiet .mp-evento-desc {
+.mp-ev--quiet .mp-ev-desc {
   color: rgba(255, 255, 255, 0.38);
   font-size: 0.8rem;
 }
 
-.mp-evento--quiet .mp-evento-idx {
-  color: rgba(212, 184, 122, 0.25);
-}
+/* ── Event head (time + country) ────────────────────── */
 
-.mp-evento-data {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  width: 88px;
-  max-width: 88px;
-  padding: 12px 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(212, 184, 122, 0.22);
-  overflow: hidden;
-  flex-shrink: 0;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.mp-evento-data strong {
-  font-family: var(--font-serif);
-  color: #fff;
-  font-size: 1.65rem;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  display: block;
-  width: 100%;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.mp-evento-data .mp-evento-meta,
-.mp-evento-data span {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  color: rgba(212, 184, 122, 0.82);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-top: 6px;
-  font-weight: 500;
-  line-height: 1.3;
-  max-width: 100%;
-  text-align: center;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  hyphens: none;
-}
-
-.mp-evento-body {
-  min-width: 0;
-}
-
-.mp-evento-head {
+.mp-ev-head {
   display: flex;
   gap: 10px;
-  align-items: center;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 3px;
 }
 
-.mp-regiao {
+.mp-ev-time {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-weight: 500;
-  color: rgba(212, 184, 122, 0.85);
-}
-
-.mp-regiao::before {
-  content: '';
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  background: var(--gold-bright);
-  border-radius: 50%;
-  margin-right: 8px;
-  vertical-align: middle;
-  transform: translateY(-1px);
-}
-
-.mp-hora {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.72rem;
+  color: rgba(196, 164, 106, 0.82);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  font-weight: 500;
 }
 
-.mp-badge {
-  display: none;
+.mp-ev-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  color: rgba(196, 164, 106, 0.66);
 }
 
-.mp-evento-title {
+/* ── Event content ──────────────────────────────────── */
+
+.mp-ev-title {
   color: #fff;
   font-weight: 600;
   font-size: 1.02rem;
-  margin-bottom: 6px;
   line-height: 1.3;
   font-family: var(--font-serif);
   letter-spacing: -0.005em;
+  margin-bottom: 4px;
 }
 
-.mp-evento-desc {
-  color: rgba(255, 255, 255, 0.66);
+.mp-ev-desc {
+  color: rgba(255, 255, 255, 0.62);
   font-size: 0.84rem;
   line-height: 1.6;
-  margin-bottom: 8px;
   font-weight: 300;
+  margin-bottom: 6px;
 }
 
-.mp-evento-src {
+.mp-ev-src {
   font-family: var(--font-mono);
   font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.32);
@@ -1144,24 +1129,54 @@ header.is-scrolled {
   font-weight: 500;
 }
 
-.mp-vazio {
-  display: block;
-  grid-template-columns: none;
+/* ── Cadencia / fallback ────────────────────────────── */
+
+.mp-ev--intro {
   color: rgba(255, 255, 255, 0.62);
-  padding: 18px 22px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.6;
-  background: rgba(255, 255, 255, 0.03);
-  border-left: 2px solid rgba(212, 184, 122, 0.45);
-  margin-bottom: 14px;
-  grid-column: 1 / -1;
 }
 
-.mp-cadencia-intro {
-  display: block;
-  grid-template-columns: none;
-  grid-column: 1 / -1;
+.mp-ev--intro p {
+  margin: 0;
 }
+
+.mp-ev--cadencia .mp-ev-title {
+  font-size: 0.94rem;
+}
+
+/* ── Agend heading ────────────────────────────────── */
+
+.mp-agenda h3 {
+  color: var(--gold-bright);
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 500;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* ── Legacy compat (removido, mantido como no-op) ──── */
+
+.mp-evento-data,
+.mp-evento-body,
+.mp-evento-head,
+.mp-evento-idx,
+.mp-evento-title,
+.mp-evento-desc,
+.mp-evento-src,
+.mp-evento,
+.mp-agenda ul,
+.mp-regiao,
+.mp-hora,
+.mp-badge,
+.mp-vazio,
+.mp-cadencia-intro { display: none; }
+
+/* ── Offline / loading ─────────────────────────────── */
 
 .mp-offline {
   padding: 28px;
@@ -1184,13 +1199,13 @@ header.is-scrolled {
 }
 
 #macroPanel[data-loading] .mp-ticker,
-#macroPanel[data-loading] .mp-agenda ul {
+#macroPanel[data-loading] .mp-timeline {
   opacity: 0.35;
   transition: opacity 0.25s;
 }
 
 #macroPanel[data-state='ready'] .mp-ticker,
-#macroPanel[data-state='ready'] .mp-agenda ul {
+#macroPanel[data-state='ready'] .mp-timeline {
   opacity: 1;
 }
 
@@ -1803,60 +1818,55 @@ footer {
     font-size: 1.75rem;
   }
 
-  .mp-evento {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "date idx"
-      "body body";
-    gap: 10px 12px;
-    padding: 18px 0;
+  /* ── Agenda timeline mobile ─────────────────────── */
+  .mp-timeline::before {
+    left: 26px;
   }
 
-  .mp-evento--cadencia {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "date"
-      "body";
+  .mp-day {
+    grid-template-columns: 54px 1fr;
+    padding-bottom: 26px;
   }
 
-  .mp-evento-data {
-    grid-area: date;
-    width: auto;
-    max-width: 88px;
-    min-width: 68px;
+  .mp-day::after {
+    left: 21.5px;
+    top: 6px;
+    width: 7px;
+    height: 7px;
   }
 
-  .mp-evento-idx {
-    grid-area: idx;
-    align-self: start;
-    padding-top: 12px;
+  .mp-day-num {
+    font-size: 1.55rem;
   }
 
-  .mp-evento-body {
-    grid-area: body;
-    padding-top: 2px;
-  }
-
-  .mp-evento-data strong {
-    font-size: 1.5rem;
-  }
-
-  .mp-evento-data .mp-evento-meta,
-  .mp-evento-data span {
-    font-size: 0.52rem;
+  .mp-day-wd {
+    font-size: 0.54rem;
     letter-spacing: 0.08em;
   }
 
-  .mp-evento-title {
-    font-size: 0.94rem;
+  .mp-day-mo {
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
   }
 
-  .mp-evento-desc {
-    font-size: 0.8rem;
+  .mp-day-body {
+    padding-left: 18px;
   }
 
-  .mp-evento-idx {
-    font-size: 0.64rem;
+  .mp-ev {
+    padding-bottom: 18px;
+  }
+
+  .mp-ev-title {
+    font-size: 0.92rem;
+  }
+
+  .mp-ev-desc {
+    font-size: 0.78rem;
+  }
+
+  .mp-ev-time {
+    font-size: 0.66rem;
   }
 
   .market-card {

@@ -62,6 +62,7 @@ Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
     'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
+    'relatorio_cache.json',
     'og-cover.jpg', 'logo.png',
     'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'
 )
@@ -94,6 +95,9 @@ Copy-IfExists (Join-Path $ROOT 'privacidade.html') (Join-Path $MULTI 'privacidad
 Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologia.html') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologia') | Out-Null
 
+# Sitemap multi-assets.com. Criado em 2026-08-09, antes o dominio respondia 404.
+Copy-IfExists (Join-Path $ROOT 'sitemap-multi.xml') (Join-Path $MULTI 'sitemap.xml') | Out-Null
+
 # Imagética institucional (assets/img/*.webp), tambem usada em consultoria.html.
 # Mesmo diretorio inteiro do bloco sz, sem allowlist propria.
 Copy-Tree (Join-Path $ROOT 'assets\img') (Join-Path $MULTI 'assets\img') '*.webp' | Out-Null
@@ -118,10 +122,12 @@ $obrigatorios = @(
     'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
     'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
     'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
+    'sz\relatorio_cache.json',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
     'multi\privacidade.html', 'multi\privacidade',
     'multi\metodologia.html', 'multi\metodologia',
+    'multi\sitemap.xml',
     'multi\og-cover.jpg', 'multi\assets\sz-config.js'
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })

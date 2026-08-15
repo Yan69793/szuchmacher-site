@@ -22,7 +22,9 @@
 param([switch]$Simular)
 
 Set-StrictMode -Version Latest
-$ErrorActionPreference = 'Stop'
+# 'Continue' obrigatorio em script chamado pelo Task Scheduler: com 'Stop' o erro
+# aborta antes do 'exit' e LastTaskResult pode reportar 0 com falha real. FALHA-002.
+$ErrorActionPreference = 'Continue'
 
 $ROOT     = Split-Path -Parent $PSScriptRoot          # ...\Site\site-producao
 $REPO     = Split-Path -Parent $ROOT                  # ...\Site

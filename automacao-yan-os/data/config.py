@@ -42,8 +42,10 @@ SITE_REMOTE_DIR  = os.environ.get("SITE_REMOTE_DIR", "/home1/hg545631/public_htm
 SITE_URL         = os.environ.get("SITE_URL", "https://szuchmacher.com.br")
 
 # Webhook (alternativa ao FTP)
+# Segredo sem default: com a variavel ausente o webhook fica desabilitado
+# (fail-closed). O default anterior era um segredo publico versionado no repo.
 SITE_WEBHOOK_URL    = os.environ.get("SITE_WEBHOOK_URL", "")
-SITE_WEBHOOK_SECRET = os.environ.get("SITE_WEBHOOK_SECRET", "yan_os_webhook_2026")
+SITE_WEBHOOK_SECRET = os.environ.get("SITE_WEBHOOK_SECRET", "")
 
 # ─── Notificações ──────────────────────────────────────────────────────────
 # Telegram (recomendado — gratuito, sem limite de mensagens)
@@ -76,8 +78,13 @@ MONITOR_HORARIO_INICIO = os.environ.get("MONITOR_INICIO", "09:00")
 MONITOR_HORARIO_FIM    = os.environ.get("MONITOR_FIM",    "18:45")
 
 # ─── Qualificador de leads ──────────────────────────────────────────────────
+# Por seguranca, o webhook de leads escuta so em localhost por padrao. Expor
+# em 0.0.0.0 exige LEAD_HOST explicito no .env (e LEAD_SECRET configurado).
 LEAD_WEBHOOK_PORT   = int(os.environ.get("LEAD_PORT", "8765"))
-LEAD_WEBHOOK_SECRET = os.environ.get("LEAD_SECRET", "yan_os_leads_2026")
+LEAD_WEBHOOK_HOST   = os.environ.get("LEAD_HOST", "127.0.0.1")
+# Segredo sem default: qualificador_leads.py ja desliga a verificacao quando
+# vazio. O default anterior era um segredo publico versionado no repo.
+LEAD_WEBHOOK_SECRET = os.environ.get("LEAD_SECRET", "")
 
 # ─── Helpers ───────────────────────────────────────────────────────────────
 def is_interativo() -> bool:

@@ -294,6 +294,7 @@
         .ticker-card.gold::before { background: var(--gold); }
         .ticker-card.silver::before { background: #c0c0c0; }
         .ticker-card.platinum::before { background: #8ecfdd; }
+        .ticker-card.copper::before { background: #b87333; }
         .ticker-card.btc::before { background: var(--orange); }
         .ticker-card.usd::before { background: var(--green); }
         .ticker-card:hover { border-color: transparent; transform: none; box-shadow: none; background: var(--surface2); }
@@ -302,6 +303,7 @@
         .ticker-icon.gold { background: rgba(201,168,76,0.15); color:#c9a84c; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.silver { background: rgba(192,192,192,0.1); color:#c0c0c0; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.platinum { background: rgba(142,207,221,0.1); color:#8ecfdd; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+        .ticker-icon.copper { background: rgba(184,115,51,0.14); color:#b87333; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.btc { background: rgba(240,122,64,0.15); color: var(--orange); }
         .ticker-icon.usd { background: rgba(76,175,125,0.15); color: var(--green); }
         .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
@@ -485,7 +487,7 @@
 
         /* COMPARADOR */
         .comparador-header { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .comp-inputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .comp-inputs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
         .comp-input-card { background: var(--surface); border: 1px solid var(--border); border-radius: 0; padding: 20px; }
         .comp-input-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
         .comp-prazo-row { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 0; padding: 16px 20px; margin-bottom: 24px; }
@@ -505,7 +507,7 @@
         .comp-table tr:last-child td { border-bottom: none; }
         .comp-table tr:hover td { background: rgba(255,255,255,0.02); }
         .comp-mini-label { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
-        .comp-mini-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .comp-mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
         .comp-mini-item { background: var(--surface); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
         .comp-mini-title { font-size: 11px; font-weight: 600; padding: 12px 14px 8px; letter-spacing: 0.05em; }
         .comp-tv-mini { min-height: 180px; }
@@ -1712,8 +1714,27 @@
             </div>
         </div>
 
+        <!-- COBRE -->
+        <div class="ticker-card copper reveal d3">
+            <div class="ticker-left">
+                <div class="ticker-icon copper">Cu</div>
+                <div>
+                    <div class="ticker-name">Cobre (XCU/USD)</div>
+                    <div class="ticker-sub">Spot Price</div>
+                </div>
+            </div>
+            <div class="ticker-right tv-widget-wrap">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/tv-lazy" data-src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">
+                    {"symbol":"OANDA:XCUUSD","width":"100%","colorTheme":"dark","isTransparent":true,"locale":"br"}
+                    </script>
+                </div>
+            </div>
+        </div>
+
         <!-- BITCOIN -->
-        <div class="ticker-card btc reveal d3">
+        <div class="ticker-card btc reveal d4">
             <div class="ticker-left">
                 <div class="ticker-icon btc">₿</div>
                 <div>
@@ -1841,7 +1862,7 @@
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
                 <script type="text/tv-lazy" data-src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js">
-                {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"br","isTransparent":true,"showSymbolLogo":true,"showFloatingTooltip":false,"width":"100%","height":"340","tabs":[{"title":"Metais","symbols":[{"s":"TVC:GOLD","d":"Ouro (XAU)"},{"s":"TVC:SILVER","d":"Prata (XAG)"},{"s":"TVC:PLATINUM","d":"Platina (XPT)"},{"s":"TVC:PALLADIUM","d":"Paládio (XPD)"}],"originalTitle":"Metais"}]}
+                {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"br","isTransparent":true,"showSymbolLogo":true,"showFloatingTooltip":false,"width":"100%","height":"340","tabs":[{"title":"Metais","symbols":[{"s":"TVC:GOLD","d":"Ouro (XAU)"},{"s":"TVC:SILVER","d":"Prata (XAG)"},{"s":"TVC:PLATINUM","d":"Platina (XPT)"},{"s":"TVC:PALLADIUM","d":"Paládio (XPD)"},{"s":"OANDA:XCUUSD","d":"Cobre (XCU)"}],"originalTitle":"Metais"}]}
                 </script>
             </div>
         </div>
@@ -2030,6 +2051,9 @@
         </button>
         <button class="sim-nav-btn" onclick="activateSim('sim-platina', this)">
             <span class="sim-nav-icon" style="color:#8ecfdd">Pt</span> Platina
+        </button>
+        <button class="sim-nav-btn" onclick="activateSim('sim-cobre', this)">
+            <span class="sim-nav-icon" style="color:#b87333">Cu</span> Cobre
         </button>
         <button class="sim-nav-btn" onclick="activateSim('sim-btc', this)">
             <span class="sim-nav-icon" style="color:#f07a40">₿</span> Bitcoin
@@ -2327,6 +2351,99 @@
         </div>
     </div>
 
+    <!-- COBRE -->
+    <div id="sim-cobre" class="sim-panel reveal">
+        <div class="sim-panel-grid">
+            <div class="sim-panel-left">
+                <div class="sim-ativo-header">
+                    <div class="sim-ativo-icon" style="background:rgba(184,115,51,0.12);color:#b87333;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">Cu</div>
+                    <div>
+                        <div class="sim-ativo-nome display">Cobre</div>
+                        <div class="sim-ativo-ticker">XCU / USD · libra (lb)</div>
+                    </div>
+                    <div class="sim-ativo-preco-live">
+                        <div class="sim-preco-val" id="sp-copper-price" style="color:#b87333">$ —</div>
+                        <div class="sim-preco-change change-neutral" id="sp-copper-change">—</div>
+                    </div>
+                </div>
+                <div class="sim-form-block">
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label" for="cu-inicial">Valor inicial (USD)</label><input type="number" id="cu-inicial" value="10000" class="form-input" min="0" oninput="recalcSim('copper')"></div>
+                        <div class="form-group"><label class="form-label" for="cu-aporte">Aporte mensal (USD)</label><input type="number" id="cu-aporte" value="500" class="form-input" min="0" oninput="recalcSim('copper')"></div>
+                    </div>
+                    <div class="form-row" style="grid-template-columns:1fr;">
+                        <div class="form-group"><label class="form-label" for="cu-prazo">Prazo (anos)</label><input type="number" id="cu-prazo" value="10" class="form-input" min="1" max="30" oninput="recalcSim('copper')"></div>
+                    </div>
+                </div>
+                <div class="sc-selector" id="sc-copper">
+                    <div class="sc-card pessimist active-sc" onclick="selectScenario('copper','pess',this)">
+                        <div class="sc-badge">Conservador</div>
+                        <div class="sc-rate" id="cu-rate-cons" style="color:var(--red)">−8% a.a.</div>
+                        <div class="sc-desc" id="cu-desc-cons">Desaceleração industrial e imobiliária na China, de longe a maior consumidora do metal, corta a demanda incremental no momento em que o preço parte perto da máxima de doze meses, cerca de 50% acima da mínima do período. Projetos de expansão aprovados no ciclo de preço alto começam a entregar volume. Cobre é o mais sensível ao ciclo industrial entre os metais desta plataforma, então a correção chega antes e mais forte.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="cu-pess">$ —</div><div class="sc-result-ret" id="cu-pess-r">—</div></div>
+                        <div class="sc-breakdown" id="cu-pess-break"></div>
+                        <div class="sc-proj-price" id="cu-pess-price"></div>
+                    </div>
+                    <div class="sc-card base-sc" onclick="selectScenario('copper','base',this)">
+                        <div class="sc-badge">Moderado</div>
+                        <div class="sc-rate" id="cu-rate-mod" style="color:#b87333">+8% a.a.</div>
+                        <div class="sc-desc" id="cu-desc-mod">Eletrificação de rede, veículos elétricos e data centers sustentam demanda estrutural crescente contra oferta concentrada em Chile e Peru, com teor de minério em queda nas minas maduras. A premissa fica abaixo do retorno anual composto de 14,3% dos últimos dez anos justamente porque a série já parte perto da máxima. Prêmio de escassez preservado, sem repetir o ritmo que trouxe o metal até aqui.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="cu-base">$ —</div><div class="sc-result-ret" id="cu-base-r">—</div></div>
+                        <div class="sc-breakdown" id="cu-base-break"></div>
+                        <div class="sc-proj-price" id="cu-base-price"></div>
+                    </div>
+                    <div class="sc-card optimist" onclick="selectScenario('copper','otim',this)">
+                        <div class="sc-badge">Agressivo</div>
+                        <div class="sc-rate" id="cu-rate-agr" style="color:var(--green)">+20% a.a.</div>
+                        <div class="sc-desc" id="cu-desc-agr">O déficit de oferta se materializa antes do previsto. Uma mina leva mais de uma década entre descoberta e primeira produção, então nenhum projeto novo de grande porte resolve o problema no horizonte relevante, e a demanda de rede elétrica e data centers não espera. Cobre vira gargalo físico da transição energética e passa a negociar com prêmio permanente sobre o custo marginal de produção.</div>
+                        <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="cu-otim">$ —</div><div class="sc-result-ret" id="cu-otim-r">—</div></div>
+                        <div class="sc-breakdown" id="cu-otim-break"></div>
+                        <div class="sc-proj-price" id="cu-otim-price"></div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;"><canvas id="chart-copper" height="160"></canvas></div>
+
+                <!-- ── MONTE CARLO — COBRE ── -->
+                <div class="mc-section" id="mc-section-copper">
+                    <button class="mc-toggle-btn" id="mc-btn-copper" onclick="toggleMC('copper',this)">
+                        <span class="mc-spinner-inline"></span>
+                        <i class="fas fa-chart-area"></i>
+                        <span class="mc-label-main">Simulação Monte Carlo</span>
+                        <span class="mc-label-badge">10.000 simulações</span>
+                    </button>
+                    <div class="mc-content" id="mc-content-copper" style="display:none">
+                        <div class="mc-header-row">
+                            <span class="mc-header-title">Cone de probabilidade — Cobre (cenário base)</span>
+                            <div class="mc-brl-toggle" id="mc-brl-copper">
+                                <button class="mc-brl-btn active" onclick="setMCCurrency('copper','usd',this)">USD</button>
+                                <button class="mc-brl-btn" onclick="setMCCurrency('copper','brl',this)">BRL</button>
+                            </div>
+                        </div>
+                        <div class="mc-metrics-row" id="mc-metrics-copper"></div>
+                        <div class="mc-chart-wrap"><canvas id="chart-mc-copper"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- ── COMPARTILHAR — COBRE ── -->
+                <div class="sim-share-row">
+                    <button class="sim-share-btn" id="share-btn-copper" onclick="shareSim('copper', this)">
+                        <i class="fas fa-link"></i>
+                        <span>Compartilhar esta simulação</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sim-panel-right">
+                <div class="sim-chart-label">Gráfico Técnico — Cobre (XCU/USD)</div>
+                <div class="tradingview-widget-container sim-tv-chart">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/tv-lazy" data-src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
+                    {"autosize":true,"symbol":"OANDA:XCUUSD","interval":"D","timezone":"America/Sao_Paulo","theme":"dark","style":"1","locale":"br","backgroundColor":"#000000","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"save_image":false,"hide_volume":false,"support_host":"https://www.tradingview.com"}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- BITCOIN -->
     <div id="sim-btc" class="sim-panel reveal">
         <div class="sim-panel-grid">
@@ -2517,11 +2634,11 @@
                     <div class="sim-ativo-icon" style="background:rgba(76,175,125,0.15);color:#4caf7d;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">IPCA+</div>
                     <div>
                         <div class="sim-ativo-nome display">NTN-B</div>
-                        <div class="sim-ativo-ticker">Tesouro IPCA+ · duration intermediária</div>
+                        <div class="sim-ativo-ticker">Tesouro IPCA+ · ETF IB5M11 (IMA-B 5+)</div>
                     </div>
                 </div>
                 <div class="alert-box" style="border-color:rgba(76,175,125,0.25);color:#8ccfad;">
-                    <strong>Título indexado à inflação:</strong> a NTN-B paga IPCA + taxa prefixada no vencimento. A duration (~5-7 anos para o ETF NTNB11) introduz volatilidade de marcação a mercado, mas o carregamento é real (acima da inflação). <strong>Rentabilidade em BRL.</strong>
+                    <strong>Título indexado à inflação:</strong> a NTN-B paga IPCA + taxa prefixada no vencimento. A duration (~10,7 anos no IMA-B 5+, lâmina ANBIMA) introduz volatilidade de marcação a mercado, mas o carregamento é real (acima da inflação). <strong>Rentabilidade em BRL.</strong>
                 </div>
                 <div class="sim-form-block">
                     <div class="form-row">
@@ -2589,10 +2706,10 @@
                 <div class="sim-info-card">
                     <div class="sim-info-row"><span class="sim-info-label">Spread IPCA+</span><span class="sim-info-val" style="color:#4caf7d;">~7,5% a.a.</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val">~8% (duration)</span></div>
-                    <div class="sim-info-row"><span class="sim-info-label">Duration (NTNB11)</span><span class="sim-info-val">~6 anos</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Duration (IMA-B 5+)</span><span class="sim-info-val">~10,7 anos (ANBIMA)</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Indexador</span><span class="sim-info-val">IPCA (IBGE)</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">D+1 (Tesouro Direto)</span></div>
-                    <div class="sim-info-note">A NTN-B é o principal instrumento de proteção contra inflação no Brasil. O ETF NTNB11 replica o índice IMA-B 5+ da B3. Diferente do CDI, a NTN-B tem risco de duration: se os juros reais sobem, o preço do título cai no curto prazo. O carregamento real (IPCA + spread) compensa esse risco no horizonte de 3-5 anos.</div>
+                    <div class="sim-info-note">A NTN-B é o principal instrumento de proteção contra inflação no Brasil. O ETF IB5M11 replica o índice IMA-B 5+ da B3. Diferente do CDI, a NTN-B tem risco de duration: se os juros reais sobem, o preço do título cai no curto prazo. O carregamento real (IPCA + spread) compensa esse risco no horizonte de 3-5 anos.</div>
                 </div>
             </div>
         </div>
@@ -2719,6 +2836,12 @@
                 <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-p-ap">Mensal (USD)</label><input type="number" id="c-p-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
                 <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-p-tx-d">6,0%</span></div><input type="range" id="c-p-tx" aria-label="Taxa de retorno anual — Platina" min="2" max="30" step="0.5" value="6" oninput="document.getElementById('c-p-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
             </div>
+            <div class="comp-input-card" style="border-color:rgba(184,115,51,0.28)">
+                <div class="comp-input-title" style="color:#b87333">Cu Cobre</div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-cu-ini">Inicial (USD)</label><input type="number" id="c-cu-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-cu-ap">Mensal (USD)</label><input type="number" id="c-cu-ap" value="500" class="form-input" min="0" oninput="recalcComparador()"></div>
+                <div class="slider-wrap" style="margin-bottom:0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-cu-tx-d">8,0%</span></div><input type="range" id="c-cu-tx" aria-label="Taxa de retorno anual — Cobre" min="2" max="30" step="0.5" value="8" oninput="document.getElementById('c-cu-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador()"></div>
+            </div>
             <div class="comp-input-card" style="border-color:rgba(240,122,64,0.3)">
                 <div class="comp-input-title" style="color:var(--orange)">₿ Bitcoin</div>
                 <div class="form-group" style="margin-bottom:10px;"><label class="form-label" for="c-b-ini">Inicial (USD)</label><input type="number" id="c-b-ini" value="10000" class="form-input" min="0" oninput="recalcComparador()"></div>
@@ -2776,6 +2899,10 @@
                 <div class="comp-mini-item">
                     <div class="comp-mini-title" style="color:#8ecfdd">Pt Platina — XPT/USD</div>
                     <div class="tradingview-widget-container comp-tv-mini"><div class="tradingview-widget-container__widget"></div><script type="text/tv-lazy" data-src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:PLATINUM","width":"100%","height":"180","locale":"br","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":false}</script></div>
+                </div>
+                <div class="comp-mini-item">
+                    <div class="comp-mini-title" style="color:#b87333">Cu Cobre — XCU/USD</div>
+                    <div class="tradingview-widget-container comp-tv-mini"><div class="tradingview-widget-container__widget"></div><script type="text/tv-lazy" data-src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"OANDA:XCUUSD","width":"100%","height":"180","locale":"br","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":false}</script></div>
                 </div>
                 <div class="comp-mini-item">
                     <div class="comp-mini-title" style="color:var(--orange)">₿ Bitcoin — BTC/USD</div>
@@ -2843,17 +2970,17 @@
                         <button class="alloc-cenario-btn" data-cenario="pessimista" onclick="setAllocCenario('pessimista',this)">
                             <span class="cenario-icon"><i class="fas fa-triangle-exclamation"></i></span>
                             <span class="cenario-nome">Pessimista</span>
-                            <span class="cenario-desc">Juros restritivos, pressão em cripto, metais defensivos</span>
+                            <span class="cenario-desc">Corta cobre e Bitcoin, realoca em NTN-B e CDI</span>
                         </button>
                         <button class="alloc-cenario-btn active" data-cenario="base" onclick="setAllocCenario('base',this)">
                             <span class="cenario-icon"><i class="fas fa-chart-column"></i></span>
                             <span class="cenario-nome">Base</span>
-                            <span class="cenario-desc">Cortes graduais de juros e normalização macro</span>
+                            <span class="cenario-desc">Composição de referência do perfil escolhido</span>
                         </button>
                         <button class="alloc-cenario-btn" data-cenario="otimista" onclick="setAllocCenario('otimista',this)">
                             <span class="cenario-icon"><i class="fas fa-arrow-trend-up"></i></span>
                             <span class="cenario-nome">Otimista</span>
-                            <span class="cenario-desc">Dólar mais fraco, metais em alta, criptoativos valorizados</span>
+                            <span class="cenario-desc">Amplia cobre e Bitcoin, financiado por CDI e NTN-B</span>
                         </button>
                     </div>
                     <div class="alloc-cenario-desc" id="alloc-cenario-desc">
@@ -2866,16 +2993,16 @@
                     <div class="alloc-left">
                         <div class="alloc-dot" style="background:#4caf7d"></div>
                         <div>
-                            <span class="alloc-name">NTNB11 <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">ETF IPCA+</span></span>
-                            <span class="alloc-tag">B3 · ETF NTN-B · duration intermediária</span>
+                            <span class="alloc-name">IB5M11 <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">IMA-B 5+</span></span>
+                            <span class="alloc-tag">B3 · ETF IMA-B 5+ · duration longa</span>
                             <span class="alloc-live-badge"><span class="alloc-live-dot" style="background:#4caf7d"></span><span class="alloc-live-val" id="alloc-ntnb-price">—</span><span style="opacity:0.5">R$/cota</span></span>
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-ntnb" style="background:#4caf7d;width:30%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-ntnb" style="background:#4caf7d;width:27%"></div></div>
                         <div class="alloc-nums">
-                            <span class="alloc-pct-val" id="pct-ntnb">30%</span>
-                            <span class="alloc-value mono" id="val-ntnb" style="color:#4caf7d">R$ 150.000</span>
+                            <span class="alloc-pct-val" id="pct-ntnb">27%</span>
+                            <span class="alloc-value mono" id="val-ntnb" style="color:#4caf7d">R$ 135.000</span>
                         </div>
                     </div>
                 </div>
@@ -2890,10 +3017,10 @@
                         </div>
                     </div>
                     <div class="alloc-right-wrap">
-                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-cdi" style="background:#5b9cf6;width:25%"></div></div>
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-cdi" style="background:#5b9cf6;width:21%"></div></div>
                         <div class="alloc-nums">
-                            <span class="alloc-pct-val" id="pct-cdi">25%</span>
-                            <span class="alloc-value mono" id="val-cdi" style="color:#5b9cf6">R$ 125.000</span>
+                            <span class="alloc-pct-val" id="pct-cdi">21%</span>
+                            <span class="alloc-value mono" id="val-cdi" style="color:#5b9cf6">R$ 105.000</span>
                         </div>
                     </div>
                 </div>
@@ -2946,6 +3073,24 @@
                         <div class="alloc-nums">
                             <span class="alloc-pct-val" id="pct-platinum">5%</span>
                             <span class="alloc-value mono" id="val-platinum" style="color:#8ecfdd">R$ 25.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alloc-group-label" style="margin-top:16px;">Metais Industriais</div>
+                <div class="alloc-item" data-key="copper">
+                    <div class="alloc-left">
+                        <div class="alloc-dot" style="background:#b87333"></div>
+                        <div>
+                            <span class="alloc-name">Cobre (XCU)</span>
+                            <span class="alloc-tag">ETF · cobre spot internacional</span>
+                        </div>
+                    </div>
+                    <div class="alloc-right-wrap">
+                        <div class="alloc-bar-wrap"><div class="alloc-bar" id="bar-copper" style="background:#b87333;width:2%"></div></div>
+                        <div class="alloc-nums">
+                            <span class="alloc-pct-val" id="pct-copper">2%</span>
+                            <span class="alloc-value mono" id="val-copper" style="color:#b87333">R$ 10.000</span>
                         </div>
                     </div>
                 </div>
@@ -3007,11 +3152,13 @@
                     </div>
                 </div>
                 <div class="alloc-donut-legend" id="donut-legend">
-                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#4caf7d"></span><span class="donut-leg-label">NTNB11 30%</span></div>
-                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#5b9cf6"></span><span class="donut-leg-label">CDI 25%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#4caf7d"></span><span class="donut-leg-label">NTN-B 27%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#5b9cf6"></span><span class="donut-leg-label">CDI 21%</span></div>
                     <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#c9a84c"></span><span class="donut-leg-label">Ouro 15%</span></div>
-                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#f07a40"></span><span class="donut-leg-label">Bitcoin 10%</span></div>
                     <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#c0c0c0"></span><span class="donut-leg-label">Prata 5%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#8ecfdd"></span><span class="donut-leg-label">Platina 5%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#b87333"></span><span class="donut-leg-label">Cobre 2%</span></div>
+                    <div class="donut-leg-item"><span class="donut-leg-dot" style="background:#f07a40"></span><span class="donut-leg-label">Bitcoin 10%</span></div>
                     <div class="donut-leg-item"><span class="donut-leg-dot" style="background:rgba(201,168,76,0.55)"></span><span class="donut-leg-label">Reserva 15%</span></div>
                 </div>
             </div>
@@ -3056,8 +3203,8 @@
                 <span class="bench-assume-val" style="color:var(--blue)" id="bench-assume-selic">14,50% → 12% a.a.</span>
             </div>
             <div class="bench-assume-item">
-                <span class="bench-assume-label">NTNB11 (ETF IPCA+)</span>
-                <span class="bench-assume-val" style="color:var(--green)" id="bench-assume-ntnb">IPCA + 7,5% a.a.</span>
+                <span class="bench-assume-label">IB5M11 (IMA-B 5+)</span>
+                <span class="bench-assume-val" style="color:var(--green)" id="bench-assume-ntnb">IPCA + 7,5% a.a. (premissa de modelo)</span>
             </div>
             <div class="bench-assume-item">
                 <span class="bench-assume-label">Perfil × Cenário</span>
@@ -3109,7 +3256,7 @@
                 </div>
                 <div class="bench-mc-chart-wrap"><canvas id="chart-portfolio-mc"></canvas></div>
                 <div class="bench-mc-disclaimer">
-                    <strong style="color: var(--muted)">Metodologia:</strong> 10.000 trajetórias independentes com retornos log-normais por ativo. Volatilidades históricas: ouro 15%, prata 34%, platina 32%, Bitcoin 85%, NTN-B duration 8%, CDI 0,5%, USD/BRL 12%. As probabilidades indicam a fração das simulações em que o portfólio superou o benchmark no período. Os percentuais exibidos são premissas de cenário para fins de simulação, não projeção de resultado nem promessa de rentabilidade. <a href="/metodologia" target="_blank" style="color:var(--gold);text-decoration:underline;">Metodologia completa</a>. Retorno passado não garante retorno futuro e o resultado real pode ser inferior ao pior cenário simulado.
+                    <strong style="color: var(--muted)">Metodologia:</strong> 10.000 trajetórias independentes com retornos log-normais por ativo. Volatilidades históricas: ouro 15%, prata 34%, platina 32%, cobre 21%, Bitcoin 85%, NTN-B duration 8%, CDI 0,5%, USD/BRL 12%. As probabilidades indicam a fração das simulações em que o portfólio superou o benchmark no período. Os percentuais exibidos são premissas de cenário para fins de simulação, não projeção de resultado nem promessa de rentabilidade. <a href="/metodologia" target="_blank" style="color:var(--gold);text-decoration:underline;">Metodologia completa</a>. Retorno passado não garante retorno futuro e o resultado real pode ser inferior ao pior cenário simulado.
                 </div>
             </div>
         </div>
@@ -3544,11 +3691,11 @@ window.geoScenarios = [
     {
         id: 'cold-war', nome: 'Guerra fria administrada', probMin: 0.35, probMax: 0.55,
         desc: 'Desacoplamento tecnologico e comercial sem ruptura militar. Tarifas estruturais de 25-45%, restricoes a semicondutores e IA, blocos comerciais paralelos. Brasil mantem posicao nao-alinhada pragmatica. Cenario modal (35-55%).',
-        retornos: { gold: 0.095, silver: 0.06, platinum: 0.03, btc: 0.30, ntnb: 0.13, cdi: 0.12, ouro: 0.095, prata: 0.06, platina: 0.03 },
+        retornos: { gold: 0.095, silver: 0.06, platinum: 0.03, copper: 0.12, btc: 0.30, ntnb: 0.13, cdi: 0.12, ouro: 0.095, prata: 0.06, platina: 0.03, cobre: 0.12 },
         macro: { selic: [0.145,0.138,0.130,0.125,0.120], ipca: [0.055,0.050,0.047,0.045,0.045], usdbrl: [5.09,5.25,5.35,5.40,5.50], brent: [78,82,80,78,75] },
         correlShift: { goldBtc: 0.10, goldSilver: 0.05, goldPlatinum: 0.03 },
         setoresBR: {
-            beneficiados: ['<strong>Ouro e metais preciosos</strong> — demanda estrutural por refugio em desacoplamento','<strong>NTN-B e renda fixa real</strong> — juros elevados sustentam premios por periodo prolongado','<strong>Agronegocio exportador</strong> — Brasil supre ambos os blocos, poder de precificacao ampliado','<strong>Petroleo e energia</strong> — pre-sal e renovaveis com demanda dual EUA-China'],
+            beneficiados: ['<strong>Ouro e metais preciosos</strong> — demanda estrutural por refugio em desacoplamento','<strong>Cobre</strong> — blocos paralelos duplicam investimento em rede eletrica e fabricacao de semicondutores','<strong>NTN-B e renda fixa real</strong> — juros elevados sustentam premios por periodo prolongado','<strong>Agronegocio exportador</strong> — Brasil supre ambos os blocos, poder de precificacao ampliado','<strong>Petroleo e energia</strong> — pre-sal e renovaveis com demanda dual EUA-China'],
             penalizados: ['<strong>Semicondutores e tecnologia BR</strong> — corte de cadeias asiaticas e custos logisticos','<strong>Varejo importador</strong> — tarifas elevadas e fragmentacao comprimem margens','<strong>Industria automotiva</strong> — cadeias bipartidas, custos de compliance regulatorio'],
             neutros: ['<strong>Bancos e financeiro</strong> — juros altos sustentam spread, inadimplencia sobe com desaceleracao','<strong>Infraestrutura</strong> — depende mais de fiscal domestico que de geopolitica externa']
         }
@@ -3556,23 +3703,23 @@ window.geoScenarios = [
     {
         id: 'limited-conflict', nome: 'Escalada com conflito limitado', probMin: 0.15, probMax: 0.30,
         desc: 'Confronto naval ou aereo localizado no Mar do Sul da China ou Estreito de Taiwan. Sem escalada nuclear. Sancoes financeiras severas (SWIFT parcial, reservas congeladas). Petroleo dispara temporariamente (USD 105-130/bbl).',
-        retornos: { gold: 0.20, silver: 0.12, platinum: 0.05, btc: 0.50, ntnb: 0.10, cdi: 0.11, ouro: 0.20, prata: 0.12, platina: 0.05 },
+        retornos: { gold: 0.20, silver: 0.12, platinum: 0.05, copper: 0.08, btc: 0.50, ntnb: 0.10, cdi: 0.11, ouro: 0.20, prata: 0.12, platina: 0.05, cobre: 0.08 },
         macro: { selic: [0.145,0.140,0.135,0.130,0.125], ipca: [0.055,0.058,0.055,0.050,0.048], usdbrl: [5.09,5.50,5.70,5.60,5.80], brent: [78,95,105,90,85] },
         correlShift: { goldBtc: 0.20, goldSilver: 0.10, goldPlatinum: 0.05 },
         setoresBR: {
             beneficiados: ['<strong>Ouro e reserva de valor</strong> — demanda extraordinaria em crise militar localizada','<strong>Petroleo e gas</strong> — pre-sal se beneficia de Brent acima de USD 100','<strong>Defesa e seguranca</strong> — reaparelhamento militar global','<strong>Agricultura de commodities</strong> — disrupcao de cadeias eleva premio de exportadores confiaveis'],
             penalizados: ['<strong>BRL e ativos em reais</strong> — flight-to-quality para USD, real deprecia aceleradamente','<strong>Empresas com divida em USD</strong> — depreciacao cambial comprime balancos','<strong>Turismo e aviacao</strong> — reducao de viagens e custo de combustivel'],
-            neutros: ['<strong>Bitcoin e cripto</strong> — volatilidade bidirecional, beneficio de narrativa vs risco de aversao','<strong>Renda fixa curta</strong> — Selic elevada oferece protecao nominal, perde para inflacao e cambio']
+            neutros: ['<strong>Bitcoin e cripto</strong> — volatilidade bidirecional, beneficio de narrativa vs risco de aversao','<strong>Cobre</strong> — rotas navais interrompidas apertam a oferta, desaceleracao industrial corta o consumo civil','<strong>Renda fixa curta</strong> — Selic elevada oferece protecao nominal, perde para inflacao e cambio']
         }
     },
     {
         id: 'de-escalation', nome: 'Desescalada negociada', probMin: 0.10, probMax: 0.25,
         desc: 'Acordo comercial parcial EUA-China. Relaxamento de tarifas e sancoes tecnologicas. Retomada de fluxos de investimento bilateral. Ambiente global mais previsivel. Dolar enfraquece, emergentes se beneficiam.',
-        retornos: { gold: 0.05, silver: 0.14, platinum: 0.15, btc: 0.60, ntnb: 0.10, cdi: 0.09, ouro: 0.05, prata: 0.14, platina: 0.15 },
+        retornos: { gold: 0.05, silver: 0.14, platinum: 0.15, copper: 0.18, btc: 0.60, ntnb: 0.10, cdi: 0.09, ouro: 0.05, prata: 0.14, platina: 0.15, cobre: 0.18 },
         macro: { selic: [0.145,0.130,0.120,0.110,0.100], ipca: [0.055,0.048,0.045,0.043,0.040], usdbrl: [5.09,5.00,4.85,4.75,4.70], brent: [78,75,72,70,68] },
         correlShift: { goldBtc: -0.10, goldSilver: -0.05, goldPlatinum: -0.05 },
         setoresBR: {
-            beneficiados: ['<strong>Acoes ciclicas e small caps</strong> — juros menores e crescimento global favorecem multiples','<strong>Platina e paladio</strong> — retomada industrial global eleva demanda','<strong>Real e ativos em BRL</strong> — apreciacao cambial e fluxos de portfolio','<strong>Tecnologia e inovacao</strong> — reducao de restricoes reduz custos de cadeia'],
+            beneficiados: ['<strong>Acoes ciclicas e small caps</strong> — juros menores e crescimento global favorecem multiples','<strong>Cobre</strong> — retomada industrial com dolar fraco atinge em cheio o metal mais sensivel ao ciclo','<strong>Platina e paladio</strong> — retomada industrial global eleva demanda','<strong>Real e ativos em BRL</strong> — apreciacao cambial e fluxos de portfolio','<strong>Tecnologia e inovacao</strong> — reducao de restricoes reduz custos de cadeia'],
             penalizados: ['<strong>Ouro</strong> — perda de premio de risco geopolitico reduz demanda por refugio','<strong>Renda fixa prefixada longa</strong> — queda de juros reduz fluxo de caixa corrente'],
             neutros: ['<strong>Bitcoin</strong> — ganha com risk-on, perde narrativa de hedge contra colapso sistemico','<strong>Energia</strong> — preco do petroleo cai, volume de exportacao se mantem']
         }
@@ -3580,25 +3727,25 @@ window.geoScenarios = [
     {
         id: 'exogenous-shock', nome: 'Cooperacao por choque exogeno', probMin: 0.05, probMax: 0.15,
         desc: 'Crise global compartilhada (pandemia, catastrofe climatica ou crise financeira sistemica) forca cooperacao pragmatica EUA-China. Acordos de estabilizacao financeira e climatica. Juros globais caem para combater recessao.',
-        retornos: { gold: 0.15, silver: 0.08, platinum: 0.02, btc: 0.80, ntnb: 0.08, cdi: 0.07, ouro: 0.15, prata: 0.08, platina: 0.02 },
+        retornos: { gold: 0.15, silver: 0.08, platinum: 0.02, copper: -0.10, btc: 0.80, ntnb: 0.08, cdi: 0.07, ouro: 0.15, prata: 0.08, platina: 0.02, cobre: -0.10 },
         macro: { selic: [0.145,0.120,0.100,0.090,0.085], ipca: [0.055,0.045,0.040,0.038,0.035], usdbrl: [5.09,5.10,5.00,4.90,4.85], brent: [78,60,55,58,62] },
         correlShift: { goldBtc: 0.25, goldSilver: 0.08, goldPlatinum: 0.02 },
         setoresBR: {
             beneficiados: ['<strong>Bitcoin e ativos digitais</strong> — crise de confianca no sistema financeiro tradicional','<strong>Ouro</strong> — refugio em crise global, mesmo com cooperacao parcial','<strong>Renda fixa soberana BR</strong> — juros em queda acelerada geram ganho de capital'],
-            penalizados: ['<strong>Commodities ciclicas</strong> — colapso de demanda industrial global','<strong>Petroleo</strong> — Brent abaixo de USD 60 comprime receitas','<strong>Bancos</strong> — inadimplencia explode com recessao global sincronizada'],
+            penalizados: ['<strong>Cobre e commodities ciclicas</strong> — colapso de demanda industrial global','<strong>Petroleo</strong> — Brent abaixo de USD 60 comprime receitas','<strong>Bancos</strong> — inadimplencia explode com recessao global sincronizada'],
             neutros: ['<strong>Platina</strong> — colapso industrial vs cooperacao reconstroi cadeias','<strong>Agronegocio</strong> — demanda alimentar resistente, precos caem com deflacao global']
         }
     },
     {
         id: 'direct-conflict', nome: 'Conflito armado direto', probMin: 0.03, probMax: 0.08,
         desc: 'Confronto militar aberto no Pacifico com baixas significativas. Bloqueios navais, ciberataques a infraestrutura, interrupcao de cadeias de suprimento globais. Potencial escalada nuclear limitada. Cenario de cauda (3-8%).',
-        retornos: { gold: 0.35, silver: 0.25, platinum: 0.10, btc: 1.50, ntnb: 0.15, cdi: 0.14, ouro: 0.35, prata: 0.25, platina: 0.10 },
+        retornos: { gold: 0.35, silver: 0.25, platinum: 0.10, copper: 0.20, btc: 1.50, ntnb: 0.15, cdi: 0.14, ouro: 0.35, prata: 0.25, platina: 0.10, cobre: 0.20 },
         macro: { selic: [0.145,0.155,0.170,0.180,0.180], ipca: [0.055,0.070,0.085,0.090,0.085], usdbrl: [5.09,6.00,6.50,7.00,7.50], brent: [78,110,130,120,110] },
         correlShift: { goldBtc: 0.30, goldSilver: 0.20, goldPlatinum: 0.12 },
         setoresBR: {
             beneficiados: ['<strong>Ouro fisico</strong> — unico ativo com valor preservado em conflito sistemico global','<strong>Petroleo e commodities energeticas</strong> — disrupcao de oferta eleva precos a niveis extremos','<strong>Producao agricola basica</strong> — alimentos se tornam ativo estrategico','<strong>Ativos em moeda forte (offshore)</strong> — BRL colapsa, USD/CHF/JPY disparam'],
             penalizados: ['<strong>Acoes e credito corporativo</strong> — mercados financeiros podem fechar temporariamente','<strong>Sistema bancario</strong> — risco sistemico, corridas bancarias, controles de capital','<strong>Infraestrutura conectada</strong> — ciberataques a grids eletricos e sistemas de pagamento'],
-            neutros: ['<strong>Bitcoin</strong> — extremo beneficio como reserva descentralizada vs risco de proibicao estatal','<strong>Platina</strong> — demanda militar vs colapso da demanda civil de automoveis']
+            neutros: ['<strong>Bitcoin</strong> — extremo beneficio como reserva descentralizada vs risco de proibicao estatal','<strong>Platina</strong> — demanda militar vs colapso da demanda civil de automoveis','<strong>Cobre</strong> — disrupcao de oferta e demanda de reaparelhamento contra paralisia industrial civil']
         }
     }
 ];
@@ -3609,7 +3756,12 @@ window.geoActiveScenario = null;
 // Correlacoes base entre pares de ativos (tempos normais) — calibradas em serie historica 2018-2026
 window.geoBaseCorrelations = {
     'gold-silver': 0.65, 'gold-platinum': 0.55, 'gold-btc': 0.15,
-    'silver-platinum': 0.70, 'silver-btc': 0.12, 'platinum-btc': 0.08
+    'silver-platinum': 0.70, 'silver-btc': 0.12, 'platinum-btc': 0.08,
+    // Cobre medido em 30/07/2026 na mesma janela, log-retornos mensais de HG=F contra
+    // GC=F, SI=F, PL=F e BTC-USD, jan/2018 a jul/2026. Correlacao baixa com ouro
+    // porque cobre e risk-on e ouro e refugio; mais alta com prata e platina, que
+    // tambem tem demanda industrial.
+    'gold-copper': 0.33, 'silver-copper': 0.46, 'platinum-copper': 0.40, 'copper-btc': 0.18
 };
 
 // Parametros de calibracao (fontes academicas + prediction markets)
@@ -3661,7 +3813,7 @@ window.cenarioDescricoes = {
 window.taxasCenario = { pessimista: {}, base: {}, otimista: {} };
 
 // Consumidores leem ora a chave PT-BR, ora a EN (`taxasAtivo.ouro || taxasAtivo.gold`).
-const TAXAS_ALIAS_PTBR  = { gold: 'ouro', silver: 'prata', platinum: 'platina' };
+const TAXAS_ALIAS_PTBR  = { gold: 'ouro', silver: 'prata', platinum: 'platina', copper: 'cobre' };
 const TAXAS_CENARIO_SEL = { pess: 'pessimista', base: 'base', otim: 'otimista' };
 
 // Reprojeta taxasCenario a partir de simConfigs. Chamar depois de qualquer escrita
@@ -3753,6 +3905,7 @@ const simConfigs = {
     gold:     { ini: 'g-inicial', ap: 'g-aporte', prazo: 'g-prazo', pess: 0.04,  base: 0.093, otim: 0.15,  prefix: 'g', sel: 'pess' },
     silver:   { ini: 's-inicial', ap: 's-aporte', prazo: 's-prazo', pess: 0.03,  base: 0.085, otim: 0.18,  prefix: 's', sel: 'pess' },
     platinum: { ini: 'p-inicial', ap: 'p-aporte', prazo: 'p-prazo', pess: -0.05, base: 0.06,  otim: 0.20,  prefix: 'p', sel: 'pess' },
+    copper:   { ini: 'cu-inicial',ap: 'cu-aporte',prazo: 'cu-prazo',pess: -0.08, base: 0.08,  otim: 0.20,  prefix: 'cu', sel: 'pess' },
     btc:      { ini: 'b-inicial', ap: 'b-aporte', prazo: 'b-prazo', pess: null,  base: 0.40,  otim: 1.20,  prefix: 'b', sel: 'pess' },
     cdi:      { ini: 'c-inicial', ap: 'c-aporte', prazo: 'c-prazo', pess: 0.12,  base: 0.1425, otim: 0.165, prefix: 'c', sel: 'pess' },
     ntnb:     { ini: 'n-inicial', ap: 'n-aporte', prazo: 'n-prazo', pess: 0.10,  base: 0.13,   otim: 0.16,  prefix: 'n', sel: 'pess' },
@@ -3863,8 +4016,9 @@ function applyScenarioRates(asset, r) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
             applyScenarioRates('usdbrl', r);
-            // Atualiza cotacao global para conversao BRL no Monte Carlo
-            if (r.usdbrl_bid != null) usdBrlLive = r.usdbrl_bid;
+            // Atualiza cotacao global para conversao BRL no Monte Carlo.
+            // usdbrl_bid e campo de topo do payload, nao fica dentro de rates.
+            if (d.usdbrl_bid != null) usdBrlLive = d.usdbrl_bid;
             // Atualiza macro strip
             if (d.usdbrl_bid != null) {
                 var macroUsd = document.getElementById('macro-usd');
@@ -3888,7 +4042,6 @@ const SC_CARD_CLASS = { pess: '.pessimist', base: '.base-sc', otim: '.optimist' 
 // SC_CARD_CLASS['toString'] ou simConfigs['constructor'] resolvem na cadeia de
 // prototipo, passando por qualquer checagem de verdade simples.
 function temChave(obj, k) { return Object.prototype.hasOwnProperty.call(obj, k); }
-
 // Espelha no DOM o cenario que esta em simConfigs[asset].sel. Init e bootstrap
 // de link compartilhado chamam isto em vez de fixar o card zero, entao a ordem
 // em que os dois rodam deixa de importar.
@@ -3953,7 +4106,7 @@ function recalcSim(asset) {
 
     // Preço atual do ativo via prices.php (armazenado em window._livePrices)
     const _lp = window._livePrices || {};
-    const _priceKey = { gold: 'gold', silver: 'silver', platinum: 'platinum', btc: 'bitcoin' }[asset];
+    const _priceKey = { gold: 'gold', silver: 'silver', platinum: 'platinum', copper: 'copper', btc: 'bitcoin' }[asset];
     const _currentPrice = _lp[_priceKey];
     const _priceLabel = _currentPrice ? `$ ${Number(_currentPrice).toLocaleString('en-US')}` : '';
     const elPP = document.getElementById(p + '-pess-price');
@@ -3974,11 +4127,11 @@ function recalcSim(asset) {
 const simCharts = {};
 
 function drawSimChart(asset, ini, ap, prazo, c, pessVal, baseVal, otimVal) {
-    const canvasId = { gold: 'chart-gold', silver: 'chart-silver', platinum: 'chart-platinum', btc: 'chart-btc', cdi: 'chart-cdi', ntnb: 'chart-ntnb', usdbrl: 'chart-usdbrl' }[asset];
+    const canvasId = { gold: 'chart-gold', silver: 'chart-silver', platinum: 'chart-platinum', copper: 'chart-copper', btc: 'chart-btc', cdi: 'chart-cdi', ntnb: 'chart-ntnb', usdbrl: 'chart-usdbrl' }[asset];
     const canvas   = document.getElementById(canvasId);
     if (!canvas) return;
 
-    const colors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', btc: '#f07a40', cdi: '#5b9cf6', ntnb: '#4caf7d', usdbrl: '#c9a84c' };
+    const colors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', copper: '#b87333', btc: '#f07a40', cdi: '#5b9cf6', ntnb: '#4caf7d', usdbrl: '#c9a84c' };
     const color  = colors[asset];
     const sel    = simConfigs[asset].sel;
 
@@ -4050,6 +4203,7 @@ function recalcComparador() {
         { key: 'gold',     ini: 'c-g-ini', ap: 'c-g-ap', tx: 'c-g-tx', label: 'Ouro',    color: '#c9a84c', dash: [] },
         { key: 'silver',   ini: 'c-s-ini', ap: 'c-s-ap', tx: 'c-s-tx', label: 'Prata',   color: '#d0d0d0', dash: [6,3] },
         { key: 'platinum', ini: 'c-p-ini', ap: 'c-p-ap', tx: 'c-p-tx', label: 'Platina', color: '#8ecfdd', dash: [3,3] },
+        { key: 'copper',   ini: 'c-cu-ini',ap: 'c-cu-ap',tx: 'c-cu-tx',label: 'Cobre',   color: '#b87333', dash: [2,4] },
         { key: 'btc',      ini: 'c-b-ini', ap: 'c-b-ap', tx: 'c-b-tx', label: 'Bitcoin', color: '#f07a40', dash: [10,4] },
     ];
     const labels = [];
@@ -4146,42 +4300,126 @@ setTimeout(initSimulators, 500);
 
 // Perfis: conservador (pessimista), moderado (base), arrojado (otimista)
 // Soma sempre 100%
+// Cada perfil agora tem tres tabelas de peso, uma por cenario macro
+// (pessimista/base/otimista), nao mais uma unica. Cobre e o dial que varia
+// por cenario dentro de cada perfil (0 a 5%, minimo no pessimista, maximo no
+// otimista); Bitcoin varia junto, em 2x a amplitude do cobre, mesma direcao,
+// por ser o ativo de maior volatilidade da carteira (VOL_PORT.btc = 0,85
+// contra 0,21 do cobre). Ouro, prata e platina ficam fixos em qualquer
+// cenario dentro do mesmo perfil, ouro por ser protecao monetaria e
+// geopolitica, prata e platina por nao terem regra de tilt definida.
+// NTN-B e CDI absorvem toda a diferenca: no base, financiam a entrada do
+// cobre; no pessimista, recebem o que sai de cobre e Bitcoin; no otimista,
+// cedem para financiar o aumento de cobre e Bitcoin, CDI primeiro, NTN-B so
+// se CDI nao bastar. Reserva nunca muda dentro do mesmo perfil, e
+// dimensionada para liquidez, nao para leitura de mercado.
+// As nove tabelas foram calculadas e conferidas em script (soma = 100,00 nas
+// nove, sem excecao) antes de virar literal aqui.
 const PERFIS = {
     conservador: {
-        desc: 'Cenário pessimista: risco geopolítico elevado (conflito Irã), juros altos por mais tempo, inflação resistente. Proteção máxima em renda fixa real e ouro; mínima exposição a volatilidade.',
-        items: [
-            { key: 'ntnb',     pct: 43, color: '#4caf7d',             label: 'NTN-B'   },
-            { key: 'cdi',      pct: 28, color: '#5b9cf6',             label: 'CDI'     },
-            { key: 'gold',     pct: 10, color: '#c9a84c',             label: 'Ouro'    },
-            { key: 'silver',   pct:  2, color: '#c0c0c0',             label: 'Prata'   },
-            { key: 'platinum', pct:  2, color: '#8ecfdd',             label: 'Platina' },
-            { key: 'btc',      pct:  3, color: '#f07a40',             label: 'Bitcoin' },
-            { key: 'reserva',  pct: 12, color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
-        ]
+        desc: 'Perfil de máxima proteção: prioriza renda fixa real e liquidez, com exposição mínima a ativos de risco. Concentração maior em NTN-B e CDI, participação marginal em metais, cobre e cripto.',
+        items: {
+            pessimista: [
+                { key: 'ntnb',     pct: 44.5, color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct: 28.5, color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 10,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  2,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct:  2,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  0,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct:  1,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 12,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+            base: [
+                { key: 'ntnb',     pct: 42.5, color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct: 27.5, color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 10,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  2,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct:  2,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  1,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct:  3,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 12,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+            otimista: [
+                { key: 'ntnb',     pct: 42.5, color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct: 24.5, color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 10,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  2,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct:  2,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  2,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct:  5,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 12,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+        }
     },
     moderado: {
-        desc: 'Cenário base: ciclo de cortes do BCB em andamento (Selic em 14,50% após −0,25pp em mar e abr/2026), com incerteza geopolítica moderada e desinflação gradual. Portfólio balanceado entre proteção real e crescimento.',
-        items: [
-            { key: 'ntnb',     pct: 28, color: '#4caf7d',             label: 'NTN-B'   },
-            { key: 'cdi',      pct: 22, color: '#5b9cf6',             label: 'CDI'     },
-            { key: 'gold',     pct: 15, color: '#c9a84c',             label: 'Ouro'    },
-            { key: 'silver',   pct:  5, color: '#c0c0c0',             label: 'Prata'   },
-            { key: 'platinum', pct:  5, color: '#8ecfdd',             label: 'Platina' },
-            { key: 'btc',      pct: 10, color: '#f07a40',             label: 'Bitcoin' },
-            { key: 'reserva',  pct: 15, color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
-        ]
+        desc: 'Perfil balanceado: divide o portfólio entre proteção real (NTN-B, CDI) e ativos de crescimento (metais, cobre, Bitcoin), sem concentração extrema em nenhuma ponta.',
+        items: {
+            pessimista: [
+                { key: 'ntnb',     pct: 29.5, color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct: 23,   color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 15,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  5,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct:  5,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  0.5, color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct:  7,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+            base: [
+                { key: 'ntnb',     pct: 27,   color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct: 21,   color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 15,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  5,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct:  5,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  2,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct: 10,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+            otimista: [
+                { key: 'ntnb',     pct: 27,   color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct: 15,   color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 15,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  5,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct:  5,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  4,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct: 14,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+        }
     },
     arrojado: {
-        desc: 'Cenário otimista: resolução do conflito Irã, queda acelerada de juros no Brasil e no mundo, dólar em enfraquecimento. Maior exposição a metais preciosos, ativos reais e cripto.',
-        items: [
-            { key: 'ntnb',     pct: 13, color: '#4caf7d',             label: 'NTN-B'   },
-            { key: 'cdi',      pct:  8, color: '#5b9cf6',             label: 'CDI'     },
-            { key: 'gold',     pct: 22, color: '#c9a84c',             label: 'Ouro'    },
-            { key: 'silver',   pct:  7, color: '#c0c0c0',             label: 'Prata'   },
-            { key: 'platinum', pct: 10, color: '#8ecfdd',             label: 'Platina' },
-            { key: 'btc',      pct: 25, color: '#f07a40',             label: 'Bitcoin' },
-            { key: 'reserva',  pct: 15, color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
-        ]
+        desc: 'Perfil de maior tolerância a risco: prioriza metais, cobre e Bitcoin em busca de crescimento, com renda fixa reduzida ao mínimo necessário de estabilidade.',
+        items: {
+            pessimista: [
+                { key: 'ntnb',     pct: 14.5, color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct:  9.5, color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 22,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  7,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct: 10,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  1,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct: 21,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+            base: [
+                { key: 'ntnb',     pct: 11,   color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct:  7,   color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 22,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  7,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct: 10,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  3,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct: 25,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+            otimista: [
+                { key: 'ntnb',     pct: 11,   color: '#4caf7d',             label: 'NTN-B'   },
+                { key: 'cdi',      pct:  1,   color: '#5b9cf6',             label: 'CDI'     },
+                { key: 'gold',     pct: 22,   color: '#c9a84c',             label: 'Ouro'    },
+                { key: 'silver',   pct:  7,   color: '#c0c0c0',             label: 'Prata'   },
+                { key: 'platinum', pct: 10,   color: '#8ecfdd',             label: 'Platina' },
+                { key: 'copper',   pct:  5,   color: '#b87333',             label: 'Cobre'   },
+                { key: 'btc',      pct: 29,   color: '#f07a40',             label: 'Bitcoin' },
+                { key: 'reserva',  pct: 15,   color: 'rgba(201,168,76,0.55)', label: 'Reserva' },
+            ],
+        }
     },
 };
 
@@ -4200,7 +4438,16 @@ function setPerfilAlocacao(perfil, btn) {
     _refreshGeoPortfolioMC();
 }
 
-function getAllocItems() { return PERFIS[perfilAtivo].items; }
+function getAllocItems() { return PERFIS[perfilAtivo].items[benchCenario] || PERFIS[perfilAtivo].items.base; }
+
+// Formata percentual de alocacao em PT-BR. Precisa existir porque o
+// rebalanceamento por cenario introduziu casos com meio ponto (ex.: cobre em
+// 0,5% no moderado pessimista); item.pct + '%' cru mostraria "0.5%" com
+// ponto, fora do padrao PT-BR usado no resto do app. Numero inteiro continua
+// sem casa decimal, so ganha casa quando o valor realmente tem fracao.
+function fmtPct(n) {
+    return (n % 1 === 0 ? n : n.toFixed(1).replace('.', ',')) + '%';
+}
 
 function fmtBRL(v) {
     if (v >= 1e6) return 'R$ ' + (v/1e6).toFixed(2).replace('.',',') + ' M';
@@ -4225,7 +4472,7 @@ function atualizarAlocacao(val) {
         const elPct = document.getElementById('pct-' + item.key);
         const elBar = document.getElementById('bar-' + item.key);
         if (elVal) elVal.textContent = 'R$ ' + fmt(v, 0);
-        if (elPct) elPct.textContent = item.pct + '%';
+        if (elPct) elPct.textContent = fmtPct(item.pct);
         if (elBar) elBar.style.width = item.pct + '%';
     });
 
@@ -4247,7 +4494,7 @@ function desenharDonut(val) {
     donutChart = new Chart(canvas, {
         type: 'doughnut',
         data: {
-            labels: items.map(d => d.label + ' ' + d.pct + '%'),
+            labels: items.map(d => d.label + ' ' + fmtPct(d.pct)),
             datasets: [{
                 data: items.map(d => d.pct),
                 backgroundColor: items.map(d => d.color),
@@ -4286,7 +4533,7 @@ function desenharDonut(val) {
     const legEl = document.getElementById('donut-legend');
     if (legEl) {
         legEl.innerHTML = items.map(i =>
-            `<div class="donut-leg-item"><span class="donut-leg-dot" style="background:${i.color}"></span><span class="donut-leg-label">${i.label} ${i.pct}%</span></div>`
+            `<div class="donut-leg-item"><span class="donut-leg-dot" style="background:${i.color}"></span><span class="donut-leg-label">${i.label} ${fmtPct(i.pct)}</span></div>`
         ).join('');
     }
 }
@@ -4316,6 +4563,8 @@ function setBenchCenario(cenario, btn) {
     });
     const descEl = document.getElementById('alloc-cenario-desc');
     if (descEl) descEl.textContent = getCenarioDescricao(cenario);
+    const val = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+    atualizarAlocacao(val);
     desenharBenchmark();
     _refreshPortfolioMC();
     _refreshGeoPortfolioMC();
@@ -4336,6 +4585,8 @@ function setAllocCenario(cenario, btn) {
         const colors = { pessimista: 'rgba(224,112,112,0.4)', base: 'rgba(91,156,246,0.3)', otimista: 'rgba(76,175,125,0.4)' };
         descEl.style.borderLeftColor = colors[cenario] || colors.base;
     }
+    const val = parseInt(document.getElementById('portfolio-slider')?.value) || 500000;
+    atualizarAlocacao(val);
     desenharBenchmark();
     _refreshPortfolioMC();
     _refreshGeoPortfolioMC();
@@ -4361,12 +4612,13 @@ function desenharBenchmark() {
 
     const perfil     = perfilAtivo || 'moderado';
     const taxasAtivo = window.taxasCenario[benchCenario] || window.taxasCenario.base;
-    const itens      = PERFIS[perfil].items;
+    const itens      = PERFIS[perfil].items[benchCenario] || PERFIS[perfil].items.base;
     const pNtnb  = (itens.find(i => i.key === 'ntnb')?.pct     || 0) / 100;
     const pCdi   = (itens.find(i => i.key === 'cdi')?.pct      || 0) / 100;
     const pOuro  = (itens.find(i => i.key === 'gold')?.pct     || 0) / 100;
     const pPrata = (itens.find(i => i.key === 'silver')?.pct   || 0) / 100;
     const pPlat  = (itens.find(i => i.key === 'platinum')?.pct || 0) / 100;
+    const pCobre = (itens.find(i => i.key === 'copper')?.pct   || 0) / 100;
     const pBtc   = (itens.find(i => i.key === 'btc')?.pct      || 0) / 100;
     const pRes   = (itens.find(i => i.key === 'reserva')?.pct  || 0) / 100;
 
@@ -4378,6 +4630,7 @@ function desenharBenchmark() {
              + ((taxasAtivo.ouro || taxasAtivo.gold) * pOuro)
              + ((taxasAtivo.prata || taxasAtivo.silver) * pPrata)
              + ((taxasAtivo.platina || taxasAtivo.platinum) * pPlat)
+             + ((taxasAtivo.cobre || taxasAtivo.copper) * pCobre)
              + (taxasAtivo.btc * pBtc)
              + (selic * pRes);
     }
@@ -4535,6 +4788,10 @@ const VOL_PORT = {
     gold:     0.15,
     silver:   0.34,   // histórico 5a: ~34% a.a.
     platinum: 0.32,   // histórico 5a: ~32% a.a.
+    copper:   0.21,   // histórico COMEX HG=F: 20,6% a.a. em 10a, 21,5% em 5a.
+                      // Cobre não entra em nenhum perfil de carteira: a chave existe
+                      // aqui porque VOL_ANUAL, que alimenta o Monte Carlo do simulador
+                      // individual, deriva deste objeto e não pode ter fonte própria.
     btc:      0.85,
     reserva:  0.005,
     usdbrl:   0.12,   // volatilidade cambial histórica ~12% a.a.
@@ -4588,12 +4845,13 @@ function _runPortfolioMC() {
             case 'gold':     return taxasAtivo.gold || taxasAtivo.ouro || 0.10;
             case 'silver':   return taxasAtivo.silver || taxasAtivo.prata || 0.10;
             case 'platinum': return taxasAtivo.platinum || taxasAtivo.platina || 0.10;
+            case 'copper':   return taxasAtivo.copper || taxasAtivo.cobre || 0.10;
             case 'btc':      return taxasAtivo.btc || 0.10;
             default:         return 0.10;
         }
     }
 
-    const itens = PERFIS[perfil].items;
+    const itens = PERFIS[perfil].items[benchCenario] || PERFIS[perfil].items.base;
 
     // Roda N simulações
     const paths = [];
@@ -4889,8 +5147,8 @@ function _renderGeoScenarioDetail() {
         el.innerHTML = '<div style="font-size:12px;color:var(--muted);line-height:1.6;padding:10px 0;">Selecione um cenario geopolitico acima para ver os retornos condicionais projetados para cada ativo.</div>';
         return;
     }
-    var labels = { gold: 'Ouro', silver: 'Prata', platinum: 'Platina', btc: 'BTC', ntnb: 'NTN-B', cdi: 'CDI' };
-    var retItems = ['gold','silver','platinum','btc','ntnb','cdi'].map(function(k) {
+    var labels = { gold: 'Ouro', silver: 'Prata', platinum: 'Platina', copper: 'Cobre', btc: 'BTC', ntnb: 'NTN-B', cdi: 'CDI' };
+    var retItems = ['gold','silver','platinum','copper','btc','ntnb','cdi'].map(function(k) {
         var val = s.retornos[k] || 0;
         var cls = val >= 0.10 ? 'geo-ret-pos' : val < 0.05 ? 'geo-ret-neg' : 'geo-ret-neu';
         var sign = val >= 0 ? '+' : '';
@@ -4939,8 +5197,8 @@ function _renderGeoReturnChart() {
     var canvas = document.getElementById('chart-geo-return');
     if (!canvas) return;
     if (geoReturnChart) geoReturnChart.destroy();
-    var assets = ['gold', 'silver', 'platinum', 'btc'];
-    var assetLabels = ['Ouro', 'Prata', 'Platina', 'Bitcoin'];
+    var assets = ['gold', 'silver', 'platinum', 'copper', 'btc'];
+    var assetLabels = ['Ouro', 'Prata', 'Platina', 'Cobre', 'Bitcoin'];
     var colors = ['rgba(106,150,212,0.7)', 'rgba(224,143,143,0.7)', 'rgba(76,175,125,0.7)', 'rgba(201,168,76,0.7)', 'rgba(180,130,130,0.7)'];
     var datasets = window.geoScenarios.map(function(s, i) {
         return { label: s.nome, data: assets.map(function(a) { return (s.retornos[a] || 0) * 100; }), backgroundColor: colors[i], borderColor: colors[i].replace('0.7', '1'), borderWidth: 0, barPercentage: 0.8, categoryPercentage: 0.9 };
@@ -5051,7 +5309,7 @@ function _runPortfolioMCGeo() {
     var prazo = benchPrazo;
     var perfil = perfilAtivo || 'moderado';
     var N = 2000;
-    var itens = PERFIS[perfil].items;
+    var itens = PERFIS[perfil].items[benchCenario] || PERFIS[perfil].items.base;
     var taxasAtivo = window.taxasCenario[benchCenario] || window.taxasCenario.base;
 
     function _baseTaxa(key, y) {
@@ -5060,6 +5318,7 @@ function _runPortfolioMCGeo() {
             case 'gold': return taxasAtivo.gold || taxasAtivo.ouro || 0.10;
             case 'silver': return taxasAtivo.silver || taxasAtivo.prata || 0.10;
             case 'platinum': return taxasAtivo.platinum || taxasAtivo.platina || 0.10;
+            case 'copper': return taxasAtivo.copper || taxasAtivo.cobre || 0.10;
             case 'btc': return taxasAtivo.btc || 0.10;
             default: return 0.10;
         }
@@ -5155,7 +5414,7 @@ function _renderGeoPortfolioMCChart(geoResults, labels) {
             scales: { x: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: function(v) { return 'R$ ' + fmt(v, 0); } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
     });
     var disc = document.getElementById('geo-mc-disclaimer');
-    if (disc) disc.innerHTML = '<strong style="color:var(--muted)">Metodologia:</strong> 2.000 trajetorias independentes para cada um dos 5 cenarios geopoliticos + cenario base (12.000 simulacoes totais). Volatilidades: ouro 15%, prata 28%, platina 22%, Bitcoin 85%, NTN-B duration 8%, CDI/reserva 0,5%. As projecoes condicionais usam retornos anuais e trajetorias macro calibradas com dados de prediction markets (Polymarket, Good Judgment, Metaculus) e series historicas de conflito (Correlates of War, UCDP). Nao constitui garantia de retorno. Cenarios geopoliticos sao eventos unicos (Knightianos) sem serie historica para calibracao estatistica; as probabilidades refletem avaliacao qualitativa estruturada.';
+    if (disc) disc.innerHTML = '<strong style="color:var(--muted)">Metodologia:</strong> 2.000 trajetorias independentes para cada um dos 5 cenarios geopoliticos + cenario base (12.000 simulacoes totais). Volatilidades: ouro 15%, prata 34%, platina 32%, cobre 21%, Bitcoin 85%, NTN-B duration 8%, CDI/reserva 0,5%. As projecoes condicionais usam retornos anuais e trajetorias macro calibradas com dados de prediction markets (Polymarket, Good Judgment, Metaculus) e series historicas de conflito (Correlates of War, UCDP). Nao constitui garantia de retorno. Cenarios geopoliticos sao eventos unicos (Knightianos) sem serie historica para calibracao estatistica; as probabilidades refletem avaliacao qualitativa estruturada.';
 }
 
 function _refreshGeoPortfolioMC() {
@@ -5301,6 +5560,7 @@ const VOL_ANUAL = {
     gold:     VOL_PORT.gold,
     silver:   VOL_PORT.silver,
     platinum: VOL_PORT.platinum,
+    copper:   VOL_PORT.copper,
     btc:      VOL_PORT.btc,
     cdi:      VOL_PORT.cdi,
     ntnb:     VOL_PORT.ntnb,
@@ -5440,7 +5700,7 @@ function _renderMCMetrics(asset, result, ini, ap, prazo, taxa, vol, currency) {
     const maxDD   = calcMaxDrawdown(vol, prazo);
     const retMed  = (((finalMedian - totalInv) / totalInv) * 100).toFixed(0);
     const cagr    = ((Math.pow(finalMedian / Math.max(ini, 1), 1 / prazo) - 1) * 100).toFixed(1);
-    const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', btc: '#f07a40' };
+    const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', copper: '#b87333', btc: '#f07a40' };
     const color = assetColors[asset] || '#c9a84c';
     const sharpeNum = parseFloat(sharpe);
     const sharpeColor = sharpeNum >= 0.8 ? '#4caf7d' : sharpeNum >= 0.4 ? '#c9a84c' : '#e05c5c';
@@ -5474,7 +5734,7 @@ function _renderMCChart(asset, result, prazo, currency, ini, ap) {
     for (let y = 0; y <= prazo; y++) labels.push(y === 0 ? 'Hoje' : 'Ano ' + y);
     const conv = function(arr) { return arr.map(function(v) { return _convertBRL(v, currency); }); };
     const sym  = currency === 'brl' ? 'R$' : '$';
-    const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', btc: '#f07a40' };
+    const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', copper: '#b87333', btc: '#f07a40' };
     const color = assetColors[asset] || '#c9a84c';
     if (mcCharts[asset]) mcCharts[asset].destroy();
     mcCharts[asset] = new Chart(canvas, {
@@ -5574,7 +5834,7 @@ async function exportPDF(fabEl) {
             var panel = document.querySelector('.sim-panel.active');
             if (!panel) return 'Ouro';
             var id = panel.id || '';
-            var map = { 'sim-ouro':'Ouro (XAU/USD)', 'sim-prata':'Prata (XAG/USD)', 'sim-platina':'Platina (XPT/USD)', 'sim-btc':'Bitcoin (BTC/USD)', 'sim-cdi':'CDI', 'sim-ntnb':'NTN-B (IPCA+)', 'sim-usdbrl':'USD/BRL' };
+            var map = { 'sim-ouro':'Ouro (XAU/USD)', 'sim-prata':'Prata (XAG/USD)', 'sim-platina':'Platina (XPT/USD)', 'sim-cobre':'Cobre (XCU/USD)', 'sim-btc':'Bitcoin (BTC/USD)', 'sim-cdi':'CDI', 'sim-ntnb':'NTN-B (IPCA+)', 'sim-usdbrl':'USD/BRL' };
             return map[id] || 'Ativo';
         }
         function getSimConfig() {
@@ -5585,6 +5845,7 @@ async function exportPDF(fabEl) {
                 'sim-ouro':    { prefix:'g', asset:'gold' },
                 'sim-prata':   { prefix:'s', asset:'silver' },
                 'sim-platina': { prefix:'p', asset:'platinum' },
+                'sim-cobre':   { prefix:'cu', asset:'copper' },
                 'sim-btc':     { prefix:'b', asset:'btc' },
                 'sim-cdi':     { prefix:'c', asset:'cdi' },
                 'sim-ntnb':    { prefix:'n', asset:'ntnb' },
@@ -5731,7 +5992,7 @@ async function exportPDF(fabEl) {
 
             pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
             pdf.setTextColor(...TEXT); pdf.text(item.label, mg+4, cy+5.5);
-            pdf.setTextColor(clr[0],clr[1],clr[2]); pdf.text(item.pct+'%', mg+32, cy+5.5);
+            pdf.setTextColor(clr[0],clr[1],clr[2]); pdf.text(fmtPct(item.pct), mg+32, cy+5.5);
             pdf.setTextColor(...MUT); pdf.text('R$'+Math.round(v).toLocaleString('pt-BR'), W-mg-3, cy+5.5, {align:'right'});
             cy += 9;
         });
@@ -5981,6 +6242,19 @@ function _showMacroStamp(generatedAt) {
 function renderMacro(d) {
     // Sanitizar citações [N] que LLMs às vezes inserem
     const stripCites = s => typeof s === 'string' ? s.replace(/(\[\d+\])+/g, '') : s;
+    // Escape HTML obrigatório: os campos vêm de LLM (macro_api.php) e entram via
+    // innerHTML. Sem isso, qualquer markup que o modelo reproduzir vira XSS
+    // armazenado no domínio. escRich libera apenas <strong>, que o prompt pede
+    // nos campos beneficiados/penalizados/cenários.
+    const escHtml = s => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    // Whitelist apenas <strong>. Qualquer outra coisa que pareca tag fica
+    // como texto literal escapado (inofensivo). Remover "tags" por regex
+    // apagava texto legitimo entre < e > nos campos do LLM, ex.:
+    // "crescimento < 2%" virava "crescimento" — delecao silenciosa.
+    const escRich = s => escHtml(s)
+        .replace(/&lt;strong&gt;/g, '<strong>').replace(/&lt;\/strong&gt;/g, '</strong>');
     const sanitize = obj => {
         if (typeof obj === 'string') return stripCites(obj);
         if (Array.isArray(obj)) return obj.map(sanitize);
@@ -5990,10 +6264,10 @@ function renderMacro(d) {
     d = sanitize(d);
     const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerHTML = val; };
 
-    set('macro-cenario-eyebrow', d.eyebrow);
-    set('macro-alert-title', d.alert_title);
-    set('macro-alert-text', d.alert_text);
-    set('macro-alert-badge', d.alert_badge);
+    set('macro-cenario-eyebrow', escHtml(d.eyebrow));
+    set('macro-alert-title', escHtml(d.alert_title));
+    set('macro-alert-text', escHtml(d.alert_text));
+    set('macro-alert-badge', escHtml(d.alert_badge));
 
     if (d.canais?.length) {
         const dirMap = { up: '↑', down: '↓', neutral: '~' };
@@ -6001,9 +6275,9 @@ function renderMacro(d) {
         const tbody = document.getElementById('macro-canais-tbody');
         if (tbody) {
             tbody.innerHTML = d.canais.map(c => `<tr>
-                <td><strong>${c.variavel}</strong></td>
+                <td><strong>${escHtml(c.variavel)}</strong></td>
                 <td><span class="macro-dir ${clsMap[c.direcao] || 'neutral'}">${dirMap[c.direcao] || '~'}</span></td>
-                <td>${c.mecanismo}</td>
+                <td>${escHtml(c.mecanismo)}</td>
             </tr>`).join('');
         }
     }
@@ -6012,23 +6286,23 @@ function renderMacro(d) {
         const cont = document.getElementById('macro-brasil-content');
         if (cont) {
             cont.innerHTML = d.brasil.map(b => `<div class="macro-brazil-item">
-                <div class="macro-brazil-label">${b.label}</div>
-                <div class="macro-brazil-text">${b.text}</div>
+                <div class="macro-brazil-label">${escHtml(b.label)}</div>
+                <div class="macro-brazil-text">${escHtml(b.text)}</div>
             </div>`).join('');
         }
     }
 
     if (d.beneficiados?.length) {
         const el = document.getElementById('macro-setores-beneficiados');
-        if (el) el.innerHTML = d.beneficiados.map(s => `<li>${s}</li>`).join('');
+        if (el) el.innerHTML = d.beneficiados.map(s => `<li>${escRich(s)}</li>`).join('');
     }
     if (d.penalizados?.length) {
         const el = document.getElementById('macro-setores-penalizados');
-        if (el) el.innerHTML = d.penalizados.map(s => `<li>${s}</li>`).join('');
+        if (el) el.innerHTML = d.penalizados.map(s => `<li>${escRich(s)}</li>`).join('');
     }
     if (d.cenarios_brent?.length) {
         const el = document.getElementById('macro-cenarios-brent');
-        if (el) el.innerHTML = d.cenarios_brent.map(s => `<li>${s}</li>`).join('');
+        if (el) el.innerHTML = d.cenarios_brent.map(s => `<li>${escRich(s)}</li>`).join('');
     }
 
     // Timestamp de última atualização
@@ -6099,11 +6373,11 @@ async function fetchRFDiario() {
     }
     let ntnbPrice = null, selicRate = null;
 
-    // NTNB11: proxy server-side (market-data.php) — evita CORS Yahoo no browser.
-    // O handler devolve stale[] com os ativos que cairam no SEED hardcoded em vez
-    // de fetch ao vivo. Sem checar isso, o SEED (95) passava no teste p > 0 e
-    // preemptava o fallback brapi.dev abaixo, que funciona. Dado falso ganhava de
-    // dado bom, silenciosamente.
+    // IB5M11 (IMA-B 5+): proxy server-side (market-data.php) — evita CORS Yahoo
+    // no browser. A chave do payload continua 'ntnb11' por contrato; a fonte
+    // trocou de NTNB11 para IB5M11 na auditoria de 15/08/2026, quando se
+    // confirmou que o NTNB11.SA nao existe no Yahoo e que o fallback brapi.dev
+    // (removido daqui) respondia 401 sem token desde maio/2026.
     try {
         const res = await fetch('/market-data.php', { signal: AbortSignal.timeout(10000), headers: { 'Accept': 'application/json' } });
         if (res.ok) {
@@ -6113,12 +6387,6 @@ async function fetchRFDiario() {
             if (!seeded && p > 0) ntnbPrice = p;
         }
     } catch(e) {}
-    if (!ntnbPrice) {
-        try {
-            const res = await fetch('https://brapi.dev/api/quote/NTNB11', { signal: AbortSignal.timeout(8000) });
-            if (res.ok) { const d = await res.json(); const p = d?.results?.[0]?.regularMarketPrice; if (p > 0) ntnbPrice = p; }
-        } catch(e) {}
-    }
 
     // CDI/Selic: BrasilAPI → BCB série 432
     try {
@@ -6318,31 +6586,58 @@ document.addEventListener('click', function(e) {
 });
 
 // ── PREÇOS AO VIVO — proxy server-side prices.php ─────────────────────────────
+// Contador por ciclo de 15 min, não pela vida da página: sem resetar no
+// setInterval, três falhas nas primeiras horas travavam o card em "$ —" pro
+// resto do dia, porque a escada de retry só disparava uma vez.
+let _pricesFalhas = 0;
+function agendarRetryPrices() {
+    if (_pricesFalhas >= 3) return;
+    _pricesFalhas++;
+    setTimeout(loadLivePrices, _pricesFalhas * 20000);
+}
 async function loadLivePrices() {
     try {
         const res  = await fetch('prices.php', { signal: AbortSignal.timeout(10000) });
         const data = await res.json();
-        if (!data || !data.ok) return;
+        if (!data || !data.ok) {
+            agendarRetryPrices();
+            return;
+        }
         window._livePrices = data;
+        // source_state 'stale'/'stale-cache' indica cache vencido servido
+        // durante a revalidacao: dado velho sem o flag stale ainda assim
+        // nao e cotacao do minuto, e precisa do mesmo sinal honesto.
+        const defasado = data.stale || data.source_state === 'stale' || data.source_state === 'stale-cache';
+        if (defasado) {
+            console.warn('prices.php: cotação parcial — fonte ao vivo indisponível, valores podem estar defasados');
+        }
         // Atualiza o display de preço ao vivo no header de cada ativo
         const map = {
             'sp-gold-price':   data.gold,
             'sp-silver-price': data.silver,
             'sp-plat-price':   data.platinum,
+            'sp-copper-price': data.copper,
             'sp-btc-price':    data.bitcoin,
         };
         Object.entries(map).forEach(([id, val]) => {
             const el = document.getElementById(id);
-            if (el) el.textContent = val ? `$ ${Number(val).toLocaleString('en-US')}` : '$ —';
+            if (el) {
+                el.textContent = val ? `$ ${Number(val).toLocaleString('en-US')}` : '$ —';
+                // Sinal honesto de cotação defasada: tooltip no próprio preço,
+                // sem mudar o layout.
+                el.title = defasado ? 'Cotação defasada: fonte ao vivo indisponível no momento' : '';
+            }
         });
         // Re-renderiza cards para exibir preço atual em todos os *-pess-price
         Object.keys(simConfigs).forEach(asset => recalcSim(asset));
+        _pricesFalhas = 0;
     } catch (e) {
         console.warn('prices.php indisponível:', e.message);
+        agendarRetryPrices();
     }
 }
 loadLivePrices();
-setInterval(loadLivePrices, 15 * 60 * 1000);
+setInterval(() => { _pricesFalhas = 0; loadLivePrices(); }, 15 * 60 * 1000);
 
 // ══════════════════════════════════════════════════════════════════
 // ── SIMULAÇÕES COMPARTILHÁVEIS (URL params + deep link)
@@ -6351,6 +6646,7 @@ const _SHARE_ASSET_TO_PANEL = {
     gold:     'sim-ouro',
     silver:   'sim-prata',
     platinum: 'sim-platina',
+    copper:   'sim-cobre',
     btc:      'sim-btc',
     cdi:      'sim-cdi',
     ntnb:     'sim-ntnb',
@@ -6491,9 +6787,11 @@ function _applyShareParams() {
         if (!sim) return;
 
         // ── Ativo individual ──
-        // simConfigs cobre os 7 ativos que shareSim sabe exportar. A lista fixa
+        // simConfigs cobre os ativos que shareSim sabe exportar. A lista fixa
         // de metais que estava aqui deixava CDI, NTN-B e USD/BRL sem nenhum
-        // parametro aplicado.
+        // parametro aplicado, e obrigava a lembrar de edita-la a cada ativo
+        // novo. Ler simConfigs direto resolve os dois casos, com guarda de
+        // chave propria (temChave) contra a cadeia de prototipo.
         if (temChave(simConfigs, sim)) {
             var c = simConfigs[sim];
 

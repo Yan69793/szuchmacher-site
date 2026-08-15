@@ -534,10 +534,21 @@
         })
         .then(function (d) {
           if (!d.ok) return;
-          if (d.ibovespa) setCard('cardIbovespa', fmtBR(d.ibovespa, 0),          'Cotação atual');
-          if (d.usd_brl)  setCard('cardDolar',    'R$ '  + fmtBR(d.usd_brl, 4), 'Cotação atual');
-          if (d.sp500)    setCard('cardSP500',     fmtBR(d.sp500, 2),             'Cotação atual');
-          if (d.wti)      setCard('cardWTI',       'US$ ' + fmtBR(d.wti, 2),     'Cotação atual');
+          // stale é array de ativos defasados, array vazio é truthy: comparar
+          // por comprimento. O rótulo é por card, não da página: um WTI
+          // defasado não pode marcar Ibovespa fresco como defasado.
+          // source_state 'stale'/'stale-cache' indica cache vencido servido
+          // durante a revalidacao: dado velho sem flag ainda nao é cotação
+          // do minuto.
+          var defasados = Array.isArray(d.stale) ? d.stale : [];
+          var cacheVelho = d.source_state === 'stale' || d.source_state === 'stale-cache';
+          function rotuloDe(chave) {
+            return (defasados.indexOf(chave) !== -1 || cacheVelho) ? 'Cotação defasada' : 'Cotação atual';
+          }
+          if (d.ibovespa) setCard('cardIbovespa', fmtBR(d.ibovespa, 0),          rotuloDe('ibovespa'));
+          if (d.usd_brl)  setCard('cardDolar',    'R$ '  + fmtBR(d.usd_brl, 4), rotuloDe('usd_brl'));
+          if (d.sp500)    setCard('cardSP500',     fmtBR(d.sp500, 2),             rotuloDe('sp500'));
+          if (d.wti)      setCard('cardWTI',       'US$ ' + fmtBR(d.wti, 2),     rotuloDe('wti'));
         })
         .catch(function () { /* silencioso — fallback JSON permanece */ });
     }

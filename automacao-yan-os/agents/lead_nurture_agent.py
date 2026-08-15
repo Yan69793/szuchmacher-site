@@ -110,9 +110,18 @@ def load_state() -> dict:
         return {"nurtured": {}}
 
 
-def save_state(state: dict) -> None:
+def save_state(state: dict) -> bool:
     _STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    _STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    # Escrita atomica: um crash no meio do write nao pode corromper o estado
+    # de "ja enviado" e provocar reenvio em lote na proxima execucao.
+    tmp = _STATE_FILE.with_suffix(".json.tmp")
+    try:
+        tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(_STATE_FILE)
+        return True
+    except Exception as e:
+        log(f"ERRO ao salvar estado: {e}")
+        return False
 
 
 def lead_key(lead: dict) -> str:
@@ -212,7 +221,7 @@ def enviar_email(dest: str, assunto: str, corpo: str, dry_run: bool) -> bool:
     msg["To"] = dest
 
     try:
-        with smtplib.SMTP(EMAIL_SMTP_HOST, int(EMAIL_SMTP_PORT)) as srv:
+        with smtplib.SMTP(EMAIL_SMTP_HOST, int(EMAIL_SMTP_PORT), timeout=30) as srv:
             srv.starttls()
             srv.login(EMAIL_REMETENTE, EMAIL_SENHA)
             srv.sendmail(EMAIL_REMETENTE, [dest], msg.as_string())
@@ -310,12 +319,23 @@ def processar(dry_run: bool = False) -> int:
         msg = gerar_mensagem(lead, analise)
         ok_email = enviar_email(lead.get("email", ""), msg["assunto"], msg["corpo"], dry_run)
 
-        aviso = (
-            f"📬 *Lead Nurture enviado*\n"
-            f"*{nome}* · {lead.get('email', '')}\n"
-            f"Fit {analise.get('fit_score', '—')}/10 · {analise.get('urgencia', '—')}\n"
-            f"Assunto: _{msg['assunto']}_"
-        )
+        # A notificacao reflete o resultado real do envio: antes, o aviso de
+        # "enviado" saia mesmo com SMTP falhando, falso positivo que escondia
+        # lead sem nurture.
+        if ok_email:
+            aviso = (
+                f"📬 *Lead Nurture enviado*\n"
+                f"*{nome}* · {lead.get('email', '')}\n"
+                f"Fit {analise.get('fit_score', '—')}/10 · {analise.get('urgencia', '—')}\n"
+                f"Assunto: _{msg['assunto']}_"
+            )
+        else:
+            aviso = (
+                f"⚠️ *Lead Nurture FALHOU*\n"
+                f"*{nome}* · {lead.get('email', '')}\n"
+                f"Fit {analise.get('fit_score', '—')}/10 · {analise.get('urgencia', '—')}\n"
+                f"Assunto: _{msg['assunto']}_"
+            )
         notificar_yan(aviso, dry_run)
 
         if ok_email or dry_run:
@@ -328,7 +348,11 @@ def processar(dry_run: bool = False) -> int:
             sent += 1
 
     if not dry_run:
-        save_state(state)
+        if not save_state(state):
+            # Estado nao persistido = risco de reenvio em lote na proxima
+            # execucao. Nao pode sair como sucesso silencioso.
+            log("ERRO: estado nao persistido; a proxima execucao pode reenviar leads.")
+            return -1
     else:
         log(f"DRY-RUN: {sent} nurture(s) simulados (estado não salvo).")
 

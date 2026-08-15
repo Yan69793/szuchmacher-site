@@ -22,7 +22,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $TaskName = 'Szuchmacher-AgendaAgent'
-$Runner   = 'E:\Diretorio\Claude\Site\site-producao\scripts\run-agenda-agent.ps1'
+$Runner   = 'E:\Diretorio\Claude\FREQUENTE\Site\site-producao\scripts\run-agenda-agent.ps1'
 
 if ($Remove) {
     if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
@@ -50,7 +50,8 @@ $settings = New-ScheduledTaskSettingsSet `
     -StartWhenAvailable `
     -MultipleInstances IgnoreNew `
     -ExecutionTimeLimit (New-TimeSpan -Minutes 30) `
-    -DontStopOnIdleEnd
+    -DontStopOnIdleEnd `
+    -DisallowStartIfOnBatteries $false
 
 # LogonType Interactive de proposito: o wrangler le as credenciais Cloudflare do
 # perfil do usuario. Rodar como SYSTEM registraria a tarefa e quebraria o deploy.
@@ -80,5 +81,5 @@ if ($RunNow) {
     $i = Get-ScheduledTaskInfo -TaskName $TaskName
     Write-Host ("LastRunTime: {0}  LastTaskResult: {1}" -f $i.LastRunTime, $i.LastTaskResult)
     Write-Host "A tarefa continua rodando em segundo plano. Log:" -ForegroundColor DarkGray
-    Write-Host ("  E:\Diretorio\Claude\Site\automacao-yan-os\logs\agenda_scheduled_{0:yyyyMMdd}.log" -f (Get-Date))
+    Write-Host ("  E:\Diretorio\Claude\FREQUENTE\Site\automacao-yan-os\logs\agenda_scheduled_{0:yyyyMMdd}.log" -f (Get-Date))
 }

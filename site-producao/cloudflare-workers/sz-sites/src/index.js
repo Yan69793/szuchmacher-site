@@ -10,6 +10,7 @@ import { handleBtcScenarios } from './handlers/btc-scenarios.js';
 import { handleCdiScenarios } from './handlers/cdi-scenarios.js';
 import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
 import { handleUsdbrlScenarios } from './handlers/usdbrl-scenarios.js';
+import { handleRelatorioPrices } from './handlers/relatorio-prices.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -20,17 +21,18 @@ const SITE_MAP = {
 };
 
 const API_ROUTES = {
-  '/prices.php': (req, env, ctx) => handlePrices(env),
-  '/market-data.php': (req, env, ctx) => handleMarketData(env),
+  '/prices.php': (req, env, ctx) => handlePrices(env, ctx),
+  '/market-data.php': (req, env, ctx) => handleMarketData(env, ctx),
+  '/relatorio-prices.php': (req, env, ctx) => handleRelatorioPrices(env, ctx),
   '/macro_api.php': (req, env, ctx) => handleMacroApi(req, env),
   '/assets/macro.php': (req, env, ctx) => handleMacroPanel(env, req),
   '/assets/agenda.php': (req, env, ctx) => handleAgenda(env, req),
   '/stripe-webhook': (req, env, ctx) => handleStripeWebhook(req, env, ctx),
   '/relatorio-signup': (req, env, ctx) => handleRelatorioSignup(req, env),
-  '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env),
-  '/api/cdi-scenarios': (req, env, ctx) => handleCdiScenarios(env),
-  '/api/ntnb-scenarios': (req, env, ctx) => handleNtnbScenarios(env),
-  '/api/usdbrl-scenarios': (req, env, ctx) => handleUsdbrlScenarios(env),
+  '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env, ctx),
+  '/api/cdi-scenarios': (req, env, ctx) => handleCdiScenarios(env, ctx),
+  '/api/ntnb-scenarios': (req, env, ctx) => handleNtnbScenarios(env, ctx),
+  '/api/usdbrl-scenarios': (req, env, ctx) => handleUsdbrlScenarios(env, ctx),
   '/health': (req, env, ctx) => handleHealth(env),
 };
 

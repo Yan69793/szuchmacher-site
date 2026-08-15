@@ -34,7 +34,7 @@ from config import (
     CALLMEBOT_PHONE, CALLMEBOT_APIKEY, CALLMEBOT_USER,
     TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM, TWILIO_TO,
     TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
-    LEAD_WEBHOOK_PORT, LEAD_WEBHOOK_SECRET
+    LEAD_WEBHOOK_PORT, LEAD_WEBHOOK_HOST, LEAD_WEBHOOK_SECRET
 )
 
 
@@ -309,6 +309,12 @@ def iniciar_servidor_webhook():
     import hmac
     import hashlib
 
+    # Fail-closed: webhook exposto fora de loopback sem segredo e porta aberta
+    # para a internet. Com host publico, a assinatura HMAC e obrigatoria.
+    if LEAD_WEBHOOK_HOST not in ("127.0.0.1", "localhost", "::1") and not LEAD_WEBHOOK_SECRET:
+        print("[leads] ERRO: LEAD_WEBHOOK_HOST fora de loopback exige LEAD_WEBHOOK_SECRET configurado.")
+        sys.exit(1)
+
     app = Flask(__name__)
 
     @app.route("/health", methods=["GET"])
@@ -340,7 +346,7 @@ def iniciar_servidor_webhook():
     print(f"  Para expor à internet: ngrok http {LEAD_WEBHOOK_PORT}")
     print(f"\n  Pressione Ctrl+C para parar.\n")
 
-    app.run(host="0.0.0.0", port=LEAD_WEBHOOK_PORT, debug=False)
+    app.run(host=LEAD_WEBHOOK_HOST, port=LEAD_WEBHOOK_PORT, debug=False)
 
 
 # ─── Modo interativo ──────────────────────────────────────────────────────────

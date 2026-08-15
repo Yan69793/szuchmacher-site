@@ -61,12 +61,26 @@ def audit_page(page, name: str, vp: dict) -> dict:
     errors = []
     warnings = []
     console_msgs = []
+    http_errors = []
 
     def on_console(msg):
         if msg.type in ("error", "warning"):
             console_msgs.append({"type": msg.type, "text": msg.text[:300]})
 
+    seen_http = set()
+
+    def on_response(resp):
+        if resp.status >= 400:
+            req = getattr(resp, "request", None)
+            if not req:
+                return
+            key = f"{resp.status} {req.method} {resp.url}"
+            if key not in seen_http:
+                seen_http.add(key)
+                http_errors.append(key[:300])
+
     page.on("console", on_console)
+    page.on("response", on_response)
     page.on("pageerror", lambda exc: errors.append(f"pageerror: {str(exc)[:200]}"))
 
     t0 = datetime.now(timezone.utc)
@@ -82,13 +96,18 @@ def audit_page(page, name: str, vp: dict) -> dict:
     if name == "home":
         try:
             page.wait_for_selector("#macroPanel[data-state='ready']", timeout=35000)
-            panel = page.locator("#macroPanel")
-            items = page.locator(".mp-evento")
+            items = page.locator(".mp-ev")
+            days = page.locator(".mp-day")
+            title_el = page.locator("#agendaTitle")
+            rotulo = title_el.first.inner_text().strip() if title_el.count() else ""
             result = {
                 "macro_ready": True,
                 "eventos": items.count(),
-                "has_sexta": any("19/06" in items.nth(i).inner_text() for i in range(items.count())),
+                "dias": days.count(),
+                "rotulo": rotulo[:80],
             }
+            if "Semana de referência" in rotulo:
+                warnings.append("agenda janela no passado (rotulo 'Semana de referencia')")
         except Exception as e:
             result = {"macro_ready": False, "error": str(e)[:200]}
             warnings.append("macro panel not ready")
@@ -142,6 +161,7 @@ def audit_page(page, name: str, vp: dict) -> dict:
         "screenshot": str(shot),
         "checks": result,
         "console": console_msgs[:15],
+        "http_errors": http_errors[:15],
         "errors": errors,
         "warnings": warnings,
     }

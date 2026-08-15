@@ -49,7 +49,7 @@ def enviar_briefing(pdf_path: str, destinatarios: list[str]):
     )
     msg.attach(parte)
 
-    with smtplib.SMTP(smtp_host, smtp_port) as servidor:
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=30) as servidor:
         servidor.starttls()
         servidor.login(remetente, senha)
         servidor.sendmail(remetente, destinatarios, msg.as_string())

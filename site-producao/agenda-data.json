@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "2026-07-26",
+    "version": "2026-08-14",
     "curator": "Szuchmacher Consultoria",
     "fontes_primarias": [
       "IBGE — Calendário de divulgações (API v3/calendario)",
@@ -21,14 +21,14 @@
       "en"
     ]
   },
-  "gerado": "2026-07-26T14:31:53-03:00",
+  "gerado": "2026-08-14T19:20:00-03:00",
   "janela": {
-    "inicio": "2026-07-27",
-    "fim": "2026-07-31"
+    "inicio": "2026-08-10",
+    "fim": "2026-08-17"
   },
   "eventos": [
     {
-      "data": "2026-07-27",
+      "data": "2026-08-10",
       "hora_brt": "08:25",
       "regiao": "BR",
       "evento": "Boletim Focus",
@@ -39,18 +39,73 @@
       "relevancia": "alta"
     },
     {
-      "data": "2026-07-28",
+      "data": "2026-08-10",
+      "hora_brt": "22:30",
+      "regiao": "CN",
+      "evento": "China — IPC ao consumidor (CPI)",
+      "evento_en": "China — Consumer Price Index (CPI)",
+      "descricao": "Inflação ao consumidor na China. Leituras baixas sinalizam risco deflacionário e fraqueza de demanda doméstica, com impacto em commodities e moedas de países exportadores de matérias-primas (BRL, AUD, NZD, CLP).",
+      "descricao_en": "China consumer inflation. Low readings signal deflation risk and weak domestic demand, impacting commodities and commodity-exporting currencies (BRL, AUD, NZD, CLP).",
+      "fonte": "NBS China",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-08-11",
       "hora_brt": "09:00",
       "regiao": "BR",
-      "evento": "Índice Nacional de Preços ao Consumidor Amplo 15",
-      "evento_en": "Índice Nacional de Preços ao Consumidor Amplo 15",
-      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor Amplo 15.",
-      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor Amplo 15.",
+      "evento": "Índice Nacional de Preços ao Consumidor Amplo",
+      "evento_en": "Índice Nacional de Preços ao Consumidor Amplo",
+      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor Amplo.",
+      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor Amplo.",
       "fonte": "IBGE",
       "relevancia": "alta"
     },
     {
-      "data": "2026-07-29",
+      "data": "2026-08-11",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Índice Nacional de Preços ao Consumidor",
+      "evento_en": "Índice Nacional de Preços ao Consumidor",
+      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor.",
+      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor.",
+      "fonte": "IBGE",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-08-11",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Industrial Mensal: Produção Física - Regional",
+      "evento_en": "Pesquisa Industrial Mensal: Produção Física - Regional",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Industrial Mensal: Produção Física - Regional.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Industrial Mensal: Produção Física - Regional.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-08-12",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Mensal de Serviços",
+      "evento_en": "Pesquisa Mensal de Serviços",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Mensal de Serviços.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Mensal de Serviços.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-08-12",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Índice de Preços ao Consumidor (CPI) — julho/2026",
+      "evento_en": "Consumer Price Index (CPI) — July 2026",
+      "descricao": "Inflação ao consumidor nos EUA, cheia e núcleo. Principal referência de curto prazo para a trajetória de juros do Fed e para o apetite a risco global.",
+      "descricao_en": "US consumer inflation, headline and core. The key near-term input for the Fed's rate path and global risk appetite.",
+      "fonte": "BLS",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-08-12",
       "hora_brt": "11:30",
       "regiao": "US",
       "evento": "EUA — Estoques de petróleo bruto (EIA)",
@@ -61,7 +116,29 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-07-30",
+      "data": "2026-08-13",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Mensal de Comércio",
+      "evento_en": "Pesquisa Mensal de Comércio",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Mensal de Comércio.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Mensal de Comércio.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-08-13",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Índice de Preços ao Produtor (PPI) — julho/2026",
+      "evento_en": "Producer Price Index (PPI) — July 2026",
+      "descricao": "Inflação no atacado nos EUA. Antecede pressões de custo que se transmitem ao consumidor e complementa a leitura do CPI para o Fed.",
+      "descricao_en": "US wholesale inflation. Signals cost pressures that feed through to consumers and complements the CPI read for the Fed.",
+      "fonte": "BLS",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-08-13",
       "hora_brt": "09:30",
       "regiao": "US",
       "evento": "EUA — Novos pedidos de seguro-desemprego",
@@ -72,70 +149,92 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-07-30",
-      "hora_brt": "15:00",
+      "data": "2026-08-14",
+      "hora_brt": "09:30",
       "regiao": "US",
-      "evento": "FOMC — Decisão de juros (07/2026)",
-      "evento_en": "FOMC — Rate Decision (07/2026)",
-      "descricao": "Decisão do Federal Reserve sobre os Fed Funds. Impacto direto no diferencial Brasil–EUA e no real.",
-      "descricao_en": "Federal Reserve decision on the Fed Funds rate. Direct impact on the Brazil–US rate differential and BRL.",
-      "fonte": "Fed",
+      "evento": "Vendas no Varejo (Advance) — julho/2026",
+      "evento_en": "Advance Retail Sales — July 2026",
+      "descricao": "Vendas do varejo nos EUA. Principal leitura de curto prazo sobre a força do consumo americano, que responde por cerca de dois terços do PIB.",
+      "descricao_en": "US retail sales. The key near-term read on the strength of American consumer spending, which drives roughly two-thirds of GDP.",
+      "fonte": "Census Bureau",
       "relevancia": "alta"
     },
     {
-      "data": "2026-07-30",
-      "hora_brt": "16:00",
-      "regiao": "UK",
-      "evento": "BoE — Decisão de juros no Reino Unido (MPC)",
-      "evento_en": "BoE — UK Rate Decision (MPC)",
-      "descricao": "O Monetary Policy Committee do Bank of England divulga a decisão sobre a Bank Rate e a ata da reunião simultaneamente. Impacto direto na GBP e nos gilts. Quatro das oito reuniões incluem o Monetary Policy Report com projeções macro.",
-      "descricao_en": "The MPC announces the Bank Rate decision and minutes simultaneously. Four meetings per year include the Monetary Policy Report with macro projections. Direct impact on GBP and gilt yields.",
-      "fonte": "Bank of England",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-30",
-      "hora_brt": "18:30",
+      "hora_brt": "08:00",
+      "data": "2026-08-17",
       "regiao": "BR",
-      "evento": "COPOM — Decisão de juros (07/2026)",
-      "evento_en": "COPOM — Rate Decision (07/2026)",
-      "descricao": "O BCB divulga a decisão sobre a Selic ao final do segundo dia de reunião. O comunicado e a ata subsequente moldam a curva de juros doméstica e o câmbio.",
-      "descricao_en": "BCB releases the Selic decision at the end of day two. The statement and subsequent minutes shape the domestic rate curve and BRL.",
+      "evento_en": "IGP-10 (FGV) — August 2026",
+      "descricao_en": "FGV General Price Index - 10, collected between the 11th of the prior month and the 10th of the reference month. Reference for contract adjustments and wholesale price trends.",
+      "fonte": "FGV",
+      "relevancia": "media",
+      "descricao": "Índice Geral de Preços - 10, calculado pela FGV com coleta entre o dia 11 do mês anterior e o dia 10 do mês corrente. Referência para reajustes de contratos e para a trajetória de preços no atacado.",
+      "evento": "IGP-10 (FGV) — agosto/2026"
+    },
+    {
+      "hora_brt": "08:25",
+      "data": "2026-08-17",
+      "regiao": "BR",
+      "evento_en": "Focus Market Report",
+      "descricao_en": "Weekly market medians for Selic, CPI, FX and GDP — key forward-guidance inputs for the rate curve and COPOM decisions.",
       "fonte": "BCB",
-      "relevancia": "alta"
+      "relevancia": "alta",
+      "descricao": "Medianas semanais do mercado para Selic, IPCA, câmbio e PIB — principais referências de expectativas para a curva de juros e decisão do COPOM.",
+      "evento": "Boletim Focus"
     },
     {
-      "data": "2026-07-31",
-      "hora_brt": "06:00",
-      "regiao": "EU",
-      "evento": "Zona do Euro — IPC Flash",
-      "evento_en": "Eurozone — CPI Flash Estimate",
-      "descricao": "Estimativa preliminar da inflação ao consumidor na Zona do Euro (índice cheio e núcleo). Divulgado pelo Eurostat. Principal dado de inflação para o BCE antes da decisão de juros seguinte.",
-      "descricao_en": "Preliminary Eurozone CPI estimate (headline and core) by Eurostat. Key inflation data point ahead of ECB rate decisions.",
-      "fonte": "Eurostat",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-07-31",
       "hora_brt": "09:00",
+      "data": "2026-08-17",
       "regiao": "BR",
-      "evento": "Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação",
-      "evento_en": "Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação",
-      "descricao": "Divulgação programada do IBGE: Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação.",
-      "descricao_en": "Scheduled IBGE release: Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação.",
-      "fonte": "IBGE",
-      "relevancia": "media"
+      "evento_en": "Central Bank Economic Activity Index (IBC-Br) — June 2026",
+      "descricao_en": "Monthly GDP proxy published by the Central Bank, aggregating industry, trade, services and agriculture. Closely watched by the Copom.",
+      "fonte": "BCB",
+      "relevancia": "alta",
+      "descricao": "Prévia mensal do PIB calculada pelo Banco Central, agrega indústria, comércio, serviços e agropecuária. Leitura acompanhada de perto pelo Copom.",
+      "evento": "IBC-Br (Índice de Atividade Econômica do BCB) — junho/2026"
     },
     {
-      "data": "2026-07-31",
-      "hora_brt": "23:30",
+      "hora_brt": "09:30",
+      "data": "2026-08-17",
+      "regiao": "US",
+      "evento_en": "US — Empire State Manufacturing Survey (Aug 2026)",
+      "descricao_en": "Manufacturing survey for the New York Fed district, the month's first regional read on American industry.",
+      "fonte": "Federal Reserve Bank of New York",
+      "relevancia": "media",
+      "descricao": "Sondagem da atividade industrial no distrito de Nova York, primeira leitura regional do mês sobre a manufatura americana.",
+      "evento": "EUA — Índice Empire State de atividade industrial (ago/2026)"
+    },
+    {
+      "hora_brt": "11:00",
+      "data": "2026-08-17",
+      "regiao": "US",
+      "evento_en": "US — NAHB Housing Market Index (Aug 2026)",
+      "descricao_en": "US homebuilder confidence, a reference for the housing market and construction activity.",
+      "fonte": "NAHB",
+      "relevancia": "media",
+      "descricao": "Confiança das construtoras americanas, referência para o mercado imobiliário e para a atividade de construção nos EUA.",
+      "evento": "EUA — Índice de confiança do mercado imobiliário NAHB (ago/2026)"
+    },
+    {
+      "hora_brt": "19:50",
+      "data": "2026-08-17",
       "regiao": "JP",
-      "evento": "BoJ — Decisão de juros no Japão",
-      "evento_en": "BoJ — Japan Rate Decision",
-      "descricao": "O Bank of Japan divulga a decisão sobre a policy rate e publica o Outlook Report trimestral (jan, abr, jul, out). Impacto no USD/JPY, Nikkei 225 e JGBs. Divulgação ocorre de madrugada no horário brasileiro (11:30 JST = 23:30 BRT do dia anterior).",
-      "descricao_en": "The BoJ announces its policy rate decision and publishes the quarterly Outlook Report (Jan, Apr, Jul, Oct). Impact on USD/JPY, Nikkei 225 and JGBs.",
-      "fonte": "Bank of Japan",
-      "relevancia": "alta"
+      "evento_en": "Japan — Q2 GDP (preliminary estimate)",
+      "descricao_en": "First read on Japanese Q2 GDP. Released 7:50am Tokyo time, Sunday evening (Aug 16) in Brasília, setting the tone for Monday's Asian open.",
+      "fonte": "Cabinet Office Japan",
+      "relevancia": "alta",
+      "descricao": "Primeira leitura do PIB japonês do 2º trimestre. Divulgação às 7h50 em Tóquio, na noite de domingo (16/08) no horário de Brasília, e define o tom da abertura dos mercados asiáticos na segunda.",
+      "evento": "Japão — PIB do 2º trimestre (leitura preliminar)"
+    },
+    {
+      "hora_brt": "23:00",
+      "data": "2026-08-17",
+      "regiao": "CN",
+      "evento_en": "China — Industrial production, retail sales and fixed asset investment (July 2026)",
+      "descricao_en": "China's monthly activity package. Released 10am Beijing time, Sunday evening (Aug 16) in Brasília. Key read for commodity demand and global risk appetite.",
+      "fonte": "NBS China",
+      "relevancia": "alta",
+      "descricao": "Pacote mensal de atividade da China. Divulgação às 10h em Pequim, na noite de domingo (16/08) no horário de Brasília. Leitura-chave para a demanda por commodities e para o apetite a risco global.",
+      "evento": "China — Produção industrial, vendas no varejo e investimento em ativos fixos (julho/2026)"
     }
   ]
 }

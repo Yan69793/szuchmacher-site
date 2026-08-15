@@ -263,14 +263,6 @@
 
 <!-- TIERS -->
 <section id="tiers" class="section" style="padding-top:24px;">
-    <div class="founder-band" style="margin-bottom:32px;">
-        <div class="fb-text">
-            <strong>Condição de fundador, 50 vagas</strong>
-            <span>Preço mantido para os primeiros assinantes e canal direto de atendimento. Quem assina primeiro garante a condição enquanto houver vaga.</span>
-        </div>
-        <div class="fb-count"><b>50</b><span>vagas</span></div>
-    </div>
-
     <div class="sec-head" style="text-align:center;">
         <div class="sec-eyebrow">Planos</div>
         <h2 class="sec-title">Escolha o formato que faz sentido para você</h2>
@@ -323,7 +315,7 @@
         <div class="signup-info">
             <div class="sec-eyebrow">Prefere falar antes?</div>
             <h2>Deixe seu contato</h2>
-            <p>Se quiser alinhar expectativas antes de assinar, envie seus dados. Retorno em até 24 horas úteis, com prioridade de fundador pela ordem de contato.</p>
+            <p>Se quiser alinhar expectativas antes de assinar, envie seus dados. Retorno em até 24 horas úteis, pela ordem de contato.</p>
             <p style="font-size:13px;">Já decidiu? Use os botões de assinatura acima. O processo é imediato.</p>
         </div>
         <form id="leadForm" class="signup-form" method="POST" action="" data-formspree="1" data-form="assinatura_interesse">
@@ -393,7 +385,7 @@
                 </span>
             </a>
             <p class="footer-desc">Research autoral e consultoria patrimonial independente. Carta macro e fechamentos, em conteúdo impessoal.</p>
-            <div class="footer-status"><span class="status-dot"></span><span class="status-text">Lista de fundadores aberta</span></div>
+            <div class="footer-status"><span class="status-dot"></span><span class="status-text">Assinaturas abertas</span></div>
         </div>
         <div class="footer-col">
             <div class="footer-col-title">Assinatura</div>
@@ -439,7 +431,7 @@
         } catch (e) {}
         window.SZ && window.SZ.wireStripeButtons && window.SZ.wireStripeButtons();
         window.SZ && window.SZ.bindFormspree && window.SZ.bindFormspree(document.getElementById('leadForm'), {
-            onSuccess: function () { var f = document.getElementById('leadForm'); if (f) f.innerHTML = '<h3>Inscrição recebida</h3><p class="sub">Você está na lista de fundadores. Aviso você na abertura.</p>'; }
+            onSuccess: function () { var f = document.getElementById('leadForm'); if (f) f.innerHTML = '<h3>Inscrição recebida</h3><p class="sub">Recebi seus dados. Retorno em até 24 horas úteis.</p>'; }
         });
     });
 </script>

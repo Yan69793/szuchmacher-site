@@ -1,36 +1,54 @@
 // Handler: /api/ntnb-scenarios
-// Busca cotacao do ETF NTNB11 (B3: IPCA+) do Yahoo Finance, extrai yield
-// implicito e calcula cenarios de renda fixa indexada a inflacao.
-// Cache em KV por 2h. Nao aceita dado stale (SEED 95 do market-data.js).
+// Busca cotacao do ETF IB5M11 (B3: It Now IMA-B 5+) no Yahoo Finance.
+//
+// Historico: o handler nasceu buscando "NTNB11" (ticker de titulo do Tesouro
+// Direto, nunca existiu como ETF na B3) e o fallback brapi.dev respondia 401
+// sem token desde maio/2026. Auditoria de 15/08/2026 trocou a fonte para o
+// IB5M11, que e o indice IMA-B 5+ negociado em bolsa, que era justamente a
+// intencao declarada do codigo original ("NTNB11 busca replicar o IMA-B 5+").
+//
+// O spread IPCA+ segue sendo PREMISSA DE MODELO fixa (7,5%), nao derivada do
+// preco: derivar yield real do preco de ETF exige VNA e duration do indice, e
+// mesmo assim seria aproximacao. Enquanto isso nao existir, os cenarios sao
+// calibrados, nao cotados, e o payload diz isso (campo warning).
+//
+// TTL de frescor 2h; a entrada em si sobrevive 12h no KV (staleTtl) pra dar
+// margem de revalidacao em background antes de expirar de vez.
 
-import { fetchJson, jsonResponse } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { fetchJsonStrict, jsonResponse } from '../utils/http.js';
+import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'ntnb-scenarios';
 const CACHE_TTL = 7200; // 2 horas
 
-// Valores padrao calibrados em jul/2026: IPCA ~5,5%, NTN-B ~IPCA+7,5% = ~13,4% nominal
+// Valores padrao calibrados em jul/2026: IPCA ~5,5%, spread IPCA+ ~7,5%.
+// Sao premissas de modelo, nao cotacao: qualquer numero aqui que passe a ser
+// exibido como dado de mercado e regressao (ver rotulo de origem no front).
 const DEFAULTS = {
   ntnb_price: 95.0,
   ipca_spread: 0.075,  // 7,5% a.a. acima do IPCA
   ipca_proj: 0.055,    // 5,5% a.a. Focus mediana 2026
 };
 
-async function fetchYahooNtnb() {
+const WARNING_DEFAULTS =
+  'Fontes de mercado indisponíveis. Cenários exibidos com premissas fixas ' +
+  'calibradas em jul/2026, não com cotações ao vivo.';
+
+async function fetchYahooImaB() {
   // Yahoo Finance v8 chart API — mesmo padrao de market-data.js
-  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/NTNB11.SA?interval=1d&range=5d';
-  const data = await fetchJson(url, {
+  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/IB5M11.SA?interval=1d&range=5d';
+  const r = await fetchJsonStrict(url, {
     timeout: 12000,
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MultiAssetBot/1.0)' },
   });
-  if (!data?.chart?.result?.[0]) return null;
+  if (!r.ok) return null;
 
-  const result = data.chart.result[0];
+  const data = r.data;
+  const result = data?.chart?.result?.[0];
+  if (!result) return null;
+
   const meta = result.meta;
-  const quotes = result.indicators?.quote?.[0];
-
-  // Preco atual
-  const price = meta.regularMarketPrice;
+  const price = meta?.regularMarketPrice;
   if (!price || price <= 0) return null;
 
   // Verifica se os dados estao frescos (timestamp do ultimo candle < 2 dias uteis)
@@ -66,72 +84,82 @@ function computeRates(ipcaSpread, ipcaProj) {
   return { pess, base, otim };
 }
 
-export async function handleNtnbScenarios(env) {
-  // Tenta cache primeiro
-  const cache = await readCache(env.CACHE, CACHE_KEY);
-  if (cache?.ts && Date.now() / 1000 - cache.ts < CACHE_TTL) {
+async function revalidate(env) {
+  let ntnbPrice = DEFAULTS.ntnb_price;
+  let ipcaSpread = DEFAULTS.ipca_spread;
+  const ipcaProj = DEFAULTS.ipca_proj;
+  let source = 'defaults';
+  let warning = WARNING_DEFAULTS;
+
+  const yahoo = await fetchYahooImaB();
+  if (yahoo && !yahoo.stale && yahoo.price > 0) {
+    ntnbPrice = yahoo.price;
+    source = 'yahoo';
+    warning = null;
+    // spread segue a premissa de modelo; o preco vivo alimenta so o preco.
+    ipcaSpread = DEFAULTS.ipca_spread;
+  }
+
+  const rates = computeRates(ipcaSpread, ipcaProj);
+  const ts = Math.floor(Date.now() / 1000);
+
+  // source e warning entram no cache junto do payload: um hit de cache NAO pode
+  // devolver source 'fresh' e apagar o fato de que os numeros vieram de
+  // premissas fixas. Antes deste fix o cache hit devolvia source=estado do
+  // cache ('fresh'/'stale') e a origem real se perdia.
+  await writeCache(env.CACHE, CACHE_KEY, {
+    rates,
+    ntnb_price: ntnbPrice,
+    ipca_spread: ipcaSpread,
+    ts,
+    source,
+    warning,
+  }, staleTtl(CACHE_TTL));
+
+  return {
+    ok: true,
+    rates,
+    ntnb_price: ntnbPrice,
+    ipca_spread: ipcaSpread,
+    generated_at: ts,
+    source,
+    warning,
+    stale: source === 'defaults',
+  };
+}
+
+export async function handleNtnbScenarios(env, ctx) {
+  const { cached, state } = await readCacheOrRevalidate(
+    env.CACHE,
+    CACHE_KEY,
+    CACHE_TTL,
+    ctx,
+    () => revalidate(env)
+  );
+
+  if (cached) {
+    // Payloads antigos no KV (gravados antes deste contrato) nao tem source
+    // nem warning. Na pratica eram todos da era 'defaults' (NTNB11.SA nunca
+    // existiu no Yahoo), entao mapear legacy para 'defaults' e mais honesto do
+    // que devolver 'desconhecido' com stale:false por 12h de transicao.
+    const source = cached.source ?? 'defaults';
     return jsonResponse(
       {
         ok: true,
-        rates: cache.rates,
-        ntnb_price: cache.ntnb_price,
-        ipca_spread: cache.ipca_spread,
-        generated_at: cache.ts,
-        source: 'cache',
+        rates: cached.rates,
+        ntnb_price: cached.ntnb_price,
+        ipca_spread: cached.ipca_spread,
+        generated_at: cached.ts,
+        source,
+        warning: cached.warning ?? null,
+        stale: source === 'defaults',
+        cache_state: state,
       },
       { headers: { 'Cache-Control': 'public, max-age=3600' } }
     );
   }
 
-  // Busca cotacao
-  let ntnbPrice = DEFAULTS.ntnb_price;
-  let ipcaSpread = DEFAULTS.ipca_spread;
-  const ipcaProj = DEFAULTS.ipca_proj;
-  let source = 'defaults';
-
-  const yahoo = await fetchYahooNtnb();
-  if (yahoo && !yahoo.stale && yahoo.price > 0) {
-    ntnbPrice = yahoo.price;
-    source = 'yahoo';
-    // Estimar spread a partir do preco do ETF:
-    // NTNB11 busca replicar o IMA-B 5+. O yield implicito no preco do ETF
-    // e aproximadamente o IPCA + spread do indice subjacente.
-    // Simplificacao: usamos o spread default de 7,5% calibrado no mercado.
-    // Uma estimacao mais precisa exigiria a duration do indice IMA-B 5+.
-    ipcaSpread = DEFAULTS.ipca_spread;
-  }
-
-  // Se Yahoo falhou ou retornou stale, tenta brapi.dev como fallback secundario
-  if (source === 'defaults') {
-    const brapi = await fetchJson('https://brapi.dev/api/quote/NTNB11', { timeout: 10000 });
-    if (brapi?.results?.[0]?.regularMarketPrice) {
-      const p = parseFloat(brapi.results[0].regularMarketPrice);
-      if (p > 0) {
-        ntnbPrice = p;
-        source = 'brapi';
-      }
-    }
-  }
-
-  const rates = computeRates(ipcaSpread, ipcaProj);
-
-  const payload = {
-    ok: true,
-    rates,
-    ntnb_price: ntnbPrice,
-    ipca_spread: ipcaSpread,
-    generated_at: Math.floor(Date.now() / 1000),
-    source,
-  };
-
-  await writeCache(env.CACHE, CACHE_KEY, {
-    rates,
-    ntnb_price: ntnbPrice,
-    ipca_spread: ipcaSpread,
-    ts: Math.floor(Date.now() / 1000),
-  }, CACHE_TTL);
-
-  return jsonResponse(payload, {
+  return jsonResponse(await revalidate(env), {
     headers: { 'Cache-Control': 'public, max-age=3600' },
   });
 }

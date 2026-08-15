@@ -100,35 +100,62 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  // O backend gera as chaves do Focus com o ano dinamico (selic_2026, selic_2027
+  // e assim por diante). O front nao pode cravar o ano no nome do campo: em
+  // 01/01/2027 os quatro cards congelariam em "Aguardando Focus" sem erro.
+  // Preferencia: ano corrente. Fallback: a chave mais recente disponivel.
+  // A chave pode EXISTIR com valor null (Focus sem linha para o indicador):
+  // devolver objeto com valor null fazia renderTicker ler .mediana de null e
+  // derrubar o painel inteiro. So devolve chave com valor de verdade.
+  function focusCampo(f, prefixo) {
+    if (!f) return null;
+    var anoAtual = String(new Date().getFullYear());
+    var ks = Object.keys(f).filter(function (k) {
+      return k.indexOf(prefixo + '_') === 0 && /^\d{4}$/.test(k.slice(prefixo.length + 1));
+    }).sort().reverse();
+    var candidatos = [prefixo + '_' + anoAtual].concat(ks);
+    for (var i = 0; i < candidatos.length; i++) {
+      var k = candidatos[i];
+      if (f[k] !== null && f[k] !== undefined) return { chave: k, valor: f[k] };
+    }
+    return null;
+  }
+
   function renderTicker(macro) {
     var f = macro && macro.focus ? macro.focus : {};
     var selicAtual  = macro && macro.selic_meta  ? macro.selic_meta  : null;
     var cambioPtax  = macro && macro.cambio_ptax ? macro.cambio_ptax : null;
+
+    var selicF  = focusCampo(f, 'selic');
+    var ipcaF   = focusCampo(f, 'ipca');
+    var cambioF = focusCampo(f, 'cambio');
+    var pibF    = focusCampo(f, 'pib');
+    var anoDe   = function (campo) { return campo ? campo.chave.split('_').pop() : String(new Date().getFullYear()); };
 
     var cards = [
       {
         label: 'Selic (meta hoje)',
         valor: selicAtual ? fmtPct(selicAtual.valor, 2) : '—',
         ref:   selicAtual ? ('Meta vigente · ' + fmtDataBR(selicAtual.data)) : 'Aguardando BCB',
-        nota:  f.selic_2026 ? ('Focus 2026: mediana ' + fmtPct(f.selic_2026.mediana, 2) + ' · ' + intervaloFocus(f.selic_2026)) : ''
+        nota:  selicF ? ('Focus ' + anoDe(selicF) + ': mediana ' + fmtPct(selicF.valor.mediana, 2) + ' · ' + intervaloFocus(selicF.valor)) : ''
       },
       {
-        label: 'IPCA (expectativa 2026)',
-        valor: f.ipca_2026 ? fmtPct(f.ipca_2026.mediana, 2) : '—',
-        ref:   f.ipca_2026 ? ('Mediana Focus · coletado ' + fmtDataISO(f.ipca_2026.data)) : 'Aguardando Focus',
-        nota:  f.ipca_2026 ? intervaloFocus(f.ipca_2026) + ' · ' + (f.ipca_2026.respondentes || '—') + ' respondentes' : ''
+        label: 'IPCA (expectativa ' + anoDe(ipcaF) + ')',
+        valor: ipcaF ? fmtPct(ipcaF.valor.mediana, 2) : '—',
+        ref:   ipcaF ? ('Mediana Focus · coletado ' + fmtDataISO(ipcaF.valor.data)) : 'Aguardando Focus',
+        nota:  ipcaF ? intervaloFocus(ipcaF.valor) + ' · ' + (ipcaF.valor.respondentes || '—') + ' respondentes' : ''
       },
       {
         label: 'Câmbio USD/BRL',
         valor: cambioPtax ? fmtBRL(cambioPtax.valor) : '—',
         ref:   cambioPtax ? ('PTAX · ' + fmtDataBR(cambioPtax.data)) : 'Aguardando PTAX',
-        nota:  f.cambio_2026 ? ('Focus fim de 2026: mediana R$ ' + fmtNum(f.cambio_2026.mediana, 2) + ' · ' + 'Intervalo R$ ' + fmtNum(f.cambio_2026.minimo, 2) + ' – R$ ' + fmtNum(f.cambio_2026.maximo, 2)) : ''
+        nota:  cambioF ? ('Focus fim de ' + anoDe(cambioF) + ': mediana R$ ' + fmtNum(cambioF.valor.mediana, 2) + ' · ' + 'Intervalo R$ ' + fmtNum(cambioF.valor.minimo, 2) + ' – R$ ' + fmtNum(cambioF.valor.maximo, 2)) : ''
       },
       {
-        label: 'PIB (expectativa 2026)',
-        valor: f.pib_2026 ? fmtPct(f.pib_2026.mediana, 2) : '—',
-        ref:   f.pib_2026 ? ('Mediana Focus · coletado ' + fmtDataISO(f.pib_2026.data)) : 'Aguardando Focus',
-        nota:  f.pib_2026 ? intervaloFocus(f.pib_2026) + ' · ' + (f.pib_2026.respondentes || '—') + ' respondentes' : ''
+        label: 'PIB (expectativa ' + anoDe(pibF) + ')',
+        valor: pibF ? fmtPct(pibF.valor.mediana, 2) : '—',
+        ref:   pibF ? ('Mediana Focus · coletado ' + fmtDataISO(pibF.valor.data)) : 'Aguardando Focus',
+        nota:  pibF ? intervaloFocus(pibF.valor) + ' · ' + (pibF.valor.respondentes || '—') + ' respondentes' : ''
       }
     ];
 
@@ -160,28 +187,33 @@
   ];
 
   function renderCadenciaInstitucional() {
-    return [
-      '<li class="mp-evento mp-vazio mp-cadencia-intro">Sem eventos críticos na janela dos próximos 7 dias. Abaixo, a régua de releases recorrentes que organizam o cenário macro.</li>'
-    ].concat(CADENCIA_INSTITUCIONAL.map(function (c) {
-      return (
-        '<li class="mp-evento mp-evento--cadencia">' +
-          '<div class="mp-evento-data">' +
-            '<strong>' + esc(c.regiao) + '</strong>' +
-            '<span>recorrente</span>' +
+    return (
+      '<div class="mp-day">' +
+        '<div class="mp-day-marker">' +
+          '<strong class="mp-day-num" aria-hidden="true">&mdash;</strong>' +
+          '<span class="mp-day-wd">REC</span>' +
+          '<span class="mp-day-mo">ORR</span>' +
+        '</div>' +
+        '<div class="mp-day-body">' +
+          '<div class="mp-ev mp-ev--intro">' +
+            '<p>Sem eventos críticos na janela dos próximos 7 dias. Abaixo, a régua de releases recorrentes que organizam o cenário macro.</p>' +
           '</div>' +
-          '<div class="mp-evento-body">' +
-            '<div class="mp-evento-head">' +
-              '<span class="mp-regiao">' + esc(c.regiao) + '</span>' +
-              '<span class="mp-hora">' + esc(c.cad) + '</span>' +
-              relevanciaBadge('alta') +
-            '</div>' +
-            '<div class="mp-evento-title">' + esc(c.titulo) + '</div>' +
-            '<div class="mp-evento-desc">' + esc(c.desc) + '</div>' +
-            '<div class="mp-evento-src">Fonte: ' + esc(c.fonte) + '</div>' +
-          '</div>' +
-        '</li>'
-      );
-    })).join('');
+          CADENCIA_INSTITUCIONAL.map(function (c) {
+            return (
+              '<div class="mp-ev mp-ev--cadencia">' +
+                '<div class="mp-ev-head">' +
+                  '<span class="mp-ev-time">' + esc(c.cad) + '</span>' +
+                  '<span class="mp-ev-tag">' + esc(c.regiao) + '</span>' +
+                '</div>' +
+                '<div class="mp-ev-title">' + esc(c.titulo) + '</div>' +
+                '<div class="mp-ev-desc">' + esc(c.desc) + '</div>' +
+                '<div class="mp-ev-src">Fonte: ' + esc(c.fonte) + '</div>' +
+              '</div>'
+            );
+          }).join('') +
+        '</div>' +
+      '</div>'
+    );
   }
 
   function pad2(n) {
@@ -277,32 +309,53 @@
     };
   }
 
-  function renderEventoRow(e, idx, quiet) {
-    var cell = fmtAgendaCelula(e.data);
-    var cls = 'mp-evento' + (quiet ? ' mp-evento--quiet' : '');
-    var head = quiet
-      ? '<div class="mp-evento-head"><span class="mp-hora">dia útil</span></div>'
-      : (
-        '<div class="mp-evento-head">' +
-          '<span class="mp-regiao">' + esc(e.regiao || '') + '</span>' +
-          '<span class="mp-hora">' + esc(e.hora_brt || '') + ' BRT</span>' +
-          relevanciaBadge(e.relevancia) +
+  function renderDayGroup(iso, eventos, quiet) {
+    var d = parseISODate(iso);
+    var diaNum = d ? String(d.getDate()) : '—';
+    var meses = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    var mes = d ? meses[d.getMonth()] : '';
+    var wd = diaDaSemana(iso).toUpperCase();
+    var isHoje = iso === hojeBrIso();
+
+    var eventsHtml = eventos.map(function (e) {
+      if (quiet) {
+        return (
+          '<div class="mp-ev mp-ev--quiet">' +
+            '<div class="mp-ev-head">' +
+              '<span class="mp-ev-time">dia útil</span>' +
+            '</div>' +
+            '<div class="mp-ev-title">' + esc(e.evento || '') + '</div>' +
+            (e.descricao ? '<div class="mp-ev-desc">' + esc(e.descricao) + '</div>' : '') +
+          '</div>'
+        );
+      }
+      return (
+        '<div class="mp-ev">' +
+          '<div class="mp-ev-head">' +
+            '<span class="mp-ev-time">' + esc(e.hora_brt || '') + '</span>' +
+            '<span class="mp-ev-tag">' + esc(e.regiao || '') + '</span>' +
+          '</div>' +
+          '<div class="mp-ev-title">' + esc(e.evento || '') + '</div>' +
+          (e.descricao ? '<div class="mp-ev-desc">' + esc(e.descricao) + '</div>' : '') +
+          (e.fonte ? '<div class="mp-ev-src">Fonte: ' + esc(e.fonte) + '</div>' : '') +
         '</div>'
       );
+    }).join('');
+
+    var cls = 'mp-day';
+    if (isHoje) cls += ' mp-day--hoje';
+
     return (
-      '<li class="' + cls + '">' +
-        '<div class="mp-evento-data">' +
-          '<strong>' + esc(cell.dia) + '</strong>' +
-          '<span class="mp-evento-meta">' + esc(cell.meta) + '</span>' +
+      '<div class="' + cls + '">' +
+        '<div class="mp-day-marker">' +
+          '<strong class="mp-day-num">' + esc(diaNum) + '</strong>' +
+          '<span class="mp-day-wd">' + esc(wd) + '</span>' +
+          '<span class="mp-day-mo">' + esc(mes) + '</span>' +
         '</div>' +
-        '<div class="mp-evento-body">' +
-          head +
-          '<div class="mp-evento-title">' + esc(e.evento || '') + '</div>' +
-          (e.descricao ? '<div class="mp-evento-desc">' + esc(e.descricao) + '</div>' : '') +
-          (!quiet && e.fonte ? '<div class="mp-evento-src">Fonte: ' + esc(e.fonte) + '</div>' : '') +
+        '<div class="mp-day-body">' +
+          eventsHtml +
         '</div>' +
-        '<span class="mp-evento-idx">' + pad2(idx) + '</span>' +
-      '</li>'
+      '</div>'
     );
   }
 
@@ -320,8 +373,14 @@
     }
 
     if (!dias.length) {
-      return eventos.map(function (e, i) {
-        return renderEventoRow(e, i + 1, false);
+      var byDataManual = {};
+      eventos.forEach(function (e) {
+        var k = String(e.data || '').slice(0, 10);
+        if (!byDataManual[k]) byDataManual[k] = [];
+        byDataManual[k].push(e);
+      });
+      return Object.keys(byDataManual).sort().map(function (dataKey) {
+        return renderDayGroup(dataKey, byDataManual[dataKey], false);
       }).join('');
     }
 
@@ -332,22 +391,17 @@
       byData[k].push(e);
     });
 
-    var html = [];
-    var idx = 0;
+    var html = '';
     dias.forEach(function (dia) {
       var evts = byData[dia];
       if (evts && evts.length) {
-        evts.forEach(function (e) {
-          idx++;
-          html.push(renderEventoRow(e, idx, false));
-        });
+        html += renderDayGroup(dia, evts, false);
       } else {
-        idx++;
         var ph = placeholderDiaSemEvento(dia);
-        html.push(renderEventoRow(ph, idx, ph._quiet !== false));
+        html += renderDayGroup(dia, [ph], ph._quiet !== false);
       }
     });
-    return html.join('');
+    return html;
   }
 
   function renderDisclaimer(macro, agenda) {

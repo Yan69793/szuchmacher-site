@@ -55,6 +55,19 @@ $checks = @(
     # --- endpoints ---
     @{ Url = "$SZ/prices.php";        Status = 200; Contem = '"ok"' }
     @{ Url = "$SZ/market-data.php";   Status = 200; Contem = '"ok"' }
+    # Fontes do market-data morrendo em silencio (incidente NTNB11: brapi 401
+    # por meses sem alerta nenhum). A ordem do array stale e deterministica no
+    # handler (ibov, sp500, wti, treasury10y, ntnb11), entao o literal casa
+    # quando o ativo e o primeiro da lista. ntnb11 fica fora de proposito ate a
+    # fonte nova (IB5M11/IMA-B 5+) estar em producao — regra do projeto:
+    # checagem so entra depois que a mudanca correspondente ja esta no ar.
+    @{ Url = "$SZ/market-data.php"; Status = 200;
+       NaoContem = @('"stale":["ibov', '"stale":["sp500', '"stale":["wti', '"stale":["treasury10y');
+       Rotulo = 'market-data.php: fontes vivas (ibov/sp500/wti/treasury10y fora do stale)' }
+    # handler portado na auditoria de 15/08/2026 (antes 404 mudo desde 17/06);
+    # checagem so entrou depois que a rota ja estava em producao (regra do projeto)
+    @{ Url = "$SZ/relatorio-prices.php"; Status = 200; Contem = '"ok"';
+       Rotulo = 'relatorio-prices.php: contrato com a pagina de relatorios' }
     # cascata de LLM a frio ja levou 32 s; 30 s de timeout dava falso negativo
     @{ Url = "$SZ/macro_api.php";     Status = 200; Timeout = 90 }
     @{ Url = "$SZ/assets/macro.php";  Status = 200 }
@@ -109,6 +122,8 @@ $checks = @(
     @{ Url = "$MULTI/"; Status = 200; Contem = 'function rebuildTaxasCenario(';
        Rotulo = 'multi: taxasCenario derivado de simConfigs (fonte unica)' }
 
+    @{ Url = "$MULTI/sitemap.xml";                      Status = 200; Contem = 'multi-assets.com';
+       Rotulo = 'multi: sitemap (criado 2026-08-09, antes 404)' }
     @{ Url = "$MULTI/og-cover.jpg";                     Status = 200; MinBytes = 10000 }
     @{ Url = "$MULTI/prices.php";                       Status = 200; Contem = '"ok"' }
     @{ Url = "$MULTI/assets/video/demo-multiasset.mp4"; Status = 200; MinBytes = 100000 }

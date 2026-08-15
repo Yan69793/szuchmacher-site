@@ -32,7 +32,7 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 | `agenda-data.json` | Cache local da agenda |
 | `market-data.php` | Endpoint: Ibovespa, S&P 500, WTI, Treasury 10y via Yahoo Finance |
 | `market_data_cache.json` | Cache local do market-data.php (TTL 10 min, gerado automaticamente) |
-| `macro-panel-live.js` | Script que popula o painel macro no `index.html` |
+| `assets/macro-panel.js` | Script que popula o painel macro no `index.html` (`macro-panel-live.js` é variante morta, sem referência em HTML) |
 | `assets/sz-config.js` | Configuração central: GA4_ID, CLARITY_ID, FORMSPREE_ID |
 | `assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX) — funcional |
 | `assets/agenda.php` | Agenda ao vivo — funcional |
@@ -41,6 +41,51 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 | `scripts/` | Scripts de deploy e manutenção |
 | `cloudflare-workers/sz-sites/` | Worker de produção (HTML estático + APIs PHP portadas) |
 | `cloudflare-workers/sz-sites/src/handlers/fechamento.js` | Proxy `/fechamento/:slug` → Worker briefing (leitura via site) |
+
+---
+
+## Dependências cruzadas
+
+### `relatorio-diario-szuchmacher` — widget de fechamento na home
+
+O bloco de fechamento de mercado em `relatorios.html` consome `relatorio_cache.json`.
+Esse arquivo **não é gerado por este projeto**. Ele é produzido pelo pipeline do
+projeto `E:\Diretorio\Claude\relatorio-diario-szuchmacher\` (task
+`Szuchmacher-FechamentoDiario`, 19h dias úteis) e sincronizado para cá por
+`scripts/sync_relatorio_cache.py` de lá, que chama o `deploy-cloudflare.ps1`
+daqui.
+
+Se o widget estiver desatualizado mas o restante do site funcionando, a causa
+está no pipeline de lá, não neste Worker. Para sincronizar manualmente:
+
+```powershell
+cd E:\Diretorio\Claude\relatorio-diario-szuchmacher
+python scripts/sync_relatorio_cache.py YYYYMMDD
+```
+
+A task `Szuchmacher-FechamentoDiario` e as outras 6 tasks com prefixo
+`Szuchmacher-` que não são `AgendaAgent` nem `MacroCron` **pertencem ao projeto
+`relatorio-diario-szuchmacher`, não a este**. Procurar a causa de falha nelas
+aqui é caminho errado.
+
+### Cloud Routine — pipeline remoto de domingo
+
+Existe uma rotina que roda na nuvem (Claude Code Remote), sem depender desta
+máquina: **`szuchmacher-domingo`**, cron `0 11 * * 0` (domingo 08:00 BRT),
+environment `env_01DW1CsRC9cNGdotEAxnnJqk`, repo `yan69793/szuchmacher-site`.
+Ela coleta dados macro, gera `macro_data.json` e `agenda-data.json`, e publica
+via FTP no HostGator.
+
+Isso significa que:
+- Domingo de manhã o Worker **não** é a única via de publicação. A rotina remota
+  sobe arquivos por FTP que o Worker serve do mesmo `public/`.
+- A task local `Szuchmacher-AgendaAgent` também roda domingo 08:00. As duas
+  podem colidir. A local publica via `publicar-com-rollback.ps1` (com
+  validação e rollback), a remota vai direto por FTP.
+- Desligar o Worker pensando que só a máquina local publica vai quebrar a
+  rotina remota em silêncio.
+
+Documentação completa em `docs/controle-remoto-claude-code.md`.
 
 ---
 
@@ -167,15 +212,68 @@ Falha dispara `scripts/send-alert-email.ps1`. Log em
 
 ### Legado FTP (rollback apenas)
 
-```powershell
-.\scripts\deploy-all.ps1 -FtpOnly   # se existir flag; senão deploy-all sem -Cloudflare
-```
-
 - HostGator `sh00110.hostgator.com.br` — não usar para mudanças rotineiras após migração 17/06/2026
+- `deploy-all.ps1` é Cloudflare-only desde 20/07/2026 (FTP removido dele) e aceita `-Purge`
+- O caminho FTP legado é `scripts/deploy.sh` (bash, HostGator), usado só pela rotina remota `szuchmacher-domingo`
+
+### Tarefas agendadas no Windows (visão completa)
+
+Das 9 tasks com prefixo `Szuchmacher-` no Task Scheduler desta máquina, **só 2
+são deste projeto**. As outras 7 são do `relatorio-diario-szuchmacher`.
+
+**Deste projeto (Site):**
+
+| Task | Schedule | O que faz |
+|------|----------|-----------|
+| `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` |
+| `Szuchmacher-MacroCron` | segunda 09:00 | Dispara `macro_api.php?cron=1` para regenerar `macro_data.json` |
+
+Registro: `scripts/register-agenda-task.ps1`, `scripts/register-macro-task.ps1`,
+ou `scripts/register-all-automation.ps1` para as duas de uma vez.
+
+**De outros projetos (não mexer aqui):**
+
+| Task | Projeto |
+|------|---------|
+| `Szuchmacher-FechamentoDiario` | `relatorio-diario-szuchmacher` |
+| `Szuchmacher-FechamentoWatchdog` | `relatorio-diario-szuchmacher` |
+| `Szuchmacher-PreflightAnthropic` | `relatorio-diario-szuchmacher` |
+| `Szuchmacher-ColetaManchetes` | `relatorio-diario-szuchmacher` |
+| `Szuchmacher-MacroAgent` | `relatorio-diario-szuchmacher` |
+| `Szuchmacher-AgendaMacro-Claude` | `relatorio-diario-szuchmacher` |
+| `Szuchmacher-LeadNurture` | `relatorio-diario-szuchmacher` (desabilitada desde 08/ago/2026) |
+
+### Projetos internos dentro do diretório Site
+
+O diretório `E:\Diretorio\Claude\Site\` contém dois projetos com vida própria
+que não são o site em si:
+
+**`automacao-yan-os/`** — pipeline Python com 3 venvs (`venv-py312`,
+`venv-task`, `venv-playwright`). Contém:
+
+- `agents/agenda_agent.py` — geração da agenda econômica (chamado pelo
+  AgendaAgent)
+- `agents/macro_agent.py` — narrativa macro via LLM
+- `agents/lead_nurture_agent.py` — nutrição de leads (task desabilitada)
+- `monitor_mercado.py` — monitor intraday 09:00-18:45 com alertas
+  WhatsApp/Telegram
+- `qualificador_leads.py` — webhook Flask na porta 8765, scoring de leads
+- `main.py` — orquestrador com flags `--manual`, `--sem-ia`, `--monitor`,
+  `--leads`, `--instalar`, `--testar`
+- `testar_sistema.py` — teste do pipeline YAN OS
+
+Logs em `automacao-yan-os/logs/`. Cada rotina escreve seu próprio arquivo
+(`agenda_scheduled_YYYYMMDD.log`, `macro_cron_YYYYMMDD.log`,
+`lead_nurture_YYYYMMDD.log`).
+
+**`atualizador-relatorios/`** — projeto Node.js independente. Lê PDFs de
+fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
+`relatorios.html` via FTP. Comando: `node atualizar.js`. Dependências:
+`pdf-parse`, `@anthropic-ai/sdk`, `cheerio`, `basic-ftp`, `dotenv`.
 
 ---
 
-## Estado de produção (verificado 17/06/2026)
+## Estado de produção (verificado 09/08/2026)
 
 | Item | Status | Ação |
 |------|--------|------|
@@ -226,13 +324,35 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-1. **Cal.com** — `SZ_CALCOM_URL` em `_PENDING` (`assets/sz-config.js:21`); `[data-sz-cal]` cai no WhatsApp
-2. **Contraste `--gold` em fundo claro** — eyebrows/labels reprovam WCAG AA (3.6–4.3:1 vs 4.5:1). Resolvido nas faixas escuras com `--gold-bright`; em `--bg`/`--surface` continua decisão de design
-3. **Token CF Cache Purge** — `setup-cloudflare-token.ps1` (purge API sem permissão; mitigado pela invalidação KV do deploy)
-4. **CSP opcional** — `static.cloudflareinsights.com` em `script-src` (silenciar beacon CF)
-5. **Sitemap do multi-assets.com** — o domínio não serve `/sitemap.xml` (404). O de szuchmacher lista só URL própria e não pode cobrir outro domínio
-6. **`wrangler` 4.101.0 com 4 vulnerabilidades altas** — `undici`, `ws` e `esbuild` entram transitivamente por ele. É `devDependency` única do Worker, não vai para o edge, então a exposição é a máquina de build, não produção. Correção real é subir para 4.112.0+ e revalidar, não `npm audit fix`. Fora da janela de domingo por decisão da rotina
-7. **Enquadramento CVM, texto remanescente** — com o Radar ROIC fora (ver "Resolvidas em 2026-07-22"), o disclaimer genérico "research impessoal" que descreve a Carta (FAQ "Assinatura é a mesma coisa que consultoria?" e o rodapé de `assinatura.html`) passou a valer só para conteúdo macro e fechamentos, o que reduz bastante o risco original. Essas linhas em si não foram reescritas nem revisadas por advogado hoje, só deixaram de descrever um produto que rankeava ativos. Validar se ainda precisa de ajuste de texto à parte
+Fase 2 da auditoria em andamento. Relatório consolidado e tabela de achados:
+`diagnosticos/FASE2-2026-08-15.md`. Em ordem:
+
+1. **Deploy do pacote da fase 2** (fonte IB5M11/IMA-B 5+, fail-closed do macro,
+   telemetria de fontes, gate 34) via `publicar-com-rollback.ps1` — aguarda
+   autorização.
+2. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
+3. **Desligar `agenda-cron.php` do cPanel** (alvo inerte desde a migração para
+   Worker em 17/06) e redefinir a rotina remota `szuchmacher-domingo`
+   (FTP não alcança produção; ver `docs/controle-remoto-claude-code.md`).
+4. **CRON_SECRET no Worker** (`macro_api.php?cron=1` segue público, só rate
+   limit KV de 1h) e decisão sobre os 3 gatilhos de regeneração do macro.
+5. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
+6. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
+   legados (`macro-panel-live.js`, `hero-*`, `multiasset/` duplicada, worktree
+   prunable), P3-15 (calendários 2026), F5 (cache-busting).
+7. **Commit do pacote** (código em produção desde 15/08 sem commit) e merge
+   para master.
+
+### Resolvidas em 2026-08-09
+
+- **Cal.com** — conta criada, link de agendamento configurado. `SZ_CALCOM_URL` em `assets/sz-config.js` atualizado para `https://cal.com/yan-szuchmacher-bblyrf/30min`.
+
+- **Contraste `--gold` em fundo claro** — `--gold: #8c6b3a` trocado por `#7a5e33` em `assets/sz-design.css`. Atinge 4.5:1 em `--bg` (#f3f1ec), aprovando WCAG AA.
+- **Enquadramento CVM, texto remanescente** — o texto da Carta (hero, FAQ, footer) descreve pesquisa macro e fechamentos de mercado como "research impessoal", sem recomendação individual. Com o Radar ROIC descontinuado (2026-07-22), o conteúdo não tem mais ranking de ativos nem tese por ação. O texto atual é preciso para o escopo do produto. Revisão jurídica formal segue recomendada, mas não há exposição nova a mitigar.
+- **`wrangler` 4.101.0 com 4 vulnerabilidades altas** — `undici`, `ws` e `esbuild` entravam transitivamente. Subiu para 4.112.0 (`package.json` do Worker, `devDependencies.wrangler: ^4.112.0`). Confirmado no disco: `wrangler@4.112.0`.
+- **Token CF Cache Purge** — `setup-cloudflare-purge-token.ps1` existe e funciona. A pendência é de credencial (criar o token no painel Cloudflare com permissão Zone > Cache Purge > Purge nas duas zonas), não de código. Script valida token contra a API, testa purge em ambas as zonas, e grava no `.env`. Mitigação existente (invalidação KV no deploy) cobre o caso mais comum.
+- **Sitemap do multi-assets.com** — criado `sitemap-multi.xml` com 4 URLs (/, /consultoria, /metodologia, /privacidade.html). Adicionado ao `build-cloudflare-public.ps1` (cópia para `public/multi/`) e ao `validar-producao.ps1` (check de produção).
+- **CSP — beacon Cloudflare** — `static.cloudflareinsights.com` ja esta no CSP do Worker (`src/utils/headers.js:3`) desde a migracao. Nao havia falha, o dominio sempre esteve allowlisted. Item era nota de "opcional", nao bug.
 
 ### Resolvidas em 2026-07-22
 
