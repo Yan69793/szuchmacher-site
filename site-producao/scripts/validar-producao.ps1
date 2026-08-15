@@ -58,12 +58,12 @@ $checks = @(
     # Fontes do market-data morrendo em silencio (incidente NTNB11: brapi 401
     # por meses sem alerta nenhum). A ordem do array stale e deterministica no
     # handler (ibov, sp500, wti, treasury10y, ntnb11), entao o literal casa
-    # quando o ativo e o primeiro da lista. ntnb11 fica fora de proposito ate a
-    # fonte nova (IB5M11/IMA-B 5+) estar em producao — regra do projeto:
-    # checagem so entra depois que a mudanca correspondente ja esta no ar.
+    # quando o ativo e o primeiro da lista. ntnb11 entrou na checagem em
+    # 15/08/2026, depois que a fonte IB5M11 (IMA-B 5+) ja estava em producao,
+    # regra do projeto.
     @{ Url = "$SZ/market-data.php"; Status = 200;
-       NaoContem = @('"stale":["ibov', '"stale":["sp500', '"stale":["wti', '"stale":["treasury10y');
-       Rotulo = 'market-data.php: fontes vivas (ibov/sp500/wti/treasury10y fora do stale)' }
+       NaoContem = @('"stale":["ibov', '"stale":["sp500', '"stale":["wti', '"stale":["treasury10y', '"stale":["ntnb11');
+       Rotulo = 'market-data.php: fontes vivas (ibov/sp500/wti/treasury10y/ntnb11 fora do stale)' }
     # handler portado na auditoria de 15/08/2026 (antes 404 mudo desde 17/06);
     # checagem so entrou depois que a rota ja estava em producao (regra do projeto)
     @{ Url = "$SZ/relatorio-prices.php"; Status = 200; Contem = '"ok"';
