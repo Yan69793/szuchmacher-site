@@ -1,4 +1,4 @@
-# setup_windows.ps1 — YAN OS v2.0
+﻿# setup_windows.ps1 — YAN OS v2.0
 # Execute UMA vez para configurar todo o ambiente:
 #   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 #   .\setup_windows.ps1

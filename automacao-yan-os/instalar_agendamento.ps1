@@ -1,4 +1,4 @@
-# YanOS — Task Scheduler (semanal)
+﻿# YanOS — Task Scheduler (semanal)
 $action  = New-ScheduledTaskAction -Execute 'E:\Diretorio\Claude\FREQUENTE\Site\automacao-yan-os\venv\Scripts\python.exe' `
            -Argument 'E:\Diretorio\Claude\FREQUENTE\Site\automacao-yan-os\main.py' `
            -WorkingDirectory 'E:\Diretorio\Claude\FREQUENTE\Site\automacao-yan-os'

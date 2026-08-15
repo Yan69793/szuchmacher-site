@@ -1,4 +1,4 @@
-# register-agents.ps1 — GUARDA (desativado em 2026-08-15)
+﻿# register-agents.ps1 — GUARDA (desativado em 2026-08-15)
 #
 # Este script registrava tres tasks (Szuchmacher-MacroAgent, Szuchmacher-AgendaAgent,
 # Szuchmacher-LeadNurture) com configuracao legada: agenda sem domingo (MON,THU),

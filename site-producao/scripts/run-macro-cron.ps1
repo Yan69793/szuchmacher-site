@@ -1,4 +1,4 @@
-# run-macro-cron.ps1 — Dispara macro_api.php?cron=1 no servidor (regenera macro_data.json)
+﻿# run-macro-cron.ps1 — Dispara macro_api.php?cron=1 no servidor (regenera macro_data.json)
 # Usado pelo Task Scheduler (Szuchmacher-MacroCron)
 #
 # RETRY1 (2026-08-11): versao com retry + backoff progressivo + SOFT-OK.

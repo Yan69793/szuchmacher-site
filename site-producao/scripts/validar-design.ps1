@@ -1,4 +1,4 @@
-# validar-design.ps1 — lint de regras duras sz-design
+﻿# validar-design.ps1 — lint de regras duras sz-design
 # Escaneia HTML/CSS em site-producao e reporta violacoes.
 # Erro = P0 (quebra identidade), Aviso = P1 (suspeito, revisar)
 

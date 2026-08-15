@@ -1,4 +1,4 @@
-# test-scripts.ps1 — validação estática dos scripts de deploy/automação
+﻿# test-scripts.ps1 — validação estática dos scripts de deploy/automação
 # Uso: .\scripts\test-scripts.ps1
 # Sai 1 se algum script crítico não parsear ou violar a regra FALHA-002
 # (script chamado pelo Task Scheduler com $ErrorActionPreference = 'Stop'
