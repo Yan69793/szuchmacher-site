@@ -273,7 +273,7 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 
 ---
 
-## Estado de produção (verificado 09/08/2026)
+## Estado de produção (verificado 15/08/2026, Worker `f08d6f46`)
 
 | Item | Status | Ação |
 |------|--------|------|
@@ -287,7 +287,7 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 | Hosting Cloudflare Workers | ✅ | `sz-sites` serve szuchmacher + multi-assets |
 | `macro_api.php` | ✅ | Cache 7d + BCB + OpenRouter no Worker |
 | `/fechamento/:slug` | ✅ | Proxy para Worker briefing; GET direto em workers.dev bloqueado |
-| `market-data.php` | ✅ | IBOV, S&P 500, WTI, Treasury 10y via Yahoo Finance ao vivo |
+| `market-data.php` | ✅ | IBOV, S&P 500, WTI, Treasury 10y, IB5M11 (chave `ntnb11`) ao vivo |
 | `assets/macro.php` | ✅ | BCB ao vivo |
 | `assets/agenda.php` | ✅ | Agenda ao vivo |
 | `prices.php` | ✅ | Metais + BTC ao vivo |
