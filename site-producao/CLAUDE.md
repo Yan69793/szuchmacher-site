@@ -345,6 +345,12 @@ Fase 2 da auditoria em andamento. Relatório consolidado e tabela de achados:
 7. **Commit do pacote** (código em produção desde 15/08 sem commit) e merge
    para master.
 
+### Resolvidas em 2026-08-15
+
+- Pacote da fase 2 publicado via `publicar-com-rollback.ps1` (v `f08d6f46`).
+- Commit e merge em master (`cedcdad`, `4a48002`, `c2f69ff`, `07f6621`).
+- Checagem de `ntnb11` no gate, só depois que o IB5M11 já estava no ar.
+
 ### Resolvidas em 2026-08-09
 
 - **Cal.com** — conta criada, link de agendamento configurado. `SZ_CALCOM_URL` em `assets/sz-config.js` atualizado para `https://cal.com/yan-szuchmacher-bblyrf/30min`.

@@ -8,7 +8,9 @@ $ErrorActionPreference = 'Stop'
 
 $WORKER = Join-Path (Split-Path -Parent $PSScriptRoot) 'cloudflare-workers\sz-sites'
 $KV_ID  = 'fd40efe1057c4c54b3d33277d4665434'
-$KEYS   = @('macro-api', 'macro-panel', 'market-data')
+# ntnb-scenarios entrou depois do deploy da fase 2 (15/08/2026): o payload
+# legado no KV (source defaults, preco 95) sobrevive ate 2h sem esta chave.
+$KEYS   = @('macro-api', 'macro-panel', 'market-data', 'ntnb-scenarios')
 
 Push-Location $WORKER
 
