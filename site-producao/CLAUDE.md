@@ -63,10 +63,11 @@ cd E:\Diretorio\Claude\relatorio-diario-szuchmacher
 python scripts/sync_relatorio_cache.py YYYYMMDD
 ```
 
-A task `Szuchmacher-FechamentoDiario` e as outras 6 tasks com prefixo
-`Szuchmacher-` que não são `AgendaAgent` nem `MacroCron` **pertencem ao projeto
-`relatorio-diario-szuchmacher`, não a este**. Procurar a causa de falha nelas
-aqui é caminho errado.
+A task `Szuchmacher-FechamentoDiario` e as outras tasks com prefixo
+`Szuchmacher-` que não são `AgendaAgent` **pertencem ao projeto
+`relatorio-diario-szuchmacher`, não a este**. `MacroCron` local foi
+desabilitada em 15/08/2026. Procurar a causa de falha nas tasks dos outros
+projetos aqui é caminho errado.
 
 ### Cloud Routine — pipeline remoto de domingo
 
@@ -218,18 +219,21 @@ Falha dispara `scripts/send-alert-email.ps1`. Log em
 
 ### Tarefas agendadas no Windows (visão completa)
 
-Das 9 tasks com prefixo `Szuchmacher-` no Task Scheduler desta máquina, **só 2
-são deste projeto**. As outras 7 são do `relatorio-diario-szuchmacher`.
+Das tasks com prefixo `Szuchmacher-` no Task Scheduler desta máquina, **só 1
+viva é deste projeto**. As demais são do `relatorio-diario-szuchmacher` ou
+estão desabilitadas de propósito.
 
 **Deste projeto (Site):**
 
-| Task | Schedule | O que faz |
-|------|----------|-----------|
-| `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` |
-| `Szuchmacher-MacroCron` | segunda 09:00 | Dispara `macro_api.php?cron=1` para regenerar `macro_data.json` |
+| Task / gatilho | Schedule | O que faz |
+|----------------|----------|-----------|
+| `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` (escritor de produção) |
+| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * 1` UTC) | Regenera o macro (`forceRefresh` interno) |
+| `Szuchmacher-MacroCron` | **desabilitada 15/08/2026** | Competia com o deploy das 08h, 429, alarme falso |
 
-Registro: `scripts/register-agenda-task.ps1`, `scripts/register-macro-task.ps1`,
-ou `scripts/register-all-automation.ps1` para as duas de uma vez.
+Registro da agenda: `scripts/register-agenda-task.ps1`.
+`register-macro-task.ps1` só desabilita a task local, não a recria.
+`register-all-automation.ps1` registra a agenda e garante o MacroCron desligado.
 
 **De outros projetos (não mexer aqui):**
 
@@ -333,7 +337,7 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    Worker em 17/06) e redefinir a rotina remota `szuchmacher-domingo`
    (FTP não alcança produção; ver `docs/controle-remoto-claude-code.md`).
 3. **CRON_SECRET no Worker** (`macro_api.php?cron=1` segue público, só rate
-   limit KV de 1h) e decisão sobre os 3 gatilhos de regeneração do macro.
+   limit KV de 1h). Gatilho único de regeneração já é o cron do Worker.
 4. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
 5. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
    legados (`macro-panel-live.js`, `hero-*`, `multiasset/` duplicada, worktree
@@ -344,6 +348,8 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 - Pacote da fase 2 publicado via `publicar-com-rollback.ps1` (v `f08d6f46`).
 - Commit e merge em master (`cedcdad`, `4a48002`, `c2f69ff`, `f4308a7`, `11d9a92`).
 - Checagem de `ntnb11` no gate, só depois que o IB5M11 já estava no ar.
+- `Szuchmacher-MacroCron` desabilitada. Um escritor de agenda (Agent local) e
+  um gatilho de macro (cron do Worker).
 
 ### Resolvidas em 2026-08-09
 

@@ -1,5 +1,6 @@
-﻿# run-macro-cron.ps1 — Dispara macro_api.php?cron=1 no servidor (regenera macro_data.json)
-# Usado pelo Task Scheduler (Szuchmacher-MacroCron)
+﻿# run-macro-cron.ps1, refresh manual de emergencia do macro_api.php?cron=1
+# A task Szuchmacher-MacroCron foi desabilitada em 2026-08-15. O gatilho
+# canonico e o cron do Worker. Este script fica para disparo a mao.
 #
 # RETRY1 (2026-08-11): versao com retry + backoff progressivo + SOFT-OK.
 # A versao anterior fazia uma unica tentativa e morria em HTTP 429, que o

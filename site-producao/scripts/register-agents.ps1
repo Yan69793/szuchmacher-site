@@ -8,7 +8,7 @@
 #
 # Registro canonico:
 #   AgendaAgent: .\scripts\register-agenda-task.ps1   (dom+seg+qui 08:00, com rollback)
-#   MacroCron:   .\scripts\register-macro-task.ps1    (seg 09:00)
+#   Macro:       cron do Worker (0 3 * * 1 UTC). register-macro-task.ps1 so desabilita.
 #   MacroAgent e LeadNurture pertencem ao projeto relatorio-diario-szuchmacher.
 #
 # Uso: .\scripts\register-agents.ps1 [-Remove]
@@ -31,13 +31,13 @@ if ($Remove) {
         schtasks /Delete /TN $t /F 2>$null
         Write-Host "Removido: $t" -ForegroundColor Yellow
     }
-    Write-Host "AgendaAgent (task canonica) preservada. Para registrar de novo, use os scripts canonicos (register-agenda-task.ps1 / register-macro-task.ps1)." -ForegroundColor DarkGray
+    Write-Host "AgendaAgent (task canonica) preservada. Para registrar de novo, use register-agenda-task.ps1. Macro e cron do Worker, nao task local." -ForegroundColor DarkGray
     return
 }
 
 Write-Host "REGISTRO BLOQUEADO" -ForegroundColor Red
 Write-Host "Este script foi desativado em 2026-08-15: ele recriava tasks com configuracao legada."
 Write-Host "  AgendaAgent: .\scripts\register-agenda-task.ps1"
-Write-Host "  MacroCron:   .\scripts\register-macro-task.ps1"
+Write-Host "  Macro:        cron do Worker (register-macro-task.ps1 so desabilita a task local)"
 Write-Host "  MacroAgent / LeadNurture: projeto relatorio-diario-szuchmacher (nao registrar aqui)"
 Write-Host "Para apenas remover as tasks antigas: .\scripts\register-agents.ps1 -Remove"
