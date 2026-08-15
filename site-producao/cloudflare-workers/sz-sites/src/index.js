@@ -10,6 +10,7 @@ import { handleBtcScenarios } from './handlers/btc-scenarios.js';
 import { handleCdiScenarios } from './handlers/cdi-scenarios.js';
 import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
 import { handleUsdbrlScenarios } from './handlers/usdbrl-scenarios.js';
+import { handleRelatorioPrices } from './handlers/relatorio-prices.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -22,6 +23,7 @@ const SITE_MAP = {
 const API_ROUTES = {
   '/prices.php': (req, env, ctx) => handlePrices(env, ctx),
   '/market-data.php': (req, env, ctx) => handleMarketData(env, ctx),
+  '/relatorio-prices.php': (req, env, ctx) => handleRelatorioPrices(env, ctx),
   '/macro_api.php': (req, env, ctx) => handleMacroApi(req, env),
   '/assets/macro.php': (req, env, ctx) => handleMacroPanel(env, req),
   '/assets/agenda.php': (req, env, ctx) => handleAgenda(env, req),

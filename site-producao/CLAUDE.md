@@ -32,7 +32,7 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 | `agenda-data.json` | Cache local da agenda |
 | `market-data.php` | Endpoint: Ibovespa, S&P 500, WTI, Treasury 10y via Yahoo Finance |
 | `market_data_cache.json` | Cache local do market-data.php (TTL 10 min, gerado automaticamente) |
-| `macro-panel-live.js` | Script que popula o painel macro no `index.html` |
+| `assets/macro-panel.js` | Script que popula o painel macro no `index.html` (`macro-panel-live.js` é variante morta, sem referência em HTML) |
 | `assets/sz-config.js` | Configuração central: GA4_ID, CLARITY_ID, FORMSPREE_ID |
 | `assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX) — funcional |
 | `assets/agenda.php` | Agenda ao vivo — funcional |
@@ -210,11 +210,9 @@ Falha dispara `scripts/send-alert-email.ps1`. Log em
 
 ### Legado FTP (rollback apenas)
 
-```powershell
-.\scripts\deploy-all.ps1 -FtpOnly   # se existir flag; senão deploy-all sem -Cloudflare
-```
-
 - HostGator `sh00110.hostgator.com.br` — não usar para mudanças rotineiras após migração 17/06/2026
+- `deploy-all.ps1` é Cloudflare-only desde 20/07/2026 (FTP removido dele) e aceita `-Purge`
+- O caminho FTP legado é `scripts/deploy.sh` (bash, HostGator), usado só pela rotina remota `szuchmacher-domingo`
 
 ### Tarefas agendadas no Windows (visão completa)
 
@@ -324,7 +322,24 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 
 ## Pendências abertas (prioridade)
 
-Nenhuma pendência aberta no momento.
+Fase 2 da auditoria em andamento. Relatório consolidado e tabela de achados:
+`diagnosticos/FASE2-2026-08-15.md`. Em ordem:
+
+1. **Deploy do pacote da fase 2** (fonte IB5M11/IMA-B 5+, fail-closed do macro,
+   telemetria de fontes, gate 34) via `publicar-com-rollback.ps1` — aguarda
+   autorização.
+2. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
+3. **Desligar `agenda-cron.php` do cPanel** (alvo inerte desde a migração para
+   Worker em 17/06) e redefinir a rotina remota `szuchmacher-domingo`
+   (FTP não alcança produção; ver `docs/controle-remoto-claude-code.md`).
+4. **CRON_SECRET no Worker** (`macro_api.php?cron=1` segue público, só rate
+   limit KV de 1h) e decisão sobre os 3 gatilhos de regeneração do macro.
+5. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
+6. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
+   legados (`macro-panel-live.js`, `hero-*`, `multiasset/` duplicada, worktree
+   prunable), P3-15 (calendários 2026), F5 (cache-busting).
+7. **Commit do pacote** (código em produção desde 15/08 sem commit) e merge
+   para master.
 
 ### Resolvidas em 2026-08-09
 

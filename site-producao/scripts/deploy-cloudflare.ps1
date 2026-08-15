@@ -1,7 +1,11 @@
 ﻿# deploy-cloudflare.ps1 — publica szuchmacher + multi-assets no Cloudflare Workers
-# Uso: .\scripts\deploy-cloudflare.ps1 [-DryRun]
+# Uso: .\scripts\deploy-cloudflare.ps1 [-DryRun] [-Purge]
+#   -Purge  roda purge-cloudflare.ps1 apos o deploy (limpa o edge cache do CDN)
 
-param([switch]$DryRun)
+param(
+    [switch]$DryRun,
+    [switch]$Purge
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -44,11 +48,49 @@ try {
 
     $secretScript = Join-Path $PSScriptRoot 'set-openrouter-secret.ps1'
     if (Test-Path $secretScript) {
-        & $secretScript
+        # O filho usa ErrorActionPreference='Stop' e faz Write-Error fora de
+        # try: falha de chave chega aqui como excecao, nao como exit code.
+        # Os dois caminhos viram aviso, e o LASTEXITCODE e zerado para o
+        # residuo nao virar rollback de um deploy que concluiu.
+        $secretFalhou = $false
+        $secretMsg = ''
+        try {
+            & $secretScript
+            if ($LASTEXITCODE -ne 0) { $secretFalhou = $true; $secretMsg = "exit $LASTEXITCODE" }
+        } catch {
+            $secretFalhou = $true
+            $secretMsg = $_.Exception.Message
+        }
+        $global:LASTEXITCODE = 0
+        if ($secretFalhou) {
+            Write-Warning "set-openrouter-secret.ps1 falhou ($secretMsg). O deploy seguiu, mas o OPENROUTER_KEY do Worker pode estar desatualizado: macro pode cair no fallback estatico."
+        }
     }
 
     Write-Host "`n=== INVALIDAR CACHE KV ===" -ForegroundColor Cyan
-    & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1') -RefreshMacro
+    try {
+        & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1') -RefreshMacro
+    } catch {
+        # O deploy ja concluiu. Falha aqui nao pode reportar exit 1 e induzir
+        # rollback (ou falso alarme) de uma publicacao que foi bem.
+        Write-Warning "Invalidação de cache KV falhou após o deploy (site ja publicado): $($_.Exception.Message). Rode invalidate-worker-cache.ps1 manualmente."
+    }
+    # O invalidador roda npx por dentro e nao chama exit: um delete KV que
+    # falhou deixa $LASTEXITCODE sujo aqui, e publicar-com-rollback.ps1 le esse
+    # valor depois do deploy e reverte uma publicacao bem-sucedida (caminho
+    # silencioso, sem excecao, medido em 30/07/2026). Zerar e obrigatorio.
+    $global:LASTEXITCODE = 0
+
+    if ($Purge) {
+        Write-Host "`n=== PURGE CDN ===" -ForegroundColor Cyan
+        try {
+            & (Join-Path $PSScriptRoot 'purge-cloudflare.ps1')
+            if ($LASTEXITCODE -ne 0) { Write-Warning "purge-cloudflare.ps1 falhou (exit $LASTEXITCODE)." }
+        } catch {
+            Write-Warning "Purge de CDN falhou: $($_.Exception.Message)"
+        }
+        $global:LASTEXITCODE = 0
+    }
 
     Write-Host "`nDeploy Cloudflare concluido." -ForegroundColor Green
     Write-Host "Validar:" -ForegroundColor DarkGray
@@ -57,6 +99,11 @@ try {
     Write-Host "  https://multi-assets.com/consultoria"
     Write-Host "  https://szuchmacher.com.br/assets/macro.php"
     Write-Host "  https://multi-assets.com/prices.php"
+
+    # Contrato com o chamador: publicar-com-rollback.ps1 decide rollback pelo
+    # $LASTEXITCODE depois de & $DEPLOY. Sem exit explicito, o residuo de
+    # qualquer npx interno vazaria para essa decisao. Sucesso = exit 0.
+    exit 0
 }
 finally {
     Pop-Location

@@ -31,6 +31,21 @@ $CACHE_TTL  = 7 * 24 * 3600; // 7 dias
 // ─── 1. Verificar cache ───────────────────────────────────────────────────
 $isCron = isset($_GET['cron']) && $_GET['cron'] === '1';
 
+// Fail-closed no refresh: o caminho cron dispara chamada paga ao OpenRouter e
+// regrava macro_data.json. Sem CRON_SECRET definido na origem, o refresh fica
+// desativado. O cron agendado (Szuchmacher-MacroCron) bate na URL publica, que
+// e servida pelo Worker, nao neste arquivo, entao nada que existe hoje quebra.
+$cronSecret = getenv('CRON_SECRET');
+if ($isCron) {
+    $tokenOk = is_string($cronSecret) && $cronSecret !== ''
+        && isset($_GET['token']) && hash_equals($cronSecret, (string) $_GET['token']);
+    if (!$tokenOk) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Refresh não autorizado: CRON_SECRET ausente ou token inválido']);
+        exit;
+    }
+}
+
 if (!$isCron && file_exists($CACHE_FILE)) {
     $age = time() - filemtime($CACHE_FILE);
     if ($age < $CACHE_TTL) {
@@ -208,19 +223,19 @@ $or_err = curl_error($ch);
 curl_close($ch);
 
 if ($or_raw === false || !empty($or_err)) {
+    error_log('[macro_api] OpenRouter curl error: ' . $or_err);
     http_response_code(503);
-    echo json_encode(['ok' => false, 'error' => 'OpenRouter curl error: ' . $or_err]);
+    echo json_encode(['ok' => false, 'error' => 'OpenRouter falhou (erro de rede)']);
     exit;
 }
 
 $or_resp = json_decode($or_raw, true);
 if (empty($or_resp['choices'][0]['message']['content'])) {
+    // O corpo bruto do upstream nao pode ecoar para o cliente (pode conter
+    // detalhes da resposta do provedor). Vai para o log do servidor.
+    error_log('[macro_api] OpenRouter resposta inválida: ' . substr($or_raw, 0, 500));
     http_response_code(503);
-    echo json_encode([
-        'ok'    => false,
-        'error' => 'OpenRouter resposta inválida',
-        'raw'   => substr($or_raw, 0, 500),
-    ]);
+    echo json_encode(['ok' => false, 'error' => 'OpenRouter resposta inválida']);
     exit;
 }
 
@@ -238,12 +253,9 @@ if (preg_match('/```(?:json)?\s*([\s\S]+?)\s*```/i', $content, $m)) {
 
 $data = json_decode($content, true);
 if (json_last_error() !== JSON_ERROR_NONE || !isset($data['eyebrow'])) {
+    error_log('[macro_api] JSON do LLM inválido (' . json_last_error_msg() . '): ' . substr($content, 0, 400));
     http_response_code(503);
-    echo json_encode([
-        'ok'    => false,
-        'error' => 'JSON do LLM inválido: ' . json_last_error_msg(),
-        'raw'   => substr($content, 0, 400),
-    ]);
+    echo json_encode(['ok' => false, 'error' => 'JSON do LLM inválido']);
     exit;
 }
 
@@ -254,10 +266,14 @@ $cache_payload = [
     'data'         => $data,
 ];
 
+// Escrita atomica (temp + rename): dois refreshes concorrentes truncando o
+// mesmo arquivo deixariam macro_data.json corrompido para o proximo leitor.
+$tmp = $CACHE_FILE . '.tmp';
 file_put_contents(
-    $CACHE_FILE,
+    $tmp,
     json_encode($cache_payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
 );
+rename($tmp, $CACHE_FILE);
 
 // ─── 6. Retornar ao frontend ──────────────────────────────────────────────
 echo json_encode([

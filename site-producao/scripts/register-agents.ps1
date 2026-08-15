@@ -1,50 +1,43 @@
-﻿# register-agents.ps1 — Agenda Macro + Agenda + Lead Nurture no Task Scheduler
-# Executar PowerShell como usuário normal (não precisa admin para tarefas próprias)
+# register-agents.ps1 — GUARDA (desativado em 2026-08-15)
+#
+# Este script registrava tres tasks (Szuchmacher-MacroAgent, Szuchmacher-AgendaAgent,
+# Szuchmacher-LeadNurture) com configuracao legada: agenda sem domingo (MON,THU),
+# LeadNurture diario e MacroAgent via cadeia cmd/c. Reexecuta-lo apagava e recriava
+# as tasks canonicas com configuracao pior, reabilitando inclusive o LeadNurture
+# que foi desabilitado de proposito em 08/08/2026.
+#
+# Registro canonico:
+#   AgendaAgent: .\scripts\register-agenda-task.ps1   (dom+seg+qui 08:00, com rollback)
+#   MacroCron:   .\scripts\register-macro-task.ps1    (seg 09:00)
+#   MacroAgent e LeadNurture pertencem ao projeto relatorio-diario-szuchmacher.
+#
 # Uso: .\scripts\register-agents.ps1 [-Remove]
 
 param([switch]$Remove)
 
-$ErrorActionPreference = 'Stop'
-$YAN = 'E:\Diretorio\Claude\Site\automacao-yan-os'
-$PY = Join-Path $YAN 'venv\Scripts\python.exe'
-$DEPLOY = 'E:\Diretorio\Claude\Site\site-producao\scripts\deploy-all.ps1'
+$ErrorActionPreference = 'Continue'
 
-$tasks = @(
-    @{
-        Name = 'Szuchmacher-MacroAgent'
-        Day  = 'FRI'
-        Time = '18:00'
-        Cmd  = "cmd /c `"set YAN_OS_BATCH=1&& `"$PY`" `"$YAN\agents\macro_agent.py`" && powershell -File `"$DEPLOY`"`""
-    },
-    @{
-        Name = 'Szuchmacher-AgendaAgent'
-        Day  = 'MON,THU'
-        Time = '08:00'
-        Cmd  = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"E:\Diretorio\Claude\Site\site-producao\scripts\run-agenda-agent.ps1`""
-    },
-    @{
-        Name = 'Szuchmacher-LeadNurture'
-        Day  = 'Daily'
-        Time = '10:00'
-        Cmd  = "`"$PY`" `"$YAN\agents\lead_nurture_agent.py`""
-    }
-)
+# ATENCAO: Szuchmacher-AgendaAgent NAO esta na lista de remocao de proposito.
+# O nome colide com a task canonica deste projeto (register-agenda-task.ps1
+# registra com esse mesmo nome, dom+seg+qui). Remover aqui derrubaria a task
+# viva. Szuchmacher-MacroAgent TAMBEM NAO entra: e task viva (Ready no
+# scheduler em 15/08/2026) do projeto relatorio-diario-szuchmacher, nao e
+# legado deste repo. Só LeadNurture e legado deste projeto (desabilitada de
+# proposito em 08/08/2026).
+$legacy = @('Szuchmacher-LeadNurture')
 
-foreach ($t in $tasks) {
-    if ($Remove) {
-        schtasks /Delete /TN $t.Name /F 2>$null
-        Write-Host "Removido: $($t.Name)" -ForegroundColor Yellow
-        continue
+if ($Remove) {
+    foreach ($t in $legacy) {
+        schtasks /Delete /TN $t /F 2>$null
+        Write-Host "Removido: $t" -ForegroundColor Yellow
     }
-    schtasks /Delete /TN $t.Name /F 2>$null | Out-Null
-    if ($t.Day -eq 'Daily') {
-        schtasks /Create /TN $t.Name /TR $t.Cmd /SC DAILY /ST $t.Time /F | Out-Null
-    } else {
-        schtasks /Create /TN $t.Name /TR $t.Cmd /SC WEEKLY /D $t.Day /ST $t.Time /F | Out-Null
-    }
-    Write-Host "Agendado: $($t.Name) — $($t.Day) $($t.Time)" -ForegroundColor Green
+    Write-Host "AgendaAgent (task canonica) preservada. Para registrar de novo, use os scripts canonicos (register-agenda-task.ps1 / register-macro-task.ps1)." -ForegroundColor DarkGray
+    return
 }
 
-if (-not $Remove) {
-    Write-Host "`nVerificar: schtasks /Query /TN Szuchmacher-MacroAgent" -ForegroundColor Cyan
-}
+Write-Host "REGISTRO BLOQUEADO" -ForegroundColor Red
+Write-Host "Este script foi desativado em 2026-08-15: ele recriava tasks com configuracao legada."
+Write-Host "  AgendaAgent: .\scripts\register-agenda-task.ps1"
+Write-Host "  MacroCron:   .\scripts\register-macro-task.ps1"
+Write-Host "  MacroAgent / LeadNurture: projeto relatorio-diario-szuchmacher (nao registrar aqui)"
+Write-Host "Para apenas remover as tasks antigas: .\scripts\register-agents.ps1 -Remove"

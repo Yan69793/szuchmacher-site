@@ -19,8 +19,18 @@ try {
     }
 
     $cfg = @{}
-    Get-Content $ENV_FILE | Where-Object { $_ -match '^[A-Z_]+=.+' } | ForEach-Object {
-        $k, $v = $_ -split '=', 2
+    # Parser tolerante: pula comentarios e linhas vazias, aceita aspas simples e
+    # duplas, e trata BOM/CRLF de arquivo salvo no Windows. O regex anterior
+    # colava o \r no valor e quebrava credencial de forma intermitente.
+    Get-Content $ENV_FILE -Encoding UTF8 | ForEach-Object {
+        $linha = $_.Trim()
+        if (-not $linha -or $linha.StartsWith('#')) { return }
+        if ($linha -notmatch '^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$') { return }
+        $k = $Matches[1]
+        $v = $Matches[2].Trim()
+        if (($v.StartsWith('"') -and $v.EndsWith('"')) -or ($v.StartsWith("'") -and $v.EndsWith("'"))) {
+            $v = $v.Substring(1, $v.Length - 2)
+        }
         $cfg[$k] = $v
     }
 

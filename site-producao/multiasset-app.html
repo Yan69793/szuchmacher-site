@@ -2634,11 +2634,11 @@
                     <div class="sim-ativo-icon" style="background:rgba(76,175,125,0.15);color:#4caf7d;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;">IPCA+</div>
                     <div>
                         <div class="sim-ativo-nome display">NTN-B</div>
-                        <div class="sim-ativo-ticker">Tesouro IPCA+ · duration intermediária</div>
+                        <div class="sim-ativo-ticker">Tesouro IPCA+ · ETF IB5M11 (IMA-B 5+)</div>
                     </div>
                 </div>
                 <div class="alert-box" style="border-color:rgba(76,175,125,0.25);color:#8ccfad;">
-                    <strong>Título indexado à inflação:</strong> a NTN-B paga IPCA + taxa prefixada no vencimento. A duration (~5-7 anos para o ETF NTNB11) introduz volatilidade de marcação a mercado, mas o carregamento é real (acima da inflação). <strong>Rentabilidade em BRL.</strong>
+                    <strong>Título indexado à inflação:</strong> a NTN-B paga IPCA + taxa prefixada no vencimento. A duration (~10,7 anos no IMA-B 5+, lâmina ANBIMA) introduz volatilidade de marcação a mercado, mas o carregamento é real (acima da inflação). <strong>Rentabilidade em BRL.</strong>
                 </div>
                 <div class="sim-form-block">
                     <div class="form-row">
@@ -2706,10 +2706,10 @@
                 <div class="sim-info-card">
                     <div class="sim-info-row"><span class="sim-info-label">Spread IPCA+</span><span class="sim-info-val" style="color:#4caf7d;">~7,5% a.a.</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Volatilidade anual</span><span class="sim-info-val">~8% (duration)</span></div>
-                    <div class="sim-info-row"><span class="sim-info-label">Duration (NTNB11)</span><span class="sim-info-val">~6 anos</span></div>
+                    <div class="sim-info-row"><span class="sim-info-label">Duration (IMA-B 5+)</span><span class="sim-info-val">~10,7 anos (ANBIMA)</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Indexador</span><span class="sim-info-val">IPCA (IBGE)</span></div>
                     <div class="sim-info-row"><span class="sim-info-label">Liquidez</span><span class="sim-info-val">D+1 (Tesouro Direto)</span></div>
-                    <div class="sim-info-note">A NTN-B é o principal instrumento de proteção contra inflação no Brasil. O ETF NTNB11 replica o índice IMA-B 5+ da B3. Diferente do CDI, a NTN-B tem risco de duration: se os juros reais sobem, o preço do título cai no curto prazo. O carregamento real (IPCA + spread) compensa esse risco no horizonte de 3-5 anos.</div>
+                    <div class="sim-info-note">A NTN-B é o principal instrumento de proteção contra inflação no Brasil. O ETF IB5M11 replica o índice IMA-B 5+ da B3. Diferente do CDI, a NTN-B tem risco de duration: se os juros reais sobem, o preço do título cai no curto prazo. O carregamento real (IPCA + spread) compensa esse risco no horizonte de 3-5 anos.</div>
                 </div>
             </div>
         </div>
@@ -2993,8 +2993,8 @@
                     <div class="alloc-left">
                         <div class="alloc-dot" style="background:#4caf7d"></div>
                         <div>
-                            <span class="alloc-name">NTNB11 <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">ETF IPCA+</span></span>
-                            <span class="alloc-tag">B3 · ETF NTN-B · duration intermediária</span>
+                            <span class="alloc-name">IB5M11 <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">IMA-B 5+</span></span>
+                            <span class="alloc-tag">B3 · ETF IMA-B 5+ · duration longa</span>
                             <span class="alloc-live-badge"><span class="alloc-live-dot" style="background:#4caf7d"></span><span class="alloc-live-val" id="alloc-ntnb-price">—</span><span style="opacity:0.5">R$/cota</span></span>
                         </div>
                     </div>
@@ -3203,8 +3203,8 @@
                 <span class="bench-assume-val" style="color:var(--blue)" id="bench-assume-selic">14,50% → 12% a.a.</span>
             </div>
             <div class="bench-assume-item">
-                <span class="bench-assume-label">NTNB11 (ETF IPCA+)</span>
-                <span class="bench-assume-val" style="color:var(--green)" id="bench-assume-ntnb">IPCA + 7,5% a.a.</span>
+                <span class="bench-assume-label">IB5M11 (IMA-B 5+)</span>
+                <span class="bench-assume-val" style="color:var(--green)" id="bench-assume-ntnb">IPCA + 7,5% a.a. (premissa de modelo)</span>
             </div>
             <div class="bench-assume-item">
                 <span class="bench-assume-label">Perfil × Cenário</span>
@@ -4016,8 +4016,9 @@ function applyScenarioRates(asset, r) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
             applyScenarioRates('usdbrl', r);
-            // Atualiza cotacao global para conversao BRL no Monte Carlo
-            if (r.usdbrl_bid != null) usdBrlLive = r.usdbrl_bid;
+            // Atualiza cotacao global para conversao BRL no Monte Carlo.
+            // usdbrl_bid e campo de topo do payload, nao fica dentro de rates.
+            if (d.usdbrl_bid != null) usdBrlLive = d.usdbrl_bid;
             // Atualiza macro strip
             if (d.usdbrl_bid != null) {
                 var macroUsd = document.getElementById('macro-usd');
@@ -6236,6 +6237,19 @@ function _showMacroStamp(generatedAt) {
 function renderMacro(d) {
     // Sanitizar citações [N] que LLMs às vezes inserem
     const stripCites = s => typeof s === 'string' ? s.replace(/(\[\d+\])+/g, '') : s;
+    // Escape HTML obrigatório: os campos vêm de LLM (macro_api.php) e entram via
+    // innerHTML. Sem isso, qualquer markup que o modelo reproduzir vira XSS
+    // armazenado no domínio. escRich libera apenas <strong>, que o prompt pede
+    // nos campos beneficiados/penalizados/cenários.
+    const escHtml = s => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    // Whitelist apenas <strong>. Qualquer outra coisa que pareca tag fica
+    // como texto literal escapado (inofensivo). Remover "tags" por regex
+    // apagava texto legitimo entre < e > nos campos do LLM, ex.:
+    // "crescimento < 2%" virava "crescimento" — delecao silenciosa.
+    const escRich = s => escHtml(s)
+        .replace(/&lt;strong&gt;/g, '<strong>').replace(/&lt;\/strong&gt;/g, '</strong>');
     const sanitize = obj => {
         if (typeof obj === 'string') return stripCites(obj);
         if (Array.isArray(obj)) return obj.map(sanitize);
@@ -6245,10 +6259,10 @@ function renderMacro(d) {
     d = sanitize(d);
     const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerHTML = val; };
 
-    set('macro-cenario-eyebrow', d.eyebrow);
-    set('macro-alert-title', d.alert_title);
-    set('macro-alert-text', d.alert_text);
-    set('macro-alert-badge', d.alert_badge);
+    set('macro-cenario-eyebrow', escHtml(d.eyebrow));
+    set('macro-alert-title', escHtml(d.alert_title));
+    set('macro-alert-text', escHtml(d.alert_text));
+    set('macro-alert-badge', escHtml(d.alert_badge));
 
     if (d.canais?.length) {
         const dirMap = { up: '↑', down: '↓', neutral: '~' };
@@ -6256,9 +6270,9 @@ function renderMacro(d) {
         const tbody = document.getElementById('macro-canais-tbody');
         if (tbody) {
             tbody.innerHTML = d.canais.map(c => `<tr>
-                <td><strong>${c.variavel}</strong></td>
+                <td><strong>${escHtml(c.variavel)}</strong></td>
                 <td><span class="macro-dir ${clsMap[c.direcao] || 'neutral'}">${dirMap[c.direcao] || '~'}</span></td>
-                <td>${c.mecanismo}</td>
+                <td>${escHtml(c.mecanismo)}</td>
             </tr>`).join('');
         }
     }
@@ -6267,23 +6281,23 @@ function renderMacro(d) {
         const cont = document.getElementById('macro-brasil-content');
         if (cont) {
             cont.innerHTML = d.brasil.map(b => `<div class="macro-brazil-item">
-                <div class="macro-brazil-label">${b.label}</div>
-                <div class="macro-brazil-text">${b.text}</div>
+                <div class="macro-brazil-label">${escHtml(b.label)}</div>
+                <div class="macro-brazil-text">${escHtml(b.text)}</div>
             </div>`).join('');
         }
     }
 
     if (d.beneficiados?.length) {
         const el = document.getElementById('macro-setores-beneficiados');
-        if (el) el.innerHTML = d.beneficiados.map(s => `<li>${s}</li>`).join('');
+        if (el) el.innerHTML = d.beneficiados.map(s => `<li>${escRich(s)}</li>`).join('');
     }
     if (d.penalizados?.length) {
         const el = document.getElementById('macro-setores-penalizados');
-        if (el) el.innerHTML = d.penalizados.map(s => `<li>${s}</li>`).join('');
+        if (el) el.innerHTML = d.penalizados.map(s => `<li>${escRich(s)}</li>`).join('');
     }
     if (d.cenarios_brent?.length) {
         const el = document.getElementById('macro-cenarios-brent');
-        if (el) el.innerHTML = d.cenarios_brent.map(s => `<li>${s}</li>`).join('');
+        if (el) el.innerHTML = d.cenarios_brent.map(s => `<li>${escRich(s)}</li>`).join('');
     }
 
     // Timestamp de última atualização
@@ -6354,11 +6368,11 @@ async function fetchRFDiario() {
     }
     let ntnbPrice = null, selicRate = null;
 
-    // NTNB11: proxy server-side (market-data.php) — evita CORS Yahoo no browser.
-    // O handler devolve stale[] com os ativos que cairam no SEED hardcoded em vez
-    // de fetch ao vivo. Sem checar isso, o SEED (95) passava no teste p > 0 e
-    // preemptava o fallback brapi.dev abaixo, que funciona. Dado falso ganhava de
-    // dado bom, silenciosamente.
+    // IB5M11 (IMA-B 5+): proxy server-side (market-data.php) — evita CORS Yahoo
+    // no browser. A chave do payload continua 'ntnb11' por contrato; a fonte
+    // trocou de NTNB11 para IB5M11 na auditoria de 15/08/2026, quando se
+    // confirmou que o NTNB11.SA nao existe no Yahoo e que o fallback brapi.dev
+    // (removido daqui) respondia 401 sem token desde maio/2026.
     try {
         const res = await fetch('/market-data.php', { signal: AbortSignal.timeout(10000), headers: { 'Accept': 'application/json' } });
         if (res.ok) {
@@ -6368,12 +6382,6 @@ async function fetchRFDiario() {
             if (!seeded && p > 0) ntnbPrice = p;
         }
     } catch(e) {}
-    if (!ntnbPrice) {
-        try {
-            const res = await fetch('https://brapi.dev/api/quote/NTNB11', { signal: AbortSignal.timeout(8000) });
-            if (res.ok) { const d = await res.json(); const p = d?.results?.[0]?.regularMarketPrice; if (p > 0) ntnbPrice = p; }
-        } catch(e) {}
-    }
 
     // CDI/Selic: BrasilAPI → BCB série 432
     try {
@@ -6591,6 +6599,13 @@ async function loadLivePrices() {
             return;
         }
         window._livePrices = data;
+        // source_state 'stale'/'stale-cache' indica cache vencido servido
+        // durante a revalidacao: dado velho sem o flag stale ainda assim
+        // nao e cotacao do minuto, e precisa do mesmo sinal honesto.
+        const defasado = data.stale || data.source_state === 'stale' || data.source_state === 'stale-cache';
+        if (defasado) {
+            console.warn('prices.php: cotação parcial — fonte ao vivo indisponível, valores podem estar defasados');
+        }
         // Atualiza o display de preço ao vivo no header de cada ativo
         const map = {
             'sp-gold-price':   data.gold,
@@ -6601,7 +6616,12 @@ async function loadLivePrices() {
         };
         Object.entries(map).forEach(([id, val]) => {
             const el = document.getElementById(id);
-            if (el) el.textContent = val ? `$ ${Number(val).toLocaleString('en-US')}` : '$ —';
+            if (el) {
+                el.textContent = val ? `$ ${Number(val).toLocaleString('en-US')}` : '$ —';
+                // Sinal honesto de cotação defasada: tooltip no próprio preço,
+                // sem mudar o layout.
+                el.title = defasado ? 'Cotação defasada: fonte ao vivo indisponível no momento' : '';
+            }
         });
         // Re-renderiza cards para exibir preço atual em todos os *-pess-price
         Object.keys(simConfigs).forEach(asset => recalcSim(asset));

@@ -41,14 +41,18 @@
 
 </IfModule>
 
-# Protege arquivos sensiveis contra acesso direto
-<FilesMatch "^\.(htaccess|htpasswd|env|git)">
+# Protege arquivos sensiveis contra acesso direto.
+# Inclui config.php (chave de API) e backups .bak/.tmp que rotinas geram no
+# disco. Antes, se o handler PHP falhasse, o Apache servia o fonte do config.
+<FilesMatch "^(\.(htaccess|htpasswd|env|git)|config\.php|.+\.(bak|tmp))$">
     Require all denied
 </FilesMatch>
 
 # MultiAsset migrou para dominio proprio (2026-06-17)
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # _arquivo/ guarda snapshots historicos que nunca devem ser servidos
+    RewriteRule ^_arquivo/ - [F,L]
     RewriteRule ^multiasset-app\.html$ https://multi-assets.com/ [R=301,L]
     RewriteRule ^multiasset\.html$ https://multi-assets.com/ [R=301,L]
 </IfModule>

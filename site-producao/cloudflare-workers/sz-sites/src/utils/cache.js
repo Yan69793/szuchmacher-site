@@ -37,6 +37,25 @@ export function staleTtl(ttlSeconds) {
 //
 // Sem isso, o visitante que chega no instante do vencimento paga a cascata de
 // upstream inteira: /api/btc-scenarios mediu 13,0 s frio contra 0,33 s quente.
+// Single-flight em memória por isolado: N requests concorrentes contra a mesma
+// chave compartilham UMA execução da tarefa. Sem isso, o vencimento do cache
+// dispara N cascatas de upstream ao mesmo tempo (thundering herd), com N writes
+// no KV colidindo no limite de 1 write/segundo por chave. O Map vive por isolado,
+// então a deduplicação não cobre isolados diferentes, mas reduz o problema de
+// "um por request" para "um por isolado", que é a ordem de grandeza que importa.
+const inflight = new Map();
+
+export async function singleFlight(key, task) {
+  if (inflight.has(key)) return inflight.get(key);
+  const p = Promise.resolve().then(task);
+  inflight.set(key, p);
+  try {
+    return await p;
+  } finally {
+    if (inflight.get(key) === p) inflight.delete(key);
+  }
+}
+
 export async function readCacheOrRevalidate(kv, key, ttlSeconds, ctx, revalidate) {
   const cached = await readCache(kv, key);
   if (!cached?.ts) return { cached: null, state: 'miss' };
@@ -46,7 +65,9 @@ export async function readCacheOrRevalidate(kv, key, ttlSeconds, ctx, revalidate
   if (ctx?.waitUntil) {
     // A resposta já saiu com o valor stale; uma rejeição aqui não chega a mais
     // ninguém, mas sem .catch() vira erro não tratado na invocação do Worker.
-    ctx.waitUntil(revalidate().catch((err) => {
+    // O singleFlight deduplica as revalidações concorrentes de requests que
+    // chegam juntos no instante do vencimento.
+    ctx.waitUntil(singleFlight(`reval:${key}`, revalidate).catch((err) => {
       console.error(`revalidação em background falhou para '${key}':`, err?.message ?? err);
     }));
     return { cached, state: 'stale' };

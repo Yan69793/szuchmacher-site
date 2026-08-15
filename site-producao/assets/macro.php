@@ -158,8 +158,11 @@ function focus_all_null($focus) {
 
 function focus_cache_poisoned($payload) {
     if (!is_array($payload)) return false;
-    $sgsOk = ($payload['selic_meta'] ?? null) !== null || ($payload['cambio_ptax'] ?? null) !== null;
-    return $sgsOk && focus_all_null($payload['focus'] ?? []);
+    // Port da correcao do Worker: o cache so vale com os DOIS indicadores SGS.
+    // O `||` anterior declarava o payload completo com um dos dois de pe e
+    // regravava o cache envenenado (mesmo mecanismo do incidente de 26/07/2026).
+    $sgsMissing = ($payload['selic_meta'] ?? null) === null || ($payload['cambio_ptax'] ?? null) === null;
+    return $sgsMissing || focus_all_null($payload['focus'] ?? []);
 }
 
 function read_cache() {
@@ -185,7 +188,14 @@ function delete_cache() {
 /* ── cache válido? serve direto ───────────────────────────────── */
 $cache = read_cache();
 $forceLive = isset($_GET['nocache']);
-$debugMode = isset($_GET['debug']) && isset($_GET['token']) && $_GET['token'] === (getenv('CRON_SECRET') ?: '');
+// Fail-closed: antes, o fallback `?: ''` fazia token vazio bater com CRON_SECRET
+// ausente e ligava o debug sem segredo nenhum. Agora exige segredo definido e
+// comparação em tempo constante.
+$cronSecret = getenv('CRON_SECRET');
+$debugMode = isset($_GET['debug'])
+    && is_string($cronSecret) && $cronSecret !== ''
+    && isset($_GET['token'])
+    && hash_equals($cronSecret, (string) $_GET['token']);
 
 if (
     !$forceLive
@@ -206,15 +216,21 @@ if ($cache && focus_cache_poisoned($cache)) {
 }
 
 /* ── busca BCB ────────────────────────────────────────────────── */
+// Anos dinamicos: o Worker gera ipca_<anoAtual> e ipca_<anoProx> via
+// getFullYear(), e o front (macro-panel.js) descobre as chaves em tempo de
+// execucao. O PHP de origem precisa acompanhar, senao o rollback serviria
+// chaves de 2026/2027 para sempre.
+$anoAtual = (int) date('Y');
+$anoProx  = $anoAtual + 1;
 $focusSpecs = [
-    'ipca_2026'   => ['indicador' => 'IPCA',      'ano' => 2026],
-    'ipca_2027'   => ['indicador' => 'IPCA',      'ano' => 2027],
-    'selic_2026'  => ['indicador' => 'Selic',     'ano' => 2026],
-    'selic_2027'  => ['indicador' => 'Selic',     'ano' => 2027],
-    'cambio_2026' => ['indicador' => "C\u00e2mbio", 'ano' => 2026],
-    'cambio_2027' => ['indicador' => "C\u00e2mbio", 'ano' => 2027],
-    'pib_2026'    => ['indicador' => 'PIB Total', 'ano' => 2026],
-    'pib_2027'    => ['indicador' => 'PIB Total', 'ano' => 2027],
+    "ipca_{$anoAtual}"   => ['indicador' => 'IPCA',      'ano' => $anoAtual],
+    "ipca_{$anoProx}"    => ['indicador' => 'IPCA',      'ano' => $anoProx],
+    "selic_{$anoAtual}"  => ['indicador' => 'Selic',     'ano' => $anoAtual],
+    "selic_{$anoProx}"   => ['indicador' => 'Selic',     'ano' => $anoProx],
+    "cambio_{$anoAtual}" => ['indicador' => "C\u00e2mbio", 'ano' => $anoAtual],
+    "cambio_{$anoProx}"  => ['indicador' => "C\u00e2mbio", 'ano' => $anoProx],
+    "pib_{$anoAtual}"    => ['indicador' => 'PIB Total', 'ano' => $anoAtual],
+    "pib_{$anoProx}"     => ['indicador' => 'PIB Total', 'ano' => $anoProx],
 ];
 
 $payload = [

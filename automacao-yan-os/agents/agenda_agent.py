@@ -1123,8 +1123,13 @@ def anti_regressao(nova: dict) -> tuple[dict, str | None]:
 def salvar_local(payload: dict) -> bool:
     try:
         _AGENDA_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(_AGENDA_PATH, "w", encoding="utf-8") as f:
+        # Escrita atomica: a rotina remota szuchmacher-domingo publica no mesmo
+        # horario da task local de domingo e le o mesmo arquivo. Temp + rename
+        # impede leitor de enxergar o JSON pela metade.
+        tmp = _AGENDA_PATH.with_suffix(".json.tmp")
+        with open(tmp, "w", encoding="utf-8") as f:
             json.dump(payload, f, ensure_ascii=False, indent=2)
+        tmp.replace(_AGENDA_PATH)
         log(f"Salvo: {_AGENDA_PATH}")
         return True
     except Exception as e:

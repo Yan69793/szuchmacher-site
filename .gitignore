@@ -4,6 +4,11 @@
 # Backups temporários gerados por rotinas (agenda, etc.) — nunca fonte de verdade
 backups/
 
+# Backups .bak que as rotinas deixam ao lado dos JSONs de dados
+# (o sufixo real e .bak-YYYYMMDD, por isso o curinga)
+*.bak
+*.bak-*
+
 # Node
 node_modules/
 

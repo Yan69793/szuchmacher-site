@@ -100,35 +100,62 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  // O backend gera as chaves do Focus com o ano dinamico (selic_2026, selic_2027
+  // e assim por diante). O front nao pode cravar o ano no nome do campo: em
+  // 01/01/2027 os quatro cards congelariam em "Aguardando Focus" sem erro.
+  // Preferencia: ano corrente. Fallback: a chave mais recente disponivel.
+  // A chave pode EXISTIR com valor null (Focus sem linha para o indicador):
+  // devolver objeto com valor null fazia renderTicker ler .mediana de null e
+  // derrubar o painel inteiro. So devolve chave com valor de verdade.
+  function focusCampo(f, prefixo) {
+    if (!f) return null;
+    var anoAtual = String(new Date().getFullYear());
+    var ks = Object.keys(f).filter(function (k) {
+      return k.indexOf(prefixo + '_') === 0 && /^\d{4}$/.test(k.slice(prefixo.length + 1));
+    }).sort().reverse();
+    var candidatos = [prefixo + '_' + anoAtual].concat(ks);
+    for (var i = 0; i < candidatos.length; i++) {
+      var k = candidatos[i];
+      if (f[k] !== null && f[k] !== undefined) return { chave: k, valor: f[k] };
+    }
+    return null;
+  }
+
   function renderTicker(macro) {
     var f = macro && macro.focus ? macro.focus : {};
     var selicAtual  = macro && macro.selic_meta  ? macro.selic_meta  : null;
     var cambioPtax  = macro && macro.cambio_ptax ? macro.cambio_ptax : null;
+
+    var selicF  = focusCampo(f, 'selic');
+    var ipcaF   = focusCampo(f, 'ipca');
+    var cambioF = focusCampo(f, 'cambio');
+    var pibF    = focusCampo(f, 'pib');
+    var anoDe   = function (campo) { return campo ? campo.chave.split('_').pop() : String(new Date().getFullYear()); };
 
     var cards = [
       {
         label: 'Selic (meta hoje)',
         valor: selicAtual ? fmtPct(selicAtual.valor, 2) : '—',
         ref:   selicAtual ? ('Meta vigente · ' + fmtDataBR(selicAtual.data)) : 'Aguardando BCB',
-        nota:  f.selic_2026 ? ('Focus 2026: mediana ' + fmtPct(f.selic_2026.mediana, 2) + ' · ' + intervaloFocus(f.selic_2026)) : ''
+        nota:  selicF ? ('Focus ' + anoDe(selicF) + ': mediana ' + fmtPct(selicF.valor.mediana, 2) + ' · ' + intervaloFocus(selicF.valor)) : ''
       },
       {
-        label: 'IPCA (expectativa 2026)',
-        valor: f.ipca_2026 ? fmtPct(f.ipca_2026.mediana, 2) : '—',
-        ref:   f.ipca_2026 ? ('Mediana Focus · coletado ' + fmtDataISO(f.ipca_2026.data)) : 'Aguardando Focus',
-        nota:  f.ipca_2026 ? intervaloFocus(f.ipca_2026) + ' · ' + (f.ipca_2026.respondentes || '—') + ' respondentes' : ''
+        label: 'IPCA (expectativa ' + anoDe(ipcaF) + ')',
+        valor: ipcaF ? fmtPct(ipcaF.valor.mediana, 2) : '—',
+        ref:   ipcaF ? ('Mediana Focus · coletado ' + fmtDataISO(ipcaF.valor.data)) : 'Aguardando Focus',
+        nota:  ipcaF ? intervaloFocus(ipcaF.valor) + ' · ' + (ipcaF.valor.respondentes || '—') + ' respondentes' : ''
       },
       {
         label: 'Câmbio USD/BRL',
         valor: cambioPtax ? fmtBRL(cambioPtax.valor) : '—',
         ref:   cambioPtax ? ('PTAX · ' + fmtDataBR(cambioPtax.data)) : 'Aguardando PTAX',
-        nota:  f.cambio_2026 ? ('Focus fim de 2026: mediana R$ ' + fmtNum(f.cambio_2026.mediana, 2) + ' · ' + 'Intervalo R$ ' + fmtNum(f.cambio_2026.minimo, 2) + ' – R$ ' + fmtNum(f.cambio_2026.maximo, 2)) : ''
+        nota:  cambioF ? ('Focus fim de ' + anoDe(cambioF) + ': mediana R$ ' + fmtNum(cambioF.valor.mediana, 2) + ' · ' + 'Intervalo R$ ' + fmtNum(cambioF.valor.minimo, 2) + ' – R$ ' + fmtNum(cambioF.valor.maximo, 2)) : ''
       },
       {
-        label: 'PIB (expectativa 2026)',
-        valor: f.pib_2026 ? fmtPct(f.pib_2026.mediana, 2) : '—',
-        ref:   f.pib_2026 ? ('Mediana Focus · coletado ' + fmtDataISO(f.pib_2026.data)) : 'Aguardando Focus',
-        nota:  f.pib_2026 ? intervaloFocus(f.pib_2026) + ' · ' + (f.pib_2026.respondentes || '—') + ' respondentes' : ''
+        label: 'PIB (expectativa ' + anoDe(pibF) + ')',
+        valor: pibF ? fmtPct(pibF.valor.mediana, 2) : '—',
+        ref:   pibF ? ('Mediana Focus · coletado ' + fmtDataISO(pibF.valor.data)) : 'Aguardando Focus',
+        nota:  pibF ? intervaloFocus(pibF.valor) + ' · ' + (pibF.valor.respondentes || '—') + ' respondentes' : ''
       }
     ];
 

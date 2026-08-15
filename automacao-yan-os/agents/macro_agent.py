@@ -11,7 +11,7 @@ Uso:
   python agents/macro_agent.py --dry-run   # coleta + busca + salva local (sem deploy)
 
 Deve ser rodado a partir de automacao-yan-os/:
-  cd E:\\Diretorio\\Claude\\Site\\automacao-yan-os
+  cd E:\\Diretorio\\Claude\\FREQUENTE\\Site\\automacao-yan-os
   python agents/macro_agent.py --dry-run
 """
 
@@ -25,7 +25,7 @@ from pathlib import Path
 # ─── Paths ──────────────────────────────────────────────────────────────────
 _AGENTS_DIR  = Path(__file__).parent                    # automacao-yan-os/agents/
 _BASE_DIR    = _AGENTS_DIR.parent                       # automacao-yan-os/
-_PROJECT_DIR = _BASE_DIR.parent                         # E:\Diretorio\Claude\Site\
+_PROJECT_DIR = _BASE_DIR.parent                         # E:\Diretorio\Claude\FREQUENTE\Site\
 _DATA_DIR    = _BASE_DIR / "data"
 
 sys.path.insert(0, str(_DATA_DIR))
@@ -88,9 +88,19 @@ def carregar_dados_mercado() -> dict:
 
 def carregar_macro_atual() -> dict:
     """Lê macro_data.json existente para preservar seções semi-estáticas."""
-    if MACRO_JSON_PATH.exists():
-        with open(MACRO_JSON_PATH, encoding="utf-8") as f:
-            return json.load(f)
+    # Leitura tolerante: arquivo pela metade (escrita concorrente da rotina
+    # remota de domingo) nao pode derrubar o agente. Tenta o principal e depois
+    # o backup .bak.
+    for caminho in (MACRO_JSON_PATH, MACRO_JSON_PATH.with_name(MACRO_JSON_PATH.name + ".bak")):
+        try:
+            if not caminho.exists():
+                continue
+            with open(caminho, encoding="utf-8") as f:
+                dados = json.load(f)
+            if isinstance(dados, dict):
+                return dados
+        except Exception as e:
+            log(f"AVISO: falha ao ler {caminho}: {e}")
     log("AVISO: macro_data.json não encontrado — seções semi-estáticas ficarão vazias")
     return {}
 
@@ -178,8 +188,12 @@ def montar_macro_data(analise: dict, macro_atual: dict) -> dict:
 def salvar_local(macro_data: dict) -> bool:
     try:
         MACRO_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(MACRO_JSON_PATH, "w", encoding="utf-8") as f:
+        # Escrita atomica (temp + rename), mesmo padrao da agenda: leitores
+        # concorrentes nunca enxergam o JSON pela metade.
+        tmp = MACRO_JSON_PATH.with_suffix(".json.tmp")
+        with open(tmp, "w", encoding="utf-8") as f:
             json.dump(macro_data, f, ensure_ascii=False, indent=2)
+        tmp.replace(MACRO_JSON_PATH)
         log(f"Salvo: {MACRO_JSON_PATH}")
         return True
     except Exception as e:

@@ -18,6 +18,31 @@ $URL    = 'https://szuchmacher.com.br/macro_api.php?cron=1'
 $CACHE  = 'https://szuchmacher.com.br/macro_data.json'
 $ALERT  = Join-Path $PSScriptRoot 'send-alert-email.ps1'
 
+# Contador de falhas consecutivas de REGENERACAO. O caminho SOFT-OK sai 0 de
+# proposito (o cache publico esta fresco), mas sem memoria entre execucoes uma
+# semana inteira de falha nao acumulava sinal nenhum: foi exatamente o que
+# aconteceu entre 10/08 e 17/08. A partir da 2a falha seguida, dispara alerta.
+$FAILSTATE = Join-Path $LOGDIR 'macro_cron_falhas_seq.txt'
+
+function Get-FalhasSeq {
+    try {
+        if (Test-Path $FAILSTATE) {
+            $n = [int]((Get-Content $FAILSTATE -Raw).Trim())
+            if ($n -ge 0) { return $n }
+        }
+    } catch { }
+    return 0
+}
+
+function Set-FalhasSeq([int]$n) {
+    try {
+        New-Item -ItemType Directory -Force -Path $LOGDIR | Out-Null
+        Set-Content -Path $FAILSTATE -Value $n -Encoding ASCII
+    } catch {
+        Write-Log "AVISO: nao consegui gravar contador de falhas: $($_.Exception.Message)"
+    }
+}
+
 function Write-Log([string]$Msg) {
     $line = "[{0}] {1}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Msg
     Write-Host $line
@@ -68,6 +93,16 @@ for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
 }
 
 if (-not $refreshOk) {
+    # 429 = a janela de rate limit do macro_api esta ativa, ou seja, alguem
+    # (visita com cache vencido ou outro refresh) ja disparou a regeneracao na
+    # ultima hora. O objetivo do cron foi atendido por outra via: nao registra
+    # falha e nao incrementa o contador, que existe para flagrar regeneracao
+    # que NAO acontece.
+    if ($lastCode -eq 429) {
+        Write-Log "OK: rate limit do macro_api ativo (refresh recente ja em andamento). Contador de falhas nao incrementado."
+        Write-Log "=== FIM OK (429) ==="
+        exit 0
+    }
     Write-Log "avaliando SOFT-OK via cache publico..."
     try {
         $cacheResp = Invoke-WebRequest -Uri $CACHE -TimeoutSec 30 -UseBasicParsing
@@ -79,7 +114,12 @@ if (-not $refreshOk) {
                 $genDate = [DateTime]::ParseExact($genStr.Trim(), 'dd/MM/yyyy, HH:mm', [Globalization.CultureInfo]::InvariantCulture)
                 $ageH = [Math]::Round(((Get-Date) - $genDate).TotalHours, 1)
                 if ($ageH -lt 24) {
-                    Write-Log "SOFT-OK: refresh falhou (code=$lastCode) mas cache fresco ok=true generated=$genStr age_h=$ageH"
+                    $seq = (Get-FalhasSeq) + 1
+                    Set-FalhasSeq $seq
+                    Write-Log "SOFT-OK: refresh falhou (code=$lastCode) mas cache fresco ok=true generated=$genStr age_h=$ageH falhas_seq=$seq"
+                    if ($seq -ge 2 -and (Test-Path $ALERT)) {
+                        & $ALERT -Subject "[Szuchmacher] Macro cron em SOFT-OK pela ${seq}a vez seguida" -Body "run-macro-cron.ps1 nao consegue regenerar o macro desde $(Get-Date -Format 'yyyy-MM-dd HH:mm').`nCache publico ainda fresco (age_h=$ageH), por isso o exit e 0, mas a regeneracao agendada esta falhando ha $seq execucoes.`n`nUltimo erro: code=$lastCode $lastMsg`n`nLog: $LOG"
+                    }
                     Write-Log "=== FIM SOFT-OK ==="
                     exit 0
                 } else {
@@ -95,12 +135,15 @@ if (-not $refreshOk) {
         Write-Log "SOFT-FAIL: nao conseguiu buscar cache publico: $($_.Exception.Message)"
     }
 
-    Write-Log "=== FIM COM FALHA (sem cache fresco) ==="
+    $seq = (Get-FalhasSeq) + 1
+    Set-FalhasSeq $seq
+    Write-Log "=== FIM COM FALHA (sem cache fresco) falhas_seq=$seq ==="
     if (Test-Path $ALERT) {
-        & $ALERT -Subject "[Szuchmacher] Falha na automacao de macro cron" -Body "run-macro-cron.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nUltimo erro: code=$lastCode $lastMsg`n`nLog: $LOG"
+        & $ALERT -Subject "[Szuchmacher] Falha na automacao de macro cron" -Body "run-macro-cron.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nUltimo erro: code=$lastCode $lastMsg`nFalhas consecutivas: $seq`n`nLog: $LOG"
     }
     exit 1
 }
 
+Set-FalhasSeq 0
 Write-Log "=== FIM OK ==="
 exit 0

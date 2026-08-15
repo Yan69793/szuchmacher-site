@@ -275,6 +275,9 @@ def _publicar_webhook(cache: dict) -> bool:
     if not SITE_WEBHOOK_URL:
         _log("ERRO: SITE_WEBHOOK_URL nao configurada.")
         return False
+    if not SITE_WEBHOOK_SECRET:
+        _log("ERRO: SITE_WEBHOOK_SECRET nao configurada — webhook desabilitado por seguranca.")
+        return False
     try:
         import requests
         payload = json.dumps({"files": {"relatorio_cache.json": cache}},

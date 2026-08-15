@@ -1,5 +1,5 @@
-import { fetchJson, jsonResponse } from '../utils/http.js';
-import { readCache, writeCache } from '../utils/cache.js';
+import { fetchJson, fetchJsonStrict, jsonResponse } from '../utils/http.js';
+import { readCache, writeCache, singleFlight } from '../utils/cache.js';
 
 const CACHE_KEY = 'macro-api';
 const CACHE_TTL = 7 * 24 * 3600;
@@ -7,10 +7,12 @@ const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OPENROUTER_MODEL = 'anthropic/claude-haiku-4-5';
 
 async function bcbSgs(serie) {
-  const j = await fetchJson(
+  const r = await fetchJsonStrict(
     `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${serie}/dados/ultimos/1?formato=json`,
     { timeout: 8000 },
   );
+  if (!r.ok) return null;
+  const j = r.data;
   return Array.isArray(j) && j[0] ? j[0] : null;
 }
 
@@ -28,8 +30,9 @@ function focusUrl(indicador, anoRef) {
 }
 
 async function bcbFocus(indicador, anoRef) {
-  const j = await fetchJson(focusUrl(indicador, anoRef), { timeout: 12000 });
-  const med = j?.value?.[0]?.Mediana;
+  const r = await fetchJsonStrict(focusUrl(indicador, anoRef), { timeout: 12000 });
+  if (!r.ok) return null;
+  const med = r.data?.value?.[0]?.Mediana;
   return med != null ? Number(med) : null;
 }
 
@@ -51,10 +54,10 @@ DADOS BCB AO VIVO:
 - PTAX USD/BRL: R$ ${data.ptax_valor} (referência: ${data.ptax_data})
 
 FOCUS — Medianas do mercado (${data.anoAtual}):
-- Selic fim de ano: ${data.focus_selic}% a.a.
-- IPCA: ${data.focus_ipca}%
-- Câmbio (USD/BRL): R$ ${data.focus_cambio}
-- PIB Real: ${data.focus_pib}%
+- Selic fim de ano: ${data.focus_selic}
+- IPCA: ${data.focus_ipca}
+- Câmbio (USD/BRL): ${data.focus_cambio}
+- PIB Real: ${data.focus_pib}
 
 Gere um JSON VÁLIDO com a estrutura EXATA abaixo. Tom técnico, analítico, para investidores sofisticados. Português do Brasil. Não inclua nada fora do JSON.
 
@@ -108,14 +111,29 @@ async function checkRefreshRate(env, request) {
   const RATE_TTL = 3600; // 1 hour between refreshes
   const key = 'macro-refresh-rate';
   const now = Math.floor(Date.now() / 1000);
-  const lastRefresh = await env.CACHE.get(key);
+  let lastRefresh = null;
+  try {
+    lastRefresh = await env.CACHE.get(key);
+  } catch (e) {
+    // Falha transitoria do KV nao pode derrubar o request do macro: sem
+    // leitura, o refresh segue permitido (comportamento pre-auditoria).
+    console.warn('[macro-api] KV get macro-refresh-rate falhou:', e.message);
+  }
   if (lastRefresh) {
     const elapsed = now - parseInt(lastRefresh, 10);
     if (elapsed < RATE_TTL) {
       return { allowed: false, retryAfter: RATE_TTL - elapsed };
     }
   }
-  await env.CACHE.put(key, String(now), { expirationTtl: RATE_TTL });
+  try {
+    await env.CACHE.put(key, String(now), { expirationTtl: RATE_TTL });
+  } catch (e) {
+    // O KV aceita 1 write/s por chave: dois requests concorrentes no
+    // vencimento do cache de 7 dias colidem aqui com 429. Engolir (padrao
+    // writeCache do cache.js); o custo de permitir outro refresh e
+    // irrelevante perto de devolver 500 ao visitante.
+    console.warn('[macro-api] KV put macro-refresh-rate falhou:', e.message);
+  }
   return { allowed: true };
 }
 
@@ -251,8 +269,40 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         { headers: { ...cors, 'Cache-Control': 'no-store' } },
       );
     }
+
+    // Cache vencido ou ausente: o refresh implicito agora respeita a mesma
+    // janela de 1h do refresh explicito. Antes desta mudanca, cada visitante
+    // que chegasse no vencimento disparava a cascata completa (2 SGS + 4 Focus
+    // + OpenRouter pago) em foreground, ~30s de resposta para cada um.
+    // Quem chega durante a janela recebe o fallback estatico, que e instantaneo.
+    const rate = await checkRefreshRate(env, request);
+    if (!rate.allowed) {
+      const fallback = await loadStaticMacro(env, request);
+      if (fallback?.data) {
+        return jsonResponse({
+          ok: true,
+          generated_at: fallback.generated_at ?? '',
+          cache: true,
+          data: fallback.data,
+          note: 'refresh_janela_ativa',
+        }, { headers: cors });
+      }
+      return jsonResponse(
+        { ok: false, error: 'Macro em atualizacao, tente em instantes', retry_after_seconds: rate.retryAfter },
+        { status: 503, headers: { ...cors, 'Retry-After': String(rate.retryAfter) } },
+      );
+    }
+
+    // Single-flight: requests concorrentes que passaram juntos pelo rate check
+    // compartilham UMA execucao da cascata, em vez de uma por visitante.
+    return await singleFlight('macro-api-refresh', () => gerarMacro(env, request, { cors, forceRefresh }));
   }
 
+  return await gerarMacro(env, request, { cors, forceRefresh });
+
+  // Cascata completa: BCB + Focus + OpenRouter + persistencia. Extraida em funcao
+  // para o caminho de leitura conseguir embrulhar em singleFlight.
+  async function gerarMacro(env, request, { cors, forceRefresh }) {
   const key = resolveOpenRouterKey(env);
   if (!key || !key.startsWith('sk-')) {
     if (forceRefresh) {
@@ -275,18 +325,53 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
 
   const selicSgs = await bcbSgs(432);
   const ptaxSgs = await bcbSgs(1);
+
+  // Fail-closed: se o BCB SGS nao responde, NAO gerar narrativa com numero
+  // fabricado apresentado como "DADOS BCB AO VIVO". Antes desta mudanca o
+  // prompt recebia 14.75/5.20 hardcoded em silencio e o texto do LLM saia
+  // com cenario falso. O fallback estatico (macro_data.json versionado) e o
+  // unico substituto aceitavel para leitura; para refresh forcado, 503 claro.
+  if (!selicSgs?.valor || !selicSgs?.data || !ptaxSgs?.valor || !ptaxSgs?.data) {
+    console.error('[macro-api] BCB SGS indisponível (selic/ptax ausentes); refresh abortado sem dados fabricados');
+    if (!forceRefresh) {
+      const fallback = await loadStaticMacro(env, request);
+      if (fallback?.data) {
+        return jsonResponse({
+          ok: true,
+          generated_at: fallback.generated_at ?? '',
+          cache: true,
+          data: fallback.data,
+          warn: 'bcb_indisponivel',
+        }, { headers: cors });
+      }
+    }
+    return jsonResponse(
+      { ok: false, error: 'BCB SGS indisponível, tente mais tarde' },
+      { status: 503, headers: cors },
+    );
+  }
+
   const anoAtual = new Date().getFullYear();
+  const focusSelic = await bcbFocus('Selic', anoAtual);
+  const focusIpca = await bcbFocus('IPCA', anoAtual);
+  const focusCambio = await bcbFocus('Câmbio', anoAtual);
+  const focusPib = await bcbFocus('PIB Total', anoAtual);
+  // Focus e complementar, nao bloqueia: mediana ausente vira 'indisponível'
+  // no prompt, nunca numero inventado. Campo a campo, para uma mediana fora
+  // do ar nao apagar as outras tres que estavam vivas.
+  const focusFmt = (v, fmt) => (v != null ? fmt(v) : 'indisponível');
+
   const prompt = buildPrompt({
     dataHoje: brtDate(),
-    selic_valor: selicSgs?.valor ?? '14.75',
-    selic_data: selicSgs?.data ?? brtDate(),
-    ptax_valor: ptaxSgs?.valor ?? '5.20',
-    ptax_data: ptaxSgs?.data ?? brtDate(),
+    selic_valor: selicSgs.valor,
+    selic_data: selicSgs.data,
+    ptax_valor: ptaxSgs.valor,
+    ptax_data: ptaxSgs.data,
     anoAtual,
-    focus_selic: (await bcbFocus('Selic', anoAtual)) ?? 14.75,
-    focus_ipca: (await bcbFocus('IPCA', anoAtual)) ?? 5.5,
-    focus_cambio: (await bcbFocus('Câmbio', anoAtual)) ?? 5.2,
-    focus_pib: (await bcbFocus('PIB Total', anoAtual)) ?? 2.0,
+    focus_selic: focusFmt(focusSelic, (v) => `${v}% a.a.`),
+    focus_ipca: focusFmt(focusIpca, (v) => `${v}%`),
+    focus_cambio: focusFmt(focusCambio, (v) => `R$ ${v}`),
+    focus_pib: focusFmt(focusPib, (v) => `${v}%`),
   });
 
   const orHeaders = new Headers({
@@ -374,4 +459,5 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   await writeCache(env.CACHE, CACHE_KEY, { generated_at, data, ts: Math.floor(Date.now() / 1000) }, CACHE_TTL);
 
   return jsonResponse({ ok: true, generated_at, cache: false, data }, { headers: { ...cors, 'Cache-Control': 'no-store' } });
+  }
 }

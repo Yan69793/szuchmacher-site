@@ -50,7 +50,11 @@ Registrar ""
 function Get-VersaoViva {
     Push-Location $WORKER
     try { $s = (npx wrangler deployments status 2>&1 | Out-String) } finally { Pop-Location }
-    $mm = [regex]::Match($s, '\(100%\)\s+([0-9a-f-]{36})')
+    # O wrangler colore a saida com sequencias ANSI quando o terminal aceita
+    # (medido em 15/08/2026: ESC[39m ESC[90m entre "(100%)" e o ID). Sem o
+    # strip, o regex nao casa e o deploy aborta com a versao legivel na tela.
+    $limpo = [regex]::Replace($s, [string][char]27 + '\[[0-9;]*[A-Za-z]', '')
+    $mm = [regex]::Match($limpo, '\(100%\)\s+([0-9a-f-]{36})')
     if ($mm.Success) { return @{ Id = $mm.Groups[1].Value; Bruto = $s } }
     return @{ Id = $null; Bruto = $s }
 }
