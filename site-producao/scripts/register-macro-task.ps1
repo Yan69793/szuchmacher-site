@@ -14,7 +14,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $TaskName = 'Szuchmacher-MacroCron'
-$Runner   = 'E:\Diretorio\Claude\Site\site-producao\scripts\run-macro-cron.ps1'
+$Runner   = 'E:\Diretorio\Claude\FREQUENTE\Site\site-producao\scripts\run-macro-cron.ps1'
 
 if ($Remove) {
     if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
