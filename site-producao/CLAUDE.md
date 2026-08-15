@@ -327,9 +327,11 @@ Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser
 Fase 2 da auditoria em andamento. Relatório consolidado e tabela de achados:
 `diagnosticos/FASE2-2026-08-15.md`. Em ordem:
 
-1. **Deploy do pacote da fase 2** (fonte IB5M11/IMA-B 5+, fail-closed do macro,
-   telemetria de fontes, gate 34) via `publicar-com-rollback.ps1` — aguarda
-   autorização.
+1. **Deploy do pacote da fase 2** — FEITO 15/08 08:17 BRT via
+   `publicar-com-rollback.ps1`: viva `b4c3ba12` → `f08d6f46`, gate 34/34,
+   IB5M11 vivo no ar (R$ 123,09, stale vazio). Relatório em
+   `diagnosticos/publicacao_2026-08-15_0817.md`. Histórico no git: commits na
+   branch + merge em `master` + push (último `f4308a7`).
 2. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
 3. **Desligar `agenda-cron.php` do cPanel** (alvo inerte desde a migração para
    Worker em 17/06) e redefinir a rotina remota `szuchmacher-domingo`
