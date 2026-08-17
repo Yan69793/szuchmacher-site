@@ -228,7 +228,7 @@ estão desabilitadas de propósito.
 | Task / gatilho | Schedule | O que faz |
 |----------------|----------|-----------|
 | `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` (escritor de produção) |
-| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * 1` UTC) | Regenera o macro (`forceRefresh` interno) |
+| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * 1` UTC) | Regenera o macro (`forceRefresh` interno). Registrado no CF, mas sem confirmação de disparo em 17/08 — ver Pendências #1 |
 | `Szuchmacher-MacroCron` | **desabilitada 15/08/2026** | Competia com o deploy das 08h, 429, alarme falso |
 
 Registro da agenda: `scripts/register-agenda-task.ps1`.
@@ -332,17 +332,61 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
-2. **cPanel `agenda-cron.php`** ainda não desligado no painel. FTPS `deploy@`
+1. **Cron nativo do macro sem confirmação de disparo.** `0 3 * * 1` (segunda
+   00:00 BRT) está registrado do lado do Cloudflare (API `/schedules`
+   confirma), mas na primeira segunda ativa (17/08) não deixou rastro:
+   zero eventos `origin=cron` no Workers Observability na janela do horário
+   esperado, `macro-cron-last` e `macro_cache` em `/health` seguem com o
+   registro de sábado/domingo. MacroCron local foi desligada de propósito
+   em 15/08, então hoje não há mecanismo de reserva se isso se repetir.
+   Sem impacto ainda (cache dentro de 48h). Evidência completa e linha do
+   tempo: `diagnosticos/DIAGNOSTICO-2026-08-17.md` §7.1. Reconferir no
+   próximo disparo (24/08) ou testar manualmente via
+   `/cdn-cgi/handler/scheduled` antes disso.
+2. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
+3. **cPanel `agenda-cron.php`** ainda não desligado no painel. FTPS `deploy@`
    devolveu 530 nesta sessão. A rotina remota `szuchmacher-domingo` continua
    apontando FTP para HostGator (produção serve ASSETS). Sem MCP
    `Claude_Code_Remote` nesta sessão, o trigger remoto não foi pausado.
-3. **Deploy do Worker** com CRON_SECRET no `?cron=1` (código no repo, ainda
-   não publicado). Até lá o endpoint público segue só com rate limit de 1h.
 4. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
-5. Itens 2–5 do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, limpeza de
-   legados (`macro-panel-live.js`, `hero-*`, `multiasset/` duplicada, worktree
-   prunable), P3-15 (calendários 2026), F5 (cache-busting).
+5. Itens restantes do §Q do PRE-DEPLOY-2026-08-15: **CSP sem unsafe-inline**
+   (refatoração grande, precisa de escopo próprio), **`hero-*` legado**
+   (`assets/hero-editorial.js`/`hero-switch.js` ainda alternam variante
+   `hero-classic`/`hero-editorial` via `data-hero-variant` — checar se o A/B
+   ainda é intencional antes de tratar como legado), **`multiasset/`
+   duplicada** (não investigado), **F5 cache-busting** manual e inconsistente
+   (P2 no doc original, escopo próprio). `macro-panel-live.js` e o worktree
+   prunable já saíram da lista, ver Resolvidas 2026-08-17. **P3-15**
+   (calendários 2026 hardcoded) é sub-item do #3 acima (`agenda-cron.php`
+   legado) — desligar o cPanel resolve os dois juntos.
+6. **Overflow horizontal no MultiAsset mobile 320** (`horizontal_overflow_elements=2`).
+   Causa raiz achada 17/08: `.geo-main-grid` é grid `1fr 1fr` sem
+   `min-width:0` nos itens, cria loop de dimensionamento clássico com o
+   canvas responsivo do Chart.js (`chart-geo-prob`), trava o card em 338px
+   num viewport de 320px. Fix de uma linha preparado e testado local
+   (`.geo-main-grid > * { min-width: 0; }`), confirmado reduzindo o card
+   pra 288px sem regressão esperada no grid 2 colunas (`min-width:0` só
+   relaxa um piso, nunca força crescer). **Não deployado — aguarda ordem.**
+
+### Resolvidas em 2026-08-17
+
+- **CRON_SECRET no `?cron=1` confirmado em produção.** Testado sem header:
+  `403` com o corpo exato do código (`"Refresh não autorizado: CRON_SECRET
+  ausente ou token inválido"`). O item 3 antigo desta lista ("código no
+  repo, ainda não publicado") estava desatualizado, o deploy já tinha ido
+  ao ar em algum momento entre o commit `3a5cbcf` (15/08) e a auditoria de
+  17/08. `sz-sites` mostra último deploy `2026-08-16T11:00:45Z`.
+- Suíte de testes do Worker subiu de 47 para **56/56**, com a cobertura nova
+  de `CRON_SECRET`/`coerceLlmContent` do mesmo commit.
+- Auditoria completa (`/szuchmacher-audit`) rodada, gate 34/34, zero P0/P1.
+  Achado novo (não resolvido): cron nativo sem rastro de disparo, ver item 1
+  da lista de pendências acima.
+- `assets/macro-panel-live.js` já não existe no disco — zero referências em
+  qualquer arquivo, item já estava moot antes desta sessão.
+- `git worktree prune` rodado — removida referência órfã a
+  `E:/Diretorio/Claude/Site/.claude/worktrees/compassionate-herschel-6ea761`
+  (caminho pré-reorg de 12/08, diretório já não existia). Worktree do Traycer
+  (`C:/Users/User/.traycer/worktrees/...`) está ativo, não tocado.
 
 ### Resolvidas em 2026-08-15
 
