@@ -1,5 +1,9 @@
 # CLAUDE.md — szuchmacher.com.br
 
+## Estado do projeto
+
+Página canônica de estado, legível por qualquer agente (não só Claude): `status/ESTADO.md`. Ler antes de começar sessão de trabalho, atualizar a data e os itens ao fechar uma sessão que mudou o estado.
+
 ## Identidade do projeto
 
 Site institucional de advisory patrimonial independente de Yan Szuchmacher.
@@ -354,27 +358,44 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 
    Cache vence 24/08 04:23, quase em cima do próximo disparo previsto.
    Evidência completa: `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
+   Verificado em 17/08 via API Cloudflare: schedule `0 3 * * 1` registrado no
+   worker `sz-sites` (modified 17/08 11:00 UTC pelo deploy da manhã) e o
+   handler `scheduled(event, env, ctx)` está no código deployado. Config está
+   correta, o despacho pelo Cloudflare segue sendo a única dúvida.
 2. **Monitorar o disparo de 24/08** comparando `macro-cron-last.ts` em
    `/health` com a data esperada. Barato e não exige religar a MacroCron
    local. Se falhar de novo com o trigger recém-reregistrado pelo deploy de
    17/08, o caso vira suporte Cloudflare.
-3. **cPanel `agenda-cron.php`** ainda não desligado no painel. FTPS `deploy@`
-   devolveu 530 nesta sessão. A rotina remota `szuchmacher-domingo` continua
-   apontando FTP para HostGator (produção serve ASSETS). Sem MCP
-   `Claude_Code_Remote` nesta sessão, o trigger remoto não foi pausado.
-4. **Recalibrar spread IPCA+ (7,5%)** contra lâmina ANBIMA do IMA-B 5+.
+3. **cPanel `agenda-cron.php`** neutralizado na borda em 17/08: o `CRON_SECRET`
+   do Worker `sz-sites` foi rotacionado via API Cloudflare e o `.env` local do
+   `automacao-yan-os` ganhou o valor novo (testado: chamada com o valor antigo
+   leva 403 "Refresh não autorizado"). O cron físico do cPanel segue registrado
+   no painel, mas está inerte, qualquer refresh dele é rejeitado. Desligar o
+   job no painel vira limpeza opcional quando houver login do cPanel. ATENÇÃO:
+   a rotina remota `szuchmacher-domingo` (env `env_01DW1CsRC9cNGdotEAxnnJqk`),
+   se tiver cópia própria do segredo antigo, perde o refresh de KV. Antes do
+   próximo domingo (24/08), atualizar a cópia remota com o valor novo (que vive
+   no `.env` do `automacao-yan-os`) ou confirmar que ela não depende do refresh.
 5. Itens restantes do §Q do PRE-DEPLOY-2026-08-15: **CSP sem unsafe-inline**
    (refatoração grande, precisa de escopo próprio), **`hero-*` legado**
-   (`assets/hero-editorial.js`/`hero-switch.js` ainda alternam variante
-   `hero-classic`/`hero-editorial` via `data-hero-variant` — checar se o A/B
-   ainda é intencional antes de tratar como legado), **`multiasset/`
-   duplicada** (não investigado), **F5 cache-busting** manual e inconsistente
-   (P2 no doc original, escopo próprio). `macro-panel-live.js` e o worktree
-   prunable já saíram da lista, ver Resolvidas 2026-08-17. **P3-15**
+   (verificado 17/08: nenhum HTML usa `data-hero-variant`, o A/B está inativo;
+   `hero-editorial.js`/`hero-switch.js` são órfãos mas ainda copiados pelo
+   `build-cloudflare-public.ps1` `$szAssets` — remoção aguarda decisão do
+   operador), **F5 cache-busting** manual e inconsistente
+   (P2 no doc original, escopo próprio). **P3-15**
    (calendários 2026 hardcoded) é sub-item do #3 acima (`agenda-cron.php`
    legado) — desligar o cPanel resolve os dois juntos.
 
 ### Resolvidas em 2026-08-17
+
+- **Spread IPCA+ (7,5%) recalibrado contra mercado e mantido.** Taxas NTN-B
+  longas em 14/08/2026 (Valor Investe): IPCA+ 2040 = 7,66%, 2050 = 7,40%;
+  curva Bianco mai/26: NTN-B 10y = 7,50%. O 7,5% fica no centro da faixa.
+  O yield oficial do IMA-B 5+ (lâmina ANBIMA) não está publicado em fonte
+  acessível; quando estiver, recalibrar de novo. Comentário de calibração
+  atualizado em `cloudflare-workers/sz-sites/src/handlers/ntnb-scenarios.js`.
+- **`multiasset/` duplicada não existe mais.** Verificado 17/08: não há pasta
+  `multiasset/` em `site-producao`, só a origem em `Site\multiasset`.
 
 - **Publicação semanal do macro passou a validar e ter rollback.**
   `run-macro-agent.ps1` estava órfão e quebrado (exigia
