@@ -21,9 +21,16 @@ import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 const CACHE_KEY = 'ntnb-scenarios';
 const CACHE_TTL = 7200; // 2 horas
 
-// Valores padrao calibrados em jul/2026: IPCA ~5,5%, spread IPCA+ ~7,5%.
-// Sao premissas de modelo, nao cotacao: qualquer numero aqui que passe a ser
-// exibido como dado de mercado e regressao (ver rotulo de origem no front).
+// Valores padrao. Sao premissas de modelo, nao cotacao: qualquer numero aqui
+// que passe a ser exibido como dado de mercado e regressao (ver rotulo de
+// origem no front).
+//
+// Recalibracao 17/08/2026 contra mercado (pendencia #4 do CLAUDE.md):
+// spread IPCA+ 7,5% mantido. Taxas NTN-B longas em 14/08/2026 (Valor Investe):
+// IPCA+ 2040 = 7,66%, 2050 = 7,40%; curva Bianco mai/26: NTN-B 10y = 7,50%.
+// O 7,5% fica no centro da faixa. O yield oficial do IMA-B 5+ (lamina ANBIMA)
+// nao esta publicado em fonte acessivel; quando estiver, recalibrar de novo.
+// IPCA proj 5,5% = Focus mediana 2026 (mantido).
 const DEFAULTS = {
   ntnb_price: 95.0,
   ipca_spread: 0.075,  // 7,5% a.a. acima do IPCA
@@ -32,7 +39,7 @@ const DEFAULTS = {
 
 const WARNING_DEFAULTS =
   'Fontes de mercado indisponíveis. Cenários exibidos com premissas fixas ' +
-  'calibradas em jul/2026, não com cotações ao vivo.';
+  'calibradas em ago/2026, não com cotações ao vivo.';
 
 async function fetchYahooImaB() {
   // Yahoo Finance v8 chart API — mesmo padrao de market-data.js
