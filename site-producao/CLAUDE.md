@@ -332,18 +332,32 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Cron nativo do macro sem confirmação de disparo.** `0 3 * * 1` (segunda
-   00:00 BRT) está registrado do lado do Cloudflare (API `/schedules`
-   confirma), mas na primeira segunda ativa (17/08) não deixou rastro:
-   zero eventos `origin=cron` no Workers Observability na janela do horário
-   esperado, `macro-cron-last` e `macro_cache` em `/health` seguem com o
-   registro de sábado/domingo. MacroCron local foi desligada de propósito
-   em 15/08, então hoje não há mecanismo de reserva se isso se repetir.
-   Sem impacto ainda (cache dentro de 48h). Evidência completa e linha do
-   tempo: `diagnosticos/DIAGNOSTICO-2026-08-17.md` §7.1. Reconferir no
-   próximo disparo (24/08) ou testar manualmente via
-   `/cdn-cgi/handler/scheduled` antes disso.
-2. **Rate limit nativo Cloudflare** no `/relatorio-signup` (zonas Free).
+1. **Cron nativo do macro não dispara desde que foi estreitado para segunda.**
+   O `wrangler.jsonc` só passou a declarar `triggers.crons = ["0 3 * * 1"]`
+   no commit `3a5cbcf`, aplicado no deploy de 16/08 11:00 UTC. Antes disso
+   existia um agendamento mais amplo (criado 17/06), e ele funcionava: o
+   `ts` de `macro-cron-last` marca disparo em **domingo** 16/08 03:00 UTC,
+   data incompatível com um cron de segunda-feira. Na primeira segunda sob
+   o agendamento novo (17/08 03:00 UTC) não houve disparo, com zero eventos
+   `origin=cron` no Observability e `macro-cron-last` intocado.
+
+   **Cuidado ao ler `macro-cron-last`:** o campo `generated_at` ali dentro é
+   o timestamp do macro, não do disparo (`rec.generated_at = body.generated_at`,
+   `src/index.js:287`). O disparo é o `ts`.
+
+   O que mantém o macro fresco hoje é deploy manual, porque a etapa de
+   invalidação de KV chama `macro_api.php?cron=1` com o `X-Cron-Secret`. As
+   duas últimas atualizações (16/08 08:01 e 17/08 04:23) foram efeito
+   colateral de deploy, não automação. Cascata LLM, chave OpenRouter e
+   `CRON_SECRET` estão **provados funcionando**, o que resta em dúvida é só
+   o despacho do `scheduled()` pelo Cloudflare.
+
+   Cache vence 24/08 04:23, quase em cima do próximo disparo previsto.
+   Evidência completa: `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
+2. **Monitorar o disparo de 24/08** comparando `macro-cron-last.ts` em
+   `/health` com a data esperada. Barato e não exige religar a MacroCron
+   local. Se falhar de novo com o trigger recém-reregistrado pelo deploy de
+   17/08, o caso vira suporte Cloudflare.
 3. **cPanel `agenda-cron.php`** ainda não desligado no painel. FTPS `deploy@`
    devolveu 530 nesta sessão. A rotina remota `szuchmacher-domingo` continua
    apontando FTP para HostGator (produção serve ASSETS). Sem MCP
@@ -359,16 +373,69 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    prunable já saíram da lista, ver Resolvidas 2026-08-17. **P3-15**
    (calendários 2026 hardcoded) é sub-item do #3 acima (`agenda-cron.php`
    legado) — desligar o cPanel resolve os dois juntos.
-6. **Overflow horizontal no MultiAsset mobile 320** (`horizontal_overflow_elements=2`).
-   Causa raiz achada 17/08: `.geo-main-grid` é grid `1fr 1fr` sem
-   `min-width:0` nos itens, cria loop de dimensionamento clássico com o
-   canvas responsivo do Chart.js (`chart-geo-prob`), trava o card em 338px
-   num viewport de 320px. Fix de uma linha preparado e testado local
-   (`.geo-main-grid > * { min-width: 0; }`), confirmado reduzindo o card
-   pra 288px sem regressão esperada no grid 2 colunas (`min-width:0` só
-   relaxa um piso, nunca força crescer). **Não deployado — aguarda ordem.**
 
 ### Resolvidas em 2026-08-17
+
+- **Publicação semanal do macro passou a validar e ter rollback.**
+  `run-macro-agent.ps1` estava órfão e quebrado (exigia
+  `automacao-yan-os\venv`, que não existe mais), e a task publicava com
+  `deploy-all.ps1`, que não valida nada nem reverte.
+
+  Conserto: a resolução do interpretador virou sondagem, e a sonda **importa
+  as dependências reais**, não só checa versão. Isso importa aqui mais que no
+  agenda: `macro_agent.py` faz `from config import ...` no topo, `config.py`
+  importa `dotenv`, `coletor.py` importa `requests`. Medido em 17/08,
+  `venv-py312` e `venv-playwright` têm Python 3.12 vivo e passariam numa sonda
+  só de versão, mas não têm `dotenv`. Uma cópia literal do padrão do agenda
+  teria escolhido `venv-py312` e quebrado em `ModuleNotFoundError` depois de
+  o script já ter se declarado pronto. Único candidato válido hoje é
+  `venv-task` (3.12.13, com `dotenv` e `requests`).
+
+  O arquivo também passou a ser **ASCII puro sem BOM**, igual ao
+  `run-agenda-agent.ps1`. O BOM que ele carregava existia só por causa de
+  acento e travessão em comentário, que o PowerShell 5.1 do Task Scheduler lê
+  errado sem BOM (commit `c2f69ff`). Sem caractere não-ASCII, a dependência
+  do BOM some.
+
+  Task `Szuchmacher-MacroAgent` repontada para
+  `powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File ...\run-macro-agent.ps1`,
+  mesmo padrão do AgendaAgent. Gatilho preservado (sexta 18:00, próxima
+  21/08). Backup do XML anterior em
+  `diagnosticos/backup-task-MacroAgent-20260817.xml`.
+
+  Verificado: sintaxe 0 erro, `test-scripts.ps1` OK incluindo checagem de
+  `ErrorActionPreference`, sondagem resolvendo para `venv-task`, sem BOM e
+  sem não-ASCII. **Não rodado ponta a ponta**, porque o passo final publica.
+  Detalhe em `diagnosticos/DIAGNOSTICO-2026-08-17.md` §12.
+
+- **Guarda de working tree portada para o `run-macro-agent.ps1`.**
+  `Get-MudancasDeployaveis` copiada do `run-agenda-agent.ps1`, com as três
+  listas (`$NAO_DEPLOYAVEL`, `$ARTEFATOS_DE_PIPELINE`, `$COPIADO_POR_GLOB`) e
+  o passo de aborto antes da geração. `macro_data.json` já estava na lista de
+  artefatos de pipeline, então a rotina não bloqueia a própria saída. Testada
+  contra a árvore real: ignora `.md` e arquivo em `site-producao/scripts/`,
+  veredito "passaria". Fecha o último buraco da cadeia de publicação semanal.
+
+- **Macro regenerado sob demanda às 05:23 BRT** via `run-macro-cron.ps1`
+  (`gerado=17/08/2026, 05:23 BRT cache=False`, exit 0, 36 s). Segunda prova de
+  que a cascata e o `CRON_SECRET` funcionam quando o handler é invocado, o que
+  reforça que o problema de §11.3 está no despacho do cron, não no código.
+  Empurra o vencimento do cache de 7 dias para 24/08 05:23.
+
+- **Rate limit nativo Cloudflare no `/relatorio-signup`** aplicado nas duas
+  zonas (ruleset `ca6211cde...` em szuchmacher, `5da457611...` em
+  multi-assets), phase `http_ratelimit`, block, `ip.src + cf.colo.id`.
+  As zonas são **Free Website** (o plano pago é o de Workers, produto
+  diferente), e o Free só aceita `period: 10` e `mitigation_timeout: 10`,
+  ambos recusados pela API em qualquer outro valor. Ficou 5 req por 10 s,
+  bloqueio de 10 s. Proteção fraca de propósito por limite de plano, corta
+  rajada e não substitui o controle da aplicação (3 por 15 min em KV) nem
+  cobre flood distribuído. Verificado que POST legítimo ainda chega ao
+  Worker (422 de validação, `CF-Ray` presente). Rollback é apagar a regra
+  no painel. Detalhe em `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.5.
+- **Overflow 320 do MultiAsset fechado** (`5d4d115` + deploy `d87f95be`).
+  `.geo-main-grid > * { min-width: 0 }`. Playwright pós-deploy: `warnings: []`
+  nos 6 viewports.
 
 - **CRON_SECRET no `?cron=1` confirmado em produção.** Testado sem header:
   `403` com o corpo exato do código (`"Refresh não autorizado: CRON_SECRET

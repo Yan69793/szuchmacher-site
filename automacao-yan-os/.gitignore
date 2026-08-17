@@ -4,5 +4,9 @@ __pycache__/
 *.pyc
 output/
 logs/*.log
+# Estado de runtime das rotinas, nao codigo. O contador de falhas seguidas do
+# run-macro-cron.ps1 (macro_cron_falhas_seq.txt) escapava da regra acima so por
+# ser .txt, e ficava sujando o working tree a cada execucao.
+logs/*.txt
 *.pdf
 *.pptx
