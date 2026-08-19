@@ -1,6 +1,6 @@
 # Estado do projeto — Site (produção)
 
-Última atualização: 2026-08-17 (agente: Claude Code)
+Última atualização: 2026-08-19 (agente: Claude Code)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -11,9 +11,9 @@ partida com os ponteiros.
 
 Site institucional de advisory patrimonial independente, servido por Cloudflare Workers (`sz-sites`) nos hostnames szuchmacher.com.br e multi-assets.com. Fase 2 no ar desde 15/08/2026. Deploy primário via `scripts/deploy-cloudflare.ps1`, com HostGator/FTP legado mantido só para rollback.
 
-## Estado em 2026-08-17
+## Estado em 2026-08-19
 
-Fase 2 no ar desde 15/08/2026 08:17 BRT, Worker `f08d6f46` (rollback `b4c3ba12`). Gate de auditoria 34/34 com zero P0/P1 e suíte de testes do Worker 56/56. Pendências abertas: cron nativo do macro sem disparo confirmado desde a restrição para segunda-feira (despacho pelo Cloudflare é a dúvida, o `macro-cron-last` mais recente é efeito colateral de deploy), monitorar o disparo previsto de 24/08, `agenda-cron.php` do cPanel ainda ativo (falta o login real do cPanel), e os itens remanescentes do §Q do PRE-DEPLOY (CSP sem unsafe-inline, hero legado, F5 cache-busting). O detalhe de cada pendência está na seção "Pendências abertas" do CLAUDE.md.
+Fase 2 no ar desde 15/08/2026 08:17 BRT, Worker `f08d6f46` (rollback `b4c3ba12`). Gate de auditoria 34/34 com zero P0/P1 e suíte de testes do Worker 56/56. Pendências abertas: verificação do disparo do cron nativo armada para 24/08 (task one-shot `Szuchmacher-CheckMacroCron-2026-08-24` + `scripts/check-macro-cron.ps1`), CSP sem unsafe-inline, F5 cache-busting e a limpeza opcional do job `agenda-cron.php` no cPanel. O detalhe de cada uma está na seção "Pendências abertas" do CLAUDE.md.
 
 ## Como verificar
 
@@ -36,7 +36,7 @@ Auditoria completa pela rota `/szuchmacher-audit` (gate 34/34). Checagens auxili
 
 ## Itens abertos
 
-- Cron nativo do macro sem disparo (Pendências #1 do CLAUDE.md)
-- Monitorar o disparo de 24/08 comparando `macro-cron-last.ts` (Pendências #2)
-- `agenda-cron.php` do cPanel não desligado (Pendências #3)
-- §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline, hero legado, F5 cache-busting (Pendências #5)
+- Verificar o disparo do cron de 24/08 (Pendências #1 do CLAUDE.md, task one-shot + `check-macro-cron.ps1`)
+- CSP sem unsafe-inline (Pendências #2, escopo próprio)
+- F5 cache-busting manual (Pendências #3, escopo próprio)
+- Job `agenda-cron.php` do cPanel para desligar quando houver login (Pendências #4)

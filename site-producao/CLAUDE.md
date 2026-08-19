@@ -223,16 +223,17 @@ Falha dispara `scripts/send-alert-email.ps1`. Log em
 
 ### Tarefas agendadas no Windows (visão completa)
 
-Das tasks com prefixo `Szuchmacher-` no Task Scheduler desta máquina, **só 1
-viva é deste projeto**. As demais são do `relatorio-diario-szuchmacher` ou
-estão desabilitadas de propósito.
+Das tasks com prefixo `Szuchmacher-` no Task Scheduler desta máquina, as vivas
+deste projeto estão na tabela abaixo. As demais são do
+`relatorio-diario-szuchmacher` ou estão desabilitadas de propósito.
 
 **Deste projeto (Site):**
 
 | Task / gatilho | Schedule | O que faz |
 |----------------|----------|-----------|
 | `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` (escritor de produção) |
-| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * 1` UTC) | Regenera o macro (`forceRefresh` interno). Registrado no CF, mas sem confirmação de disparo em 17/08 — ver Pendências #1 |
+| `Szuchmacher-CheckMacroCron-2026-08-24` | one-shot 24/08 09:00 BRT | Roda `check-macro-cron.ps1` para confirmar o disparo do cron nativo, ver Pendências #1 |
+| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * 1` UTC) | Regenera o macro (`forceRefresh` interno). Disparo sem confirmação desde 17/08, verificação armada para 24/08, ver Pendências #1 |
 | `Szuchmacher-MacroCron` | **desabilitada 15/08/2026** | Competia com o deploy das 08h, 429, alarme falso |
 
 Registro da agenda: `scripts/register-agenda-task.ps1`.
@@ -336,55 +337,55 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Cron nativo do macro não dispara desde que foi estreitado para segunda.**
-   O `wrangler.jsonc` só passou a declarar `triggers.crons = ["0 3 * * 1"]`
-   no commit `3a5cbcf`, aplicado no deploy de 16/08 11:00 UTC. Antes disso
-   existia um agendamento mais amplo (criado 17/06), e ele funcionava: o
-   `ts` de `macro-cron-last` marca disparo em **domingo** 16/08 03:00 UTC,
-   data incompatível com um cron de segunda-feira. Na primeira segunda sob
-   o agendamento novo (17/08 03:00 UTC) não houve disparo, com zero eventos
-   `origin=cron` no Observability e `macro-cron-last` intocado.
+1. **Verificação do disparo de 24/08 armada.** A task one-shot
+   `Szuchmacher-CheckMacroCron-2026-08-24` roda segunda 24/08 09:00 BRT o
+   `scripts/check-macro-cron.ps1`, que compara `macro_cron_last.ts` em
+   `/health` com 24/08 03:00 UTC numa janela de 2h e grava OK/FAIL em
+   `logs/check-macro-cron.log`. Só o dispatcher escreve esse registro
+   (`runScheduledMacro`, `src/index.js:291` e `:304`), deploy e refresh via
+   `cron=1` não tocam nele. A janela de 2h prende o OK ao disparo específico
+   de 24/08, não ao de outra segunda, e a checagem confirma disparo com
+   refresh bem-sucedido, o `ok` precisa ser true. Se a máquina estiver
+   desligada às 09:00, rodar o script manualmente quando abrir. Se der FAIL,
+   antes de abrir caso no suporte Cloudflare, conferir eventos `origin=cron`
+   no Observability do `sz-sites`. Depois de 24/08, mover este item para
+   Resolvidas com a evidência do log.
+2. **CSP sem unsafe-inline** (refatoração grande, precisa de escopo próprio).
+3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
+   próprio).
+4. **Limpeza opcional no cPanel.** O job físico `agenda-cron.php` segue
+   registrado no painel, mas está inerte na borda desde 17/08 (refresh
+   rejeitado com 403 após a rotação do `CRON_SECRET`). Desligar no painel
+   quando houver login do cPanel resolve também o P3-15 (calendários 2026
+   hardcoded). Sem risco operacional enquanto isso.
 
-   **Cuidado ao ler `macro-cron-last`:** o campo `generated_at` ali dentro é
-   o timestamp do macro, não do disparo (`rec.generated_at = body.generated_at`,
-   `src/index.js:287`). O disparo é o `ts`.
+### Resolvidas em 2026-08-19
 
-   O que mantém o macro fresco hoje é deploy manual, porque a etapa de
-   invalidação de KV chama `macro_api.php?cron=1` com o `X-Cron-Secret`. As
-   duas últimas atualizações (16/08 08:01 e 17/08 04:23) foram efeito
-   colateral de deploy, não automação. Cascata LLM, chave OpenRouter e
-   `CRON_SECRET` estão **provados funcionando**, o que resta em dúvida é só
-   o despacho do `scheduled()` pelo Cloudflare.
-
-   Cache vence 24/08 04:23, quase em cima do próximo disparo previsto.
-   Evidência completa: `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
-   Verificado em 17/08 via API Cloudflare: schedule `0 3 * * 1` registrado no
-   worker `sz-sites` (modified 17/08 11:00 UTC pelo deploy da manhã) e o
-   handler `scheduled(event, env, ctx)` está no código deployado. Config está
-   correta, o despacho pelo Cloudflare segue sendo a única dúvida.
-2. **Monitorar o disparo de 24/08** comparando `macro-cron-last.ts` em
-   `/health` com a data esperada. Barato e não exige religar a MacroCron
-   local. Se falhar de novo com o trigger recém-reregistrado pelo deploy de
-   17/08, o caso vira suporte Cloudflare.
-3. **cPanel `agenda-cron.php`** neutralizado na borda em 17/08: o `CRON_SECRET`
-   do Worker `sz-sites` foi rotacionado via API Cloudflare e o `.env` local do
-   `automacao-yan-os` ganhou o valor novo (testado: chamada com o valor antigo
-   leva 403 "Refresh não autorizado"). O cron físico do cPanel segue registrado
-   no painel, mas está inerte, qualquer refresh dele é rejeitado. Desligar o
-   job no painel vira limpeza opcional quando houver login do cPanel. ATENÇÃO:
-   a rotina remota `szuchmacher-domingo` (env `env_01DW1CsRC9cNGdotEAxnnJqk`),
-   se tiver cópia própria do segredo antigo, perde o refresh de KV. Antes do
-   próximo domingo (24/08), atualizar a cópia remota com o valor novo (que vive
-   no `.env` do `automacao-yan-os`) ou confirmar que ela não depende do refresh.
-5. Itens restantes do §Q do PRE-DEPLOY-2026-08-15: **CSP sem unsafe-inline**
-   (refatoração grande, precisa de escopo próprio), **`hero-*` legado**
-   (verificado 17/08: nenhum HTML usa `data-hero-variant`, o A/B está inativo;
-   `hero-editorial.js`/`hero-switch.js` são órfãos mas ainda copiados pelo
-   `build-cloudflare-public.ps1` `$szAssets` — remoção aguarda decisão do
-   operador), **F5 cache-busting** manual e inconsistente
-   (P2 no doc original, escopo próprio). **P3-15**
-   (calendários 2026 hardcoded) é sub-item do #3 acima (`agenda-cron.php`
-   legado) — desligar o cPanel resolve os dois juntos.
+- **Cron nativo do macro: diagnóstico fechado, verificação armada.**
+  Consolidou os itens 1 e 2 antigos. Config verificada correta via API
+  Cloudflare em 17/08 (schedule `0 3 * * 1` registrado no `sz-sites`,
+  `scheduled(event, env, ctx)` no código deployado), cascata LLM, chave
+  OpenRouter e `CRON_SECRET` provados funcionando. O que restava em dúvida
+  era só o despacho do Cloudflare, e é exatamente isso que o
+  `check-macro-cron.ps1` verifica em 24/08. Evidência completa do
+  diagnóstico em `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
+- **`CRON_SECRET` e rotina remota `szuchmacher-domingo`.** O caminho FTP da
+  rotina (`deploy.sh`) não usa o segredo, e o `scheduled()` do Worker não
+  passa pelo token. O único refresh com segredo é o dos scripts locais
+  (`run-macro-cron.ps1`, `invalidate-worker-cache.ps1`), que leem o `.env`
+  do `automacao-yan-os` com o valor novo. O prompt hospedado do trigger não
+  pôde ser inspecionado desta sessão (o MCP `Claude_Code_Remote` não está
+  disponível aqui), então fica registrado: numa sessão com esse MCP,
+  conferir se o prompt tem chamada `macro_api.php?cron=1` com
+  `X-Cron-Secret` antigo (o plano histórico de 2026-06-14 tinha um curl sem
+  token). Mesmo se tiver, o efeito é um 403 no refresh, a publicação via
+  FTP continua. Confirmação pendente é de verificação, não de operação.
+- **`hero-*` legado removido (decisão do operador de 2026-08-19).**
+  `hero-editorial.css`, `hero-editorial.js` e `hero-switch.js` apagados e
+  tirados do `$szAssets` do `build-cloudflare-public.ps1`. Nenhum HTML
+  referenciava, o A/B estava inativo. `revert-hero.ps1` apagado (procurava
+  `SZ_HERO_VARIANT`, que já não existe). `HERO-REVERT.md` arquivado em
+  `_arquivo/` (fora do git).
 
 ### Resolvidas em 2026-08-17
 

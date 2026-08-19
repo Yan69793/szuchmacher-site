@@ -68,7 +68,7 @@ $szFiles = @(
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'hero-editorial.css', 'hero-editorial.js', 'hero-switch.js')
+$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js')
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
