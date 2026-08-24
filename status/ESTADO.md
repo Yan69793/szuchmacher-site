@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-08-19 (agente: Claude Code)
+Última atualização: 2026-08-24 (agente: Claude)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -28,9 +28,9 @@ arquivos, design system, protocolo obrigatório, estado de produção verificado
 em 15/08/2026 e pendências). Pendências abertas, resumidas em uma linha cada,
 com o detalhe completo lá:
 
-- Cron nativo do macro não dispara desde que foi estreitado para segunda; a
-  dúvida restante é o despacho do `scheduled()` pelo Cloudflare.
-- Monitorar o disparo de 24/08 comparando `macro-cron-last.ts` em `/health`
+- Cron nativo disparava domingo por causa da numeração Quartz de dia da semana
+  na Cloudflare; corrigido para `0 3 * * MON` em 24/08.
+- Monitorar o disparo de 31/08 comparando `macro-cron-last.ts` em `/health`
   com a data esperada.
 - `agenda-cron.php` do cPanel ainda não desligado: FTPS `deploy@` devolveu 530
   e as credenciais do `.env` não autenticam no cPanel.
@@ -63,8 +63,8 @@ muda quando checagem nova entra, use a da saída real do script.
 
 ## Itens abertos
 
-- Cron nativo do macro sem disparo; evidência em `site-producao/diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
-- Disparo de 24/08 a monitorar via `macro-cron-last.ts` em `/health`.
+- **Cron nativo: causa raiz corrigida em 24/08, prova real só em 31/08.** A Cloudflare numera dia da semana como Quartz (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para `0 3 * * MON` e publicado (versão `5df713af`, gate 34/34). O carimbo `macro_cron_last` em `/health` ainda mostra o registro velho de 23/08 e só é reescrito no próximo disparo. Confirmar na segunda 31/08, depois das 03:00 UTC, que `ts` cai na janela e `cron` vem `0 3 * * MON`.
+- **Drift de deploy não commitado.** `cv.html` + PDFs do CV já no ar, mas a feature e a entrada no `build-cloudflare-public.ps1` não existem em nenhum commit. `check-macro-cron.ps1`, `register-*.ps1` e `send-alert-email.ps1` também têm mudança não commitada (watchdog de 24/08 roda código não versionado). Commit pendente. Detalhe: §7.2/§7.3 do mesmo DIAGNOSTICO.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
 - Itens de escopo próprio do §Q: CSP sem unsafe-inline e F5 cache-busting.
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
@@ -78,5 +78,5 @@ premissas macro e os fallbacks do panorama saíram de jun/2026 para ago/2026
 de fonte no bloco Premissas). Gate `validar-producao.ps1` 34/34 e teste em
 produção confirmando o texto novo em https://multi-assets.com/. O item
 `hero-*` legado foi resolvido em 2026-08-19 (decisão do operador), e a
-verificação do cron de 24/08 segue armada via task one-shot
-`Szuchmacher-CheckMacroCron-2026-08-24`.
+one-shot de 24/08 foi substituída em 22/08 pelo watchdog semanal
+`Szuchmacher-MacroCronWatchdog` (segunda 09:00, `check-macro-cron.ps1`).

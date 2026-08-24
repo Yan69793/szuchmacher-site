@@ -306,7 +306,7 @@ test('scheduled registra falha no KV e lanca quando o refresh devolve 503', asyn
     return jsonRes({});
   };
   const env = makeEnv();
-  await assert.rejects(() => runScheduledMacro(env, { cron: '0 3 * * 1' }), /macro cron falhou/);
+  await assert.rejects(() => runScheduledMacro(env, { cron: '0 3 * * MON' }), /macro cron falhou/);
   const last = JSON.parse(await env.CACHE.get('macro-cron-last'));
   assert.equal(last.ok, false);
   assert.equal(last.status, 503);
@@ -315,11 +315,14 @@ test('scheduled registra falha no KV e lanca quando o refresh devolve 503', asyn
 
 test('scheduled grava macro-cron-last e o KV macro-api quando a cascata fecha', async () => {
   const env = makeEnv();
-  const rec = await runScheduledMacro(env, { cron: '0 3 * * 1' });
+  const rec = await runScheduledMacro(env, { cron: '0 3 * * MON' });
   assert.equal(rec.ok, true);
   const last = JSON.parse(await env.CACHE.get('macro-cron-last'));
   assert.equal(last.ok, true);
   assert.equal(last.status, 200);
+  // O watchdog local compara este campo com o schedule declarado no wrangler.jsonc.
+  // Se um dos dois mudar sozinho, a comparacao la nunca fecha e o alerta vira ruido.
+  assert.equal(last.cron, '0 3 * * MON');
   const gravado = JSON.parse(await env.CACHE.get('macro-api'));
   assert.equal(gravado.data.eyebrow, 'Cenário teste');
 });

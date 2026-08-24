@@ -8,7 +8,7 @@
 #
 # Registro canonico:
 #   AgendaAgent: .\scripts\register-agenda-task.ps1   (dom+seg+qui 08:00, com rollback)
-#   Macro:       cron do Worker (0 3 * * 1 UTC). register-macro-task.ps1 so desabilita.
+#   Macro:       cron do Worker (0 3 * * MON UTC). register-macro-task.ps1 so desabilita.
 #   MacroAgent e LeadNurture pertencem ao projeto relatorio-diario-szuchmacher.
 #
 # Uso: .\scripts\register-agents.ps1 [-Remove]

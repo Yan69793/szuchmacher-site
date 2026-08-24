@@ -267,7 +267,7 @@ export async function runScheduledMacro(env, event = {}) {
   const started = Date.now();
   const rec = {
     ts: Math.floor(Date.now() / 1000),
-    cron: event.cron ?? '0 3 * * 1',
+    cron: event.cron ?? '0 3 * * MON',
     ok: false,
     status: 0,
     error: null,

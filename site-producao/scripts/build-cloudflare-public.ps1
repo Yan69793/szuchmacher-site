@@ -64,7 +64,11 @@ $szFiles = @(
     'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
     'relatorio_cache.json',
     'og-cover.jpg', 'logo.png',
-    'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'
+    'favicon.ico', 'favicon.svg', 'apple-touch-icon.png',
+    # Trajetoria profissional. Fora do menu e com noindex: acesso so por link
+    # direto enviado a headhunter ou contraparte. Os dois PDF sao o anexo que a
+    # pagina oferece para download, servidos do mesmo diretorio.
+    'cv.html', 'Yan_Szuchmacher_CV_PT.pdf', 'Yan_Szuchmacher_CV_EN.pdf'
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
@@ -123,6 +127,7 @@ $obrigatorios = @(
     'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
     'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
     'sz\relatorio_cache.json',
+    'sz\cv.html', 'sz\Yan_Szuchmacher_CV_PT.pdf', 'sz\Yan_Szuchmacher_CV_EN.pdf',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
     'multi\privacidade.html', 'multi\privacidade',

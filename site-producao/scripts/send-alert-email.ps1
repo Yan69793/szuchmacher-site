@@ -44,6 +44,12 @@ try {
         return
     }
 
+    # Gmail App Password vem com espacos. SmtpClient + senha da conta = 5.7.0.
+    $senha = $senha -replace '\s', ''
+
+    # PS 5.1 default SSL e TLS1.0. Gmail recusa e devolve 5.7.0 Authentication Required.
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     $msg = New-Object System.Net.Mail.MailMessage
     $msg.From = $remetente
     $msg.To.Add($remetente)
@@ -51,9 +57,12 @@ try {
     $msg.Body = $Body
 
     $smtp = New-Object System.Net.Mail.SmtpClient($smtpHost, $smtpPort)
+    $smtp.DeliveryMethod = [Net.Mail.SmtpDeliveryMethod]::Network
+    $smtp.UseDefaultCredentials = $false
     $smtp.EnableSsl = $true
     $smtp.Credentials = New-Object System.Net.NetworkCredential($remetente, $senha)
     $smtp.Send($msg)
+    $smtp.Dispose()
 
     Write-Host "[alerta] E-mail enviado para $remetente." -ForegroundColor Green
 } catch {

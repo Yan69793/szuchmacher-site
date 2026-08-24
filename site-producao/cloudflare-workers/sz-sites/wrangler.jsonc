@@ -43,8 +43,15 @@
   // registrado que nao ha URL publica de preview para este Worker.
   "workers_dev": false,
   "preview_urls": false,
+  // Dia da semana aqui NAO e Unix cron. A Cloudflare usa numeracao estilo Quartz,
+  // 1 = domingo e 7 = sabado, documentado em workers/configuration/cron-triggers.
+  // Por isso o antigo "0 3 * * 1" agendava DOMINGO 03:00 UTC, nao segunda: os
+  // carimbos de macro-cron-last em 16/08, 23/08 e o vazio de 24/08 fecham com isso.
+  // MON e a forma sem ambiguidade e e o que a propria doc recomenda escrever.
+  // Trocar aqui, nunca so no painel: a rotina de publicacao das 08:00 redeploya e
+  // reescreve o schedule a partir deste arquivo.
   "triggers": {
-    "crons": ["0 3 * * 1"]
+    "crons": ["0 3 * * MON"]
   },
   "observability": {
     "enabled": true,

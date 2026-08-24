@@ -68,10 +68,10 @@ python scripts/sync_relatorio_cache.py YYYYMMDD
 ```
 
 A task `Szuchmacher-FechamentoDiario` e as outras tasks com prefixo
-`Szuchmacher-` que não são `AgendaAgent` **pertencem ao projeto
-`relatorio-diario-szuchmacher`, não a este**. `MacroCron` local foi
-desabilitada em 15/08/2026. Procurar a causa de falha nas tasks dos outros
-projetos aqui é caminho errado.
+`Szuchmacher-` que não são `AgendaAgent` nem `MacroCronWatchdog`
+**pertencem ao projeto `relatorio-diario-szuchmacher`, não a este**.
+`MacroCron` local foi desabilitada em 15/08/2026. Procurar a causa de
+falha nas tasks dos outros projetos aqui é caminho errado.
 
 ### Cloud Routine — pipeline remoto de domingo
 
@@ -232,13 +232,14 @@ deste projeto estão na tabela abaixo. As demais são do
 | Task / gatilho | Schedule | O que faz |
 |----------------|----------|-----------|
 | `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` (escritor de produção) |
-| `Szuchmacher-CheckMacroCron-2026-08-24` | one-shot 24/08 09:00 BRT | Roda `check-macro-cron.ps1` para confirmar o disparo do cron nativo, ver Pendências #1 |
-| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * 1` UTC) | Regenera o macro (`forceRefresh` interno). Disparo sem confirmação desde 17/08, verificação armada para 24/08, ver Pendências #1 |
+| Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * MON` UTC) | Regenera o macro (`forceRefresh` interno). Primário. Disparo sem confirmação desde 17/08 |
+| `Szuchmacher-MacroCronWatchdog` | segunda 09:00 BRT | Lê `macro_cron_last.ts` em `/health`. Se o nativo não deixou carimbo nesta segunda, chama `run-macro-cron.ps1` e avisa por e-mail. Fora do scheduler da Cloudflare |
 | `Szuchmacher-MacroCron` | **desabilitada 15/08/2026** | Competia com o deploy das 08h, 429, alarme falso |
 
 Registro da agenda: `scripts/register-agenda-task.ps1`.
-`register-macro-task.ps1` só desabilita a task local, não a recria.
-`register-all-automation.ps1` registra a agenda e garante o MacroCron desligado.
+`register-macro-task.ps1` só desabilita a MacroCron antiga, não a recria.
+`register-macro-watchdog.ps1` registra o watchdog semanal e apaga o one-shot `Szuchmacher-CheckMacroCron-2026-08-24`.
+`register-all-automation.ps1` registra agenda + watchdog e garante a MacroCron desligada.
 
 **De outros projetos (não mexer aqui):**
 
@@ -337,19 +338,18 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Verificação do disparo de 24/08 armada.** A task one-shot
-   `Szuchmacher-CheckMacroCron-2026-08-24` roda segunda 24/08 09:00 BRT o
-   `scripts/check-macro-cron.ps1`, que compara `macro_cron_last.ts` em
-   `/health` com 24/08 03:00 UTC numa janela de 2h e grava OK/FAIL em
-   `logs/check-macro-cron.log`. Só o dispatcher escreve esse registro
-   (`runScheduledMacro`, `src/index.js:291` e `:304`), deploy e refresh via
-   `cron=1` não tocam nele. A janela de 2h prende o OK ao disparo específico
-   de 24/08, não ao de outra segunda, e a checagem confirma disparo com
-   refresh bem-sucedido, o `ok` precisa ser true. Se a máquina estiver
-   desligada às 09:00, rodar o script manualmente quando abrir. Se der FAIL,
-   antes de abrir caso no suporte Cloudflare, conferir eventos `origin=cron`
-   no Observability do `sz-sites`. Depois de 24/08, mover este item para
-   Resolvidas com a evidência do log.
+1. **Cron nativo do macro ainda sem prova de disparo automático.** Watchdog
+   semanal no ar desde 22/08: `Szuchmacher-MacroCronWatchdog` (segunda 09:00
+   BRT) roda `scripts/check-macro-cron.ps1`, compara `macro_cron_last.ts` em
+   `/health` com a segunda mais recente 03:00 UTC ±2 h e, se o carimbo não
+   cair na janela, dispara `run-macro-cron.ps1` (reserva HTTP) e e-mail.
+   Só o dispatcher escreve o carimbo (`runScheduledMacro`). Refresh via
+   `cron=1` não toca. One-shot `CheckMacroCron-2026-08-24` foi substituída
+   por essa task. Primeira prova real: 24/08 09:00. Se a máquina estiver
+   desligada, `StartWhenAvailable` dispara no boot. Se o nativo falhar de
+   novo, a reserva segura o painel e o e-mail pede caso no suporte CF
+   (eventos `origin=cron` no Observability). Não meter essa checagem no
+   `validar-producao.ps1` (portão de deploy).
 2. **CSP sem unsafe-inline** (refatoração grande, precisa de escopo próprio).
 3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
    próprio).
@@ -359,16 +359,37 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    quando houver login do cPanel resolve também o P3-15 (calendários 2026
    hardcoded). Sem risco operacional enquanto isso.
 
+### Resolvidas em 2026-08-24
+
+- **Cron nativo do macro disparava domingo, não segunda. Causa raiz fechada.**
+  A Cloudflare numera dia da semana como Quartz, `1` = domingo e `7` = sábado,
+  não como Unix cron. Doc oficial em `workers/configuration/cron-triggers`, com
+  nota explícita e o exemplo `0 17 * * sun` equivalente a `0 17 * * 1`. Logo o
+  schedule `0 3 * * 1` do `wrangler.jsonc` agendava **domingo 03:00 UTC**. Os
+  três carimbos batem sem sobra: disparo em 16/08 e 23/08 (domingos), janela de
+  segunda 24/08 vazia. O Worker nunca ficou mudo, só nunca foi agendado para
+  segunda. Corrigido para `0 3 * * MON` no `wrangler.jsonc`, com o fallback do
+  `index.js`, o comparador do `check-macro-cron.ps1` e os textos de registro
+  alinhados. Primeira prova real na segunda 31/08 09:00 BRT.
+  A mudança tem que morar no `wrangler.jsonc`: a rotina de publicação das 08:00
+  redeploya e reescreve o schedule, então ajuste feito só no painel volta atrás.
+- **`check-macro-cron.ps1` afirmava regeneração que não houve.**
+  `run-macro-cron.ps1` sai 0 tanto em regeneração real quanto no SOFT-OK de
+  rate limit. Em 24/08 o watchdog logou `reserva HTTP regenerou` depois de
+  quatro tentativas 429/503. O painel estava fresco por causa do deploy das
+  08:00, não da reserva. O bloco agora relê `/health` e registra o
+  `macro_cache` real em vez da alegação.
+
 ### Resolvidas em 2026-08-19
 
-- **Cron nativo do macro: diagnóstico fechado, verificação armada.**
-  Consolidou os itens 1 e 2 antigos. Config verificada correta via API
-  Cloudflare em 17/08 (schedule `0 3 * * 1` registrado no `sz-sites`,
-  `scheduled(event, env, ctx)` no código deployado), cascata LLM, chave
-  OpenRouter e `CRON_SECRET` provados funcionando. O que restava em dúvida
-  era só o despacho do Cloudflare, e é exatamente isso que o
-  `check-macro-cron.ps1` verifica em 24/08. Evidência completa do
-  diagnóstico em `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
+- **Cron nativo do macro: cascata e credenciais provadas.**
+  Consolidou os itens 1 e 2 antigos. Verificado via API Cloudflare em 17/08 que
+  o schedule estava registrado no `sz-sites` e o `scheduled(event, env, ctx)`
+  no código deployado, além de cascata LLM, chave OpenRouter e `CRON_SECRET`
+  funcionando. **A conclusão de que a config estava correta era falsa**: a
+  expressão registrada era `0 3 * * 1`, que na numeração da Cloudflare é
+  domingo. Ver a entrada de 24/08 acima. Evidência do que de fato foi provado
+  em `diagnosticos/DIAGNOSTICO-2026-08-17.md` §11.2 e §11.3.
 - **`CRON_SECRET` e rotina remota `szuchmacher-domingo`.** O caminho FTP da
   rotina (`deploy.sh`) não usa o segredo, e o `scheduled()` do Worker não
   passa pelo token. O único refresh com segredo é o dos scripts locais

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Yan Szuchmacher — Trajetória profissional</title>
+    <meta name="description" content="Trajetória profissional de Yan Szuchmacher: mais de 18 anos em private banking, corporate banking e wealth management. Currículo completo em PDF." />
+
+    <!-- Pagina de acesso por link direto. Fora do indice de busca e fora do menu do site. -->
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#f3f1ec" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Yan Szuchmacher — Trajetória profissional" />
+    <meta property="og:description" content="Mais de 18 anos em private banking, corporate banking e wealth management. R$ 2 bilhões sob gestão para clientes ultra high net worth." />
+    <meta property="og:site_name" content="Szuchmacher Consultoria" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Prata&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/sz-design.css?v=20260718c" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<style>
+/* ---------------------------------------------------------------
+   Pagina de trajetoria. Herda os tokens de /assets/sz-design.css.
+   Todo seletor local usa prefixo .cv- para nao colidir com o site.
+
+   O rodape das demais paginas do site e estilizado por CSS inline,
+   nao pelo design system. As regras .footer-* abaixo sao as mesmas
+   de honorarios.html, para o rodape ficar identico.
+   --------------------------------------------------------------- */
+
+:root {
+  --gold-dim: rgba(140, 107, 58, 0.12);
+}
+
+.cv-main { padding-top: 0; }
+
+/* --- Abertura --------------------------------------------------- */
+.cv-open {
+  border-bottom: 1px solid var(--line);
+  padding: clamp(48px, 8vw, 96px) 0 clamp(36px, 5vw, 60px);
+}
+.cv-open__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+.cv-open__name {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-display);
+  color: var(--navy);
+  margin: 14px 0 0;
+}
+.cv-open__thesis {
+  font-size: clamp(1.02rem, 1.6vw, 1.22rem);
+  line-height: 1.62;
+  color: var(--text);
+  max-width: 54ch;
+  margin: 22px 0 0;
+}
+.cv-open__thesis strong { color: var(--navy); font-weight: 600; }
+.cv-open__meta {
+  margin: 26px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+.cv-open__meta a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+.cv-open__meta a:hover { color: var(--gold); border-bottom-color: var(--gold-soft); }
+
+/* --- Bloco de download ------------------------------------------ */
+.cv-grab {
+  border: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+  padding: clamp(20px, 3vw, 30px);
+}
+.cv-grab__title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--gold);
+  margin: 0 0 6px;
+}
+.cv-grab__note {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+.cv-grab__row { display: flex; flex-direction: column; gap: 10px; }
+.cv-dl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  border: 1px solid var(--navy);
+  background: var(--navy);
+  color: #f3f1ec;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background .2s var(--ease-out), color .2s var(--ease-out);
+}
+.cv-dl:hover { background: var(--navy-soft); }
+.cv-dl--alt { background: transparent; color: var(--navy); }
+.cv-dl--alt:hover { background: var(--surface); color: var(--navy); }
+.cv-dl__lang { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; opacity: .72; }
+
+/* --- Numeros ---------------------------------------------------- */
+.cv-figures {
+  border-bottom: 1px solid var(--line);
+  padding: clamp(30px, 4vw, 46px) 0;
+}
+.cv-figures__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(18px, 3vw, 40px);
+}
+.cv-fig__v {
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  line-height: 1;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+.cv-fig__l {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.45;
+}
+
+/* --- Trajetoria -------------------------------------------------- */
+.cv-track { padding: clamp(44px, 6vw, 76px) 0; }
+.cv-track__list { margin: 34px 0 0; }
+.cv-role {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 38px);
+  padding: 26px 0;
+  border-top: 1px solid var(--line);
+}
+.cv-role:last-child { border-bottom: 1px solid var(--line); }
+.cv-role__when {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  padding-top: 5px;
+  white-space: nowrap;
+}
+.cv-role__firm {
+  font-family: var(--font-serif);
+  font-size: 1.22rem;
+  color: var(--navy);
+  margin: 0;
+  line-height: 1.25;
+}
+.cv-role__title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 5px 0 0;
+}
+.cv-role__place {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 6px 0 0;
+  text-transform: uppercase;
+}
+.cv-role__points { margin: 14px 0 0; padding: 0; list-style: none; }
+.cv-role__points li {
+  position: relative;
+  padding-left: 17px;
+  margin-bottom: 7px;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: var(--text);
+}
+.cv-role__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 1px;
+  background: var(--gold-soft);
+}
+
+/* --- Sistemas em producao (elemento-assinatura) ------------------ */
+.cv-built {
+  background: var(--navy);
+  color: #e8e4dc;
+  padding: clamp(48px, 7vw, 86px) 0;
+}
+.cv-built .cv-sec__eyebrow { color: var(--gold-bright); }
+.cv-built .cv-sec__title { color: #f3f1ec; }
+.cv-built__lead {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #b9b3a8;
+  max-width: 62ch;
+  margin: 16px 0 0;
+}
+.cv-built__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(264px, 1fr));
+  gap: 14px;
+  margin-top: 38px;
+}
+.cv-sys {
+  background: var(--navy);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 24px 22px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 172px;
+  transition: background .22s var(--ease-out), border-color .22s var(--ease-out);
+}
+.cv-sys:hover, .cv-sys:focus-visible {
+  background: #16233a;
+  border-color: var(--gold-soft);
+}
+.cv-sys__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cv-sys__name {
+  font-family: var(--font-serif);
+  font-size: 1.14rem;
+  color: #f3f1ec;
+  line-height: 1.2;
+}
+.cv-sys__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  white-space: nowrap;
+}
+.cv-sys__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+}
+.cv-sys__desc {
+  font-size: 0.85rem;
+  line-height: 1.56;
+  color: #a9a396;
+  margin: 13px 0 0;
+  flex-grow: 1;
+}
+.cv-sys__url {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--gold-soft);
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.cv-sys__arrow { transition: transform .22s var(--ease-out); }
+.cv-sys:hover .cv-sys__arrow, .cv-sys:focus-visible .cv-sys__arrow { transform: translateX(4px); }
+
+/* --- Blocos finais ---------------------------------------------- */
+.cv-closing { padding: clamp(44px, 6vw, 76px) 0; }
+.cv-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+  gap: clamp(24px, 4vw, 52px);
+  margin-top: 30px;
+}
+.cv-col__h {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--gold);
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--line-strong);
+  margin: 0 0 14px;
+}
+.cv-col__list { margin: 0; padding: 0; list-style: none; }
+.cv-col__list li {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text);
+  padding: 7px 0;
+}
+.cv-col__list li span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* --- Chamada final ---------------------------------------------- */
+.cv-end {
+  border-top: 1px solid var(--line-strong);
+  padding: clamp(40px, 5vw, 64px) 0 clamp(48px, 6vw, 80px);
+}
+.cv-end__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(22px, 4vw, 48px);
+  align-items: center;
+}
+.cv-end__t {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.8vw, 2rem);
+  color: var(--navy);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.cv-end__s { font-size: 0.94rem; color: var(--muted); margin: 11px 0 0; line-height: 1.6; }
+.cv-end__actions { display: flex; flex-wrap: wrap; gap: 11px; }
+
+/* --- Cabecalho de secao ----------------------------------------- */
+.cv-sec__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--gold);
+  margin: 0 0 12px;
+}
+.cv-sec__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  color: var(--navy);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* --- Responsivo -------------------------------------------------- */
+@media (max-width: 900px) {
+  .cv-open__grid { grid-template-columns: 1fr; }
+  .cv-figures__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .cv-end__grid { grid-template-columns: 1fr; align-items: start; }
+}
+@media (max-width: 620px) {
+  .cv-role { grid-template-columns: 1fr; gap: 10px; }
+  .cv-role__when { padding-top: 0; }
+}
+
+/* --- Acessibilidade --------------------------------------------- */
+.cv-sys:focus-visible,
+.cv-dl:focus-visible,
+.cv-open__meta a:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-sys, .cv-sys__arrow, .cv-dl { transition: none; }
+  .cv-sys:hover .cv-sys__arrow { transform: none; }
+}
+
+/* --- Rodape (espelha o CSS inline das demais paginas) ------------ */
+footer { background: var(--navy); border-top: 1px solid var(--line-strong); }
+.footer-inner { max-width: 1400px; margin: 0 auto; padding: 60px 60px 40px; display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.4fr; gap: 48px; }
+.footer-desc { font-size: 13px; color: rgba(240,238,226,0.72); line-height: 1.7; margin-bottom: 20px; max-width: 300px; }
+.footer-col-title { font-family: var(--font-mono); font-size: 0.64rem; font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--gold-bright); margin-bottom: 18px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+.footer-links a { font-size: 13px; color: rgba(240,238,226,0.74); text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; }
+.footer-links a:hover { color: #f4eee2; }
+.footer-site-link { display: inline-flex !important; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(140,107,58,0.3); border-radius: 0; color: var(--gold) !important; font-size: 12px; font-weight: 600; transition: all 0.2s !important; }
+.footer-site-link:hover { background: var(--gold-dim) !important; border-color: var(--gold) !important; }
+.footer-bottom { max-width: 1400px; margin: 0 auto; padding: 20px 60px; border-top: 1px solid rgba(240,238,226,0.12); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.footer-bottom-left, .footer-bottom-right { font-size: 12px; color: rgba(240,238,226,0.66); }
+
+@media (max-width: 1024px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; padding: 48px 32px 32px; gap: 36px; }
+  .footer-bottom { padding: 16px 32px; }
+}
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr; padding: 36px 20px 24px; gap: 28px; }
+  .footer-desc { max-width: 100%; }
+  .footer-bottom { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+/* --- Impressao --------------------------------------------------- */
+@media print {
+  header, footer, .cv-grab, .cv-end__actions { display: none; }
+  .cv-built { background: #fff; color: #000; }
+  .cv-built .cv-sec__title, .cv-sys__name { color: #000; }
+  .cv-sys, .cv-built__grid { background: #fff; border-color: #ccc; }
+  .cv-sys__desc, .cv-built__lead { color: #333; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+<!-- HEADER — mesma estrutura das demais paginas do site -->
+<header>
+  <div class="container header-row">
+    <a class="ysz-lockup" href="index.html" translate="no" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+      <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
+      <span class="ysz-lockup__type">
+        <span class="ysz-lockup__firm">Szuchmacher</span>
+        <span class="ysz-lockup__descriptor">Consultoria</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="siteNav" aria-label="Principal">
+      <a href="honorarios.html">Honorários</a>
+      <a href="assinatura.html">Assinatura</a>
+      <a href="relatorios.html">Relatórios</a>
+      <a href="https://multi-assets.com" target="_blank" rel="noopener">MultiAsset</a>
+      <a href="index.html#contato">Contato</a>
+    </nav>
+
+    <a href="#baixar" class="nav-cta">Baixar currículo</a>
+
+    <button class="mobile-menu-toggle" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="conteudo" class="cv-main">
+
+  <!-- ABERTURA -->
+  <section class="cv-open">
+    <div class="container">
+      <div class="cv-open__grid">
+        <div>
+          <p class="cv-sec__eyebrow">Trajetória profissional</p>
+          <h1 class="cv-open__name">Yan Szuchmacher</h1>
+          <p class="cv-open__thesis">
+            Mais de 18 anos em private banking, corporate banking e wealth management em bancos
+            internacionais. Até agosto de 2026 na Mirabaud, onde <strong>co-liderou a abertura da
+            operação brasileira</strong> e geriu R$ 2 bilhões para mais de 100 clientes ultra high
+            net worth. Economista, CFP desde 2017.
+          </p>
+          <p class="cv-open__meta">
+            <span>Rio de Janeiro, Brasil</span>
+            <a href="mailto:yan@szuchmacher.com.br">yan@szuchmacher.com.br</a>
+            <a href="tel:+5521981088992">+55 21 98108-8992</a>
+            <a href="https://linkedin.com/in/yan-szuchmacher" target="_blank" rel="noopener">LinkedIn</a>
+          </p>
+        </div>
+
+        <div class="cv-grab" id="baixar">
+          <p class="cv-grab__title">Currículo completo</p>
+          <p class="cv-grab__note">
+            Duas páginas, em PDF, com a trajetória detalhada. Escolha o idioma.
+          </p>
+          <div class="cv-grab__row">
+            <a class="cv-dl" href="/Yan_Szuchmacher_CV_PT.pdf" download>
+              <span>Baixar currículo</span>
+              <span class="cv-dl__lang">PT-BR</span>
+            </a>
+            <a class="cv-dl cv-dl--alt" href="/Yan_Szuchmacher_CV_EN.pdf" download>
+              <span>Download CV</span>
+              <span class="cv-dl__lang">EN</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMEROS -->
+  <section class="cv-figures">
+    <div class="container">
+      <div class="cv-figures__grid">
+        <div>
+          <div class="cv-fig__v">R$ 2 bi</div>
+          <div class="cv-fig__l">Sob gestão<br>na Mirabaud</div>
+        </div>
+        <div>
+          <div class="cv-fig__v">100+</div>
+          <div class="cv-fig__l">Clientes<br>ultra high net worth</div>
+        </div>
+        <div>
+          <div class="cv-fig__v">18+</div>
+          <div class="cv-fig__l">Anos em<br>bancos internacionais</div>
+        </div>
+        <div>
+          <div class="cv-fig__v">4</div>
+          <div class="cv-fig__l">Jurisdições<br>BR · CH · EUA · Cayman</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAJETORIA -->
+  <section class="cv-track">
+    <div class="container">
+      <p class="cv-sec__eyebrow">Experiência</p>
+      <h2 class="cv-sec__title">Uma carreira construída dentro de bancos internacionais</h2>
+
+      <div class="cv-track__list">
+
+        <article class="cv-role">
+          <div class="cv-role__when">2022 — 2026</div>
+          <div>
+            <h3 class="cv-role__firm">Mirabaud</h3>
+            <p class="cv-role__title">Private Banking, Brasil</p>
+            <p class="cv-role__place">Rio de Janeiro e São Paulo</p>
+            <ul class="cv-role__points">
+              <li>Co-liderou a abertura da operação brasileira ao lado do presidente do Crédit Agricole e de dois gerentes corporate, com mudança para São Paulo para montar o escritório.</li>
+              <li>Geriu R$ 2 bilhões em ativos sob gestão para mais de 100 clientes ultra high net worth.</li>
+              <li>Estruturou soluções patrimoniais nas jurisdições Brasil, Suíça, Estados Unidos e Cayman.</li>
+              <li>Desenhou planos de preservação e sucessão para famílias empresárias.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cv-role">
+          <div class="cv-role__when">2020 — 2022</div>
+          <div>
+            <h3 class="cv-role__firm">Crédit Agricole CIB</h3>
+            <p class="cv-role__title">Gerente de Private Banking</p>
+            <p class="cv-role__place">Rio de Janeiro</p>
+            <ul class="cv-role__points">
+              <li>Liderou o advisory de Private Banking no Rio de Janeiro.</li>
+              <li>Retornou em 2020 para apoiar a venda da unidade Brasil ao Banco Safra.</li>
+              <li>Construiu e geriu carteira de clientes com mais de R$ 10 milhões cada.</li>
+              <li>Estruturou operações de M&amp;A para empresas familiares.</li>
+              <li>Lançou produtos exclusivos para clientes UHNW com as mesas de capital markets e crédito estruturado.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cv-role">
+          <div class="cv-role__when">2018 — 2020</div>
+          <div>
+            <h3 class="cv-role__firm">Itaú BBA</h3>
+            <p class="cv-role__title">Gerente de Real Estate</p>
+            <p class="cv-role__place">São Paulo</p>
+            <ul class="cv-role__points">
+              <li>Originou e estruturou crédito imobiliário corporativo.</li>
+              <li>Montou fundos imobiliários e operações de crédito estruturado.</li>
+              <li>Geriu R$ 800 milhões em crédito imobiliário.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cv-role">
+          <div class="cv-role__when">2014 — 2018</div>
+          <div>
+            <h3 class="cv-role__firm">Itaú BBA</h3>
+            <p class="cv-role__title">Assistente Corporate Ultra High</p>
+            <p class="cv-role__place">São Paulo</p>
+            <ul class="cv-role__points">
+              <li>Apoiou a cobertura das maiores contas corporativas do banco.</li>
+              <li>Atuou em análise de crédito e estruturação de operações com bankers seniores.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cv-role">
+          <div class="cv-role__when">2010 — 2014</div>
+          <div>
+            <h3 class="cv-role__firm">Crédit Agricole CIB</h3>
+            <p class="cv-role__title">Analista de Advisory</p>
+            <p class="cv-role__place">Rio de Janeiro</p>
+            <ul class="cv-role__points">
+              <li>Modelou e estruturou operações de M&amp;A, incluindo valuations.</li>
+              <li>Apoiou clientes corporate em transações cross-border.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cv-role">
+          <div class="cv-role__when">2009 — 2010</div>
+          <div>
+            <h3 class="cv-role__firm">Crédit Agricole CIB</h3>
+            <p class="cv-role__title">Estagiário</p>
+            <p class="cv-role__place">Rio de Janeiro</p>
+            <ul class="cv-role__points">
+              <li>Estágio em investment banking, com exposição a operações internacionais e mercado de capitais.</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SISTEMAS EM PRODUCAO -->
+  <section class="cv-built">
+    <div class="container">
+      <p class="cv-sec__eyebrow">Plataformas próprias</p>
+      <h2 class="cv-sec__title">Não precisa acreditar na minha palavra. Abra e use.</h2>
+      <p class="cv-built__lead">
+        Sistemas que concebi, arquitetei e opero, todos no ar agora. Cada um resolve um problema
+        que encontrei atendendo cliente e que nenhuma ferramenta de mesa resolvia.
+      </p>
+
+      <div class="cv-built__grid">
+
+        <a class="cv-sys" href="https://vixradar.com" target="_blank" rel="noopener">
+          <div class="cv-sys__top">
+            <span class="cv-sys__name">VIX Radar</span>
+            <span class="cv-sys__live"><span class="cv-sys__dot" aria-hidden="true"></span>No ar</span>
+          </div>
+          <p class="cv-sys__desc">
+            Monitoramento automatizado de eventos de crédito em renda fixa corporativa brasileira,
+            com mais de 100 emissores em 13 setores e curadoria por inteligência artificial.
+          </p>
+          <span class="cv-sys__url">vixradar.com <span class="cv-sys__arrow" aria-hidden="true">→</span></span>
+        </a>
+
+        <a class="cv-sys" href="https://atlas.multi-assets.com" target="_blank" rel="noopener">
+          <div class="cv-sys__top">
+            <span class="cv-sys__name">Atlas</span>
+            <span class="cv-sys__live"><span class="cv-sys__dot" aria-hidden="true"></span>No ar</span>
+          </div>
+          <p class="cv-sys__desc">
+            Verificação mensal de carteiras antes de o relatório chegar ao cliente: concilia
+            patrimônio, aponta o que não fecha e mostra o custo total sobre o patrimônio.
+            Demonstração aberta, sem cadastro.
+          </p>
+          <span class="cv-sys__url">atlas.multi-assets.com <span class="cv-sys__arrow" aria-hidden="true">→</span></span>
+        </a>
+
+        <a class="cv-sys" href="https://multi-assets.com" target="_blank" rel="noopener">
+          <div class="cv-sys__top">
+            <span class="cv-sys__name">MultiAsset</span>
+            <span class="cv-sys__live"><span class="cv-sys__dot" aria-hidden="true"></span>No ar</span>
+          </div>
+          <p class="cv-sys__desc">
+            Análise fundamentalista, leitura macro e simulação de portfólio multimercado,
+            integrando juros, câmbio, equities, crédito e commodities.
+          </p>
+          <span class="cv-sys__url">multi-assets.com <span class="cv-sys__arrow" aria-hidden="true">→</span></span>
+        </a>
+
+        <a class="cv-sys" href="https://arvore.ia.br" target="_blank" rel="noopener">
+          <div class="cv-sys__top">
+            <span class="cv-sys__name">A Árvore das IAs</span>
+            <span class="cv-sys__live"><span class="cv-sys__dot" aria-hidden="true"></span>No ar</span>
+          </div>
+          <p class="cv-sys__desc">
+            Atlas interativo de 68 ferramentas de inteligência artificial, com recomendação
+            por objetivo.
+          </p>
+          <span class="cv-sys__url">arvore.ia.br <span class="cv-sys__arrow" aria-hidden="true">→</span></span>
+        </a>
+
+        <a class="cv-sys" href="https://bf-gestao-vendas.pages.dev" target="_blank" rel="noopener">
+          <div class="cv-sys__top">
+            <span class="cv-sys__name">B&amp;F Gestão de Vendas</span>
+            <span class="cv-sys__live"><span class="cv-sys__dot" aria-hidden="true"></span>No ar</span>
+          </div>
+          <p class="cv-sys__desc">
+            Gestão de vendas com fluxo de caixa diário, lançamentos e fechamento mensal,
+            em área autenticada.
+          </p>
+          <span class="cv-sys__url">bf-gestao-vendas.pages.dev <span class="cv-sys__arrow" aria-hidden="true">→</span></span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMACAO, CERTIFICACAO, IDIOMAS, COMPETENCIAS -->
+  <section class="cv-closing">
+    <div class="container">
+      <p class="cv-sec__eyebrow">Formação e competências</p>
+      <h2 class="cv-sec__title">O que sustenta o trabalho</h2>
+
+      <div class="cv-cols">
+        <div>
+          <h3 class="cv-col__h">Formação</h3>
+          <ul class="cv-col__list">
+            <li>Bacharel em Economia<span>IBMEC Rio de Janeiro · 2005 a 2009</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="cv-col__h">Certificação</h3>
+          <ul class="cv-col__list">
+            <li>CFP, Certified Financial Planner<span>Planejar · desde 2017</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="cv-col__h">Idiomas</h3>
+          <ul class="cv-col__list">
+            <li>Português<span>Nativo</span></li>
+            <li>Inglês<span>Fluente, uso institucional diário</span></li>
+            <li>Espanhol<span>Intermediário</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="cv-col__h">Áreas de atuação</h3>
+          <ul class="cv-col__list">
+            <li>Private Banking<span>Fortunas acima de R$ 10 milhões</span></li>
+            <li>Family Office<span>Single e multi-family offices</span></li>
+            <li>Estruturação patrimonial<span>Sucessão, governança, proteção de ativos</span></li>
+            <li>Compliance<span>CVM, BACEN, BIS, FATCA, CRS, AML e KYC</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAMADA FINAL -->
+  <section class="cv-end">
+    <div class="container">
+      <div class="cv-end__grid">
+        <div>
+          <h2 class="cv-end__t">Vamos conversar</h2>
+          <p class="cv-end__s">
+            Retorno no mesmo dia útil. Se preferir o currículo em arquivo, o PDF está logo ao lado.
+          </p>
+        </div>
+        <div class="cv-end__actions">
+          <a class="btn" href="mailto:yan@szuchmacher.com.br">Enviar e-mail</a>
+          <a class="btn btn-outline" href="/Yan_Szuchmacher_CV_PT.pdf" download>Baixar PDF</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <a href="index.html" class="ysz-stack ysz-stack--dark" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+                <span class="ysz-stack__icon" aria-hidden="true">YS</span>
+                <span class="ysz-stack__type">
+                    <span class="ysz-stack__firm">Szuchmacher</span>
+                    <span class="ysz-stack__descriptor">Consultoria</span>
+                </span>
+            </a>
+            <p class="footer-desc">Consultoria patrimonial independente no modelo fee fixo. Honorário profissional, sem comissão de produto e sem conflito de interesse.</p>
+        </div>
+        <div class="footer-col">
+            <div class="footer-col-title">Navegação</div>
+            <ul class="footer-links">
+                <li><a href="index.html">Consultoria</a></li>
+                <li><a href="relatorios.html">Relatórios</a></li>
+                <li><a href="honorarios.html">Honorários</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <div class="footer-col-title">A consultoria</div>
+            <ul class="footer-links">
+                <li><a href="index.html#autoridade">Quem conduz</a></li>
+                <li><a href="index.html#ofertas">O que entrego</a></li>
+                <li><a href="index.html#contato">Agendar diagnóstico</a></li>
+                <li><a href="privacidade.html">Política de privacidade</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <div class="footer-col-title">Contato</div>
+            <ul class="footer-links">
+                <li><a href="mailto:yan@szuchmacher.com.br">yan@szuchmacher.com.br</a></li>
+                <li><a href="tel:+5521981088992">21-98108-8992</a></li>
+                <li style="margin-top:16px;"><a href="index.html" class="footer-site-link">szuchmacher.com.br</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">© 2026 Szuchmacher Consultoria. Todos os direitos reservados.</div>
+        <div class="footer-bottom-right"><span>Rio de Janeiro, Brasil</span></div>
+    </div>
+</footer>
+
+<script src="/assets/sz-site.js?v=20260718"></script>
+</body>
+</html>
