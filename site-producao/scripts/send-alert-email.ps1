@@ -3,6 +3,9 @@
 # Lê credenciais de automacao-yan-os\.env (EMAIL_REMETENTE, EMAIL_SENHA, EMAIL_SMTP_HOST, EMAIL_SMTP_PORT).
 # Falha-soft: nunca lança exceção para o chamador — um problema no envio do alerta
 # não pode derrubar o script de automação que o disparou.
+# Retorna $true quando o e-mail saiu e $false em todo o resto (config ausente,
+# credencial faltando, erro de SMTP). Quem chama decide o que fazer, em geral
+# registrar no próprio log. O contrato fail-soft segue valendo, nunca lança.
 
 param(
     [Parameter(Mandatory = $true)][string]$Subject,
@@ -15,7 +18,7 @@ $ENV_FILE = Join-Path (Split-Path -Parent $ROOT) 'automacao-yan-os\.env'
 try {
     if (-not (Test-Path $ENV_FILE)) {
         Write-Host "[alerta] .env não encontrado em $ENV_FILE — alerta não enviado." -ForegroundColor Yellow
-        return
+        return $false
     }
 
     $cfg = @{}
@@ -41,7 +44,7 @@ try {
 
     if (-not $remetente -or -not $senha) {
         Write-Host "[alerta] EMAIL_REMETENTE/EMAIL_SENHA ausentes — alerta não enviado." -ForegroundColor Yellow
-        return
+        return $false
     }
 
     # Gmail App Password vem com espacos. SmtpClient + senha da conta = 5.7.0.
@@ -65,6 +68,8 @@ try {
     $smtp.Dispose()
 
     Write-Host "[alerta] E-mail enviado para $remetente." -ForegroundColor Green
+    return $true
 } catch {
     Write-Host "[alerta] ERRO ao enviar e-mail de alerta: $($_.Exception.Message)" -ForegroundColor Yellow
+    return $false
 }
