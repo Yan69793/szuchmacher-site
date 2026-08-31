@@ -3439,6 +3439,7 @@ for (var ti = 0; ti < EVTYPES.length; ti++) {
         if (type === 'click') selectGeoScenario(k.slice(4), el);
         return;
       }
+      if (k && k.charAt(0) === 'e') k = k.slice(1);
       var rec = EVENTS[k];
       if (rec && rec.t === type) rec.f.call(el, event);
     });

@@ -87,6 +87,53 @@ function Copy-Tree([string]$Src, [string]$Dst, [string]$Filter) {
     return $true
 }
 
+# Guarda do data-ev. A Fase B do CSP trocou os handlers inline do
+# multiasset-app.html por delegacao via data-ev, mas um descasamento de chave
+# (HTML `eN` x mapa `N`) deixou os 109 handlers mortos sem erro visivel.
+# Este check confere, antes do deploy, que todo data-ev="eN" do HTML tem um
+# handler 'N' no mapa EVENTS do multi-app-2.js e vice-versa. Descasar reprova
+# o build e o deploy nao roda, igual ao tratamento de arquivo sumido.
+function Test-MultiDataEv([string]$HtmlPath, [string]$JsPath) {
+    $html = [IO.File]::ReadAllText($HtmlPath)
+    $js   = [IO.File]::ReadAllText($JsPath)
+    $htmlKeys = @{}
+    foreach ($m in [regex]::Matches($html, 'data-ev="(e\d+)"')) {
+        $htmlKeys[$m.Groups[1].Value] = $true
+    }
+    $jsKeys = @{}
+    foreach ($m in [regex]::Matches($js, "(?m)^\s*'(\d+)':\s*\{\s*t:")) {
+        $jsKeys[$m.Groups[1].Value] = $true
+    }
+    $problemas = @()
+    foreach ($hk in $htmlKeys.Keys) {
+        $n = $hk.Substring(1)
+        if (-not $jsKeys.ContainsKey($n)) { $problemas += "HTML data-ev '$hk' sem handler '$n' no EVENTS" }
+    }
+    foreach ($jk in $jsKeys.Keys) {
+        $e = "e$jk"
+        if (-not $htmlKeys.ContainsKey($e)) { $problemas += "EVENTS '$jk' sem data-ev '$e' no HTML" }
+    }
+    return $problemas
+}
+
+# Guarda do class fundido. O transform da Fase B (estilo inline -> classes
+# utilitarias) colou `class=` na tag ou no atributo anterior em dezenas de
+# pontos do multiasset-app.html: `<pclass=`, `<divclass=`, `href="..."class=`.
+# Isso vira tag desconhecida para o parser e a classe cai, quebrando layout
+# sem 404 nem erro de console. Este check reprova o build se achar a cola,
+# no mesmo padrao de arquivo sumido e do descasamento data-ev.
+function Test-FusedAttrs([string]$HtmlPath) {
+    $html = [IO.File]::ReadAllText($HtmlPath)
+    $problemas = @()
+    foreach ($m in [regex]::Matches($html, '<([a-z][a-z0-9]*)class=')) {
+        $problemas += "tag '<$($m.Groups[1].Value)>' fundida com class"
+    }
+    foreach ($m in [regex]::Matches($html, '"class=')) {
+        $problemas += 'atributo fundido com class (valor"class=)'
+    }
+    return $problemas
+}
+
 Write-Host "`n=== BUILD CLOUDFLARE PUBLIC ===" -ForegroundColor Cyan
 Reset-Dir $OUT
 New-Item -ItemType Directory -Path $SZ -Force | Out-Null
@@ -207,10 +254,17 @@ $obrigatorios = @(
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })
 
-if ($script:Faltando.Count -gt 0 -or $ausentes.Count -gt 0) {
+# Guarda do data-ev e do class fundido: le do resultado em public/, mesmo
+# criterio do $obrigatorios.
+$multiDataEvProblemas = @(Test-MultiDataEv (Join-Path $MULTI 'index.html') (Join-Path $MULTI 'assets\multi-app-2.js'))
+$multiFusedProblemas = @(Test-FusedAttrs (Join-Path $MULTI 'index.html'))
+
+if ($script:Faltando.Count -gt 0 -or $ausentes.Count -gt 0 -or $multiDataEvProblemas.Count -gt 0 -or $multiFusedProblemas.Count -gt 0) {
     Write-Host "`n=== BUILD REPROVADO ===" -ForegroundColor Red
-    foreach ($f in $script:Faltando) { Write-Host "  fonte ausente:  $f" -ForegroundColor Red }
-    foreach ($f in $ausentes)        { Write-Host "  saida ausente:  $f" -ForegroundColor Red }
+    foreach ($f in $script:Faltando)      { Write-Host "  fonte ausente:  $f" -ForegroundColor Red }
+    foreach ($f in $ausentes)             { Write-Host "  saida ausente:  $f" -ForegroundColor Red }
+    foreach ($p in $multiDataEvProblemas) { Write-Host "  data-ev:  $p" -ForegroundColor Red }
+    foreach ($p in $multiFusedProblemas)  { Write-Host "  class:  $p" -ForegroundColor Red }
     throw "Build incompleto. Deploy abortado para nao publicar 404 em producao."
 }
 
