@@ -16,38 +16,6 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 
 ---
 
-## Mapa de arquivos
-
-| Arquivo | Função |
-|---------|--------|
-| `index.html` | Home institucional (~54 KB) |
-| `relatorios.html` | Página de relatórios e PDFs |
-| `multiasset.html` | Landing legada — em szuchmacher.com.br responde 301 para multi-assets.com |
-| `consultoria.html` | Página de consultoria patrimonial — servida em `multi-assets.com/consultoria` |
-| `multiasset-app.html` | App completo da plataforma (~275 KB) |
-| `honorarios.html` | Tabela de honorários |
-| `assinatura.html` | Página de assinatura |
-| `privacidade.html` | Política de privacidade |
-| `.htaccess` | Headers de segurança (CSP, HSTS, GZIP, redirects) |
-| `prices.php` | Endpoint: ouro, prata, platina, BTC ao vivo |
-| `macro_api.php` | Endpoint LLM via OpenRouter — 200, secret `OPENROUTER_KEY` no Worker |
-| `macro_data.json` | Fallback estático do macro quando `macro_api.php` falha |
-| `agenda-server.php` | Endpoint: agenda de eventos econômicos |
-| `agenda-data.json` | Cache local da agenda |
-| `market-data.php` | Endpoint: Ibovespa, S&P 500, WTI, Treasury 10y via Yahoo Finance |
-| `market_data_cache.json` | Cache local do market-data.php (TTL 10 min, gerado automaticamente) |
-| `assets/macro-panel.js` | Script que popula o painel macro no `index.html` (`macro-panel-live.js` é variante morta, sem referência em HTML) |
-| `assets/sz-config.js` | Configuração central: GA4_ID, CLARITY_ID, FORMSPREE_ID |
-| `assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX) — funcional |
-| `assets/agenda.php` | Agenda ao vivo — funcional |
-| `_arquivo/` | Backups e snapshots históricos — **não editar**, ignorado pelo git (só existe em disco) |
-| `diagnosticos/` | Registros de diagnóstico de produção |
-| `scripts/` | Scripts de deploy e manutenção |
-| `cloudflare-workers/sz-sites/` | Worker de produção (HTML estático + APIs PHP portadas) |
-| `cloudflare-workers/sz-sites/src/handlers/fechamento.js` | Proxy `/fechamento/:slug` → Worker briefing (leitura via site) |
-
----
-
 ## Dependências cruzadas
 
 ### `relatorio-diario-szuchmacher` — widget de fechamento na home
@@ -102,40 +70,8 @@ Não copiar a paleta de outros produtos. Copiar o **nível de craft**:
 espaço generoso, hairline, peso tipográfico contido (serif 400), mono em
 labels, hover sem bounce, grids com gap 1px, `border-radius: 0`.
 
-### Paleta institucional (szuchmacher.com.br — `assets/sz-design.css`)
-
-| Variável | Valor | Uso |
-|----------|-------|-----|
-| `--bg` | `#f3f1ec` | Fundo geral (papel quente) |
-| `--surface` | `#ebe7e0` | Superfície alternada |
-| `--surface-soft` | `#f8f6f2` | Cards e superfícies suaves |
-| `--navy` | `#0c1524` | Primário — textos, CTAs, header dark |
-| `--navy-soft` | `#172338` | Navy secundário |
-| `--gold` | `#8c6b3a` | Acento, eyebrows |
-| `--gold-soft` / `--gold-bright` | `#a88850` / `#c4a46a` | Acento suave / dark sections |
-| `--text` | `#161c28` | Texto principal |
-| `--muted` | `#5c6574` | Secundário |
-| `--line` / `--line-strong` | rgba navy 0.09 / 0.14 | Hairlines |
-
 **multi-assets.com** (`multiasset-app.html`): shell **dark** próprio
 (`--bg #0a0c10`, ouro `#c4a46a`, texto `#e8e4d9`). Mesmo craft, paleta distinta.
-
-### Tipografia
-
-| Variável | Família | Pesos | Uso |
-|----------|---------|-------|-----|
-| `--font-serif` | Prata (site) / Playfair (multi) | **400** display | H1–H4, métricas |
-| `--font-sans` | Public Sans (site) / DM Sans (multi) | 400–500 | Corpo |
-| `--font-mono` | JetBrains Mono / DM Mono | 400–500 | Nav, labels, CTA |
-
-### Convenções de layout
-
-- `--max`: `1120px` (site) / `1280px` (multi app)
-- `--radius`: `0`
-- `.section`: `padding: 112px 0` (site)
-- `.eyebrow`: mono, `0.64rem`, `letter-spacing: 0.14–0.16em`, weight 500, ouro
-- Botões: mono uppercase, min-height 48px, sem shadow/lift
-- Cards/offers: preferir grid `gap: 1px` sobre caixas com sombra
 
 **Desvio de craft (peso 800/900, pill, glow, bounce) é regressão — corrigir antes de entregar.**
 
@@ -304,33 +240,6 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 
 ---
 
-## Endpoints
-
-| Endpoint | HTTP | Descrição |
-|----------|------|-----------|
-| `/assets/macro.php` | 200 ✅ | BCB SGS + Focus: Selic, IPCA, PTAX |
-| `/assets/agenda.php` | 200 ✅ | Agenda de eventos econômicos da semana |
-| `/prices.php` | 200 ✅ | Ouro, prata, platina, Bitcoin |
-| `/macro_api.php` | 200 ✅ | Narrativa macro via LLM. Cascata a frio chega a ~30 s; `macro_data.json` é o fallback |
-
----
-
-## Configuração central — `assets/sz-config.js`
-
-Único arquivo que contém IDs externos. Propagado automaticamente para todas as páginas.
-
-Para ativar GA4 e Clarity, substituir as linhas:
-
-```js
-window.SZ_GA_ID      = 'G-XXXXXXXXXX';   // Google Analytics 4 Measurement ID
-window.SZ_CLARITY_ID = 'XXXXXXXXXX';     // Microsoft Clarity Project ID
-// Formspree já configurado:
-window.SZ_FORMSPREE_ID = 'mojrayrl';
-```
-
-Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser tocado.
-
----
 
 ## Pendências abertas (prioridade)
 
