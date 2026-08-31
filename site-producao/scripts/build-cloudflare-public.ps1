@@ -21,6 +21,42 @@ function Reset-Dir([string]$Path) {
 # em 19/07/2026. Agora o build falha e o deploy nao chega a rodar.
 $script:Faltando = @()
 
+# Carimbo de versao por hash de conteudo. F5 cache-busting: o HTML referencia
+# /assets/X.css?v=<hash8>, onde hash e dos primeiros 8 hex do SHA256 do proprio
+# asset em public/. Quando o asset muda, a URL muda, e o navegador refaz o fetch
+# em vez de servir a copia antiga do cache. Quando nao muda, a URL fica estavel e
+# o cache e reaproveitado. Elimina o ?v= manual e a inconsistencia de versoes
+# esquecidas. Se o HTML referencia um asset que nao existe em public/, o build
+# falha, o mesmo tratamento de arquivo sumido do source.
+function Add-VersionStamps([string]$SiteDir, [string]$AssetsDir) {
+    $htmls = @(Get-ChildItem -Path $SiteDir -File | Where-Object {
+        $_.Extension -eq '.html' -or $_.Extension -eq ''
+    })
+    foreach ($h in $htmls) {
+        $content = [IO.File]::ReadAllText($h.FullName)
+        $pattern = '/assets/([A-Za-z0-9_.-]+\.(?:css|js))(\?[^"'']*)?'
+        if ([regex]::IsMatch($content, $pattern)) {
+            $hashCache = @{}
+            $new = [regex]::Replace($content, $pattern, {
+                param($m)
+                $name = $m.Groups[1].Value
+                if (-not $hashCache.ContainsKey($name)) {
+                    $asset = Join-Path $AssetsDir $name
+                    if (-not (Test-Path $asset)) {
+                        throw "Asset referenciado em HTML nao existe em public/: $name ($($h.FullName))"
+                    }
+                    $hashCache[$name] = (Get-FileHash $asset -Algorithm SHA256).Hash.Substring(0, 8)
+                }
+                "/assets/$name`?v=$($hashCache[$name])"
+            })
+            if ($new -ne $content) {
+                [IO.File]::WriteAllText($h.FullName, $new)
+                Write-Host "  STAMP  $($h.Name)" -ForegroundColor DarkGray
+            }
+        }
+    }
+}
+
 function Copy-IfExists([string]$Src, [string]$Dst) {
     if (-not (Test-Path $Src)) {
         Write-Host "  SKIP   $Src" -ForegroundColor Yellow
@@ -118,6 +154,10 @@ Copy-Tree (Join-Path $ROOT 'assets\media') (Join-Path $MULTI 'assets\media') '*.
 foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
     Copy-IfExists (Join-Path $ROOT $f) (Join-Path $MULTI $f) | Out-Null
 }
+
+# --- Cache-busting por hash ------------------------------------------------
+Add-VersionStamps $SZ (Join-Path $SZ 'assets')
+Add-VersionStamps $MULTI (Join-Path $MULTI 'assets')
 
 # --- Verificacao de saida -----------------------------------------------------
 # Confere o resultado em public/, nao a lista de copias. Pega tambem o caso em
