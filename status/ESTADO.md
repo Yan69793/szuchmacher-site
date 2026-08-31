@@ -199,3 +199,7 @@ Commit `61e9ca4`.
 - **ntnb-scenarios no fim de semana** (P3). Staleness por dias úteis no lugar
   de 48 h corridas. Verificado num domingo 23:43 BRT, `source: yahoo`,
   `stale: false`.
+- **ESTADO.md duplicado de `site-producao/status/` removido.** O arquivo
+  (43 linhas, 24/08) estava stale e duplicava o canônico da raiz. Apagado e
+  o `site-producao/CLAUDE.md` repontado para `../status/ESTADO.md`. Fonte
+  única de estado continua sendo este arquivo, na raiz.

@@ -2,7 +2,7 @@
 
 ## Estado do projeto
 
-Página canônica de estado, legível por qualquer agente (não só Claude): `status/ESTADO.md`. Ler antes de começar sessão de trabalho, atualizar a data e os itens ao fechar uma sessão que mudou o estado.
+Página canônica de estado, legível por qualquer agente (não só Claude): `../status/ESTADO.md` (na raiz do repositório). Ler antes de começar sessão de trabalho, atualizar a data e os itens ao fechar uma sessão que mudou o estado.
 
 ## Identidade do projeto
 
