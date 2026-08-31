@@ -67,7 +67,28 @@ muda quando checagem nova entra, use a da saída real do script.
 
 ## Itens abertos
 
-- **Cron nativo: causa raiz corrigida em 24/08, prova real só em 31/08.** A Cloudflare numera dia da semana como Quartz (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para `0 3 * * MON` e publicado (versão `5df713af`, gate 34/34). O carimbo `macro_cron_last` em `/health` ainda mostra o registro velho de 23/08 e só é reescrito no próximo disparo. Confirmar na segunda 31/08, depois das 03:00 UTC, que `ts` cai na janela e `cron` vem `0 3 * * MON`. Conferido em 30/08, `/health` ainda traz `cron: "0 3 * * 1"` com `generated_at` de 23/08, que é exatamente o esperado enquanto o disparo novo não acontece.
+- ~~**Cron nativo, causa raiz corrigida em 24/08, prova real pendente.**~~
+  **Fechado em 31/08 com prova.** A Cloudflare numera dia da semana como Quartz
+  (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para
+  `0 3 * * MON` e publicado (versão `5df713af`, gate 34/34). O disparo nativo
+  aconteceu sozinho nesta segunda: `/health` traz `macro_cron_last` com
+  `ts=1788145255`, `cron: "0 3 * * MON"`, `ok: true`, `status: 200`,
+  `generated_at: "31/08/2026, 00:01 BRT"` e `ms: 39888`. Corroborado pelo
+  `check-macro-cron_20260831.log` do watchdog das 09:00, que confirmou o disparo
+  nativo sem precisar acionar a reserva HTTP, e pela API de schedules. Era o item
+  aberto mais antigo.
+- **Macro, cache esvaziado a cada deploy e reposição automática que não funciona.**
+  Aberto em 31/08, conteúdo já remediado, causa no código pendente. São três
+  defeitos que se somam. `deploy-cloudflare.ps1` chama
+  `invalidate-worker-cache.ps1` incondicionalmente e apaga `macro-api` depois de
+  todo deploy. `checkRefreshRate` grava o carimbo `macro-refresh-rate` **antes**
+  da cascata rodar, então uma tentativa que falha ainda queima a janela de 1 h.
+  E `gerarMacro` roda em foreground sem `ctx.waitUntil`, então cliente que
+  desiste antes dos ~40 s tem a execução cancelada e nada é gravado. Efeito
+  combinado, o cache fica vazio do deploy até o cron da segunda seguinte, com o
+  público servindo o fallback estático. Fix a fazer, carimbo só no sucesso,
+  `ctx.waitUntil` na regeneração e delete condicional no deploy. Merece escopo
+  próprio com teste antes de deploy.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
 - ~~CSP sem `unsafe-inline` no multi (Fase B).~~ **Fechado em 31/08.** Os 136
   handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
@@ -362,10 +383,62 @@ para que não volte: `Test-MultiDataEv` cruza `data-ev` do HTML com as chaves do
 `EVENTS`, e `Test-FusedAttrs` acha tag ou atributo fundido com `class=`. Ambas
 testadas, com teste negativo injetando caso ruim e o build reprovando.
 
-Gate 34/34 após o deploy `eb7c49e0`. Confirmado no HTML servido em produção:
+Gate 34/34 após o deploy `eb7c49e0`. Confirmado no HTML servido em produção,
 0 tag fundida, 0 atributo fundido, `<em class="u-colorvargold-fontstyleitalic">`
-restaurado. O refresh do macro deu 429 do OpenRouter nas 3 tentativas, cache
-frio sem impacto na correção.
+restaurado. O refresh do macro deu 429 nas 3 tentativas e o cache ficou frio,
+sem impacto na correção do CSP.
+
+**Correção de atribuição, feita em 31/08 à tarde.** Aquele 429 não era do
+OpenRouter, era do rate limiter do próprio Worker. `checkRefreshRate` em
+`src/handlers/macro-api.js` devolve `{ ok: false, error: 'Rate limit' }` com
+status 429 e `Retry-After` quando a janela de 1 h está aberta, e o caminho HTTP
+`cron=1` passa por ele (linha 308, `if (forceRefresh && !forceRefreshOpt)`).
+Como o carimbo é gravado antes da cascata rodar, a tentativa 1 falha e já
+bloqueia as tentativas 2 e 3. Detalhe completo na auditoria de 31/08, §7.1.
+
+### Auditoria completa da tarde de 31/08 e reposição do macro
+
+Relatório em `site-producao/diagnosticos/DIAGNOSTICO-2026-08-31.md`, com
+`audit-http-20260831.json` e os screenshots dos seis viewports. Gate 34/34,
+nenhum P0 e nenhum P1.
+
+Fechados com prova nesta corrida. O cron nativo de segunda, item acima. CSP
+estrito Fase A e B no ar, verificado no conteúdo servido e não no commit, CSP
+idêntico de 1.292 chars nas três URLs, sem `unsafe-inline` nem `unsafe-eval`, e
+o HTML do multiasset com 0 tag `<style>`, 0 atributo `style=` e 0 handler `on*=`.
+Drift zero, SHA-256 do build local bate com produção em quatro arquivos. O P3 do
+`Content-Length: 0` reretestado, os sete casos que davam 500 em 30/08 respondem
+200.
+
+Achados. Dois P2, o cache macro vazio (item aberto acima) e o `AgendaAgent` com
+LastResult 1 às 08:00, abortado pela guarda de working tree sujo em
+`multi-app-2.js` e `multiasset-app.html`, que só foram commitados às 11:38. Sem
+impacto de conteúdo, a agenda em produção estava na janela certa, 31/08 a 04/09
+com 8 eventos e rótulo correto nos seis viewports. Segunda vez que sessão de
+código na madrugada colide com a janela das 08:00. Três P3, seis violações de
+CSP no multiasset atribuídas com probe dedicado ao
+`embed-widget-single-quote.js` do TradingView injetando `<style>` no documento
+pai, sem impacto visual, `usd_brl` em stale no `relatorio-prices.php`, e quatro
+screenshots PNG soltos na raiz do repo.
+
+**Reposição do macro executada às 17:00 BRT.** Não pelo
+`invalidate-worker-cache.ps1 -RefreshMacro`, que teria apagado `macro-panel`,
+`market-data` e `ntnb-scenarios` junto, todos saudáveis, e que de todo modo
+tomaria 429 com a janela de rate ainda ativa. Foi cirúrgico, delete só da chave
+`macro-refresh-rate` no KV via `npx wrangler kv key delete --remote` (com
+`CLOUDFLARE_API_TOKEN` retirado do processo, o workaround de OAuth já
+documentado no invalidador), seguido de `GET macro_api.php?cron=1` com
+`X-Cron-Secret` em header e `TimeoutSec 180`. Saída, `ms=39234`, `ok=True`,
+`cache=False`, `generated_at=31/08/2026, 17:00 BRT`. O `cache=False` é a prova
+de geração real e não fallback. Revalidado por fora, `/health` saiu de
+`macro_cache: "empty"` para `31/08/2026, 17:00 BRT`, e a leitura pública passou
+a responder em 435 ms com `cache: true` e **sem** o campo `note`, que é o
+discriminador entre KV real e fallback estático (os dois respondem
+`cache: true`). Defasagem do painel da home caiu de ~70 h para zero. Gate
+rerodado depois, 34/34.
+
+Nada foi deployado nesta sessão. As únicas mutações em produção foram o delete
+da chave de rate e a gravação do cache pela própria regeneração.
 
 Commitado e enviado ao origin em dois commits: `8d29aec` (fix(csp), os três
 arquivos de código) e `5b5defe` (docs(estado)). Branch sincronizada, restam só
