@@ -6,7 +6,9 @@ import { readFileSync } from 'node:fs';
 // Os campos alimentados por LLM precisam passar por escHtml/escRich antes do
 // innerHTML. Se uma edição futura voltar a interpolar o campo cru, este teste
 // quebra de propósito.
-const src = readFileSync(new URL('../../../multiasset-app.html', import.meta.url), 'utf8');
+// Desde a Fase B do CSP o app do multi saiu do HTML para assets/multi-app-2.js,
+// e o guard acompanhou: o fonte verificado e o asset servido, nao o HTML.
+const src = readFileSync(new URL('../../../assets/multi-app-2.js', import.meta.url), 'utf8');
 
 test('renderMacro escapa os campos simples do LLM', () => {
   assert.ok(src.includes('const escHtml = s =>'), 'escHtml deveria existir');

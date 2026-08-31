@@ -144,6 +144,15 @@ Copy-IfExists (Join-Path $ROOT 'assets\sz-metodologia.css') (Join-Path $MULTI 'a
 Copy-IfExists (Join-Path $ROOT 'assets\sz-metodologia-1.js') (Join-Path $MULTI 'assets\sz-metodologia-1.js') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-privacidade.css') (Join-Path $MULTI 'assets\sz-privacidade.css') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-utilities.css') (Join-Path $MULTI 'assets\sz-utilities.css') | Out-Null
+# Fase B do CSP: o multiasset-app.html externalizou o bloco <style> e os 3
+# scripts executaveis, e os atributos style viraram classes utilitarias.
+# O index.html do multi referencia estes 5 assets, entao precisam existir em
+# public/multi/assets/ senao o Add-VersionStamps falha na Fase A/B.
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app.css') (Join-Path $MULTI 'assets\multi-app.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-utilities.css') (Join-Path $MULTI 'assets\multi-utilities.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app-1.js') (Join-Path $MULTI 'assets\multi-app-1.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app-2.js') (Join-Path $MULTI 'assets\multi-app-2.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app-3.js') (Join-Path $MULTI 'assets\multi-app-3.js') | Out-Null
 # Politica de privacidade. multi-assets.com coleta e-mail no popup do simulador e
 # ate 26/07/2026 respondia 404 em /privacidade.html e /privacidade: coleta sem
 # aviso ao titular. Copiada nas duas formas, com e sem extensao, igual consultoria.
@@ -192,7 +201,9 @@ $obrigatorios = @(
     'multi\privacidade.html', 'multi\privacidade',
     'multi\metodologia.html', 'multi\metodologia',
     'multi\sitemap.xml',
-    'multi\og-cover.jpg', 'multi\assets\sz-config.js'
+    'multi\og-cover.jpg', 'multi\assets\sz-config.js',
+    'multi\assets\multi-app.css', 'multi\assets\multi-utilities.css',
+    'multi\assets\multi-app-1.js', 'multi\assets\multi-app-2.js', 'multi\assets\multi-app-3.js'
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })
 

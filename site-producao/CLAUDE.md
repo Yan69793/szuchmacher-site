@@ -259,11 +259,9 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    novo, a reserva segura o painel e o e-mail pede caso no suporte CF
    (eventos `origin=cron` no Observability). Não meter essa checagem no
    `validar-producao.ps1` (portão de deploy).
-2. **CSP sem unsafe-inline — Fase A sz concluída (31/08); resta só a Fase B
-   (multi).** As 8 páginas sz externalizaram script/style inline para
-   `assets/sz-*.css` e `assets/sz-*-N.js` e o Worker emite CSP sem
-   `unsafe-inline` nos hosts sz. `unsafe-inline` permanece apenas nos hosts
-   multi (`multiasset-app.html`: 136 handlers e 257 estilos inline).
+2. ~~CSP sem unsafe-inline no multi (Fase B).~~ **Fechado em 31/08.** Os 136
+   handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
+   e o CSP saiu estrito nos dois domínios. Detalhe em "Resolvidas em 2026-08-31".
 3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
    próprio).
 4. **Limpeza opcional no cPanel.** O job físico `agenda-cron.php` segue
@@ -271,12 +269,12 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    rejeitado com 403 após a rotação do `CRON_SECRET`). Desligar no painel
    quando houver login do cPanel resolve também o P3-15 (calendários 2026
    hardcoded). Sem risco operacional enquanto isso.
-5. **CSP fail-open para host desconhecido.** Fechado em 31/08: `buildCSP` em
-   `cloudflare-workers/sz-sites/src/utils/headers.js` agora usa allowlist
-   explícita (`MULTI_HOSTS`), default estrito. Domínio futuro não mapeado cai
-   no CSP sem `unsafe-inline`, não herda política fraca por omissão. Teste
-   novo no `headers.test.mjs` (host desconhecido estrito). Publicado em 31/08
-   01:52 BRT, Worker `66f419a8`, gate 34/34.
+5. **CSP fail-open para host desconhecido.** Fechado em 31/08, e com a Fase B
+   o allowlist `MULTI_HOSTS` foi removido de vez: `buildCSP` em
+   `cloudflare-workers/sz-sites/src/utils/headers.js` emite hoje o mesmo CSP
+   estrito para qualquer host, sem branch por host. Domínio futuro não mapeado
+   cai no estrito, não herda política fraca por omissão. Teste no
+   `headers.test.mjs`. Publicado com a Fase B (Worker `b767ba10`), gate 34/34.
 
 ### Resolvidas em 2026-08-31
 
@@ -290,6 +288,21 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
   Quatro desvios de fidelidade de renderização corrigidos com `!important` nas
   5 utilitárias, replicando a precedência do inline original (1,0,0,0) que a
   classe herdou. Suíte do Worker 68 -> 69, build verde. Sem deploy.
+
+- **Fase B do CSP no multi-assets.com.** Os 136 handlers inline do
+  `multiasset-app.html` (`onclick`, `oninput`, `onkeydown`) viraram
+  `data-ev="eN"` com delegação de eventos no documento, e os 257 estilos
+  inline viraram 103 classes utilitárias em `assets/multi-utilities.css`, com
+  `!important` em tudo exceto `display` e `width`, que o JS compete via CSSOM.
+  Os 3 scripts executáveis e o bloco `<style>` saíram para `assets/multi-app-1.js`,
+  `multi-app-2.js`, `multi-app-3.js` e `assets/multi-app.css`. Cores dinâmicas
+  viraram `data-color`/`data-bg` + `applyInline()` via MutationObserver. O CSP
+  saiu estrito nos dois domínios, sem `unsafe-inline`. Dois bugs do transform
+  corrigidos: classe utilitária divergente do slug (`u-fw700` vs
+  `u-fontweight700`) e perda de todas as classes do HTML por mutação de closure
+  dentro do callback do `String.replace`. Portão repointado para
+  `$MULTI/assets/multi-app-2.js` (as âncoras saíram do HTML), Worker
+  `b767ba10`, gate 34/34, suíte do Worker 69 -> 70.
 
 ### Resolvidas em 2026-08-24
 

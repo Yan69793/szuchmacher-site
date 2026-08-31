@@ -35,8 +35,8 @@ com o detalhe completo lá:
 - `agenda-cron.php` do cPanel ainda não desligado: FTPS `deploy@` devolveu 530
   e as credenciais do `.env` não autenticam no cPanel.
 - Itens do §Q do PRE-DEPLOY-2026-08-15: F5 cache-busting fechado em 31/08
-  (`488b830`); CSP sem unsafe-inline com a Fase A sz concluída em 31/08,
-  resta a Fase B no multi.
+  (`488b830`); CSP sem unsafe-inline com a Fase A sz e a Fase B multi
+  concluídas em 31/08.
 
 ## Como verificar
 
@@ -69,20 +69,16 @@ muda quando checagem nova entra, use a da saída real do script.
 
 - **Cron nativo: causa raiz corrigida em 24/08, prova real só em 31/08.** A Cloudflare numera dia da semana como Quartz (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para `0 3 * * MON` e publicado (versão `5df713af`, gate 34/34). O carimbo `macro_cron_last` em `/health` ainda mostra o registro velho de 23/08 e só é reescrito no próximo disparo. Confirmar na segunda 31/08, depois das 03:00 UTC, que `ts` cai na janela e `cron` vem `0 3 * * MON`. Conferido em 30/08, `/health` ainda traz `cron: "0 3 * * 1"` com `generated_at` de 23/08, que é exatamente o esperado enquanto o disparo novo não acontece.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
-- **CSP sem `unsafe-inline` — Fase A concluída nas páginas sz; resta só o multi
-  (Fase B).** As 8 páginas sz externalizaram script/style inline para
-  `assets/sz-*.css` e `assets/sz-*-N.js`, e o Worker (`src/utils/headers.js`)
-  já emite CSP sem `unsafe-inline` em `script-src`/`style-src` nos hosts sz.
-  `unsafe-inline` permanece apenas nos hosts multi, porque
-  `multiasset-app.html` ainda tem 136 handlers inline (94 `onclick`,
-  41 `oninput`, 1 `onkeydown`) e 257 estilos inline. Fase B = externalizar
-  esses handlers/estilos e tirar `unsafe-inline` também do multi.
-- **CSP fail-open para host desconhecido.** Fechado em 31/08: `buildCSP`
-  em `src/utils/headers.js` virou allowlist explícita (`MULTI_HOSTS`),
-  default estrito. Host futuro não mapeado cai no CSP sem `unsafe-inline`,
-  não herda política fraca por omissão. Teste novo no `headers.test.mjs`
-  (host desconhecido estrito). Publicado em 31/08 01:52 BRT, Worker
-  `66f419a8`, gate 34/34.
+- ~~CSP sem `unsafe-inline` no multi (Fase B).~~ **Fechado em 31/08.** Os 136
+  handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
+  e o CSP saiu estrito nos dois domínios. Ver "Fase B do CSP concluída (31/08)"
+  abaixo.
+- **CSP fail-open para host desconhecido.** Fechado em 31/08, e com a Fase B o
+  allowlist `MULTI_HOSTS` foi removido de vez: `buildCSP` em
+  `src/utils/headers.js` emite agora CSP idêntico, estrito, para qualquer host,
+  sem branch por host. Host futuro não mapeado cai no mesmo estrito, não herda
+  política fraca por omissão. Teste no `headers.test.mjs` cobre o host
+  desconhecido. Publicado com a Fase B, gate 34/34.
 - ~~P3 de 30/08, GET ou HEAD com `Content-Length: 0` em rota HTML devolve 500.~~
   **Fechado em 30/08 à noite, deploy `d9a155b2`, gate 34/34.** `fetchAsset`
   reconstroi o request com `{ method, headers }`, sem repassar body. Ver
@@ -260,3 +256,51 @@ Dois itens do §Q fechados, cada um num deploy próprio, gate 34/34 em ambos.
   multi e www multi mantendo `unsafe-inline`; assets novos respondem 200. O
   JSON-LD (`application/ld+json`) nas 3 páginas não é bloqueado: é data block
   não-executável, a spec HTML retorna cedo antes do check de CSP.
+
+### Fase B do CSP concluída (31/08)
+
+Os 136 handlers (93 `onclick`, 41 `oninput`, 1 `onkeydown`, 1 dinâmico) e os
+257 estilos inline (228 no HTML + 29 dinâmicos no app) do
+`multiasset-app.html` foram externalizados e o CSP saiu estrito nos dois
+domínios. Publicado via `publicar-com-rollback.ps1`, Worker `b767ba10`,
+gate 34/34, suíte do Worker 69 -> 70.
+
+O que mudou no app:
+
+- O bloco `<style>` (91 KB) virou `assets/multi-app.css`; os atributos `style`
+  viraram 103 classes utilitárias em `assets/multi-utilities.css`, com
+  `!important` em tudo exceto `display` e `width` (que o JS compete via CSSOM).
+- Os 3 scripts executáveis viraram `assets/multi-app-1.js` (hero video),
+  `assets/multi-app-2.js` (o app, 167 KB) e `assets/multi-app-3.js`
+  (BTC hero). Os 28 blocos `text/tv-lazy` e o JSON-LD continuam inline, são
+  data block e o CSP não bloqueia.
+- Handlers viraram `data-ev="eN"` + delegação no document (click/input/keydown)
+  com `closest('[data-ev]')`, mapa `EVENTS` com os 109 únicos, e o caso
+  dinâmico `data-ev="geo:<id>"` tratado à parte. Preserva `this` via
+  `.call(el, event)`, nenhum handler usava `return false`.
+- Cores calculadas em runtime (`${retColor}`, `colorProb(...)`, `sec.color`,
+  `gr.color`) viraram `data-color`/`data-bg` + `applyInline()` por CSSOM
+  (propriedade a propriedade, permitido pelo CSP) + `MutationObserver`.
+  `fb.style.cssText` virou 10 atribuições CSSOM individuais.
+
+Dois bugs de transformação achados e corrigidos durante a validação: a classe
+usada no app para `font-weight:700` estava com nome desalinhado da registrada
+no CSS (`u-fw700` vs `u-fontweight700`), e o `transformTag` descartava as
+classes que adicionava porque mutava closure dentro da callback do replace em
+vez de retornar, fazendo os 228 estilos do HTML perderem efeito. O segundo
+foi o grave: só os `data-ev` sobreviviam. O produto final foi validado por
+drift de nomes, toda classe `u-*` usada em HTML e app existe no CSS, 103/103.
+
+O gate `validar-producao.ps1` foi repontado: as 3 checagens que buscavam no
+HTML servido (ausência do parser de taxa do payload, premissa de ouro, fonte
+única `rebuildTaxasCenario`) agora buscam em
+`$MULTI/assets/multi-app-2.js`, o asset onde essa lógica mora. O
+`xss-guard.test.mjs` também passou a ler o asset, e o `build-cloudflare-public.ps1`
+copia os 5 assets novos do multi (`multi-app.css`, `multi-utilities.css`,
+`multi-app-1.js`, `multi-app-2.js`, `multi-app-3.js`) para `public/multi/assets/`,
+incluídos nos obrigatórios do build.
+
+Verificado em produção após o deploy: CSP de `multi-assets.com` e
+`szuchmacher.com.br` sem `unsafe-inline` em `script-src` e `style-src`; o HTML
+servido tem 0 `style=` e 0 `on*=` inline e 135 `data-ev`; os assets respondem
+200.

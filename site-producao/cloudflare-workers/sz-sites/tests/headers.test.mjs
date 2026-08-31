@@ -19,11 +19,11 @@ test('CSP do sz nao tem unsafe-inline (Fase A externalizou tudo)', () => {
   assert.ok(!www.includes("'unsafe-inline'"), 'www.szuchmacher.com.br nao pode ter unsafe-inline');
 });
 
-test('CSP do multi mantem unsafe-inline (handlers inline do multiasset, Fase B)', () => {
+test('CSP do multi nao tem unsafe-inline (Fase B externalizou handlers e estilos)', () => {
   const csp = cspOf('multi-assets.com');
-  assert.ok(csp.includes("'unsafe-inline'"));
+  assert.ok(!csp.includes("'unsafe-inline'"), 'multi-assets.com nao pode ter unsafe-inline');
   const www = cspOf('www.multi-assets.com');
-  assert.ok(www.includes("'unsafe-inline'"));
+  assert.ok(!www.includes("'unsafe-inline'"), 'www.multi-assets.com nao pode ter unsafe-inline');
 });
 
 test('CSP de host desconhecido cai no estrito (fail-closed, nao herda unsafe-inline)', () => {
