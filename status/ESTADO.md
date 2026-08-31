@@ -336,3 +336,36 @@ do cPanel, e a conta pode ser encerrada sem derrubar nada. Cobertura de dados
 local confirmada no Task Scheduler, `Szuchmacher-AgendaAgent` ativa (Ready),
 publica `agenda-data.json` e `macro_data.json` no `public/` do Worker via
 `publicar-com-rollback.ps1`.
+
+### Fechamento de 31/08: dois bugs silenciosos da Fase B corrigidos
+
+A Fase B (Worker `b767ba10`) deixou dois defeitos que nenhum gate HTTP pega.
+Nenhum dá 404 nem erro de console, então `validar-producao.ps1` passava verde
+com os dois vivos. O operador reportou clicando nas abas e apontando o layout
+quebrado, não a auditoria.
+
+- **Handlers mortos por prefixo do `data-ev`.** O HTML grava `data-ev="eN"` e o
+  mapa `EVENTS` em `assets/multi-app-2.js` usa chave `'N'` sem o `e`. O lookup
+  `EVENTS["e0"]` devolvia `undefined` e os 109 handlers não disparavam. Uma
+  linha no laço de delegação remove o `e` antes do lookup. Deploy `1866735e`.
+- **`class=` colado na tag ou atributo em 35 pontos.** O transform de estilo
+  inline para classe utilitária fundiu `<pclass=`, `<divclass=`, `<spanclass=`,
+  `<emclass=`, `<strongclass=`, `href="..."class=`, `data-ev="e83"class=`,
+  `rel="noopener"class=`, `colspan="5"class=`, `aria-label="..."class=`. O
+  parser lê tag ou atributo desconhecido e descarta a classe, quebrando layout
+  (parágrafo perde max-width, "Macroeconômico"/"Geopoliticos" perdem o itálico
+  dourado, canvas perde margem) sem erro visível. Corrigido inserindo o espaço
+  nos 35 pontos. Deploy `eb7c49e0`.
+
+Duas guardas novas em `scripts/build-cloudflare-public.ps1` reprovam o build
+para que não volte: `Test-MultiDataEv` cruza `data-ev` do HTML com as chaves do
+`EVENTS`, e `Test-FusedAttrs` acha tag ou atributo fundido com `class=`. Ambas
+testadas, com teste negativo injetando caso ruim e o build reprovando.
+
+Gate 34/34 após o deploy `eb7c49e0`. Confirmado no HTML servido em produção:
+0 tag fundida, 0 atributo fundido, `<em class="u-colorvargold-fontstyleitalic">`
+restaurado. O refresh do macro deu 429 do OpenRouter nas 3 tentativas, cache
+frio sem impacto na correção.
+
+Ficam 3 arquivos não commitados: `assets/multi-app-2.js`, `multiasset-app.html`
+e `scripts/build-cloudflare-public.ps1`. Commit só com pedido do operador.
