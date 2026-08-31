@@ -86,6 +86,15 @@ muda quando checagem nova entra, use a da saída real do script.
 - ~~P3 de 30/08, `/api/ntnb-scenarios` responde `defaults` todo fim de semana.~~
   **Fechado em 30/08 à noite, deploy `d9a155b2`, gate 34/34.** Staleness por
   dias úteis no lugar de 48 h corridas. Ver "Fechamento da noite de 30/08" abaixo.
+- **Plano de cancelamento da HostGator, retomar em 01/09.** Mapeado em 31/08:
+  o Worker `sz-sites` serve 100% de `env.ASSETS` sem nenhum fetch ao HostGator,
+  então o upload FTP da rotina remota `szuchmacher-domingo` (`deploy.sh`, 8
+  arquivos) é inerte para o site. Para encerrar a conta: preparar o prompt novo
+  da rotina sem FTP (publicar via Worker), pausar a rotina no painel
+  (`Claude_Code_Remote` indisponível nesta sessão), desligar o `agenda-cron.php`
+  do cPanel (P3-15), e aí cancelar o hosting. Cobertura de dados local já
+  existe, `Szuchmacher-AgendaAgent` ativa publica `agenda-data.json` e
+  `macro_data.json` no `public/` do Worker.
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
 
 ## Estado em 2026-08-19
@@ -304,3 +313,26 @@ Verificado em produção após o deploy: CSP de `multi-assets.com` e
 `szuchmacher.com.br` sem `unsafe-inline` em `script-src` e `style-src`; o HTML
 servido tem 0 `style=` e 0 `on*=` inline e 135 `data-ev`; os assets respondem
 200.
+
+### Mapeamento de 31/08: FTP da rotina remota é inerte
+
+Mapeamento pedido pelo operador antes de decidir o cancelamento da HostGator.
+Leitura do handler do Worker `sz-sites` (`index.js`, `serveStatic`): todo
+conteúdo vem de `env.ASSETS`, o `public/` montado por
+`build-cloudflare-public.ps1` e enviado por wrangler. Não existe fetch para o
+host HostGator em caminho nenhum, e os endpoints que a rotina verifica
+(`macro_api.php`, `assets/agenda.php`) são handlers internos do Worker.
+
+A rotina remota `szuchmacher-domingo` (Cloud, domingo 08:00 BRT) coleta dados
+macro, gera `macro_data.json` e `agenda-data.json`, e publica via
+`scripts/deploy.sh` (FTP legado), que sobe 8 arquivos no HostGator e depois
+valida HTTP 200 no domínio. Como o site é servido do `env.ASSETS`, o upload vai
+para um host que ninguém lê. O prompt da rotina ainda carrega a senha `deploy@`
+em texto puro, risco documentado em `docs/controle-remoto-claude-code.md`.
+
+Dependência real para o cancelamento: a rotina remota é o único consumidor do
+FTP. Pausar ou reescrever o prompt dela (sem FTP), desligar o `agenda-cron.php`
+do cPanel, e a conta pode ser encerrada sem derrubar nada. Cobertura de dados
+local confirmada no Task Scheduler, `Szuchmacher-AgendaAgent` ativa (Ready),
+publica `agenda-data.json` e `macro_data.json` no `public/` do Worker via
+`publicar-com-rollback.ps1`.
