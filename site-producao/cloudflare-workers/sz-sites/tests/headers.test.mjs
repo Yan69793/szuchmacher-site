@@ -9,11 +9,21 @@ function cspOf(host) {
 
 test('CSP nao tem unsafe-eval (nenhum eval/new Function no JS publico)', () => {
   assert.ok(!cspOf('szuchmacher.com.br').includes("'unsafe-eval'"));
+  assert.ok(!cspOf('multi-assets.com').includes("'unsafe-eval'"));
 });
 
-test('CSP mantem unsafe-inline em script-src e style-src (handlers inline do multiasset)', () => {
+test('CSP do sz nao tem unsafe-inline (Fase A externalizou tudo)', () => {
+  const csp = cspOf('szuchmacher.com.br');
+  assert.ok(!csp.includes("'unsafe-inline'"), 'sz nao pode ter unsafe-inline');
+  const www = cspOf('www.szuchmacher.com.br');
+  assert.ok(!www.includes("'unsafe-inline'"), 'www.szuchmacher.com.br nao pode ter unsafe-inline');
+});
+
+test('CSP do multi mantem unsafe-inline (handlers inline do multiasset, Fase B)', () => {
   const csp = cspOf('multi-assets.com');
   assert.ok(csp.includes("'unsafe-inline'"));
+  const www = cspOf('www.multi-assets.com');
+  assert.ok(www.includes("'unsafe-inline'"));
 });
 
 test('CSP aplica headers de seguranca e marca o servidor', () => {

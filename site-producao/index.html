@@ -112,7 +112,8 @@
     ]
   }
   </script>
-</head>
+<link rel="stylesheet" href="/assets/sz-utilities.css" />
+  </head>
 <body data-page="home" data-design="sophistication-20260718v2">
 
   <!-- craft-revision: sophistication-20260718v2 | revert: scripts/revert-design-sophistication.ps1 -->
@@ -223,7 +224,7 @@
             <h2>Vinte anos de mercado a serviço de decisões patrimoniais mais sólidas.</h2>
             <p>Trajetória em tesouraria, risco e consultoria patrimonial em ambiente internacional de private banking. O trabalho une leitura de mercado, desenho de carteira e acompanhamento contínuo, com foco em preservar e organizar capital no longo prazo.</p>
             <p>Hoje a prática é independente: o cliente paga honorário profissional, sem comissão de produto e sem repasse de distribuidora. Isso alinha a recomendação ao interesse de quem contrata.</p>
-            <div class="figure-craft figure-craft--painel" style="max-width:360px;margin:28px 0 4px;">
+            <div class="u-maxwidth360px-margin28px04px figure-craft figure-craft--painel">
               <img src="/assets/img/index-autoridade.webp" alt="Camadas de vidro e pedra escura atravessadas por uma linha de luz dourada, representando trajetória e solidez" loading="lazy" decoding="async" width="1280" height="859" />
             </div>
             <div class="authority-metrics">
@@ -393,7 +394,7 @@
       </div>
       <div class="container">
         <h3>Uma conversa inicial de 30 minutos basta para mapear riscos e oportunidades que o extrato sozinho não mostra.</h3>
-        <div class="hero-actions" style="margin:0">
+        <div class="u-margin0 hero-actions">
           <a href="#contato" class="btn" data-ga="cta_diagnostico" data-ga-location="strip">Agendar conversa</a>
           <a href="relatorios.html" class="btn btn-outline" data-ga="cta_relatorio" data-ga-location="strip">Receber o relatório</a>
         </div>
@@ -438,7 +439,7 @@
           <details class="faq-item"><summary>Atende clientes com patrimônio no exterior?</summary><p>Sim, incluindo estruturas offshore, custódia internacional, fundos exclusivos e portfólios multi-moeda. A leitura consolidada entre jurisdições é parte central do diagnóstico patrimonial.</p></details>
           <details class="faq-item"><summary>Como é o primeiro contato?</summary><p>Conversa exploratória sem compromisso, conduzida pessoalmente por mim, com retorno em até 24 horas úteis após o formulário. O objetivo inicial é entender contexto, grau de complexidade e prioridades antes de qualquer proposta comercial.</p></details>
           <details class="faq-item"><summary>Há alguma vinculação a banco, gestora ou distribuidora?</summary><p>Não. A prática é inteiramente independente, sem mandato com instituição financeira, sem distribuição de produto e sem acordo de retrocessão. Análise e recomendação são remuneradas exclusivamente pelo honorário direto do cliente.</p></details>
-          <details class="faq-item"><summary>O relatório de mercado custa algo?</summary><p>Sim. A Carta Szuchmacher é distribuída por assinatura anual, com publicação semanal. Conheça os planos em <a href="assinatura.html" style="color:var(--gold)">szuchmacher.com.br/assinatura</a>.</p></details>
+          <details class="faq-item"><summary>O relatório de mercado custa algo?</summary><p>Sim. A Carta Szuchmacher é distribuída por assinatura anual, com publicação semanal. Conheça os planos em <a href="assinatura.html" class="u-colorvargold">szuchmacher.com.br/assinatura</a>.</p></details>
           <details class="faq-item"><summary>Qual a diferença para um gestor de investimentos?</summary><p>O advisor não gere recursos em conta própria nem emite recomendações individuais reguladas de ativos. A atuação é de leitura patrimonial, governança, arquitetura e monitoramento, com implementação permanecendo em custódia e distribuidora já existentes do cliente.</p></details>
         </div>
       </div>
@@ -454,7 +455,7 @@
             <span class="contact-meta-label">WhatsApp</span>
             <p><a href="https://wa.me/5521981088992" target="_blank" rel="noopener" data-ga="whatsapp_click" data-ga-location="contato">+55 21 98108 8992</a></p>
             <span class="contact-meta-label">E-mail</span>
-            <p><a id="contact-email-link" style="color:var(--gold);font-weight:700;"></a></p>
+            <p><a id="contact-email-link" class="u-colorvargold-fontweight700"></a></p>
             <span class="contact-meta-label">Localização</span>
             <p>Rio de Janeiro, Brasil • Atendimento presencial e remoto</p>
           </div>
@@ -483,9 +484,9 @@
             <input type="hidden" name="_origem" value="home-landing" />
             <label class="consent">
               <input type="checkbox" name="consentimento" required />
-              <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">política de privacidade</a>.</span>
+              <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" class="u-colorvargold-textdecorationunderlin-textunderlineoffset3px">política de privacidade</a>.</span>
             </label>
-            <button type="submit" class="btn" style="width:100%" data-ga="form_submit" data-ga-form="contato">Solicitar contato</button>
+            <button type="submit" class="u-width100 btn" data-ga="form_submit" data-ga-form="contato">Solicitar contato</button>
             <div class="form-note">Retorno em até 24 horas úteis. Nenhuma informação é compartilhada com terceiros.</div>
             <div class="form-success" id="formSuccess">Solicitação recebida. Retorno em até 24 horas úteis por e-mail ou WhatsApp.</div>
           </form>
@@ -533,26 +534,7 @@
     </div>
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var em = 'yan' + String.fromCharCode(64) + 'szuchmacher.com.br';
-      var el = document.getElementById('contact-email-link');
-      if (el) { el.href = 'mai' + 'lto:' + em; el.textContent = em; }
-
-      window.SZ && window.SZ.bindFormspree(document.getElementById('leadForm'), {
-        onSuccess: function () {
-          var ok = document.getElementById('formSuccess');
-          if (ok) {
-            ok.classList.add('show');
-            ok.setAttribute('role', 'status');
-            ok.setAttribute('aria-live', 'polite');
-          }
-          var fields = document.querySelectorAll('#leadForm input, #leadForm select, #leadForm textarea, #leadForm button, #leadForm label.consent');
-          fields.forEach(function (n) { n.style.display = 'none'; });
-        }
-      });
-    });
-  </script>
+  <script src="/assets/sz-index-1.js"></script>
 
   <script src="/assets/sz-site.js?v=20260618" defer></script>
   <script src="/assets/macro-panel.js?v=20260718final" defer></script>

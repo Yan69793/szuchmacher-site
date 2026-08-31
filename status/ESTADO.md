@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-08-30 (agente: Claude)
+Última atualização: 2026-08-31 (agente: Claude)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -34,8 +34,9 @@ com o detalhe completo lá:
   com a data esperada.
 - `agenda-cron.php` do cPanel ainda não desligado: FTPS `deploy@` devolveu 530
   e as credenciais do `.env` não autenticam no cPanel.
-- Itens restantes do §Q do PRE-DEPLOY-2026-08-15: CSP sem unsafe-inline e
-  F5 cache-busting, todos com escopo próprio.
+- Itens do §Q do PRE-DEPLOY-2026-08-15: F5 cache-busting fechado em 31/08
+  (`488b830`); CSP sem unsafe-inline com a Fase A sz concluída em 31/08,
+  resta a Fase B no multi.
 
 ## Como verificar
 
@@ -68,7 +69,19 @@ muda quando checagem nova entra, use a da saída real do script.
 
 - **Cron nativo: causa raiz corrigida em 24/08, prova real só em 31/08.** A Cloudflare numera dia da semana como Quartz (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para `0 3 * * MON` e publicado (versão `5df713af`, gate 34/34). O carimbo `macro_cron_last` em `/health` ainda mostra o registro velho de 23/08 e só é reescrito no próximo disparo. Confirmar na segunda 31/08, depois das 03:00 UTC, que `ts` cai na janela e `cron` vem `0 3 * * MON`. Conferido em 30/08, `/health` ainda traz `cron: "0 3 * * 1"` com `generated_at` de 23/08, que é exatamente o esperado enquanto o disparo novo não acontece.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
-- Itens de escopo próprio do §Q: CSP sem unsafe-inline e F5 cache-busting.
+- **CSP sem `unsafe-inline` — Fase A concluída nas páginas sz; resta só o multi
+  (Fase B).** As 8 páginas sz externalizaram script/style inline para
+  `assets/sz-*.css` e `assets/sz-*-N.js`, e o Worker (`src/utils/headers.js`)
+  já emite CSP sem `unsafe-inline` em `script-src`/`style-src` nos hosts sz.
+  `unsafe-inline` permanece apenas nos hosts multi, porque
+  `multiasset-app.html` ainda tem 136 handlers inline (94 `onclick`,
+  41 `oninput`, 1 `onkeydown`) e 257 estilos inline. Fase B = externalizar
+  esses handlers/estilos e tirar `unsafe-inline` também do multi.
+- **CSP fail-open para host desconhecido.** `buildCSP` em
+  `src/utils/headers.js` concede `unsafe-inline` a qualquer host fora de
+  `SZ_HOSTS`. Hoje só os 4 hostnames têm rota, risco baixo, mas domínio
+  futuro não mapeado herda a CSP fraca. Registrado em 31/08 como pendência
+  separada da Fase A.
 - ~~P3 de 30/08, GET ou HEAD com `Content-Length: 0` em rota HTML devolve 500.~~
   **Fechado em 30/08 à noite, deploy `d9a155b2`, gate 34/34.** `fetchAsset`
   reconstroi o request com `{ method, headers }`, sem repassar body. Ver
@@ -203,3 +216,46 @@ Commit `61e9ca4`.
   (43 linhas, 24/08) estava stale e duplicava o canônico da raiz. Apagado e
   o `site-producao/CLAUDE.md` repontado para `../status/ESTADO.md`. Fonte
   única de estado continua sendo este arquivo, na raiz.
+
+### Fechamentos da madrugada de 31/08
+
+Dois itens do §Q fechados, cada um num deploy próprio, gate 34/34 em ambos.
+
+- **CSP sem `unsafe-eval`**, commit `0435580`, deploy `64bbc562`. Removido
+  `unsafe-eval` de `script-src` em `cloudflare-workers/sz-sites/src/utils/headers.js`.
+  Antes de mudar, confirmei por `rg` que não há `eval` nem `new Function` no
+  JS público (só `JSON.parse`, que não é eval). Novo teste em
+  `tests/headers.test.mjs` cobre o CSP dos dois domínios; suíte do Worker
+  passou de 64 para 67. Verificado em produção via curl nos dois hosts:
+  `script-src` sem `unsafe-eval`, gate 34/34.
+- **F5 cache-busting automático**, commit `488b830`, deploy `2851bcaa`.
+  `build-cloudflare-public.ps1` ganhou `Add-VersionStamps`, que reescreve no
+  HTML copiado as referências `/assets/*.css|js` para `/assets/*.css?v=<hash8>`
+  (primeiros 8 hex do SHA256 do próprio asset em `public/`). URL muda quando
+  o asset muda, fica estável quando não muda, então o cache é quebrado só
+  quando precisa. A `fetchAsset` do Worker preserva query string e resolve por
+  pathname, então o `?v=` não quebra rota. Se o HTML referencia asset que não
+  existe em `public/`, o build falha em vez de publicar 404. Verificado em
+  produção: `sz-design.css?v=0D2D1EB5` no sz e `sz-config.js?v=F28640FD` no
+  multi, asset com query responde 200, gate 34/34. As checagens do
+  `validar-producao.ps1` usam URL limpa (sem `?v=`), por isso continuam válidas.
+
+### Fase A do CSP concluída (31/08)
+
+- **CSP sem `unsafe-inline` nas páginas sz.** Todo script/style inline das 8
+  páginas sz externalizado para `assets/sz-*.css` e `assets/sz-*-N.js`,
+  atributos `style="..."` convertidos em classes utilitárias em
+  `assets/sz-utilities.css`, e o toast do `sz-config.js` migrado de
+  `style.cssText` para atribuição CSSOM (que o CSP não bloqueia). O Worker
+  (`src/utils/headers.js`) emite agora CSP por host: sz sem `unsafe-inline`
+  em `script-src`/`style-src`, multi mantendo (Fase B). Quatro desvios de
+  fidelidade de renderização (utilitária perdendo para seletor de container)
+  corrigidos com `!important` nas 5 utilitárias, replicando a precedência do
+  inline original (1,0,0,0) que a classe herdou. Suíte do Worker 68 -> 69,
+  build verde, greps de CSP/XSS refeitos.
+- **Publicado em 31/08 01:18 BRT** via `publicar-com-rollback.ps1`, Worker
+  `0ea1fbcf-8905-4922-a65f-954f4b55cde2`, gate 34/34. Verificado em produção:
+  CSP do sz e www sz sem `unsafe-inline` (www redireciona 301 para o apex),
+  multi e www multi mantendo `unsafe-inline`; assets novos respondem 200. O
+  JSON-LD (`application/ld+json`) nas 3 páginas não é bloqueado: é data block
+  não-executável, a spec HTML retorna cedo antes do check de CSP.

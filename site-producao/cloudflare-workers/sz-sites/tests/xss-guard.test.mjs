@@ -61,13 +61,22 @@ test('escRich mantem tag nao whitelistada inofensiva (escapada, sem execucao)', 
   assert.ok(saida.includes('&lt;img'), 'tag fora da whitelist deve permanecer como texto escapado');
 });
 
+test('relatorios.html referencia o script externo sz-relatorios-1.js (Fase A)', () => {
+  const html = readFileSync(new URL('../../../relatorios.html', import.meta.url), 'utf8');
+  assert.ok(
+    html.includes('<script src="/assets/sz-relatorios-1.js"></script>'),
+    'relatorios.html deveria carregar sz-relatorios-1.js (Fase A do CSP)'
+  );
+});
+
 test('relatorios.html rotula por card e considera source_state', () => {
   // stale é array por ativo; array vazio é truthy. O rótulo é por card
   // (indexOf por chave) e cache vencido servido na revalidacao
   // (source_state) tambem conta como defasado.
-  const rel = readFileSync(new URL('../../../relatorios.html', import.meta.url), 'utf8');
-  assert.ok(rel.includes('function rotuloDe(chave)'), 'rotulo por card deveria existir');
-  assert.ok(rel.includes("defasados.indexOf(chave) !== -1 || cacheVelho"), 'rotulo considera chave defasada ou cache velho');
-  assert.ok(rel.includes("d.source_state === 'stale'"), 'source_state do cache vencido deveria ser lido');
-  assert.ok(rel.includes("rotuloDe('ibovespa')"), 'cards usam o rotulo individual');
+  // Desde a Fase A do CSP o script saiu do HTML para assets/sz-relatorios-1.js.
+  const js = readFileSync(new URL('../../../assets/sz-relatorios-1.js', import.meta.url), 'utf8');
+  assert.ok(js.includes('function rotuloDe(chave)'), 'rotulo por card deveria existir no script externo');
+  assert.ok(js.includes("defasados.indexOf(chave) !== -1 || cacheVelho"), 'rotulo considera chave defasada ou cache velho');
+  assert.ok(js.includes("d.source_state === 'stale'"), 'source_state do cache vencido deveria ser lido');
+  assert.ok(js.includes("rotuloDe('ibovespa')"), 'cards usam o rotulo individual');
 });

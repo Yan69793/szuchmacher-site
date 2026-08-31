@@ -108,7 +108,17 @@ $szFiles = @(
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js')
+# Estilos e scripts que sairam dos blocos inline de cada pagina na Fase A do CSP.
+# Se um arquivo novo entrar, precisa entrar aqui: o HTML referencia em /assets/,
+# o build falha se o asset nao existir em public/. Ordem e irrelevante.
+$szAssets = @(
+    'sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js',
+    # Fase A: CSS extraido dos <style> inline por pagina
+    'sz-index-1.js', 'sz-relatorios-1.js', 'sz-relatorios-2.js', 'sz-relatorios-3.js',
+    'sz-relatorios.css', 'sz-honorarios.css', 'sz-assinatura-1.js', 'sz-assinatura.css',
+    'sz-privacidade.css', 'sz-cv.css', 'sz-metodologia-1.js', 'sz-metodologia.css',
+    'sz-consultoria.css', 'sz-utilities.css'
+)
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
@@ -125,6 +135,15 @@ Copy-IfExists (Join-Path $ROOT 'consultoria.html') (Join-Path $MULTI 'consultori
 Copy-IfExists (Join-Path $ROOT 'macro_data.json') (Join-Path $MULTI 'macro_data.json') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'og-cover.jpg') (Join-Path $MULTI 'og-cover.jpg') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\sz-config.js') | Out-Null
+# Fase A do CSP: as paginas compartilhadas (consultoria, metodologia, privacidade)
+# tiveram os estilos e scripts inline externados. O mesmo HTML serve os dois
+# dominios, entao os assets precisam existir nos dois lados, senao o Add-VersionStamps
+# do multi falha (referencia /assets/ sem arquivo correspondente em public/).
+Copy-IfExists (Join-Path $ROOT 'assets\sz-consultoria.css') (Join-Path $MULTI 'assets\sz-consultoria.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-metodologia.css') (Join-Path $MULTI 'assets\sz-metodologia.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-metodologia-1.js') (Join-Path $MULTI 'assets\sz-metodologia-1.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-privacidade.css') (Join-Path $MULTI 'assets\sz-privacidade.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-utilities.css') (Join-Path $MULTI 'assets\sz-utilities.css') | Out-Null
 # Politica de privacidade. multi-assets.com coleta e-mail no popup do simulador e
 # ate 26/07/2026 respondia 404 em /privacidade.html e /privacidade: coleta sem
 # aviso ao titular. Copiada nas duas formas, com e sem extensao, igual consultoria.

@@ -259,7 +259,11 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    novo, a reserva segura o painel e o e-mail pede caso no suporte CF
    (eventos `origin=cron` no Observability). Não meter essa checagem no
    `validar-producao.ps1` (portão de deploy).
-2. **CSP sem unsafe-inline** (refatoração grande, precisa de escopo próprio).
+2. **CSP sem unsafe-inline — Fase A sz concluída (31/08); resta só a Fase B
+   (multi).** As 8 páginas sz externalizaram script/style inline para
+   `assets/sz-*.css` e `assets/sz-*-N.js` e o Worker emite CSP sem
+   `unsafe-inline` nos hosts sz. `unsafe-inline` permanece apenas nos hosts
+   multi (`multiasset-app.html`: 136 handlers e 257 estilos inline).
 3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
    próprio).
 4. **Limpeza opcional no cPanel.** O job físico `agenda-cron.php` segue
@@ -267,6 +271,24 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    rejeitado com 403 após a rotação do `CRON_SECRET`). Desligar no painel
    quando houver login do cPanel resolve também o P3-15 (calendários 2026
    hardcoded). Sem risco operacional enquanto isso.
+5. **CSP fail-open para host desconhecido.** `buildCSP` em
+   `cloudflare-workers/sz-sites/src/utils/headers.js` concede `unsafe-inline`
+   a qualquer host fora de `SZ_HOSTS`. Hoje só os 4 hostnames têm rota;
+   domínio futuro não mapeado herda a CSP fraca. Registrado em 31/08,
+   correção separada da Fase A.
+
+### Resolvidas em 2026-08-31
+
+- **Fase A do CSP nas páginas sz.** Todo script/style inline das 8 páginas sz
+  externalizado para `assets/sz-*.css` (estilos) e `assets/sz-*-N.js`
+  (scripts puros), atributos `style="..."` convertidos em classes utilitárias
+  em `assets/sz-utilities.css`, e o toast do `sz-config.js` migrado de
+  `style.cssText` para atribuição CSSOM (nunca bloqueada por CSP). O Worker
+  (`src/utils/headers.js`) passou a emitir CSP por host: sz sem
+  `unsafe-inline` em `script-src`/`style-src`, multi mantendo (Fase B).
+  Quatro desvios de fidelidade de renderização corrigidos com `!important` nas
+  5 utilitárias, replicando a precedência do inline original (1,0,0,0) que a
+  classe herdou. Suíte do Worker 68 -> 69, build verde. Sem deploy.
 
 ### Resolvidas em 2026-08-24
 

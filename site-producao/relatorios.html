@@ -69,90 +69,9 @@
   <link rel="stylesheet" href="/assets/sz-design.css?v=20260718c" />
   <link rel="stylesheet" href="/assets/sz-imagery.css?v=20260718b" />
 
-  <style>
-    /* Tokens, reset, tipografia, .container, .section, .eyebrow, header, .nav,
-       .btn, .hero, .pillars, .section-head e footer vem de sz-design.css.
-       Esta pagina mantinha um fork com os mesmos nomes de classe e valores
-       derivados (--radius:2px, --max:1160px, paleta fria #eef0f4). O fork foi
-       removido: o que sobra abaixo e so o que e proprio de relatorios. */
-
-    .market-wrap{background:var(--navy);color:#f4eee2}
-    .market-wrap h2{color:#fff}
-    .market-wrap p{color:rgba(255,255,255,0.74)}
-    /* --gold (#8c6b3a) sobre navy da 3.73:1 e reprova AA. Em superficie escura
-       o sistema tem --gold-bright, que sobe para ~7:1. */
-    .market-wrap .eyebrow,
-    .market-wrap .section-date{color:var(--gold-bright)}
-    .market-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,0.8fr);gap:28px;align-items:start}
-    .market-main{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);padding:38px;margin-bottom:28px}
-    .market-main h3{color:#fff;font-size:1.8rem;margin-bottom:14px}
-    .market-main p{font-size:0.98rem}
-    .market-subnote{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.12);font-size:0.88rem;color:rgba(255,255,255,0.64)}
-    .market-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
-    .market-card{background:var(--surface-soft);color:var(--text);border:1px solid var(--line-strong);border-left:2px solid var(--gold);padding:24px 22px;min-height:148px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
-    .market-card small{display:block;text-transform:uppercase;letter-spacing:0.18em;font-weight:500;color:#5c6574;margin-bottom:10px;font-size:0.68rem}
-    .market-card strong{display:block;font-size:2.1rem;line-height:1;color:var(--navy);margin-bottom:10px;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
-    .market-card span{font-size:0.9rem;color:var(--muted);line-height:1.45;max-width:240px}
-
-    .signup-section{background:var(--surface);border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
-    .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
-    .signup-info h2{margin-bottom:14px;font-size:2rem}
-    .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
-    .pill{padding:7px 13px;border:1px solid var(--line-strong);background:var(--surface-soft);color:var(--text);font-family:var(--font-mono);font-weight:500;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.10em}
-    .signup-form{background:var(--surface-soft);border:1px solid var(--line);padding:34px}
-    .signup-form h3{margin-bottom:10px}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    input,select,textarea{width:100%;background:#fff;border:1px solid var(--line-strong);min-height:48px;padding:13px 14px;font:inherit;color:var(--text);margin-bottom:12px;outline:none;border-radius:0}
-    textarea{min-height:100px;resize:vertical}
-    input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-    .consent{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:0.92rem;margin:6px 0 16px 0}
-    .consent input{width:auto;min-height:auto;margin:4px 0 0 0}
-    .form-note{color:var(--muted);font-size:0.88rem;margin-top:10px}
-    .form-success{display:none;text-align:center;padding:20px 0}
-    .form-success.show{display:block}
-    .form-success h3{margin-bottom:10px;color:var(--navy)}
-
-    .capabilities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .capability{background:var(--surface);border:1px solid var(--line);padding:32px;min-height:220px}
-    .capability h3{font-size:1.35rem;margin-bottom:12px}
-
-    .contact-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:24px;align-items:start}
-    .contact-box,.contact-form-box{background:var(--surface-soft);border:1px solid var(--line);padding:34px}
-    .contact-box h2,.contact-form-box h3{margin-bottom:12px}
-    .contact-meta-label{display:block;font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:500;color:var(--gold);margin-top:18px;margin-bottom:6px}
-    .contact-box a{color:var(--gold);font-weight:500}
-
-    footer{padding:30px 0 38px;border-top:1px solid var(--line-strong);background:var(--bg)}
-    .rel-footer-grid{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
-    .footer-brand{font-family:var(--font-serif);color:var(--navy);font-size:1rem;margin-bottom:8px}
-    .footer-note{max-width:760px;font-size:0.82rem;color:var(--muted)}
-    .footer-links{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:500;color:var(--muted)}
-
-    @media (max-width:980px){
-      .hero-grid,.market-grid,.signup-grid,.contact-grid,.capabilities-grid,.pillars-grid{grid-template-columns:1fr}
-      .market-side{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .hero h1{font-size:2.35rem}
-      .section-head{align-items:start;flex-direction:column}
-      .nav{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line-strong);padding:14px 20px 18px;flex-direction:column;align-items:flex-start;gap:14px;z-index:1001}
-      .nav.nav-open{display:flex}
-      .nav a{font-size:0.78rem;padding:6px 0}
-      .mobile-menu-toggle{display:flex}
-    }
-    @media (max-width:640px){
-      .hero{padding:92px 0 72px}
-      .section{padding:74px 0}
-      .container{padding:0 20px}
-      .form-row,.market-side{grid-template-columns:1fr}
-      .market-card{min-height:132px;padding:22px 20px}
-      .market-card strong{font-size:1.9rem}
-      .hero h1{font-size:1.95rem}
-      .nav-cta{display:none}
-    }
-
-    /* .ysz-lockup e .ysz-stack vem de sz-design.css - duplicata removida */
-
-  </style>
-</head>
+  <link rel="stylesheet" href="/assets/sz-relatorios.css" />
+<link rel="stylesheet" href="/assets/sz-utilities.css" />
+  </head>
 <body data-page="relatorios">
   <header>
     <div class="container header-row">
@@ -191,14 +110,14 @@
               <a href="/#contato" class="btn btn-outline" data-ga="cta_diagnostico" data-ga-location="hero_relatorios">Agendar análise</a>
             </div>
           </div>
-          <aside class="hero-visual" aria-label="Formato do relatório" style="background:var(--navy);color:#fff;padding:32px;border:1px solid rgba(255,255,255,0.08)">
-            <p style="font-family:var(--font-serif);font-size:1.2rem;margin-bottom:6px;color:#fff">Fechamento de Mercado</p>
-            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#d4b87a;margin-bottom:18px">Edição semanal · assinantes</p>
-            <hr style="border:none;height:1px;background:rgba(212,184,122,0.35);margin-bottom:18px" />
-            <ul style="list-style:none;padding:0;margin:0;font-size:0.9rem;color:rgba(255,255,255,0.82);line-height:1.7">
-              <li style="margin-bottom:10px"><span style="font-family:var(--font-mono);font-size:0.58rem;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px">CAMADA 1</span>Registro objetivo do que se moveu</li>
-              <li style="margin-bottom:10px"><span style="font-family:var(--font-mono);font-size:0.58rem;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px">CAMADA 2</span>Leitura de causa e contexto</li>
-              <li><span style="font-family:var(--font-mono);font-size:0.58rem;color:rgba(255,255,255,0.45);display:block;margin-bottom:4px">CAMADA 3</span>Implicação para alocação</li>
+          <aside class="u-backgroundvarnavy-colorfff-padding32px-border1pxsolid hero-visual" aria-label="Formato do relatório">
+            <p class="u-fontfamilyvarfonts-fontsize12rem-marginbottom6px-colorfff">Fechamento de Mercado</p>
+            <p class="u-fontfamilyvarfontm-fontsize062rem-letterspacing018em-textt">Edição semanal · assinantes</p>
+            <hr class="u-bordernone-height1px-backgroundrgba2121-marginbottom18px">
+            <ul class="u-liststylenone-padding0-margin0-fontsize09rem-colorrgba2552">
+              <li class="u-marginbottom10px"><span class="u-fontfamilyvarfontm-fontsize058rem-colorrgba2552-displayblo">CAMADA 1</span>Registro objetivo do que se moveu</li>
+              <li class="u-marginbottom10px"><span class="u-fontfamilyvarfontm-fontsize058rem-colorrgba2552-displayblo">CAMADA 2</span>Leitura de causa e contexto</li>
+              <li><span class="u-fontfamilyvarfontm-fontsize058rem-colorrgba2552-displayblo">CAMADA 3</span>Implicação para alocação</li>
             </ul>
           </aside>
         </div>
@@ -302,16 +221,16 @@
 
           <!-- ALTERADO 2026-07-20: formulario gratuito restaurado para o Fechamento diario.
                Envia para o Worker (/relatorio-signup) que armazena em KV e manda email. -->
-          <div class="signup-form" style="margin-bottom:20px;">
+          <div class="u-marginbottom20px signup-form">
             <h3>Receba o relatório gratuitamente</h3>
             <p>O Fechamento de Mercado diário no seu e-mail, em dias úteis, por volta das 19h BRT.</p>
-            <form id="reportSignupForm" style="margin-top:16px;">
-              <div style="display:flex;gap:10px;">
-                <input type="email" name="email" placeholder="Seu melhor e-mail" required style="flex:1;margin-bottom:0;" />
-                <button type="submit" class="btn" style="white-space:nowrap;min-width:140px;">Inscrever</button>
+            <form id="reportSignupForm" class="u-margintop16px">
+              <div class="u-displayflex-gap10px">
+                <input type="email" name="email" placeholder="Seu melhor e-mail" required class="u-flex1-marginbottom0">
+                <button type="submit" class="u-whitespacenowrap-minwidth140px btn">Inscrever</button>
               </div>
-              <div id="reportSignupMsg" style="margin-top:10px;font-size:0.88rem;display:none;"></div>
-              <div class="form-note" style="margin-top:8px;">Sem spam. Cancele quando quiser.</div>
+              <div id="reportSignupMsg" class="u-margintop10px-fontsize088rem-displaynone"></div>
+              <div class="u-margintop8px form-note">Sem spam. Cancele quando quiser.</div>
             </form>
           </div>
 
@@ -319,15 +238,15 @@
           <div class="signup-form">
             <h3>Assine a Carta Szuchmacher</h3>
             <p>Research autoral por assinatura. Cobrança anual, no cartão, cancele quando quiser.</p>
-            <ul style="list-style:none;padding:0;margin:18px 0;">
-              <li style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0;border-bottom:1px solid rgba(11,22,48,0.12);">
-                <span>Carta — research por e-mail</span><strong style="white-space:nowrap;color:var(--gold);">A consultar</strong>
+            <ul class="u-liststylenone-padding0-margin18px0">
+              <li class="u-displayflex-justifycontentspacebet-alignitemsbaseline-gap1">
+                <span>Carta — research por e-mail</span><strong class="u-whitespacenowrap-colorvargold">A consultar</strong>
               </li>
-              <li style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0;">
-                <span>MultiAsset Pro — research + plataforma</span><strong style="white-space:nowrap;color:var(--gold);">A consultar</strong>
+              <li class="u-displayflex-justifycontentspacebet-alignitemsbaseline-gap1-2">
+                <span>MultiAsset Pro — research + plataforma</span><strong class="u-whitespacenowrap-colorvargold">A consultar</strong>
               </li>
             </ul>
-            <a href="assinatura.html" class="btn" style="width:100%" data-ga="cta_report_subscribe" data-ga-location="planos">Ver planos e assinar</a>
+            <a href="assinatura.html" class="u-width100 btn" data-ga="cta_report_subscribe" data-ga-location="planos">Ver planos e assinar</a>
             <div class="form-note">Conteúdo impessoal. Não constitui recomendação individualizada.</div>
           </div>
         </div>
@@ -370,7 +289,7 @@
             <span class="contact-meta-label">WhatsApp</span>
             <p><a href="https://wa.me/5521981088992" target="_blank" rel="noopener" data-ga="whatsapp_click" data-ga-location="contato_relatorios">+55 21 98108 8992</a></p>
             <span class="contact-meta-label">E-mail</span>
-            <p><a id="contact-email-link" style="color:var(--gold);font-weight:700;"></a></p>
+            <p><a id="contact-email-link" class="u-colorvargold-fontweight700"></a></p>
           </div>
 
           <form id="contactForm" class="contact-form-box" method="POST" action="" data-formspree="1" data-form="contato">
@@ -409,12 +328,12 @@
             <textarea name="mensagem" placeholder="Breve contexto patrimonial, estruturas atuais e objetivo principal." required></textarea>
             <label class="consent">
               <input type="checkbox" name="consentimento" required />
-              <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">política de privacidade</a>.</span>
+              <span>Autorizo contato por e-mail e WhatsApp conforme a <a href="/privacidade.html" target="_blank" class="u-colorvargold-textdecorationunderlin-textunderlineoffset3px">política de privacidade</a>.</span>
             </label>
             <input type="hidden" name="_subject" value="Nova solicitação — Contato via relatorios.html" />
             <input type="hidden" name="_origem" value="relatorios.html#contato" />
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
-            <button type="submit" class="btn" style="width:100%" data-ga="cta_contato" data-ga-location="form_contato_relatorios">Solicitar contato</button>
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="u-displaynone">
+            <button type="submit" class="u-width100 btn" data-ga="cta_contato" data-ga-location="form_contato_relatorios">Solicitar contato</button>
             <div class="form-note">Retorno em até 24 horas úteis.</div>
           </form>
         </div>
@@ -444,190 +363,15 @@
           <a href="/#contato">Contato</a>
         </div>
       </div>
-      <p style="margin-top:18px;font-size:0.76rem;color:var(--muted);">© 2026 Szuchmacher Consultoria. Todos os direitos reservados. Rio de Janeiro, Brasil · CVM nº 19/2021</p>
+      <p class="u-margintop18px-fontsize076rem-colorvarmuted">© 2026 Szuchmacher Consultoria. Todos os direitos reservados. Rio de Janeiro, Brasil · CVM nº 19/2021</p>
     </div>
   </footer>
 
-  <script>
-  /* ── Carregamento dinâmico do relatório ──────────────────────────────────────
-   * Busca /relatorio_cache.json (gerado pelo cron_relatorio.php às 19:00 BRT)
-   * e popula os elementos marcados com id="rel*" e id="card*".
-   * Em caso de falha, o conteúdo estático do HTML permanece visível.
-   * ────────────────────────────────────────────────────────────────────────── */
-  (function () {
-    'use strict';
+  <script src="/assets/sz-relatorios-1.js"></script>
 
-    /* O gerador grava o texto ja escapado em HTML no relatorio_cache.json
-       ("S&amp;P 500"). Como aqui o destino e textContent, que espera texto cru,
-       o "&amp;" aparecia literal na tela. Decodifica por mapa explicito, nao por
-       innerHTML, para nao abrir caminho de injecao. A correcao definitiva e no
-       gerador, que nao deveria escapar. */
-    var ENTIDADES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' };
-
-    function decodificar(txt) {
-      if (typeof txt !== 'string') return txt;
-      return txt.replace(/&(amp|lt|gt|quot|#39|nbsp);/g, function (m) { return ENTIDADES[m] || m; });
-    }
-
-    function setText(id, value) {
-      if (!value) return;
-      var el = document.getElementById(id);
-      if (el) el.textContent = decodificar(value);
-    }
-
-    function setHTML(id, html) {
-      if (!html) return;
-      var el = document.getElementById(id);
-      if (el) el.innerHTML = html;
-    }
-
-    function setCard(id, value, label) {
-      var card = document.getElementById(id);
-      if (!card) return;
-      var strong = card.querySelector('strong');
-      var span   = card.querySelector('span');
-      if (strong && value) strong.textContent = decodificar(value);
-      if (span   && label) span.textContent   = decodificar(label);
-    }
-
-    function applyReport(data) {
-      setText('relDateMain', data.date_label);
-      setText('relEyebrow',  data.eyebrow);
-      setText('relH2',       data.h2);
-
-      var r = data.report || {};
-      setText('relHeadline', r.headline);
-      setText('relPara1',    r.paragraph1);
-      setText('relPara2',    r.paragraph2);
-      setText('relPara3',    r.paragraph3);
-
-      if (r.what_could_go_wrong) {
-        setHTML('relSubnoteErrar',
-          '<strong>O que poderia nos fazer errar.</strong> ' + r.what_could_go_wrong);
-      }
-      if (r.next_week) {
-        setHTML('relSubnoteProxSemana',
-          '<strong>Na próxima semana.</strong> ' + r.next_week);
-      }
-      setText('relSubnoteFonte', r.source_note);
-
-      var p = data.prices || {};
-      if (p.ibovespa && p.ibovespa.value)
-        setCard('cardIbovespa', p.ibovespa.value, p.ibovespa.label);
-      if (p.usd_brl && p.usd_brl.value)
-        setCard('cardDolar', 'R$ ' + p.usd_brl.value, p.usd_brl.label);
-      if (p.sp500 && p.sp500.value)
-        setCard('cardSP500', p.sp500.value, p.sp500.label);
-      if (p.wti && p.wti.value)
-        setCard('cardWTI', 'US$ ' + p.wti.value, p.wti.label);
-    }
-
-    function fmtBR(num, dec) {
-      return num.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-    }
-
-    function fetchLiveMarketPrices() {
-      fetch('/relatorio-prices.php', { cache: 'no-store' })
-        .then(function (res) {
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.json();
-        })
-        .then(function (d) {
-          if (!d.ok) return;
-          // stale é array de ativos defasados, array vazio é truthy: comparar
-          // por comprimento. O rótulo é por card, não da página: um WTI
-          // defasado não pode marcar Ibovespa fresco como defasado.
-          // source_state 'stale'/'stale-cache' indica cache vencido servido
-          // durante a revalidacao: dado velho sem flag ainda nao é cotação
-          // do minuto.
-          var defasados = Array.isArray(d.stale) ? d.stale : [];
-          var cacheVelho = d.source_state === 'stale' || d.source_state === 'stale-cache';
-          function rotuloDe(chave) {
-            return (defasados.indexOf(chave) !== -1 || cacheVelho) ? 'Cotação defasada' : 'Cotação atual';
-          }
-          if (d.ibovespa) setCard('cardIbovespa', fmtBR(d.ibovespa, 0),          rotuloDe('ibovespa'));
-          if (d.usd_brl)  setCard('cardDolar',    'R$ '  + fmtBR(d.usd_brl, 4), rotuloDe('usd_brl'));
-          if (d.sp500)    setCard('cardSP500',     fmtBR(d.sp500, 2),             rotuloDe('sp500'));
-          if (d.wti)      setCard('cardWTI',       'US$ ' + fmtBR(d.wti, 2),     rotuloDe('wti'));
-        })
-        .catch(function () { /* silencioso — fallback JSON permanece */ });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      fetch('/relatorio_cache.json?v=' + Date.now(), { cache: 'no-store' })
-        .then(function (res) {
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.json();
-        })
-        .then(applyReport)
-        .then(function () { fetchLiveMarketPrices(); })
-        .catch(function (err) {
-          console.warn('[Relatorio] Usando conteudo estatico:', err.message);
-        });
-    });
-  }());
-  </script>
-
-  <script>
-    /* ── Formulario de inscricao gratuita ────────────────────────────────────
-     * Envia POST para /relatorio-signup (Worker sz-sites), que armazena o
-     * email em KV e dispara email de boas-vindas com o ultimo relatorio.
-     * ────────────────────────────────────────────────────────────────────── */
-    (function () {
-      'use strict';
-      var form = document.getElementById('reportSignupForm');
-      if (!form) return;
-      var msg = document.getElementById('reportSignupMsg');
-      var btn = form.querySelector('button[type="submit"]');
-      var origText = btn ? btn.textContent : '';
-
-      function showMsg(text, isError) {
-        if (!msg) return;
-        msg.textContent = text;
-        msg.style.display = 'block';
-        msg.style.color = isError ? '#b33' : '#2a6b2a';
-      }
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var email = (form.querySelector('input[name="email"]') || {}).value;
-        if (!email) return;
-
-        if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
-        if (msg) msg.style.display = 'none';
-
-        fetch('/relatorio-signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim() }),
-        })
-          .then(function (r) { return r.json(); })
-          .then(function (d) {
-            if (d.ok) {
-              showMsg('Inscricao confirmada. Verifique seu email para acessar o ultimo relatorio.', false);
-              form.reset();
-            } else {
-              showMsg(d.error || 'Erro ao processar. Tente novamente.', true);
-            }
-          })
-          .catch(function () {
-            showMsg('Erro de conexao. Tente novamente em instantes.', true);
-          })
-          .then(function () {
-            if (btn) { btn.disabled = false; btn.textContent = origText; }
-          });
-      });
-    })();
-  </script>
+  <script src="/assets/sz-relatorios-2.js"></script>
 
   <script src="/assets/sz-site.js?v=20260617" defer></script>
-  <script>
-    var el = document.getElementById('contact-email-link');
-    if (el) {
-      var e = 'yan' + '@' + 'szuchmacher.com.br';
-      el.href = 'mailto:' + e;
-      el.textContent = e;
-    }
-  </script>
+  <script src="/assets/sz-relatorios-3.js"></script>
 </body>
 </html>
