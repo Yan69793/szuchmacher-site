@@ -367,5 +367,6 @@ Gate 34/34 após o deploy `eb7c49e0`. Confirmado no HTML servido em produção:
 restaurado. O refresh do macro deu 429 do OpenRouter nas 3 tentativas, cache
 frio sem impacto na correção.
 
-Ficam 3 arquivos não commitados: `assets/multi-app-2.js`, `multiasset-app.html`
-e `scripts/build-cloudflare-public.ps1`. Commit só com pedido do operador.
+Commitado e enviado ao origin em dois commits: `8d29aec` (fix(csp), os três
+arquivos de código) e `5b5defe` (docs(estado)). Branch sincronizada, restam só
+quatro screenshots não rastreados na raiz.
