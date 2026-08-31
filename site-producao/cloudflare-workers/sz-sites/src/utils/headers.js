@@ -1,12 +1,14 @@
-// CSP base, sem unsafe-eval. O unsafe-inline e condicionado ao host: o
-// multi-assets.com ainda tem 136 handlers inline e 257 estilos inline no
-// multiasset-app.html (Fase B do CSP), entao mantem unsafe-inline em
-// script-src e style-src. O szuchmacher.com.br ja externalizou tudo na Fase A
-// (blocos style/script e atributos style viraram assets), entao tira.
-const SZ_HOSTS = new Set(['szuchmacher.com.br', 'www.szuchmacher.com.br']);
+// CSP base, sem unsafe-eval. O unsafe-inline e allowlist por host, default
+// estrito: so quem ainda precisa recebe. O multi-assets.com ainda tem 136
+// handlers inline e 257 estilos inline no multiasset-app.html (Fase B do CSP),
+// entao mantem unsafe-inline em script-src e style-src. O szuchmacher.com.br
+// ja externalizou tudo na Fase A (blocos style/script e atributos style
+// viraram assets), entao tira. Host fora desta allowlist (dominio futuro nao
+// mapeado) cai no estrito, nao herda politica fraca por omissao.
+const MULTI_HOSTS = new Set(['multi-assets.com', 'www.multi-assets.com']);
 
 function buildCSP(host) {
-  const inline = SZ_HOSTS.has(host) ? '' : " 'unsafe-inline'";
+  const inline = MULTI_HOSTS.has(host) ? " 'unsafe-inline'" : '';
   return [
     "default-src 'self'",
     "script-src 'self'" + inline + " https://www.clarity.ms https://scripts.clarity.ms https://plausible.io https://s3.tradingview.com https://s.tradingview.com https://cdnjs.cloudflare.com https://static.cloudflareinsights.com",

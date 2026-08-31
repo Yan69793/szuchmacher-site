@@ -271,11 +271,12 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    rejeitado com 403 após a rotação do `CRON_SECRET`). Desligar no painel
    quando houver login do cPanel resolve também o P3-15 (calendários 2026
    hardcoded). Sem risco operacional enquanto isso.
-5. **CSP fail-open para host desconhecido.** `buildCSP` em
-   `cloudflare-workers/sz-sites/src/utils/headers.js` concede `unsafe-inline`
-   a qualquer host fora de `SZ_HOSTS`. Hoje só os 4 hostnames têm rota;
-   domínio futuro não mapeado herda a CSP fraca. Registrado em 31/08,
-   correção separada da Fase A.
+5. **CSP fail-open para host desconhecido.** Fechado em 31/08: `buildCSP` em
+   `cloudflare-workers/sz-sites/src/utils/headers.js` agora usa allowlist
+   explícita (`MULTI_HOSTS`), default estrito. Domínio futuro não mapeado cai
+   no CSP sem `unsafe-inline`, não herda política fraca por omissão. Teste
+   novo no `headers.test.mjs` (host desconhecido estrito). Publicado em 31/08
+   01:52 BRT, Worker `66f419a8`, gate 34/34.
 
 ### Resolvidas em 2026-08-31
 

@@ -26,6 +26,12 @@ test('CSP do multi mantem unsafe-inline (handlers inline do multiasset, Fase B)'
   assert.ok(www.includes("'unsafe-inline'"));
 });
 
+test('CSP de host desconhecido cai no estrito (fail-closed, nao herda unsafe-inline)', () => {
+  const csp = cspOf('outro-dominio-futuro.com');
+  assert.ok(!csp.includes("'unsafe-inline'"), 'host fora da allowlist nao pode ganhar unsafe-inline');
+  assert.ok(!csp.includes("'unsafe-eval'"));
+});
+
 test('CSP aplica headers de seguranca e marca o servidor', () => {
   const res = applySecurityHeaders(new Response('ok', { status: 200 }), 'szuchmacher.com.br');
   assert.equal(res.headers.get('Strict-Transport-Security'), 'max-age=31536000; includeSubDomains');

@@ -77,11 +77,12 @@ muda quando checagem nova entra, use a da saída real do script.
   `multiasset-app.html` ainda tem 136 handlers inline (94 `onclick`,
   41 `oninput`, 1 `onkeydown`) e 257 estilos inline. Fase B = externalizar
   esses handlers/estilos e tirar `unsafe-inline` também do multi.
-- **CSP fail-open para host desconhecido.** `buildCSP` em
-  `src/utils/headers.js` concede `unsafe-inline` a qualquer host fora de
-  `SZ_HOSTS`. Hoje só os 4 hostnames têm rota, risco baixo, mas domínio
-  futuro não mapeado herda a CSP fraca. Registrado em 31/08 como pendência
-  separada da Fase A.
+- **CSP fail-open para host desconhecido.** Fechado em 31/08: `buildCSP`
+  em `src/utils/headers.js` virou allowlist explícita (`MULTI_HOSTS`),
+  default estrito. Host futuro não mapeado cai no CSP sem `unsafe-inline`,
+  não herda política fraca por omissão. Teste novo no `headers.test.mjs`
+  (host desconhecido estrito). Publicado em 31/08 01:52 BRT, Worker
+  `66f419a8`, gate 34/34.
 - ~~P3 de 30/08, GET ou HEAD com `Content-Length: 0` em rota HTML devolve 500.~~
   **Fechado em 30/08 à noite, deploy `d9a155b2`, gate 34/34.** `fetchAsset`
   reconstroi o request com `{ method, headers }`, sem repassar body. Ver
