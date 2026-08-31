@@ -1,6 +1,6 @@
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleNtnbScenarios } from '../src/handlers/ntnb-scenarios.js';
+import { handleNtnbScenarios, tradingDayGap } from '../src/handlers/ntnb-scenarios.js';
 
 const realFetch = globalThis.fetch;
 
@@ -94,6 +94,38 @@ test('cache legacy sem source (era pre-contrato) mapeia para defaults com stale 
   const body = await r.json();
   assert.equal(body.source, 'defaults', 'payload antigo era da era defaults (NTNB11.SA nunca existiu)');
   assert.equal(body.stale, true, 'legacy nao pode passar 12h como fonte viva');
+});
+
+test('tradingDayGap: fim de semana nao conta como defasagem (P3-2)', () => {
+  // sexta 28/08/2026 21:00 UTC (18:00 BRT)
+  const fri = Date.UTC(2026, 7, 28, 21, 0, 0) / 1000;
+  assert.equal(tradingDayGap(fri, Date.UTC(2026, 7, 29, 15, 0, 0) / 1000), 0, 'sabado');
+  assert.equal(tradingDayGap(fri, Date.UTC(2026, 7, 30, 15, 0, 0) / 1000), 0, 'domingo');
+  assert.equal(tradingDayGap(fri, Date.UTC(2026, 7, 31, 15, 0, 0) / 1000), 0, 'segunda de manha');
+  assert.equal(tradingDayGap(fri, Date.UTC(2026, 8, 1, 15, 0, 0) / 1000), 1, 'terca');
+  assert.equal(tradingDayGap(fri, Date.UTC(2026, 8, 3, 15, 0, 0) / 1000), 3, 'quinta');
+});
+
+test('candle de sexta segue fresco num domingo: fonte yahoo, nao defaults (P3-2)', async () => {
+  const fri = Date.UTC(2026, 7, 28, 21, 0, 0) / 1000; // sexta 28/08 18:00 BRT
+  const realNow = Date.now;
+  Date.now = () => Date.UTC(2026, 7, 30, 18, 0, 0); // domingo 18:00 UTC = 15:00 BRT
+  try {
+    globalThis.fetch = async () => jsonRes({
+      chart: { result: [{
+        meta: { regularMarketPrice: 70.0, currency: 'BRL', exchangeName: 'B3' },
+        timestamp: [fri],
+      }] },
+    });
+    const r = await handleNtnbScenarios(makeEnv(), undefined);
+    const body = await r.json();
+    assert.equal(body.source, 'yahoo', 'fonte viva nao pode cair para defaults no fim de semana');
+    assert.equal(body.stale, false);
+    assert.equal(body.ntnb_price, 70.0);
+  } finally {
+    Date.now = realNow;
+    globalThis.fetch = realFetch;
+  }
 });
 
 test('cache de fonte viva devolve source yahoo e stale false', async () => {

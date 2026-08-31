@@ -270,11 +270,18 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   const httpRefresh = httpRefreshRequested(reqUrl);
 
   const origin = request.headers.get('Origin') || '';
+  // Allowlist exata, nunca substring. O antigo includes() deixava passar
+  // https://multi-assets.com.evil.io e https://evilmulti-assets.com e ecoava
+  // o origin de volta no ACAO, liberando leitura cross-origin da API.
+  // Fechado em 30/08/2026. Os hosts sao os 4 do SITE_MAP do index.js.
+  const ALLOWED_ORIGINS = new Set([
+    'https://szuchmacher.com.br',
+    'https://www.szuchmacher.com.br',
+    'https://multi-assets.com',
+    'https://www.multi-assets.com',
+  ]);
   const cors = {
-    'Access-Control-Allow-Origin':
-      origin.includes('multi-assets.com') || origin.includes('szuchmacher.com.br')
-        ? origin
-        : 'https://szuchmacher.com.br',
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : 'https://szuchmacher.com.br',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': CRON_HEADER,
     Vary: 'Origin',

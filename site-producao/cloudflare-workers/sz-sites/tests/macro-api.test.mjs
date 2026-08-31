@@ -326,3 +326,23 @@ test('scheduled grava macro-cron-last e o KV macro-api quando a cascata fecha', 
   const gravado = JSON.parse(await env.CACHE.get('macro-api'));
   assert.equal(gravado.data.eyebrow, 'Cenário teste');
 });
+
+test('CORS: origin exato da allowlist e ecoado, os 4 hosts do SITE_MAP', async () => {
+  const env = makeEnv();
+  for (const origin of ['https://szuchmacher.com.br', 'https://www.szuchmacher.com.br', 'https://multi-assets.com', 'https://www.multi-assets.com']) {
+    const r = await handleMacroApi(new Request('https://szuchmacher.com.br/macro_api.php', { method: 'OPTIONS', headers: { Origin: origin } }), env);
+    assert.equal(r.status, 204);
+    assert.equal(r.headers.get('Access-Control-Allow-Origin'), origin, origin);
+  }
+});
+
+test('CORS: substring maliciosa NAO e ecoada, cai no fallback fixo', async () => {
+  const env = makeEnv();
+  const maliciosos = ['https://multi-assets.com.evil.io', 'https://evilmulti-assets.com', 'https://szuchmacher.com.br.attacker.net', 'null', ''];
+  for (const origin of maliciosos) {
+    const headers = origin ? { Origin: origin } : {};
+    const r = await handleMacroApi(new Request('https://szuchmacher.com.br/macro_api.php', { method: 'OPTIONS', headers }), env);
+    assert.equal(r.status, 204);
+    assert.equal(r.headers.get('Access-Control-Allow-Origin'), 'https://szuchmacher.com.br', `origin "${origin}"`);
+  }
+});
