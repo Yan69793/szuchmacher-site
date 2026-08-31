@@ -20,6 +20,25 @@ Write-Host "`n=== DEPLOY CLOUDFLARE (sz-sites) ===" -ForegroundColor Cyan
 & $BUILD
 
 Push-Location $WORKER
+
+# CLOUDFLARE_API_TOKEN persistido (cfut_) tem precedencia sobre o login OAuth do
+# wrangler e nao carrega o escopo de Workers. Medido em 31/08/2026: o token
+# responde active em /user/tokens/verify, mas nem User Details ele le, e o deploy
+# morria em 10000 (Authentication error) no /workers/services/sz-sites seguido de
+# 9109 (Invalid access token) no /accounts. O OAuth gravado em
+# ~/.wrangler/config/default.toml traz workers, workers_kv, workers_routes e
+# workers_scripts em write, que e o que o deploy precisa. Tirar a variavel do
+# processo derruba a precedencia e o wrangler cai no OAuth.
+#
+# invalidate-worker-cache.ps1, attach-worker-domains.ps1, purge-cloudflare.ps1,
+# cleanup-dns-cloudflare.ps1 e os dois setup-*.ps1 ja faziam isto. Este script
+# tinha ficado de fora e era o unico ponto que ainda quebrava a publicacao.
+# Escopo de processo, a variavel persistida do usuario continua intacta.
+$tokenAmbiente = $env:CLOUDFLARE_API_TOKEN
+if ($tokenAmbiente) {
+    [Environment]::SetEnvironmentVariable('CLOUDFLARE_API_TOKEN', $null, 'Process')
+}
+
 try {
     if (-not (Test-Path 'node_modules')) {
         Write-Host "Instalando dependencias..." -ForegroundColor DarkGray
@@ -106,5 +125,8 @@ try {
     exit 0
 }
 finally {
+    # Env: e escopo de processo, nao de script: sem devolver, quem chamou este
+    # script com & (publicar-com-rollback.ps1) seguiria sem o token.
+    if ($tokenAmbiente) { $env:CLOUDFLARE_API_TOKEN = $tokenAmbiente }
     Pop-Location
 }
