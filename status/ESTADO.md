@@ -69,15 +69,13 @@ muda quando checagem nova entra, use a da saída real do script.
 - **Cron nativo: causa raiz corrigida em 24/08, prova real só em 31/08.** A Cloudflare numera dia da semana como Quartz (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para `0 3 * * MON` e publicado (versão `5df713af`, gate 34/34). O carimbo `macro_cron_last` em `/health` ainda mostra o registro velho de 23/08 e só é reescrito no próximo disparo. Confirmar na segunda 31/08, depois das 03:00 UTC, que `ts` cai na janela e `cron` vem `0 3 * * MON`. Conferido em 30/08, `/health` ainda traz `cron: "0 3 * * 1"` com `generated_at` de 23/08, que é exatamente o esperado enquanto o disparo novo não acontece.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
 - Itens de escopo próprio do §Q: CSP sem unsafe-inline e F5 cache-busting.
-- P3 novo de 30/08, GET ou HEAD com header `Content-Length: 0` em rota HTML
-  devolve 500. `fetchAsset` em `src/index.js:135` reempacota o request com
-  `new Request(assetUrl, request)` e o construtor rejeita body em GET e HEAD.
-  Só o caminho estático é afetado, API e asset em cache respondem 200.
-  Navegador não manda esse header, quem tropeça é cliente .NET.
-- P3 novo de 30/08, `/api/ntnb-scenarios` responde `defaults` todo fim de
-  semana. O corte de 48 h corridas do `STALE_THRESHOLD` descarta o candle de
-  sexta a partir de domingo de manhã, com o Yahoo de pé. Sem impacto de tela,
-  o app só consome `rates`, que não mudam entre os dois modos.
+- ~~P3 de 30/08, GET ou HEAD com `Content-Length: 0` em rota HTML devolve 500.~~
+  **Fechado em 30/08 à noite, deploy `d9a155b2`, gate 34/34.** `fetchAsset`
+  reconstroi o request com `{ method, headers }`, sem repassar body. Ver
+  "Fechamento da noite de 30/08" abaixo.
+- ~~P3 de 30/08, `/api/ntnb-scenarios` responde `defaults` todo fim de semana.~~
+  **Fechado em 30/08 à noite, deploy `d9a155b2`, gate 34/34.** Staleness por
+  dias úteis no lugar de 48 h corridas. Ver "Fechamento da noite de 30/08" abaixo.
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
 
 ## Estado em 2026-08-19
@@ -183,3 +181,21 @@ Os dois achados novos entraram em Itens abertos, os dois P3. O do `Content-Lengt
 coleta de headers da auditoria tropeçou nele, o `Invoke-WebRequest -Method Head`
 manda o header e o curl não. Nenhum script do projeto usa HEAD, então nada
 operacional quebra hoje.
+
+### Fechamento da noite de 30/08
+
+Os dois P3 de Itens abertos e um terceiro achado foram corrigidos e publicados
+num deploy só, versão `d9a155b2`, gate 34/34, suíte do Worker 56 -> 64 testes.
+Commit `61e9ca4`.
+
+- **CORS por substring no macro-api** (achado desta sessão, não estava nos
+  docs). `origin.includes('multi-assets.com')` deixava passar
+  `https://multi-assets.com.evil.io` e ecoava o origin de volta no
+  `Access-Control-Allow-Origin`, liberando leitura cross-origin da API.
+  Trocado por allowlist exata dos 4 hosts do SITE_MAP. Verificado em produção:
+  origin malicioso cai no fallback fixo, o legítimo ecoa.
+- **GET/HEAD com `Content-Length: 0`** (P3). `fetchAsset` reconstroi o request
+  com `{ method, headers }`, sem repassar body. HEAD em rota HTML responde 200.
+- **ntnb-scenarios no fim de semana** (P3). Staleness por dias úteis no lugar
+  de 48 h corridas. Verificado num domingo 23:43 BRT, `source: yahoo`,
+  `stale: false`.
