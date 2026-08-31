@@ -1,88 +1,88 @@
 {
-  "generated_at": "21/08/2026 às 18:01 BRT",
+  "generated_at": "28/08/2026 às 18:00 BRT",
   "data": {
     "eyebrow": "Cenário Brasil · Agosto 2026",
-    "alert_title": "Selic em 14.00% a.a. | PTAX R$ 5.19 | COPOM 16/SET em foco",
-    "alert_text": "O BCB mantém ciclo restritivo com Selic em 14.00%, enquanto o mercado projeta queda modesta para 13.75% até dezembro. A inflação acumulada (FOCUS 5.02%) permanece acima da meta, sustentando pressão por juros elevados. O câmbio em R$ 5.19 reflete vulnerabilidade externa e prêmio de risco elevado. PIB real projetado em 1.98% sinaliza desaceleração, criando trade-off entre controle inflacionário e atividade. Próxima decisão do COPOM (16/SET) será crítica para sinalizar trajetória de cortes.",
+    "alert_title": "Selic em 14.00% a.a. · PTAX R$ 5.16 · COPOM 16/SET em foco",
+    "alert_text": "O Banco Central mantém a taxa de juros em patamar elevado enquanto o mercado projeta queda modesta para 13.75% ao final de 2026, sinalizando ciclo de flexibilização gradual. O câmbio opera em R$ 5.16, com expectativa de depreciação para R$ 5.20 conforme pressões externas persistem. A inflação acumulada de 5.02% permanece acima da meta, sustentando prêmios reais elevados em ativos de renda fixa. O PIB real de 1.95% reflete desaceleração econômica, criando tensão entre suporte fiscal e ancoragem inflacionária.",
     "alert_badge": "COPOM 16/SET",
     "canais": [
       {
         "variavel": "Petróleo (WTI/Brent)",
         "direcao": "neutral",
-        "mecanismo": "Preços globais em equilíbrio dinâmico entre oferta OPEC+ e demanda fraca. Impacto indireto na inflação brasileira via combustíveis e energia, mas com pass-through limitado por câmbio apreciado. Risco de choque de oferta geopolítico permanece latente."
+        "mecanismo": "Preços de energia global influenciam diretamente a inflação de serviços e combustíveis no Brasil. Volatilidade geopolítica mantém WTI/Brent em faixa de equilíbrio, sem pressão significativa sobre o IPCA nos próximos meses. Depreciação do real tende a amplificar impacto de choques de oferta externa."
       },
       {
         "variavel": "Inflação Global",
         "direcao": "down",
-        "mecanismo": "Desinflação em curso nos EUA e zona do euro reduz pressão sobre commodities e importações. Menor inflação global favorece espaço para cortes de juros globais, reduzindo carry trade e aliviando pressão cambial no Brasil."
+        "mecanismo": "Desaceleração gradual da inflação global reduz pressão sobre commodities e taxa de câmbio. Bancos centrais desenvolvidos mantêm ciclo restritivo moderado, limitando transmissão de choques para economias emergentes. Ancoragem de expectativas em mercados desenvolvidos favorece estabilidade relativa do real."
       },
       {
         "variavel": "Juros (Fed / BCB)",
         "direcao": "down",
-        "mecanismo": "Fed em ciclo de cortes moderados; BCB mantém Selic elevada por inflação doméstica persistente. Diferencial de juros Brasil-EUA permanece atrativo, mas compressão esperada conforme desinflação avança. Risco de inversão de fluxos se cortes BCB acelerarem."
+        "mecanismo": "Fed em pausa ou início de cortes suaviza diferencial de juros Brasil-EUA, reduzindo atração de capital externo. BCB sinaliza flexibilização gradual, mas mantém Selic elevada para combater inflação doméstica. Diferencial de 800-900 bps permanece atrativo para carry trade, sustentando demanda por ativos brasileiros."
       },
       {
         "variavel": "PIB Global",
         "direcao": "neutral",
-        "mecanismo": "Crescimento global moderado (2.0-2.5%) sustenta demanda por commodities, mas sem impulso significativo. Brasil sofre com desaceleração doméstica (1.98%) e vulnerabilidade a choques externos, limitando upside de exportações."
+        "mecanismo": "Crescimento global moderado (2-2.5%) limita demanda por commodities e exportações brasileiras. Desaceleração em China e Europa reduz impulso externo, reforçando dependência de consumo doméstico. Cenário de baixo crescimento global favorece ativos defensivos e renda fixa de qualidade."
       },
       {
         "variavel": "Dólar (DXY)",
         "direcao": "up",
-        "mecanismo": "Dólar mantém força relativa pela superioridade de juros reais americanos e fluxos de capital. Apreciação do DXY pressiona emergentes, incluindo Brasil, elevando custo de dívida externa e prêmio de risco."
+        "mecanismo": "Índice do dólar mantém força relativa em contexto de incerteza geopolítica e diferencial de juros favorável aos EUA. Possível continuidade de ciclo restritivo da Fed sustenta demanda por dólar como ativo refúgio. Pressão sobre moedas emergentes, incluindo real, persiste enquanto DXY permanecer acima de 103-104."
       },
       {
         "variavel": "Real (BRL)",
         "direcao": "down",
-        "mecanismo": "PTAX em R$ 5.19 reflete saída de capital, inflação acima da meta e Selic em trajetória de queda. Déficit em conta corrente e deterioração de termos de troca ampliam pressão depreciacionista. Intervenção do BCB contém volatilidade, mas não reverte tendência."
+        "mecanismo": "Depreciação gradual do real reflete combinação de juros globais elevados, fluxos de capital voláteis e deterioração de termos de troca. PTAX em R$ 5.16 tende a R$ 5.20-5.30 conforme ciclo de cortes de juros avança. Pressão fiscal e risco de rebaixamento de rating amplificam volatilidade cambial."
       },
       {
         "variavel": "Ouro",
         "direcao": "up",
-        "mecanismo": "Ouro se beneficia de juros reais globais em queda, incerteza geopolítica e demanda por hedge. Depreciação do Real amplifica retorno em reais. Demanda de bancos centrais e investidores de risco sustenta piso de preços."
+        "mecanismo": "Ambiente de juros reais elevados mas em trajetória de queda favorece ouro como hedge contra inflação e depreciação cambial. Incerteza geopolítica e possível recessão global sustentam demanda por ativo refúgio. Depreciação do real amplifica retorno em reais para investidores brasileiros."
       },
       {
         "variavel": "Bitcoin",
-        "direcao": "up",
-        "mecanismo": "Bitcoin responde positivamente a ciclos de corte de juros globais e busca por ativos alternativos. Volatilidade cambial e inflação doméstica elevada no Brasil aumentam interesse em ativos descorrelacionados. Adoção institucional em emergentes cresce."
+        "direcao": "neutral",
+        "mecanismo": "Volatilidade de criptoativos permanece elevada em contexto de juros altos e incerteza macroeconômica. Possível redução de taxas globais pode favorecer risco, mas pressões inflacionárias e fiscal no Brasil limitam apetite especulativo. Correlação com ações tecnológicas mantém exposição a ciclo de crescimento global fraco."
       }
     ],
     "brasil": [
       {
         "label": "SELIC e COPOM",
-        "text": "Selic em 14.00% a.a. reflete combate à inflação persistente acima da meta (5.02% FOCUS). Mercado precifica apenas 25 bps de corte até dezembro, sinalizando cautela do BCB. COPOM de 16/SET será decisivo: comunicação dovish poderia acelerar ciclo de alívio, enquanto manutenção reforçaria viés restritivo. Inflação de serviços e núcleo permanecem elevadas, limitando espaço para cortes agressivos."
+        "text": "O Banco Central mantém a meta de Selic em 14.00% a.a., com próxima reunião em 16 de setembro. Mercado projeta queda para 13.75% ao final de 2026, sinalizando ciclo de flexibilização gradual conforme inflação converge para meta. Comunicação do COPOM enfatiza data-dependência e monitoramento de expectativas, sugerindo pausa antes de novos cortes. Prêmios reais em DI longo permanecem atrativos (5-6% a.a. acima da inflação), justificando alocação em renda fixa de qualidade."
       },
       {
         "label": "Câmbio e Contas Externas",
-        "text": "PTAX em R$ 5.19 reflete vulnerabilidade externa estrutural: déficit em conta corrente, saída de capital estrangeiro e prêmio de risco elevado. Diferencial de juros Brasil-EUA (Selic 14% vs Fed ~5%) não compensa risco cambial. Intervenção do BCB via leilões de dólar futuro contém volatilidade, mas pressão depreciacionista persiste. Cenário de cortes BCB mais rápidos que Fed amplificaria pressão."
+        "text": "PTAX em R$ 5.1642 reflete pressão de fluxos de capital voláteis e diferencial de juros em compressão. Mercado projeta câmbio em R$ 5.20 ao final de 2026, implicando depreciação de ~0.7% a.a. Contas externas deterioram-se com déficit em conta corrente ampliado e redução de investimento direto. Risco de rebaixamento de rating soberano amplifica volatilidade cambial e prêmios de risco. Hedge cambial recomendado para investidores com exposição em dólar."
       },
       {
         "label": "Renda Fixa — Prêmio em NTN-B e DI longo",
-        "text": "NTN-B oferece prêmio de inflação atrativo (IPCA + 5-6% a.a. em prazos longos), compensando risco de inflação persistente. DI longo em 13.5-14% a.a. precifica ciclo de cortes gradual, com oportunidade em alongamento de duration. Curva de juros invertida em prazos curtos sinaliza expectativa de alívio, mas risco fiscal e inflação limitam queda de longo prazo."
+        "text": "NTN-B (títulos indexados à inflação) oferece prêmio real de 4.5-5.5% a.a. em prazos de 5-10 anos, atrativo para proteção contra inflação acima de meta. DI longo (2-3 anos) negocia com prêmio de 5-6% a.a. acima da inflação esperada, refletindo prêmio de risco fiscal e cambial. Curva de juros apresenta inclinação positiva, favorecendo estratégias de extensão de duration. Recomenda-se alocação em NTN-B e DI longo para perfis conservador e moderado."
       },
       {
         "label": "Atividade e Fiscal",
-        "text": "PIB real projetado em 1.98% sinaliza desaceleração significativa, com consumo pressionado por juros elevados e renda real fraca. Mercado de trabalho resiliente, mas com sinais de esgotamento. Fiscal permanece sob pressão: gastos obrigatórios crescem, receitas desaceleram. Risco de deterioração de rating soberano se consolidação fiscal não avançar, elevando prêmio de risco e pressão cambial."
+        "text": "PIB real de 1.95% reflete desaceleração econômica em contexto de juros elevados e consumo pressionado. Atividade industrial e serviços mostram sinais de fraqueza, com desemprego em trajetória de alta. Pressão fiscal persiste com resultado primário negativo e trajetória de dívida pública em alta. Risco de deterioração de rating soberano amplifica prêmios de risco em ativos brasileiros. Cenário de baixo crescimento favorece ativos defensivos e renda fixa de qualidade."
       }
     ],
     "beneficiados": [
-      "<strong>Ouro e Metais Preciosos</strong> — depreciação do Real amplifica retorno em reais; juros reais globais em queda sustentam demanda",
-      "<strong>Bitcoin e Criptoativos</strong> — ciclo de corte de juros global favorece ativos alternativos; volatilidade cambial aumenta interesse em hedge descorrelacionado",
-      "<strong>NTN-B (Tesouro Inflacionário)</strong> — prêmio de inflação atrativo compensa risco de inflação persistente acima da meta",
-      "<strong>Setores Exportadores (Commodities)</strong> — depreciação do Real melhora competitividade, apesar de demanda global moderada",
-      "<strong>Bancos e Financeiras</strong> — Selic elevada sustenta margem de juros; exposição a câmbio oferece ganhos com depreciação"
+      "<strong>NTN-B (Títulos Indexados à Inflação)</strong> — prêmio real elevado (4.5-5.5% a.a.) em contexto de inflação acima de meta e juros em queda gradual",
+      "<strong>DI Longo (2-3 anos)</strong> — prêmio de risco fiscal e cambial sustenta retornos reais atrativos para investidores de renda fixa",
+      "<strong>Ouro</strong> — hedge contra depreciação cambial e inflação, com demanda global por ativo refúgio em contexto de incerteza",
+      "<strong>Setores Defensivos (Utilities, Consumo Essencial)</strong> — baixa sensibilidade a ciclo econômico fraco e demanda previsível em ambiente de juros elevados",
+      "<strong>Dólar (USD)</strong> — força relativa em contexto de juros globais elevados e fluxos de capital para economias desenvolvidas"
     ],
     "penalizados": [
-      "<strong>Renda Variável Doméstica</strong> — desaceleração do PIB (1.98%), juros elevados e saída de capital pressionam múltiplos",
-      "<strong>Construtoras e Imobiliário</strong> — Selic em 14% reduz demanda por crédito imobiliário; renda real fraca limita consumo",
-      "<strong>Varejo e Consumo Discricionário</strong> — juros elevados comprimem poder de compra; desemprego em alta reduz demanda",
-      "<strong>Dívida em Dólar (Corporativo)</strong> — depreciação do Real eleva custo de serviço da dívida externa; refinanciamento mais caro",
-      "<strong>Bonds Soberanos Longos em Reais</strong> — risco fiscal e inflação persistente limitam apreciação; curva invertida sinaliza volatilidade"
+      "<strong>Ações Cíclicas (Bancos, Varejo, Construção)</strong> — sensibilidade a crescimento econômico fraco (PIB 1.95%) e juros elevados comprimem margens",
+      "<strong>Real (BRL)</strong> — depreciação gradual reflete juros globais elevados, fluxos de capital voláteis e deterioração fiscal",
+      "<strong>Crédito Privado de Risco</strong> — ambiente de juros elevados e desaceleração econômica amplificam inadimplência e spreads de crédito",
+      "<strong>Imóveis e Construção</strong> — demanda pressionada por juros elevados (14% a.a.) e renda disponível reduzida",
+      "<strong>Bitcoin e Criptoativos</strong> — volatilidade elevada em contexto de juros altos e incerteza macroeconômica limita apetite especulativo"
     ],
     "cenarios_brent": [
-      "<strong>Cenário 1 — Estabilidade com Viés Baixista:</strong> Preços WTI/Brent entre USD 70-80/bbl sustentados por oferta OPEC+ controlada, mas demanda global fraca limita upside. Impacto no Brasil: inflação de energia contida, mas câmbio permanece pressionado por fatores externos.",
-      "<strong>Cenário 2 — Choque Geopolítico:</strong> Tensões no Oriente Médio ou sanções à Rússia elevam WTI/Brent acima de USD 90/bbl. Impacto no Brasil: inflação de combustíveis sobe, pressão sobre Selic, câmbio deprecia ainda mais por flight-to-quality.",
-      "<strong>Cenário 3 — Recessão Global:</strong> Demanda global colapsa, WTI/Brent caem para USD 50-60/bbl. Impacto no Brasil: alívio inflacionário, mas receitas de exportação caem, déficit em conta corrente piora, câmbio deprecia por falta de divisas."
+      "<strong>Cenário Pessimista — Recessão Global e Fiscal:</strong> Crescimento global desacelera abaixo de 1.5%, demanda por commodities cai, Brent cai para US$ 60-65/bbl. Pressão fiscal brasileira intensifica-se, risco de rebaixamento de rating soberano, câmbio deprecia para R$ 5.40-5.50. Selic permanece elevada por mais tempo, penalizando ativos cíclicos e renda variável.",
+      "<strong>Cenário Base — Desaceleração Ordenada:</strong> Crescimento global em 2-2.5%, Brent em US$ 70-80/bbl, inflação global em trajetória de queda. BCB reduz Selic gradualmente para 12.5-13% ao final de 2026, câmbio estabiliza em R$ 5.20-5.30. Renda fixa oferece retornos reais atrativos, ouro mantém demanda como hedge, ativos defensivos superam cíclicos.",
+      "<strong>Cenário Otimista — Ancoragem de Inflação e Cortes Acelerados:</strong> Inflação global converge para meta mais rapidamente, Fed inicia cortes de juros, Brent sobe para US$ 85-95/bbl. BCB acelera ciclo de cortes para 11.5-12% ao final de 2026, real aprecia para R$ 4.90-5.00. Ativos cíclicos e renda variável se beneficiam, spreads de crédito comprimem-se, apetite por risco aumenta."
     ],
     "ativos": {
       "ouro": {

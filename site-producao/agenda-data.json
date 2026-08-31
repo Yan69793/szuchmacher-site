@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "2026-08-24",
+    "version": "2026-08-30",
     "curator": "Szuchmacher Consultoria",
     "fontes_primarias": [
       "IBGE — Calendário de divulgações (API v3/calendario)",
@@ -21,14 +21,25 @@
       "en"
     ]
   },
-  "gerado": "2026-08-24T08:00:02-03:00",
+  "gerado": "2026-08-30T08:00:02-03:00",
   "janela": {
-    "inicio": "2026-08-24",
-    "fim": "2026-08-28"
+    "inicio": "2026-08-31",
+    "fim": "2026-09-04"
   },
   "eventos": [
     {
-      "data": "2026-08-24",
+      "data": "2026-08-31",
+      "hora_brt": "06:00",
+      "regiao": "EU",
+      "evento": "Zona do Euro — IPC Flash",
+      "evento_en": "Eurozone — CPI Flash Estimate",
+      "descricao": "Estimativa preliminar da inflação ao consumidor na Zona do Euro (índice cheio e núcleo). Divulgado pelo Eurostat. Principal dado de inflação para o BCE antes da decisão de juros seguinte.",
+      "descricao_en": "Preliminary Eurozone CPI estimate (headline and core) by Eurostat. Key inflation data point ahead of ECB rate decisions.",
+      "fonte": "Eurostat",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-08-31",
       "hora_brt": "08:25",
       "regiao": "BR",
       "evento": "Boletim Focus",
@@ -39,29 +50,40 @@
       "relevancia": "alta"
     },
     {
-      "data": "2026-08-25",
-      "hora_brt": "11:00",
-      "regiao": "US",
-      "evento": "EUA — Vendas de imóveis novos",
-      "evento_en": "US — New Home Sales",
-      "descricao": "Vendas de imóveis residenciais novos nos EUA (annualized rate). Indicador do mercado imobiliário e da saúde do consumo americano.",
-      "descricao_en": "US new single-family home sales. Housing market and consumer health indicator.",
-      "fonte": "Census Bureau",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-08-26",
+      "data": "2026-09-01",
       "hora_brt": "09:00",
       "regiao": "BR",
-      "evento": "Índice Nacional de Preços ao Consumidor Amplo 15",
-      "evento_en": "Índice Nacional de Preços ao Consumidor Amplo 15",
-      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor Amplo 15.",
-      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor Amplo 15.",
+      "evento": "Sistema de Contas Nacionais Trimestrais",
+      "evento_en": "Sistema de Contas Nacionais Trimestrais",
+      "descricao": "Divulgação programada do IBGE: Sistema de Contas Nacionais Trimestrais.",
+      "descricao_en": "Scheduled IBGE release: Sistema de Contas Nacionais Trimestrais.",
       "fonte": "IBGE",
       "relevancia": "alta"
     },
     {
-      "data": "2026-08-26",
+      "data": "2026-09-01",
+      "hora_brt": "22:00",
+      "regiao": "CN",
+      "evento": "China — PMI Industrial (NBS)",
+      "evento_en": "China — Manufacturing PMI (NBS)",
+      "descricao": "Índice de Gerentes de Compras da indústria chinesa, compilado pelo NBS. Abaixo de 50 indica contração. Indicador antecedente de atividade industrial e demanda por commodities. Também relevante o Caixin PMI (setor privado, ~2 dias depois).",
+      "descricao_en": "China manufacturing PMI by NBS. Below 50 signals contraction. Leading indicator for industrial activity and commodity demand.",
+      "fonte": "NBS China",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-09-02",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Industrial Mensal: Produção Física - Brasil",
+      "evento_en": "Pesquisa Industrial Mensal: Produção Física - Brasil",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Industrial Mensal: Produção Física - Brasil.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Industrial Mensal: Produção Física - Brasil.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-09-02",
       "hora_brt": "11:30",
       "regiao": "US",
       "evento": "EUA — Estoques de petróleo bruto (EIA)",
@@ -72,7 +94,7 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-08-27",
+      "data": "2026-09-03",
       "hora_brt": "09:30",
       "regiao": "US",
       "evento": "EUA — Novos pedidos de seguro-desemprego",
@@ -83,15 +105,15 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-08-28",
-      "hora_brt": "09:00",
-      "regiao": "BR",
-      "evento": "Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação",
-      "evento_en": "Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação",
-      "descricao": "Divulgação programada do IBGE: Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação.",
-      "descricao_en": "Scheduled IBGE release: Índice de Preços ao Produtor - Indústrias Extrativas e de Transformação.",
-      "fonte": "IBGE",
-      "relevancia": "media"
+      "data": "2026-09-04",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Payroll (Nonfarm Payrolls) — agosto/2026",
+      "evento_en": "Nonfarm Payrolls — August 2026",
+      "descricao": "Principal termômetro do mercado de trabalho americano. Surpresas no NFP movem o dólar, os Treasuries e, por extensão, o real e a curva de juros brasileira.",
+      "descricao_en": "Primary US labor market gauge. NFP surprises move the USD, Treasuries, and consequently BRL and the Brazilian rate curve.",
+      "fonte": "BLS",
+      "relevancia": "alta"
     }
   ]
 }
