@@ -77,18 +77,22 @@ muda quando checagem nova entra, use a da saída real do script.
   `check-macro-cron_20260831.log` do watchdog das 09:00, que confirmou o disparo
   nativo sem precisar acionar a reserva HTTP, e pela API de schedules. Era o item
   aberto mais antigo.
-- **Macro, cache esvaziado a cada deploy e reposição automática que não funciona.**
-  Aberto em 31/08, conteúdo já remediado, causa no código pendente. São três
-  defeitos que se somam. `deploy-cloudflare.ps1` chama
-  `invalidate-worker-cache.ps1` incondicionalmente e apaga `macro-api` depois de
-  todo deploy. `checkRefreshRate` grava o carimbo `macro-refresh-rate` **antes**
-  da cascata rodar, então uma tentativa que falha ainda queima a janela de 1 h.
-  E `gerarMacro` roda em foreground sem `ctx.waitUntil`, então cliente que
-  desiste antes dos ~40 s tem a execução cancelada e nada é gravado. Efeito
-  combinado, o cache fica vazio do deploy até o cron da segunda seguinte, com o
-  público servindo o fallback estático. Fix a fazer, carimbo só no sucesso,
-  `ctx.waitUntil` na regeneração e delete condicional no deploy. Merece escopo
-  próprio com teste antes de deploy.
+- ~~**Macro, cache esvaziado a cada deploy e reposição automática que não
+  funciona.**~~ **Fechado em 31/08 à noite, deploy `2065188f`, gate 34/34.** Os
+  três defeitos foram corrigidos no commit `e757bac`. Carimbo de rate em duas
+  fases, 60 s na tentativa em curso e 3600 s só depois do `writeCache`.
+  `ctx.waitUntil` na regeneração implícita, com o visitante recebendo o fallback
+  estático na hora em vez de esperar os ~40 s. E `macro-api` fora do conjunto
+  padrão do invalidador, agora exigindo `-IncludeMacro`.
+
+  Provado pelo próprio cenário que motivou o fix. O deploy das 17:32 rodou com a
+  janela de rate de 17:00 ainda ativa, o `-RefreshMacro` tomou 429 nas três
+  tentativas, e mesmo assim `/health` seguiu em
+  `macro_cache: "31/08/2026, 17:00 BRT"` em vez de `empty`. O público responde em
+  85 ms do KV real, sem o campo `note`. Com o código antigo essa mesma sequência
+  deixava o cache vazio até o cron da segunda seguinte.
+
+  Suíte do Worker foi de 70 para 75 testes com os cinco casos de regressão.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
 - ~~CSP sem `unsafe-inline` no multi (Fase B).~~ **Fechado em 31/08.** Os 136
   handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
@@ -439,6 +443,35 @@ rerodado depois, 34/34.
 
 Nada foi deployado nesta sessão. As únicas mutações em produção foram o delete
 da chave de rate e a gravação do cache pela própria regeneração.
+
+### Fix da causa raiz do macro e desbloqueio da publicação (31/08 à noite)
+
+Três commits, `e757bac` (macro), `78409c7` e `2867052` (deploy). Deploy
+`2065188f`, gate 34/34, evidência no item fechado acima.
+
+**O bloqueio de publicação.** Duas tentativas de deploy falharam idênticas, às
+17:20 e às 17:28, com `10000` (Authentication error) nos endpoints de Workers e
+`9109` (Invalid access token) em `/accounts`. Não era instabilidade da API, foi
+o que supus na primeira leitura e estava errado. O `CLOUDFLARE_API_TOKEN`
+persistido (`cfut_`) responde `active` em `/user/tokens/verify`, mas é
+sub-escopado a ponto de o `wrangler whoami` não ler nem os detalhes do usuário.
+O OAuth em `~/.wrangler/config/default.toml` tem `workers`, `workers_kv`,
+`workers_routes` e `workers_scripts` em write. Como o env var tem precedência
+sobre o OAuth, o deploy morria.
+
+Seis scripts já tiravam a variável do processo por esse motivo
+(`invalidate-worker-cache.ps1`, `attach-worker-domains.ps1`,
+`purge-cloudflare.ps1`, `cleanup-dns-cloudflare.ps1` e os dois `setup-*.ps1`).
+Faltavam `publicar-com-rollback.ps1`, que só lia a versão viva, e
+`deploy-cloudflare.ps1`, que era o que de fato quebrava. Os dois ganharam o
+mesmo padrão, com restore num `finally` porque `Env:` é escopo de processo e o
+rollback chama o deploy com `&`. Quando o fallback é usado, o log registra um
+aviso, porque isso indica que o token do ambiente não serve.
+
+**Dívida que sobra.** Sete scripts hoje carregam workaround para contornar um
+token que não serve para nada. Decidir entre rotacionar o `cfut_` com os escopos
+certos ou apagar a variável persistida de vez, já que o OAuth resolve tudo.
+Remover a causa elimina os sete workarounds.
 
 Commitado e enviado ao origin em dois commits: `8d29aec` (fix(csp), os três
 arquivos de código) e `5b5defe` (docs(estado)). Branch sincronizada, restam só
