@@ -125,6 +125,11 @@ muda quando checagem nova entra, use a da saída real do script.
   crítico, esse cron não existe no painel. No lugar dele entrou um passo maior e
   ainda não feito, mapear as 5 tarefas Cron que de fato existem no cPanel, 3 de
   `macro_cron.php` e 2 de `focus_cron.php`, antes de cancelar a conta.
+- Tracker de processos regulatórios/jurídicos (caso ANEEL/Enel SP):
+  infraestrutura implementada em 01/09, nada deployado nem populado.
+  Detalhe: `site-producao/CLAUDE.md`, seção "Tracker de processos
+  regulatórios em acompanhamento" e item correspondente de "Pendências
+  abertas".
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
 
 ## Estado em 2026-08-19
