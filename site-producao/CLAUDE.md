@@ -264,11 +264,17 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    e o CSP saiu estrito nos dois domínios. Detalhe em "Resolvidas em 2026-08-31".
 3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
    próprio).
-4. **Limpeza opcional no cPanel.** O job físico `agenda-cron.php` segue
-   registrado no painel, mas está inerte na borda desde 17/08 (refresh
-   rejeitado com 403 após a rotação do `CRON_SECRET`). Desligar no painel
-   quando houver login do cPanel resolve também o P3-15 (calendários 2026
-   hardcoded). Sem risco operacional enquanto isso.
+4. ~~**Limpeza opcional no cPanel**, desligar o `agenda-cron.php`.~~
+   **Fechado em 01/09 por verificação direta no painel.** Não existe tarefa
+   Cron nenhuma contendo `agenda-cron.php`. O painel tem 3 entradas para
+   `macro_cron.php` e 2 para `focus_cron.php`, e só isso. Não havia o que
+   desligar, a afirmação anterior de que o job "segue registrado no painel"
+   estava errada e nunca tinha sido conferida no cPanel, porque o acesso
+   falhava (FTPS `deploy@` com 530). **P3-15 (calendários 2026 hardcoded)
+   fecha junto**, os três arrays `$copom_2026`, `$feriados_us_2026` e
+   `$fomc_2026` moram dentro do próprio `agenda-cron.php` e não são lidos
+   por mais nada. Detalhe da evidência em `../status/ESTADO.md`, seção de
+   01/09.
 5. **CSP fail-open para host desconhecido.** Fechado em 31/08, e com a Fase B
    o allowlist `MULTI_HOSTS` foi removido de vez: `buildCSP` em
    `cloudflare-workers/sz-sites/src/utils/headers.js` emite hoje o mesmo CSP

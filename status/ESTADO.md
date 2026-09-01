@@ -32,8 +32,8 @@ com o detalhe completo lá:
   na Cloudflare; corrigido para `0 3 * * MON` em 24/08.
 - Monitorar o disparo de 31/08 comparando `macro-cron-last.ts` em `/health`
   com a data esperada.
-- `agenda-cron.php` do cPanel ainda não desligado: FTPS `deploy@` devolveu 530
-  e as credenciais do `.env` não autenticam no cPanel.
+- ~~`agenda-cron.php` do cPanel ainda não desligado.~~ Fechado em 01/09, a
+  verificação direta no painel mostrou que esse cron não existe.
 - Itens do §Q do PRE-DEPLOY-2026-08-15: F5 cache-busting fechado em 31/08
   (`488b830`); CSP sem unsafe-inline com a Fase A sz e a Fase B multi
   concluídas em 31/08.
@@ -93,7 +93,9 @@ muda quando checagem nova entra, use a da saída real do script.
   deixava o cache vazio até o cron da segunda seguinte.
 
   Suíte do Worker foi de 70 para 75 testes com os cinco casos de regressão.
-- `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
+- ~~`agenda-cron.php` do cPanel pendente de desligamento, com P3-15 (calendários
+  2026 hardcoded) como sub-item.~~ **Fechados os dois em 01/09**, por verificação
+  direta no painel. O cron não existe. Ver a seção de 01/09.
 - ~~CSP sem `unsafe-inline` no multi (Fase B).~~ **Fechado em 31/08.** Os 136
   handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
   e o CSP saiu estrito nos dois domínios. Ver "Fase B do CSP concluída (31/08)"
@@ -116,10 +118,13 @@ muda quando checagem nova entra, use a da saída real do script.
   então o upload FTP da rotina remota `szuchmacher-domingo` (`deploy.sh`, 8
   arquivos) é inerte para o site. Para encerrar a conta: preparar o prompt novo
   da rotina sem FTP (publicar via Worker), pausar a rotina no painel
-  (`Claude_Code_Remote` indisponível nesta sessão), desligar o `agenda-cron.php`
-  do cPanel (P3-15), e aí cancelar o hosting. Cobertura de dados local já
-  existe, `Szuchmacher-AgendaAgent` ativa publica `agenda-data.json` e
-  `macro_data.json` no `public/` do Worker.
+  (`Claude_Code_Remote` indisponível nesta sessão), e aí cancelar o hosting.
+  Cobertura de dados local já existe, `Szuchmacher-AgendaAgent` ativa publica
+  `agenda-data.json` e `macro_data.json` no `public/` do Worker.
+  **Atualizado em 01/09.** O passo "desligar o `agenda-cron.php`" saiu do caminho
+  crítico, esse cron não existe no painel. No lugar dele entrou um passo maior e
+  ainda não feito, mapear as 5 tarefas Cron que de fato existem no cPanel, 3 de
+  `macro_cron.php` e 2 de `focus_cron.php`, antes de cancelar a conta.
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
 
 ## Estado em 2026-08-19
@@ -361,6 +366,11 @@ do cPanel, e a conta pode ser encerrada sem derrubar nada. Cobertura de dados
 local confirmada no Task Scheduler, `Szuchmacher-AgendaAgent` ativa (Ready),
 publica `agenda-data.json` e `macro_data.json` no `public/` do Worker via
 `publicar-com-rollback.ps1`.
+
+**Correção de 01/09.** A frase acima sobre "desligar o `agenda-cron.php` do
+cPanel" está errada e fica aqui só como registro. Esse cron não existe no
+painel, ver a seção de 01/09. O inventário real de cron no cPanel são 5
+entradas, `macro_cron.php` e `focus_cron.php`, e nenhuma delas foi mapeada.
 
 ### Fechamento de 31/08: dois bugs silenciosos da Fase B corrigidos
 
@@ -605,3 +615,52 @@ O conteúdo é `[permissions] allow = [...]` guardando a linha de comando litera
 que a sessão autorizou, ou seja, estado local de máquina. Entrou no `.gitignore`
 como `/reasonix.toml`, com âncora de raiz para não capturar arquivo homônimo em
 subdiretório. Não apagado.
+
+### agenda-cron.php encerrado, e o que apareceu no lugar (01/09)
+
+**O cron não existe.** O operador abriu o cPanel e conferiu a lista de Cron
+Jobs. Não há nenhuma tarefa contendo `agenda-cron.php`. O painel tem 5 entradas,
+3 de `macro_cron.php` e 2 de `focus_cron.php`, e nenhuma foi alterada na
+verificação.
+
+Isso encerra a pendência de "desligar o `agenda-cron.php` no painel", que
+aparecia em quatro pontos deste arquivo e no item 4 de
+`site-producao/CLAUDE.md`. Não havia o que desligar. A afirmação anterior, de
+que o job "segue registrado no painel", nunca tinha sido conferida no cPanel,
+porque o acesso falhava, FTPS `deploy@` devolvia 530 e as credenciais do `.env`
+não autenticavam. Era suposição herdada do plano de junho, não observação.
+
+Três evidências no repositório sustentam que o arquivo está morto de qualquer
+ângulo, além da ausência no painel:
+
+- Nenhum script de deploy o publica. `deploy.sh`, `build-cloudflare-public.ps1`,
+  `deploy-all.ps1`, `deploy-cloudflare.ps1` e `publicar-com-rollback.ps1` não
+  citam `agenda-cron.php`. A cópia que exista no HostGator veio de upload manual
+  de junho e nada no pipeline atual a mantém.
+- O escritor real de `agenda-data.json` hoje é
+  `automacao-yan-os/agents/agenda_agent.py`, chamado por `run-agenda-agent.ps1`
+  na task `Szuchmacher-AgendaAgent` e publicado por `publicar-com-rollback.ps1`.
+- O site é servido 100% de `env.ASSETS` no Worker, então mesmo um arquivo vivo
+  no HostGator não chegaria ao visitante.
+
+**P3-15 fecha junto, e por evidência, não por conveniência.** Os calendários
+2026 hardcoded são os arrays `$copom_2026`, `$feriados_us_2026` e `$fomc_2026`,
+e eles moram dentro do próprio `agenda-cron.php`, entre as linhas 30 e 70. Não
+existe outro leitor. Sem execução, os dados fixos não produzem nada. P3-15 nunca
+foi item independente, era propriedade deste arquivo.
+
+**`site-producao/scripts/agenda-cron.php` fica no repositório, intacto**, e
+passa a ser classificado como legado inativo. Não foi editado, nem para receber
+comentário de cabeçalho. Se algum dia for removido, o gatilho é decisão de
+limpeza, não risco operacional.
+
+**A dívida que apareceu no lugar é maior que a que fechou.** As 5 tarefas Cron
+que existem de fato no cPanel não estão mapeadas em lugar nenhum deste
+repositório. `macro_cron.php` está versionado em `ferramentas-multiasset/`, é da
+era pré-Cloudflare, chama OpenRouter e grava `macro_data.json` às 23:00 BRT,
+função que hoje pertence ao `scheduled()` do Worker e ao `macro_api.php`. As
+únicas referências vivas a ele são comentários em snapshots antigos de HTML.
+`focus_cron.php` não existe neste repositório, em nenhuma forma. Antes de
+cancelar a HostGator é preciso saber o que essas 5 entradas fazem, se alguma
+ainda alimenta algo e se alguma duplica trabalho que o Worker já faz. Nada foi
+tocado nelas.
