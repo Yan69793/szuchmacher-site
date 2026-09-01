@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-08-31 (agente: Claude)
+Última atualização: 2026-09-01 (agente: Claude)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -476,3 +476,132 @@ Remover a causa elimina os sete workarounds.
 Commitado e enviado ao origin em dois commits: `8d29aec` (fix(csp), os três
 arquivos de código) e `5b5defe` (docs(estado)). Branch sincronizada, restam só
 quatro screenshots não rastreados na raiz.
+
+## Estado em 2026-09-01
+
+Rodada de copy e SEO na home, sem tocar em código de aplicação. Dois commits,
+`9ac9854` (posicionamento da home) e `27009b5` (contradição de frequência,
+léxico UHNW e JSON-LD), ambos no origin. Deploy único do segundo, Worker
+`02583888-dced-40dd-8453-99979d92a6e6`, 4 arquivos publicados, `index.html`,
+`relatorios.html`, `honorarios.html` e `sitemap.xml`.
+
+**O achado que motivou a rodada era maior do que o reportado.** O FAQ da home
+não errava só a frequência da Carta, errava o produto. Respondia "Sim" para
+"o relatório de mercado custa algo?" e mandava o visitante para `assinatura.html`.
+O Fechamento de Mercado é gratuito, tem formulário próprio em `relatorios.html`
+e endpoint vivo no Worker, confirmado com `POST /relatorio-signup` devolvendo
+422 e `{"ok":false,"error":"Email invalido"}`. A home empurrava para o checkout
+pago quem já podia receber conteúdo de graça. Reescrito separando os dois
+produtos, com a Carta lastreada no que `assinatura.html` de fato vende, carta
+macro mensal e não semanal.
+
+Junto entraram quatro correções menores. O `FAQPage` passou de 4 para 7
+`Question`, batendo com os 7 `<details class="faq-item">` visíveis, marcação que
+cobria metade da página desperdiça o rich result. `NewsletterService` não existe
+no vocabulário schema.org e virou `Service` com `serviceType`. As duas
+referências de `@id` em `relatorios.html` apontavam para `szuchmacher.com.br#org`
+e `#website` sem a barra, que não identificam nó nenhum, agora apontam para
+`/#organization` e `/#website`, que existem em `index.html`. E `relatorios.html`
+saiu de `changefreq weekly` para `daily` no sitemap, coerente com a página que se
+declara diária.
+
+O léxico UHNW saiu do schema da home e das duas metas do `honorarios.html`.
+Sobrevive só em `cv.html`, que é currículo com `noindex,nofollow` e onde o termo
+descreve fato de carreira, não posicionamento comercial.
+
+**Duas coisas não foram mexidas, de propósito, para não serem "corrigidas" por
+engano numa sessão futura.**
+
+A campanha `hero_fundador` perdeu a origem quando o CTA secundário do hero mudou
+para `honorarios.html`, e isso não é regressão. Era parâmetro de URL alimentando
+um GA4 que este site removeu por decisão de arquitetura. A atribuição de clique
+roda por `data-ga` para o Clarity, via delegação em `assets/sz-config.js`, e o
+CTA novo carrega `data-ga="cta_honorarios" data-ga-location="hero"`. Recolocar um
+UTM interno criaria `honorarios.html?utm_...` como URL indexável duplicada sem
+ganhar medição nenhuma.
+
+O bloco `market-main` de `relatorios.html` tem só descrição de produto no HTML
+estático, com o conteúdo real chegando por fetch. A resolução seria injeção no
+edge, `HTMLRewriter` no Worker lendo `relatorio_cache.json` e reescrevendo antes
+de entregar. Não implementada. Põe transform de streaming no caminho quente do
+HTML num Worker que hoje não usa `HTMLRewriter` em lugar nenhum, por causa de uma
+página só, e amarra a renderização à disponibilidade de um JSON. A perda também é
+medida contra algo que nunca existiu, antes desta rodada o estático servia uma
+edição de julho parada há dois meses. Se for retomado, é trabalho isolado com
+teste próprio.
+
+### Conferência documental do "18+ anos" (01/09)
+
+O número publicado em 12 pontos do site foi conferido contra a fonte oficial e
+**tem suporte documental**, sem inferência aritmética.
+
+- `site-producao/Yan_Szuchmacher_CV_PT.pdf`, página 1, seção PERFIL PROFISSIONAL,
+  "Executivo com mais de 18 anos em private banking, corporate banking e wealth
+  management em bancos internacionais."
+- Mesmo PDF, página 2, seção DIFERENCIAIS, "Mais de 18 anos de relacionamento
+  direto com clientes ultra high net worth."
+- `site-producao/Yan_Szuchmacher_CV_EN.pdf`, "Executive with more than 18 years
+  in private banking, corporate banking and wealth management at international
+  banks." e "More than 18 years of direct relationships with ultra high net worth
+  clients."
+
+Os dois PDFs estão versionados, último commit que os tocou é `a1cebb9` de 24/08,
+e o CV está corrente, traz a Mirabaud até agosto de 2026. Copy não alterada,
+porque o site apenas reproduz o que o currículo afirma.
+
+Fica registrada uma observação factual para o operador, que não é fundamento para
+mudar nada sozinho. A cronologia dentro do próprio CV começa em "Estagiário 2009
+a 2010" no Crédit Agricole, e a formação no IBMEC vai de 2005 a 2009. Se a
+contagem parte do estágio, o intervalo até 2026 é menor que 18. Se parte da
+graduação, é maior. O CV é a fonte, o CV afirma 18+ nas duas línguas, e o site
+está consistente com ele. Quem decide o marco inicial é o titular, não o agente.
+
+### Verificação colada
+
+```
+build-cloudflare-public.ps1   31 arquivos obrigatorios conferidos em public/
+node --test tests/*.test.mjs  pass 75, fail 0
+validar-producao.ps1          34 verificacoes, 0 falha  (EXIT=0)
+smoke pos-deploy              TOTAL: 21 OK, 0 falha, de 21
+```
+
+O smoke é ad hoc, refeito em 01/09 contra produção, read-only. Cobre home (11),
+`relatorios.html` (6), `honorarios.html` (2) e sitemap (2), com JSON-LD parseando
+nas duas páginas, 7 FAQ visíveis contra 7 no schema, e ausência de `gtag`, de
+`UHNW` e de "publicação semanal". Confirmado também em navegador na home servida,
+sem erro de console.
+
+### Dois tropeços registrados
+
+**429 no aquecimento do macro durante o deploy.** O `deploy-cloudflare.ps1`
+tentou três vezes o `macro_api.php?cron=1` e tomou `429 Too Many Requests` nas
+três, deixando o KV frio. Causa é o segundo deploy dentro de poucos minutos, com
+a janela de rate de `checkRefreshRate` ainda aberta, exatamente o comportamento
+descrito no fechamento de 31/08. O script trata como não fatal e o gate seguinte
+marcou `macro_api.php` e `assets/macro.php` OK, então não houve impacto em
+produção. Registrado porque o deploy não saiu limpo.
+
+**Bug no script de smoke, resultado falso antes da correção.** A primeira versão
+usava `$home` como variável, que é automática e read-only no PowerShell. A
+atribuição falhou em silêncio, `$home` seguiu valendo o caminho do perfil do
+usuário, e as 11 checagens da home compararam contra uma string de sistema de
+arquivos, produzindo 3 falhas falsas e aprovações igualmente sem valor. Refeito
+com `$pgHome`. É a segunda vez que um helper de verificação escrito na hora mente
+nesta linha de trabalho, a primeira foi `curl.exe` devolvendo array de strings e
+quebrando regex multilinha. A guarda que ficou no script é imprimir os bytes
+baixados e abortar se vierem vazios, antes de qualquer asserção.
+
+**Contagem do smoke corrigida.** O relatório verbal daquela sessão disse 20
+checagens verdes. A soma dos blocos dá 21, e a reexecução de 01/09 confirmou 21.
+O número correto é 21, o 20 foi erro de contagem no relato, não no teste.
+
+### reasonix.toml resolvido
+
+O arquivo não rastreado na raiz é allowlist de permissões do Reasonix Desktop,
+instalado em `C:\Users\User\.reasonix` com `reasonix-desktop.exe` em
+`AppData\Local`. A ferramenta escreve um por diretório de projeto, são 7 na
+árvore `E:\Diretorio\Claude`. Nenhum arquivo do repositório referencia reasonix.
+O conteúdo é `[permissions] allow = [...]` guardando a linha de comando literal
+que a sessão autorizou, ou seja, estado local de máquina. Entrou no `.gitignore`
+como `/reasonix.toml`, com âncora de raiz para não capturar arquivo homônimo em
+subdiretório. Não apagado.
