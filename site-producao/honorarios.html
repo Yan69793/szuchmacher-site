@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Honorários | Szuchmacher Consultoria — Consultoria Patrimonial Independente</title>
-    <meta name="description" content="Honorários da consultoria patrimonial independente de Yan Szuchmacher. Modelo fee fixo, sem comissão de produto. Planos, escopo e valores para famílias e executivos UHNW." />
+    <meta name="description" content="Honorários da consultoria patrimonial independente de Yan Szuchmacher. Modelo fee fixo, sem comissão de produto. Planos, escopo e valores para famílias, empresários e executivos com patrimônio complexo." />
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#f3f1ec" />
     <link rel="canonical" href="https://szuchmacher.com.br/honorarios.html" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Honorários | Szuchmacher Consultoria" />
-    <meta property="og:description" content="Modelo fee fixo, sem comissão de produto. Planos e valores da consultoria patrimonial independente para o segmento UHNW." />
+    <meta property="og:description" content="Modelo fee fixo, sem comissão de produto. Planos e valores da consultoria patrimonial independente para patrimônio complexo." />
     <meta property="og:url" content="https://szuchmacher.com.br/honorarios.html" />
     <meta property="og:site_name" content="Szuchmacher Consultoria" />
     <meta property="og:locale" content="pt_BR" />
@@ -112,180 +112,9 @@
     }
     </script>
 
-    <style>
-        /* Tokens, reset, tipografia, header, botões, .section, .eyebrow e footer
-           vêm de sz-design.css. Aqui ficam apenas os componentes próprios desta
-           página, mais os aliases que mapeiam os nomes antigos de token para os
-           do sistema — assim o CSS de componente abaixo segue intacto. */
-        :root {
-            --gold-light: var(--gold-soft);
-            --gold-dim: rgba(140,107,58,0.12);
-            --surface2: var(--surface-soft);
-            --border: var(--line-strong);
-            --green: #2f7d55; /* AA sobre navy do rodapé (era #4caf7d, 2.9:1) */
-        }
-
-        .display { font-family: var(--font-serif); }
-        em { color: var(--gold); font-style: italic; }
-
-        /* === Layout base — alinhado à métrica do sistema (--max 1120px) === */
-        .section { max-width: var(--max); margin: 0 auto; padding: 96px 24px; }
-        .sec-eyebrow { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 14px; }
-        .sec-title { font-family: var(--font-serif); font-size: clamp(1.55rem, 2.6vw, 1.95rem); font-weight: 400; color: var(--text); line-height: 1.18; margin-bottom: 16px; }
-        .sec-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 640px; }
-        .sec-head { margin-bottom: 44px; }
-
-        /* === HERO === */
-        .hero-h { max-width: var(--max); margin: 0 auto; padding: 132px 24px 64px; }
-        .hero-h-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
-        /* eyebrow no padrão do sistema: mono, sem pill, sem glow, sem pulse */
-        .hero-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--gold); margin-bottom: 22px; }
-        h1.hero-title { font-family: var(--font-serif); font-size: clamp(2.5rem, 4.6vw, 3.65rem); font-weight: 400; line-height: 1.05; letter-spacing: var(--tracking-display); color: var(--text); margin-bottom: 22px; max-width: 14ch; }
-        .hero-rule-h { width: 40px; height: 1px; background: var(--gold); margin: 0 0 22px; }
-        .hero-sub { font-size: 1.02rem; color: var(--muted); line-height: 1.72; max-width: 38ch; margin-bottom: 32px; }
-        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
-        .hero-visual-h { border: 1px solid var(--line-strong); padding: 10px; min-width: 0; }
-        .hero-visual-h .figure-craft { aspect-ratio: 4 / 5; }
-        .hero-visual-cap { text-align: center; margin: 12px 0 0; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); font-weight: 500; }
-
-        /* === Botões — craft: sem lift, sem glow === */
-        .btn-primary { padding: 14px 28px; background: var(--navy); color: #f4f1ea; font-family: var(--font-mono); font-weight: 500; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; min-height: 48px; border: 1px solid var(--navy); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s, color 0.2s; }
-        .btn-primary:hover { background: var(--navy-soft); border-color: var(--navy-soft); }
-        .btn-ghost { padding: 14px 28px; background: transparent; color: var(--navy); font-family: var(--font-mono); font-weight: 500; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; min-height: 48px; border: 1px solid var(--line-strong); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: border-color 0.2s, background 0.2s; }
-        .btn-ghost:hover { border-color: var(--navy); background: rgba(12,21,36,0.03); }
-
-        /* === Filosofia === */
-        .philo { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-        .philo-item { background: var(--surface); border: 1px solid var(--border); border-radius:0; padding: 30px; }
-        .philo-item strong { display: block; font-family: 'JetBrains Mono', monospace; color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 12px; }
-        .philo-item span { color: var(--muted); font-size: 14px; line-height: 1.7; }
-
-        /* === Planos === */
-        .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; align-items: stretch; }
-        .plan { background: var(--surface); border: 1px solid var(--border); border-radius:0; padding: 36px 32px; display: flex; flex-direction: column; }
-        /* destaque por hairline dourada, não por sombra: a sombra 0 20px 50px
-           rgba(0,0,0,.4) era herança de tema escuro e sujava a página creme */
-        .plan.featured { border: 1px solid var(--gold); background: var(--surface-soft); }
-        .plan-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 16px; }
-        .plan h3 { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 10px; letter-spacing: -0.2px; }
-        .plan-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin: 0; }
-        .plan-price { margin: 22px 0 4px; padding-top: 20px; border-top: 1px solid var(--border); }
-        .plan-price .pp-from { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); margin-bottom: 8px; }
-        .plan-price .pp-value { font-family: 'Playfair Display', serif; font-size: 38px; line-height: 1; color: var(--gold-light); letter-spacing: -0.5px; }
-        .plan-price .pp-value small { font-family: 'Public Sans', sans-serif; font-size: 15px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
-        .plan-price .pp-unit { display: block; font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
-        .plan ul { list-style: none; margin: 22px 0 0; padding: 0; flex-grow: 1; }
-        /* era #b4b4b4 sobre --surface: 1.68:1, reprovava WCAG AA com folga */
-        .plan ul li { position: relative; padding-left: 22px; margin-bottom: 11px; font-size: 14px; color: var(--muted); line-height: 1.5; }
-        .plan ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
-        .plan .btn-primary, .plan .btn-ghost { width: 100%; margin-top: 26px; }
-
-        /* === Faixa fee fixo === */
-        .fee-fixo { margin-top: 24px; border: 1px solid rgba(140,107,58,0.35); border-left: 3px solid var(--gold); border-radius:0; background: linear-gradient(135deg, rgba(140,107,58,0.06) 0%, rgba(140,107,58,0.015) 100%); padding: 32px 36px; display: flex; gap: 34px; align-items: center; flex-wrap: wrap; }
-        .fee-fixo .ff-mark { font-family: 'Playfair Display', serif; font-size: 34px; font-style: italic; color: var(--gold-light); white-space: nowrap; line-height: 1; }
-        .fee-fixo .ff-mark span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-style: normal; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-top: 10px; }
-        .fee-fixo p { margin: 0; flex: 1; min-width: 280px; font-size: 15px; color: var(--text); line-height: 1.75; }
-        .fee-note { margin-top: 16px; font-size: 13px; color: var(--muted); line-height: 1.7; }
-
-        /* === Faixa de contato direto === */
-        .contact-band { margin-top: 44px; border: 1px solid rgba(140,107,58,0.3); border-radius:0; background: linear-gradient(135deg, rgba(140,107,58,0.05) 0%, rgba(140,107,58,0.012) 100%); padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap; }
-        .contact-band .cb-text { flex: 1; min-width: 260px; }
-        .contact-band .cb-text strong { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold-light); margin-bottom: 8px; line-height: 1.2; }
-        .contact-band .cb-text span { font-size: 14px; color: var(--muted); line-height: 1.6; }
-        .contact-channels { display: flex; gap: 14px; flex-wrap: wrap; }
-        .contact-chip { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border: 1px solid rgba(140,107,58,0.4); border-radius:0; color: var(--gold); font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.25s; }
-        .contact-chip:hover { background: rgba(140,107,58,0.1); border-color: var(--gold); }
-        .ico { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.8; }
-        .footer-links .ico { margin-right: 7px; }
-
-        /* === Passos === */
-        .steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
-        .step { background: var(--surface); border: 1px solid var(--border); border-radius:0; padding: 28px 26px; }
-        .step-num { display: block; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold); letter-spacing: 0.14em; margin-bottom: 16px; }
-        .step h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
-        .step p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
-        .compliance { margin-top: 30px; padding: 22px 24px; background: var(--surface); border-left: 2px solid var(--gold); border-radius:0; font-size: 13px; color: var(--muted); line-height: 1.8; }
-
-        /* === FAQ === */
-        .faq { max-width: 840px; }
-        details.faq-item { border-bottom: 1px solid var(--border); padding: 22px 0; }
-        details.faq-item:first-of-type { border-top: 1px solid var(--border); }
-        details.faq-item summary { font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        details.faq-item summary::-webkit-details-marker { display: none; }
-        details.faq-item summary::after { content: '+'; font-size: 22px; color: var(--gold); font-weight: 400; }
-        details.faq-item[open] summary::after { content: '\2013'; }
-        details.faq-item p { margin-top: 14px; font-size: 14px; color: var(--muted); line-height: 1.75; }
-
-        /* === CTA (idêntico à plataforma) === */
-        /* Faixa escura: navy do sistema, não #0d0d0d. O glow radial saiu (craft).
-           .cta-sub estava em --muted sobre fundo quase preto: 3.06:1, reprovava. */
-        /* hairline clara: sobre navy, --line-strong (navy 14%) some e o CTA
-           fundiria com o rodapé, que também é navy */
-        .cta-section { background: var(--navy); border-top: 1px solid var(--line-strong); border-bottom: 1px solid rgba(240,238,226,0.14); padding: 100px 24px; text-align: center; position: relative; overflow: hidden; }
-        .cta-eyebrow { font-family: var(--font-mono); font-size: 0.64rem; font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--gold-bright); margin-bottom: 16px; position: relative; }
-        .cta-title { font-family: var(--font-serif); font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 400; color: #f4eee2; margin-bottom: 16px; line-height: 1.15; position: relative; }
-        .cta-sub { font-size: 15px; color: rgba(240,238,226,0.74); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.7; position: relative; }
-        .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
-        /* inversão sobre navy: o btn navy do sistema sumiria no fundo */
-        .cta-section .btn-primary { background: #f4eee2; color: var(--navy); border-color: #f4eee2; }
-        .cta-section .btn-primary:hover { background: #fff; border-color: #fff; }
-        .cta-section .btn-ghost { color: #f4eee2; border-color: rgba(240,238,226,0.34); }
-        .cta-section .btn-ghost:hover { border-color: #f4eee2; background: rgba(240,238,226,0.06); }
-
-        /* === Footer ===
-           O rodapé é navy, mas herdava as cores de texto do tema claro:
-           .footer-col-title ficava em 1.07:1 e o disclaimer em 1.88:1, ou seja,
-           praticamente invisíveis. Cores abaixo são para superfície escura. */
-        footer { background: var(--navy); border-top: 1px solid var(--line-strong); }
-        .footer-inner { max-width: 1400px; margin: 0 auto; padding: 60px 60px 40px; display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.4fr; gap: 48px; }
-        .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-        .footer-desc { font-size: 13px; color: rgba(240,238,226,0.72); line-height: 1.7; margin-bottom: 20px; max-width: 300px; }
-        .footer-status { display: flex; align-items: center; gap: 8px; }
-        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #5fbf8d; }
-        .status-text { font-size: 12px; color: #5fbf8d; }
-        .footer-col-title { font-family: var(--font-mono); font-size: 0.64rem; font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--gold-bright); margin-bottom: 18px; }
-        .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .footer-links a { font-size: 13px; color: rgba(240,238,226,0.74); text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; }
-        .footer-links a:hover { color: #f4eee2; }
-        .footer-site-link { display: inline-flex !important; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(140,107,58,0.3); border-radius:0; color: var(--gold) !important; font-size: 12px; font-weight: 600; transition: all 0.2s !important; }
-        .footer-site-link:hover { background: var(--gold-dim) !important; border-color: var(--gold) !important; }
-        .footer-bottom { max-width: 1400px; margin: 0 auto; padding: 20px 60px; border-top: 1px solid rgba(240,238,226,0.12); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .footer-bottom-left, .footer-bottom-right { font-size: 12px; color: rgba(240,238,226,0.66); }
-        .footer-dot { margin: 0 8px; }
-        .footer-disclaimer { max-width: 1400px; margin: 0 auto; padding: 16px 60px 32px; font-size: 11px; color: rgba(240,238,226,0.60); line-height: 1.7; }
-        .footer-disclaimer strong { color: rgba(240,238,226,0.82); }
-
-        /* === Responsivo === */
-        @media (max-width: 1024px) {
-            .footer-inner { grid-template-columns: 1fr 1fr; padding: 48px 32px 32px; gap: 36px; }
-            .footer-bottom { padding: 16px 32px; }
-            .footer-disclaimer { padding: 12px 32px 28px; }
-        }
-        /* O header agora é o do sistema (sz-design.css cuida do menu mobile),
-           por isso as regras de .nav-links/.nav-logo/.logo-* saíram daqui. */
-        @media (max-width: 900px) {
-            .section { padding: 72px 24px; }
-            .hero-h { padding: 116px 24px 56px; }
-            .hero-h-grid { grid-template-columns: 1fr; gap: 36px; }
-            .plans-grid, .steps-grid, .philo { grid-template-columns: 1fr; }
-            .cta-section { padding: 80px 28px; }
-        }
-        @media (max-width: 768px) {
-            .footer-inner { grid-template-columns: 1fr; padding: 36px 20px 24px; gap: 28px; }
-            .footer-desc { max-width: 100%; }
-            .footer-bottom { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 6px; }
-            .footer-disclaimer { padding: 12px 20px 28px; }
-            .btn-primary, .btn-ghost { width: 100%; }
-            .hero-actions { flex-direction: column; }
-        }
-        @media (max-width: 480px) {
-            .fee-fixo { flex-direction: column; align-items: flex-start; gap: 18px; padding: 26px 24px; }
-            .plan { padding: 30px 24px; }
-        }
-
-        /* .ysz-lockup e .ysz-stack vêm de sz-design.css — bloco duplicado removido */
-    </style>
-</head>
+    <link rel="stylesheet" href="/assets/sz-honorarios.css" />
+<link rel="stylesheet" href="/assets/sz-utilities.css" />
+  </head>
 <body>
 
 <!-- HEADER — mesma estrutura de index.html, estilizada por sz-design.css -->
@@ -340,7 +169,7 @@
 </section>
 
 <!-- FILOSOFIA -->
-<section class="section" style="padding-top:0;">
+<section class="u-paddingtop0 section">
     <div class="philo">
         <div class="philo-item">
             <strong>Honorário direto</strong>
@@ -358,7 +187,7 @@
 </section>
 
 <!-- PLANOS -->
-<section id="planos" class="section" style="padding-top:24px;">
+<section id="planos" class="u-paddingtop24px section">
     <div class="sec-head">
         <div class="sec-eyebrow">Planos e honorários</div>
         <h2 class="sec-title">Três formatos, com escopo e valor definidos</h2>
@@ -445,7 +274,7 @@
 </section>
 
 <!-- COMO FUNCIONA -->
-<section class="section" style="padding-top:24px;">
+<section class="u-paddingtop24px section">
     <div class="sec-head">
         <div class="sec-eyebrow">Do primeiro contato à proposta</div>
         <h2 class="sec-title">Como o honorário é definido</h2>
@@ -463,7 +292,7 @@
 </section>
 
 <!-- FAQ -->
-<section id="faq" class="section" style="padding-top:24px;">
+<section id="faq" class="u-paddingtop24px section">
     <div class="sec-head">
         <div class="sec-eyebrow">Dúvidas frequentes</div>
         <h2 class="sec-title">Sobre os honorários</h2>
@@ -541,7 +370,7 @@
             <ul class="footer-links">
                 <li><a href="mailto:yan@szuchmacher.com.br"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14"/><path d="M2.5 6.5 12 13l9.5-6.5"/></svg>yan@szuchmacher.com.br</a></li>
                 <li><a href="tel:+5521981088992"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 3h4l2 5-2.5 1.5a12 12 0 0 0 5 5L16 12l5 2v4a2 2 0 0 1-2.2 2A17 17 0 0 1 4 5.2 2 2 0 0 1 6 3z"/></svg>21-98108-8992</a></li>
-                <li style="margin-top:16px;"><a href="index.html" class="footer-site-link">szuchmacher.com.br</a></li>
+                <li class="u-margintop16px"><a href="index.html" class="footer-site-link">szuchmacher.com.br</a></li>
             </ul>
         </div>
     </div>

@@ -80,7 +80,11 @@ function Send-Alerta([string]$assunto, [string]$corpo) {
         return
     }
     try {
-        & $ALERT -Subject $assunto -Body $corpo
+        # send-alert-email.ps1 devolve $true/$false desde 2026-08-27. Registrar o
+        # resultado aqui: sem isso, alerta que nao sai nao aparece em log nenhum.
+        $enviado = & $ALERT -Subject $assunto -Body $corpo
+        if ($enviado) { Log-Linha 'Alerta por e-mail: enviado.' }
+        else { Log-Linha 'Alerta por e-mail: NAO ENVIADO, ver saida de send-alert-email.ps1.' }
     } catch {
         Log-Linha "AVISO: falha ao disparar alerta: $($_.Exception.Message)"
     }

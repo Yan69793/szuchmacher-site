@@ -12,6 +12,10 @@
     return `${d}/${m}/${y}`;
   }
 
+  function safeHref(url) {
+    return /^https?:\/\//i.test(String(url || '')) ? url : null;
+  }
+
   function statusLabel(status) {
     const map = {
       aberto: 'Aberto',
@@ -32,7 +36,7 @@
         <div class="mp-ev-head">
           <span class="mp-ev-title">${esc(fmtDataISO(ev.data))} — ${esc(ev.evento)}</span>
         </div>
-        ${ev.fonte ? `<div class="mp-ev-src">${ev.link ? `<a href="${esc(ev.link)}" target="_blank" rel="noopener">${esc(ev.fonte)}</a>` : esc(ev.fonte)}</div>` : ''}
+        ${ev.fonte ? `<div class="mp-ev-src">${safeHref(ev.link) ? `<a href="${esc(safeHref(ev.link))}" target="_blank" rel="noopener">${esc(ev.fonte)}</a>` : esc(ev.fonte)}</div>` : ''}
       </li>
     `).join('');
 

@@ -2,7 +2,7 @@
 
 ## Estado do projeto
 
-Página canônica de estado, legível por qualquer agente (não só Claude): `status/ESTADO.md`. Ler antes de começar sessão de trabalho, atualizar a data e os itens ao fechar uma sessão que mudou o estado.
+Página canônica de estado, legível por qualquer agente (não só Claude): `../status/ESTADO.md` (na raiz do repositório). Ler antes de começar sessão de trabalho, atualizar a data e os itens ao fechar uma sessão que mudou o estado.
 
 ## Identidade do projeto
 
@@ -13,40 +13,6 @@ Site institucional de advisory patrimonial independente de Yan Szuchmacher.
 **Legado:** HostGator/FTP mantido só para rollback; **não é mais o deploy primário**  
 **Deploy primário:** `.\scripts\deploy-cloudflare.ps1` (build + `wrangler deploy`)  
 **Última migração confirmada:** 17/06/2026 (`Server: cloudflare`, Worker `sz-sites` ativo)
-
----
-
-## Mapa de arquivos
-
-| Arquivo | Função |
-|---------|--------|
-| `index.html` | Home institucional (~54 KB) |
-| `relatorios.html` | Página de relatórios e PDFs |
-| `multiasset.html` | Landing legada — em szuchmacher.com.br responde 301 para multi-assets.com |
-| `consultoria.html` | Página de consultoria patrimonial — servida em `multi-assets.com/consultoria` |
-| `multiasset-app.html` | App completo da plataforma (~275 KB) |
-| `honorarios.html` | Tabela de honorários |
-| `assinatura.html` | Página de assinatura |
-| `privacidade.html` | Política de privacidade |
-| `.htaccess` | Headers de segurança (CSP, HSTS, GZIP, redirects) |
-| `prices.php` | Endpoint: ouro, prata, platina, BTC ao vivo |
-| `macro_api.php` | Endpoint LLM via OpenRouter — 200, secret `OPENROUTER_KEY` no Worker |
-| `macro_data.json` | Fallback estático do macro quando `macro_api.php` falha |
-| `agenda-server.php` | Endpoint: agenda de eventos econômicos |
-| `agenda-data.json` | Cache local da agenda |
-| `regulatorio-data.json` | Tracker público de processos regulatórios/jurídicos em acompanhamento (curadoria manual, mesmo fluxo do `agenda-data.json`) |
-| `dados-privados/regulatorio-interno.json` (raiz do repo, **fora** de `site-producao/`) | Mapa interno de emissores impactados por caso, uso exclusivo em conversa individual com cliente (CVM Res. 19/2021). Gitignored. **NUNCA** mover para dentro de `site-producao/` nem referenciar em `build-cloudflare-public.ps1` ou em handler do Worker — ver §"Tracker de processos regulatórios" abaixo |
-| `market-data.php` | Endpoint: Ibovespa, S&P 500, WTI, Treasury 10y via Yahoo Finance |
-| `market_data_cache.json` | Cache local do market-data.php (TTL 10 min, gerado automaticamente) |
-| `assets/macro-panel.js` | Script que popula o painel macro no `index.html` (`macro-panel-live.js` é variante morta, sem referência em HTML) |
-| `assets/sz-config.js` | Configuração central: GA4_ID, CLARITY_ID, FORMSPREE_ID |
-| `assets/macro.php` | BCB SGS + Focus (Selic, IPCA, PTAX) — funcional |
-| `assets/agenda.php` | Agenda ao vivo — funcional |
-| `_arquivo/` | Backups e snapshots históricos — **não editar**, ignorado pelo git (só existe em disco) |
-| `diagnosticos/` | Registros de diagnóstico de produção |
-| `scripts/` | Scripts de deploy e manutenção |
-| `cloudflare-workers/sz-sites/` | Worker de produção (HTML estático + APIs PHP portadas) |
-| `cloudflare-workers/sz-sites/src/handlers/fechamento.js` | Proxy `/fechamento/:slug` → Worker briefing (leitura via site) |
 
 ---
 
@@ -104,40 +70,8 @@ Não copiar a paleta de outros produtos. Copiar o **nível de craft**:
 espaço generoso, hairline, peso tipográfico contido (serif 400), mono em
 labels, hover sem bounce, grids com gap 1px, `border-radius: 0`.
 
-### Paleta institucional (szuchmacher.com.br — `assets/sz-design.css`)
-
-| Variável | Valor | Uso |
-|----------|-------|-----|
-| `--bg` | `#f3f1ec` | Fundo geral (papel quente) |
-| `--surface` | `#ebe7e0` | Superfície alternada |
-| `--surface-soft` | `#f8f6f2` | Cards e superfícies suaves |
-| `--navy` | `#0c1524` | Primário — textos, CTAs, header dark |
-| `--navy-soft` | `#172338` | Navy secundário |
-| `--gold` | `#8c6b3a` | Acento, eyebrows |
-| `--gold-soft` / `--gold-bright` | `#a88850` / `#c4a46a` | Acento suave / dark sections |
-| `--text` | `#161c28` | Texto principal |
-| `--muted` | `#5c6574` | Secundário |
-| `--line` / `--line-strong` | rgba navy 0.09 / 0.14 | Hairlines |
-
 **multi-assets.com** (`multiasset-app.html`): shell **dark** próprio
 (`--bg #0a0c10`, ouro `#c4a46a`, texto `#e8e4d9`). Mesmo craft, paleta distinta.
-
-### Tipografia
-
-| Variável | Família | Pesos | Uso |
-|----------|---------|-------|-----|
-| `--font-serif` | Prata (site) / Playfair (multi) | **400** display | H1–H4, métricas |
-| `--font-sans` | Public Sans (site) / DM Sans (multi) | 400–500 | Corpo |
-| `--font-mono` | JetBrains Mono / DM Mono | 400–500 | Nav, labels, CTA |
-
-### Convenções de layout
-
-- `--max`: `1120px` (site) / `1280px` (multi app)
-- `--radius`: `0`
-- `.section`: `padding: 112px 0` (site)
-- `.eyebrow`: mono, `0.64rem`, `letter-spacing: 0.14–0.16em`, weight 500, ouro
-- Botões: mono uppercase, min-height 48px, sem shadow/lift
-- Cards/offers: preferir grid `gap: 1px` sobre caixas com sombra
 
 **Desvio de craft (peso 800/900, pill, glow, bounce) é regressão — corrigir antes de entregar.**
 
@@ -178,13 +112,24 @@ dado nunca chegar à saída do build. Por isso o mapa interno
    histórico do git.
 3. **Trava ativa no build**: `build-cloudflare-public.ps1` varre a saída
    (`public/`) ao final procurando o nome `regulatorio-interno.json` e a
-   string `impacto_interno` em qualquer `.json` copiado; se achar, aborta
+   string `impacto_por_caso` em qualquer `.json` copiado; se achar, aborta
    o build com `throw` antes de qualquer deploy.
+
+**Schema de `casos[]`** em `regulatorio-data.json` (campos que
+`assets/regulatorio-panel.js` espera; nenhum é obrigatório, ausente só
+significa que aquele trecho do card não renderiza):
+`id` (slug estável, nunca reutilizar/renomear), `titulo`, `status`
+(`aberto` | `em_instrucao` | `decisao_pendente` | `resolvido`), `orgao`,
+`quem_decide`, `proximo_prazo.data` + `proximo_prazo.descricao`,
+`cronologia[]` com `data` + `evento` + `fonte` + `link` (`link` só vira
+`<a>` clicável se começar com `http://`/`https://`; qualquer outro valor é
+descartado e só o texto da fonte aparece), `desfechos_possiveis[]`
+(lista de mecanismos possíveis, nunca uma recomendação de compra/venda).
 
 Quando este bloco já estiver em produção, adicionar ao `validar-producao.ps1`
 (regra do `CLAUDE.md` raiz: checagem nova só entra depois que a mudança já
 está no ar): `regulatorio-data.json` e `/assets/regulatorio.php` respondem
-200, e `NaoContem: 'impacto_interno'` nos dois.
+200, e `NaoContem: 'impacto_por_caso'` nos dois.
 
 **Placement**: bloco dedicado (`#situacoes`), não aninhado em
 `#antecipacao`. `renderAgenda()` em `macro-panel.js` sempre tem fallback
@@ -361,33 +306,6 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 
 ---
 
-## Endpoints
-
-| Endpoint | HTTP | Descrição |
-|----------|------|-----------|
-| `/assets/macro.php` | 200 ✅ | BCB SGS + Focus: Selic, IPCA, PTAX |
-| `/assets/agenda.php` | 200 ✅ | Agenda de eventos econômicos da semana |
-| `/prices.php` | 200 ✅ | Ouro, prata, platina, Bitcoin |
-| `/macro_api.php` | 200 ✅ | Narrativa macro via LLM. Cascata a frio chega a ~30 s; `macro_data.json` é o fallback |
-
----
-
-## Configuração central — `assets/sz-config.js`
-
-Único arquivo que contém IDs externos. Propagado automaticamente para todas as páginas.
-
-Para ativar GA4 e Clarity, substituir as linhas:
-
-```js
-window.SZ_GA_ID      = 'G-XXXXXXXXXX';   // Google Analytics 4 Measurement ID
-window.SZ_CLARITY_ID = 'XXXXXXXXXX';     // Microsoft Clarity Project ID
-// Formspree já configurado:
-window.SZ_FORMSPREE_ID = 'mojrayrl';
-```
-
-Após editar: upload apenas de `assets/sz-config.js` — nenhum HTML precisa ser tocado.
-
----
 
 ## Pendências abertas (prioridade)
 
@@ -395,27 +313,50 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Cron nativo do macro ainda sem prova de disparo automático.** Watchdog
-   semanal no ar desde 22/08: `Szuchmacher-MacroCronWatchdog` (segunda 09:00
-   BRT) roda `scripts/check-macro-cron.ps1`, compara `macro_cron_last.ts` em
-   `/health` com a segunda mais recente 03:00 UTC ±2 h e, se o carimbo não
-   cair na janela, dispara `run-macro-cron.ps1` (reserva HTTP) e e-mail.
-   Só o dispatcher escreve o carimbo (`runScheduledMacro`). Refresh via
-   `cron=1` não toca. One-shot `CheckMacroCron-2026-08-24` foi substituída
-   por essa task. Primeira prova real: 24/08 09:00. Se a máquina estiver
-   desligada, `StartWhenAvailable` dispara no boot. Se o nativo falhar de
-   novo, a reserva segura o painel e o e-mail pede caso no suporte CF
-   (eventos `origin=cron` no Observability). Não meter essa checagem no
-   `validar-producao.ps1` (portão de deploy).
-2. **CSP sem unsafe-inline** (refatoração grande, precisa de escopo próprio).
-3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
-   próprio).
-4. **Limpeza opcional no cPanel.** O job físico `agenda-cron.php` segue
-   registrado no painel, mas está inerte na borda desde 17/08 (refresh
-   rejeitado com 403 após a rotação do `CRON_SECRET`). Desligar no painel
-   quando houver login do cPanel resolve também o P3-15 (calendários 2026
-   hardcoded). Sem risco operacional enquanto isso.
-5. **Tracker de processos regulatórios/jurídicos: infraestrutura pronta,
+1. ~~**Cron nativo do macro ainda sem prova de disparo automático.**~~
+   **Fechado em 31/08, reconferido em 01/09.** O disparo nativo aconteceu
+   sozinho e deixou carimbo. Leitura de `/health` em 01/09 02:13 BRT:
+   `macro_cron_last` com `ts=1788145255`, `cron: "0 3 * * MON"`, `ok: true`,
+   `status: 200`, `generated_at: "31/08/2026, 00:01 BRT"` e `ms: 39888`.
+   Só o dispatcher escreve esse carimbo (`runScheduledMacro`), refresh via
+   `cron=1` não toca, então ele é prova de despacho e não de chamada manual.
+
+   O watchdog `Szuchmacher-MacroCronWatchdog` (segunda 09:00 BRT,
+   `scripts/check-macro-cron.ps1`) continua no ar como reserva e não deve ser
+   removido. Ele compara o carimbo com a segunda mais recente 03:00 UTC ±2 h e,
+   se não cair na janela, dispara `run-macro-cron.ps1` e e-mail. Se a máquina
+   estiver desligada, `StartWhenAvailable` dispara no boot. Segue valendo a
+   regra de não meter essa checagem no `validar-producao.ps1`, que é portão de
+   deploy.
+2. ~~CSP sem unsafe-inline no multi (Fase B).~~ **Fechado em 31/08.** Os 136
+   handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
+   e o CSP saiu estrito nos dois domínios. Detalhe em "Resolvidas em 2026-08-31".
+3. ~~**F5 cache-busting** manual e inconsistente (P2 no doc original).~~
+   **Fechado em 31/08 (`488b830`, deploy `2851bcaa`), reconferido em 01/09.**
+   `Add-VersionStamps` em `scripts/build-cloudflare-public.ps1:31` reescreve as
+   referências `/assets/*.css|js` no HTML copiado para `?v=<hash8>`, os 8
+   primeiros hex do SHA256 do próprio asset. URL muda quando o asset muda e
+   fica estável quando não muda. Conferido no HTML servido em 01/09,
+   `sz-design.css?v=0D2D1EB5` e `sz-config.js?v=A3034F50`. As checagens do
+   `validar-producao.ps1` usam URL limpa, sem `?v=`, por isso continuam válidas.
+4. ~~**Limpeza opcional no cPanel**, desligar o `agenda-cron.php`.~~
+   **Fechado em 01/09 por verificação direta no painel.** Não existe tarefa
+   Cron nenhuma contendo `agenda-cron.php`. O painel tem 3 entradas para
+   `macro_cron.php` e 2 para `focus_cron.php`, e só isso. Não havia o que
+   desligar, a afirmação anterior de que o job "segue registrado no painel"
+   estava errada e nunca tinha sido conferida no cPanel, porque o acesso
+   falhava (FTPS `deploy@` com 530). **P3-15 (calendários 2026 hardcoded)
+   fecha junto**, os três arrays `$copom_2026`, `$feriados_us_2026` e
+   `$fomc_2026` moram dentro do próprio `agenda-cron.php` e não são lidos
+   por mais nada. Detalhe da evidência em `../status/ESTADO.md`, seção de
+   01/09.
+5. **CSP fail-open para host desconhecido.** Fechado em 31/08, e com a Fase B
+   o allowlist `MULTI_HOSTS` foi removido de vez: `buildCSP` em
+   `cloudflare-workers/sz-sites/src/utils/headers.js` emite hoje o mesmo CSP
+   estrito para qualquer host, sem branch por host. Domínio futuro não mapeado
+   cai no estrito, não herda política fraca por omissão. Teste no
+   `headers.test.mjs`. Publicado com a Fase B (Worker `b767ba10`), gate 34/34.
+6. **Tracker de processos regulatórios/jurídicos: infraestrutura pronta,
    nada publicado.** Código implementado em 2026-09-01 (handler, rota,
    bloco `#situacoes` em `index.html` escondido por padrão, schema dos dois
    arquivos vazios, trava anti-vazamento no build) — detalhe na seção
@@ -424,6 +365,34 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    `regulatorio-data.json` + `dados-privados/regulatorio-interno.json`,
    feita pelo Yan; (c) entradas novas em `validar-producao.ps1`, só depois
    do deploy.
+
+### Resolvidas em 2026-08-31
+
+- **Fase A do CSP nas páginas sz.** Todo script/style inline das 8 páginas sz
+  externalizado para `assets/sz-*.css` (estilos) e `assets/sz-*-N.js`
+  (scripts puros), atributos `style="..."` convertidos em classes utilitárias
+  em `assets/sz-utilities.css`, e o toast do `sz-config.js` migrado de
+  `style.cssText` para atribuição CSSOM (nunca bloqueada por CSP). O Worker
+  (`src/utils/headers.js`) passou a emitir CSP por host: sz sem
+  `unsafe-inline` em `script-src`/`style-src`, multi mantendo (Fase B).
+  Quatro desvios de fidelidade de renderização corrigidos com `!important` nas
+  5 utilitárias, replicando a precedência do inline original (1,0,0,0) que a
+  classe herdou. Suíte do Worker 68 -> 69, build verde. Sem deploy.
+
+- **Fase B do CSP no multi-assets.com.** Os 136 handlers inline do
+  `multiasset-app.html` (`onclick`, `oninput`, `onkeydown`) viraram
+  `data-ev="eN"` com delegação de eventos no documento, e os 257 estilos
+  inline viraram 103 classes utilitárias em `assets/multi-utilities.css`, com
+  `!important` em tudo exceto `display` e `width`, que o JS compete via CSSOM.
+  Os 3 scripts executáveis e o bloco `<style>` saíram para `assets/multi-app-1.js`,
+  `multi-app-2.js`, `multi-app-3.js` e `assets/multi-app.css`. Cores dinâmicas
+  viraram `data-color`/`data-bg` + `applyInline()` via MutationObserver. O CSP
+  saiu estrito nos dois domínios, sem `unsafe-inline`. Dois bugs do transform
+  corrigidos: classe utilitária divergente do slug (`u-fw700` vs
+  `u-fontweight700`) e perda de todas as classes do HTML por mutação de closure
+  dentro do callback do `String.replace`. Portão repointado para
+  `$MULTI/assets/multi-app-2.js` (as âncoras saíram do HTML), Worker
+  `b767ba10`, gate 34/34, suíte do Worker 69 -> 70.
 
 ### Resolvidas em 2026-08-24
 

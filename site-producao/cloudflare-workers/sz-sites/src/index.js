@@ -25,7 +25,7 @@ const API_ROUTES = {
   '/prices.php': (req, env, ctx) => handlePrices(env, ctx),
   '/market-data.php': (req, env, ctx) => handleMarketData(env, ctx),
   '/relatorio-prices.php': (req, env, ctx) => handleRelatorioPrices(env, ctx),
-  '/macro_api.php': (req, env, ctx) => handleMacroApi(req, env),
+  '/macro_api.php': (req, env, ctx) => handleMacroApi(req, env, {}, ctx),
   '/assets/macro.php': (req, env, ctx) => handleMacroPanel(env, req),
   '/assets/agenda.php': (req, env, ctx) => handleAgenda(env, req),
   '/assets/regulatorio.php': (req, env, ctx) => handleRegulatorio(env, req),
@@ -132,9 +132,14 @@ function redirect(url, status = 301) {
   return Response.redirect(url, status);
 }
 
-async function fetchAsset(request, env, assetUrl, hops = 0) {
+export async function fetchAsset(request, env, assetUrl, hops = 0) {
   if (hops > 3) return new Response('Asset loop', { status: 500 });
-  const res = await env.ASSETS.fetch(new Request(assetUrl, request));
+  // new Request(assetUrl, request) repassava o request inteiro, e o construtor
+  // rejeita body em GET/HEAD. Cliente que manda GET com Content-Length: 0
+  // (ex.: .NET) 500ava aqui. Reconstroi so com method e headers, sem body.
+  const res = await env.ASSETS.fetch(
+    new Request(assetUrl, { method: request.method, headers: request.headers }),
+  );
   if (![301, 302, 307, 308].includes(res.status)) return res;
   const loc = res.headers.get('Location');
   if (!loc) return res;

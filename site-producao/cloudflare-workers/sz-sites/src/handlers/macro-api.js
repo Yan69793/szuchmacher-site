@@ -107,26 +107,38 @@ Em "ativos", o campo "alocacao_sugerida" é a faixa de percentual DO PATRIMÔNIO
 
 // Rate limiting: prevent abuse of LLM refresh (costs credits). Uses KV to track
 // last refresh timestamp. Minimum 1h between external refresh requests.
-async function checkRefreshRate(env, request) {
-  const RATE_TTL = 3600; // 1 hour between refreshes
-  const key = 'macro-refresh-rate';
-  const now = Math.floor(Date.now() / 1000);
-  let lastRefresh = null;
+//
+// O carimbo e gravado em duas fases desde 31/08/2026. Antes disso ele saia com
+// 1h fixa ANTES da cascata rodar, entao qualquer tentativa que nao fechasse
+// (upstream 503, cliente desistindo antes dos ~40s) queimava a janela inteira
+// sem gravar nada, e o cache ficava vazio ate o cron da segunda seguinte. Agora
+// a tentativa em curso carimba 60s, so para conter estouro de manada, e a janela
+// cheia e gravada por stampRefreshSuccess depois do writeCache.
+const RATE_KEY = 'macro-refresh-rate';
+const RATE_TTL = 3600;        // janela cheia, so apos a cascata fechar
+const RATE_TTL_INFLIGHT = 60; // janela curta da tentativa em curso
+
+// Valor corrente e {ts, ttl}. Inteiro solto e o formato legado e continua sendo
+// lido com a semantica antiga (1h), para nao ignorar chave gravada por uma
+// versao anterior do Worker durante o rollout.
+function parseRateValue(raw) {
+  if (!raw) return null;
   try {
-    lastRefresh = await env.CACHE.get(key);
-  } catch (e) {
-    // Falha transitoria do KV nao pode derrubar o request do macro: sem
-    // leitura, o refresh segue permitido (comportamento pre-auditoria).
-    console.warn('[macro-api] KV get macro-refresh-rate falhou:', e.message);
-  }
-  if (lastRefresh) {
-    const elapsed = now - parseInt(lastRefresh, 10);
-    if (elapsed < RATE_TTL) {
-      return { allowed: false, retryAfter: RATE_TTL - elapsed };
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed.ts === 'number') {
+      return { ts: parsed.ts, ttl: typeof parsed.ttl === 'number' ? parsed.ttl : RATE_TTL };
     }
+  } catch (e) {
+    // formato legado, cai no parseInt abaixo
   }
+  const ts = parseInt(raw, 10);
+  return Number.isFinite(ts) ? { ts, ttl: RATE_TTL } : null;
+}
+
+async function putRateStamp(env, ttl) {
+  const now = Math.floor(Date.now() / 1000);
   try {
-    await env.CACHE.put(key, String(now), { expirationTtl: RATE_TTL });
+    await env.CACHE.put(RATE_KEY, JSON.stringify({ ts: now, ttl }), { expirationTtl: ttl });
   } catch (e) {
     // O KV aceita 1 write/s por chave: dois requests concorrentes no
     // vencimento do cache de 7 dias colidem aqui com 429. Engolir (padrao
@@ -134,7 +146,33 @@ async function checkRefreshRate(env, request) {
     // irrelevante perto de devolver 500 ao visitante.
     console.warn('[macro-api] KV put macro-refresh-rate falhou:', e.message);
   }
+}
+
+async function checkRefreshRate(env, request) {
+  const now = Math.floor(Date.now() / 1000);
+  let raw = null;
+  try {
+    raw = await env.CACHE.get(RATE_KEY);
+  } catch (e) {
+    // Falha transitoria do KV nao pode derrubar o request do macro: sem
+    // leitura, o refresh segue permitido (comportamento pre-auditoria).
+    console.warn('[macro-api] KV get macro-refresh-rate falhou:', e.message);
+  }
+  const atual = parseRateValue(raw);
+  if (atual) {
+    const elapsed = now - atual.ts;
+    if (elapsed < atual.ttl) {
+      return { allowed: false, retryAfter: atual.ttl - elapsed };
+    }
+  }
+  await putRateStamp(env, RATE_TTL_INFLIGHT);
   return { allowed: true };
+}
+
+// Chamada so depois do writeCache do macro-api: promove a janela curta da
+// tentativa para a janela cheia de 1h, que e o que protege o custo da cascata.
+async function stampRefreshSuccess(env) {
+  await putRateStamp(env, RATE_TTL);
 }
 
 function extractJson(content) {
@@ -265,16 +303,23 @@ export function coerceLlmContent(content) {
   return '';
 }
 
-export async function handleMacroApi(request, env, { forceRefresh: forceRefreshOpt = false } = {}) {
+export async function handleMacroApi(request, env, { forceRefresh: forceRefreshOpt = false } = {}, ctx = null) {
   const reqUrl = new URL(request.url);
   const httpRefresh = httpRefreshRequested(reqUrl);
 
   const origin = request.headers.get('Origin') || '';
+  // Allowlist exata, nunca substring. O antigo includes() deixava passar
+  // https://multi-assets.com.evil.io e https://evilmulti-assets.com e ecoava
+  // o origin de volta no ACAO, liberando leitura cross-origin da API.
+  // Fechado em 30/08/2026. Os hosts sao os 4 do SITE_MAP do index.js.
+  const ALLOWED_ORIGINS = new Set([
+    'https://szuchmacher.com.br',
+    'https://www.szuchmacher.com.br',
+    'https://multi-assets.com',
+    'https://www.multi-assets.com',
+  ]);
   const cors = {
-    'Access-Control-Allow-Origin':
-      origin.includes('multi-assets.com') || origin.includes('szuchmacher.com.br')
-        ? origin
-        : 'https://szuchmacher.com.br',
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : 'https://szuchmacher.com.br',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': CRON_HEADER,
     Vary: 'Origin',
@@ -347,6 +392,31 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         { ok: false, error: 'Macro em atualizacao, tente em instantes', retry_after_seconds: rate.retryAfter },
         { status: 503, headers: { ...cors, 'Retry-After': String(rate.retryAfter) } },
       );
+    }
+
+    // Cache vazio, janela livre. Com ctx.waitUntil e fallback estatico na mao, o
+    // visitante recebe o estatico imediatamente e a cascata termina em
+    // background. Antes desta mudanca a regeneracao rodava em foreground, entao
+    // quem fechasse a aba antes dos ~40s tinha a execucao cancelada pelo runtime
+    // e o KV nunca era gravado, enquanto o carimbo de rate ja tinha bloqueado a
+    // proxima hora. Era o que mantinha o cache vazio depois de todo deploy.
+    if (ctx?.waitUntil) {
+      const fallback = await loadStaticMacro(env, request);
+      if (fallback?.data) {
+        ctx.waitUntil(
+          singleFlight('macro-api-refresh', () => gerarMacro(env, request, { cors, forceRefresh }))
+            .catch((err) => {
+              console.error('[macro-api] regeneracao em background falhou:', err?.message ?? err);
+            }),
+        );
+        return jsonResponse({
+          ok: true,
+          generated_at: fallback.generated_at ?? '',
+          cache: true,
+          data: fallback.data,
+          note: 'regenerando_em_background',
+        }, { headers: cors });
+      }
     }
 
     // Single-flight: requests concorrentes que passaram juntos pelo rate check
@@ -520,6 +590,8 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   }).format(new Date()) + ' BRT';
 
   await writeCache(env.CACHE, CACHE_KEY, { generated_at, data, ts: Math.floor(Date.now() / 1000) }, CACHE_TTL);
+  // A cascata fechou e o KV esta gravado: so agora a janela vira 1h cheia.
+  await stampRefreshSuccess(env);
 
   return jsonResponse({ ok: true, generated_at, cache: false, data }, { headers: { ...cors, 'Cache-Control': 'no-store' } });
   }

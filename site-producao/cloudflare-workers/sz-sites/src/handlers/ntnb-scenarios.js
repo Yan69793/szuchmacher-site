@@ -58,19 +58,37 @@ async function fetchYahooImaB() {
   const price = meta?.regularMarketPrice;
   if (!price || price <= 0) return null;
 
-  // Verifica se os dados estao frescos (timestamp do ultimo candle < 2 dias uteis)
+  // Verifica se os dados estao frescos. Corte por dias uteis, nao por horas
+  // corridas: 48h fixas descartavam o candle de sexta no fim de semana e na
+  // segunda de manha com o Yahoo de pe. 2 dias uteis de defasagem e a mesma
+  // folga de antes. Fechado em 30/08/2026.
   const timestamps = result.timestamp || [];
   const lastTs = timestamps.length > 0 ? timestamps[timestamps.length - 1] : 0;
-  const nowSec = Math.floor(Date.now() / 1000);
-  const ageSec = nowSec - lastTs;
-  const STALE_THRESHOLD = 172800; // 2 dias em segundos
+  const STALE_TRADING_DAYS = 2;
+  const stale = tradingDayGap(lastTs, Math.floor(Date.now() / 1000)) > STALE_TRADING_DAYS;
 
   return {
     price,
-    stale: ageSec > STALE_THRESHOLD,
+    stale,
     currency: meta.currency || 'BRL',
     exchangeName: meta.exchangeName || 'B3',
   };
+}
+
+// Gap em dias uteis entre dois timestamps, ignorando sabado e domingo.
+// Candle de sexta para segunda conta 0 e segue fresco.
+export function tradingDayGap(fromSec, toSec) {
+  const DAY = 86400;
+  const from = Math.floor(fromSec / DAY);
+  const to = Math.floor(toSec / DAY);
+  // Dias uteis entre from e to, excluindo ambos: o candle de sexta ainda e o
+  // ultimo fechado numa segunda, entao sexta->segunda conta 0.
+  let gap = 0;
+  for (let d = from + 1; d < to; d++) {
+    const wd = new Date(d * DAY * 1000).getUTCDay();
+    if (wd !== 0 && wd !== 6) gap++;
+  }
+  return gap;
 }
 
 function computeRates(ipcaSpread, ipcaProj) {

@@ -136,7 +136,9 @@ if (-not $refreshOk) {
                     Set-FalhasSeq $seq
                     Write-Log "SOFT-OK: refresh falhou (code=$lastCode) mas cache fresco ok=true generated=$genStr age_h=$ageH falhas_seq=$seq"
                     if ($seq -ge 2 -and (Test-Path $ALERT)) {
-                        & $ALERT -Subject "[Szuchmacher] Macro cron em SOFT-OK pela ${seq}a vez seguida" -Body "run-macro-cron.ps1 nao consegue regenerar o macro desde $(Get-Date -Format 'yyyy-MM-dd HH:mm').`nCache publico ainda fresco (age_h=$ageH), por isso o exit e 0, mas a regeneracao agendada esta falhando ha $seq execucoes.`n`nUltimo erro: code=$lastCode $lastMsg`n`nLog: $LOG"
+                        $alertaOk = & $ALERT -Subject "[Szuchmacher] Macro cron em SOFT-OK pela ${seq}a vez seguida" -Body "run-macro-cron.ps1 nao consegue regenerar o macro desde $(Get-Date -Format 'yyyy-MM-dd HH:mm').`nCache publico ainda fresco (age_h=$ageH), por isso o exit e 0, mas a regeneracao agendada esta falhando ha $seq execucoes.`n`nUltimo erro: code=$lastCode $lastMsg`n`nLog: $LOG"
+                        if ($alertaOk) { Write-Log 'Alerta por e-mail: enviado.' }
+                        else { Write-Log 'Alerta por e-mail: NAO ENVIADO, ver saida de send-alert-email.ps1.' }
                     }
                     Write-Log "=== FIM SOFT-OK ==="
                     exit 0
@@ -157,7 +159,9 @@ if (-not $refreshOk) {
     Set-FalhasSeq $seq
     Write-Log "=== FIM COM FALHA (sem cache fresco) falhas_seq=$seq ==="
     if (Test-Path $ALERT) {
-        & $ALERT -Subject "[Szuchmacher] Falha na automacao de macro cron" -Body "run-macro-cron.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nUltimo erro: code=$lastCode $lastMsg`nFalhas consecutivas: $seq`n`nLog: $LOG"
+        $alertaOk = & $ALERT -Subject "[Szuchmacher] Falha na automacao de macro cron" -Body "run-macro-cron.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nUltimo erro: code=$lastCode $lastMsg`nFalhas consecutivas: $seq`n`nLog: $LOG"
+        if ($alertaOk) { Write-Log 'Alerta por e-mail: enviado.' }
+        else { Write-Log 'Alerta por e-mail: NAO ENVIADO, ver saida de send-alert-email.ps1.' }
     }
     exit 1
 }

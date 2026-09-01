@@ -326,3 +326,120 @@ test('scheduled grava macro-cron-last e o KV macro-api quando a cascata fecha', 
   const gravado = JSON.parse(await env.CACHE.get('macro-api'));
   assert.equal(gravado.data.eyebrow, 'Cenário teste');
 });
+
+test('CORS: origin exato da allowlist e ecoado, os 4 hosts do SITE_MAP', async () => {
+  const env = makeEnv();
+  for (const origin of ['https://szuchmacher.com.br', 'https://www.szuchmacher.com.br', 'https://multi-assets.com', 'https://www.multi-assets.com']) {
+    const r = await handleMacroApi(new Request('https://szuchmacher.com.br/macro_api.php', { method: 'OPTIONS', headers: { Origin: origin } }), env);
+    assert.equal(r.status, 204);
+    assert.equal(r.headers.get('Access-Control-Allow-Origin'), origin, origin);
+  }
+});
+
+test('CORS: substring maliciosa NAO e ecoada, cai no fallback fixo', async () => {
+  const env = makeEnv();
+  const maliciosos = ['https://multi-assets.com.evil.io', 'https://evilmulti-assets.com', 'https://szuchmacher.com.br.attacker.net', 'null', ''];
+  for (const origin of maliciosos) {
+    const headers = origin ? { Origin: origin } : {};
+    const r = await handleMacroApi(new Request('https://szuchmacher.com.br/macro_api.php', { method: 'OPTIONS', headers }), env);
+    assert.equal(r.status, 204);
+    assert.equal(r.headers.get('Access-Control-Allow-Origin'), 'https://szuchmacher.com.br', `origin "${origin}"`);
+  }
+});
+
+// --- Regressao do cache vazio (auditoria de 31/08/2026, DIAGNOSTICO §7.1) ---
+// Tres defeitos somados deixavam macro-api vazio do deploy ate o cron da segunda
+// seguinte. Os testes abaixo cobrem os dois que vivem neste arquivo.
+
+function envComPutsGravados(opts) {
+  const env = makeEnv(opts);
+  const puts = [];
+  const putOriginal = env.CACHE.put.bind(env.CACHE);
+  env.CACHE.put = async (key, value, o) => {
+    puts.push({ key, value, opts: o });
+    return putOriginal(key, value, o);
+  };
+  return { env, puts };
+}
+
+function carimbosDeRate(puts) {
+  return puts.filter((p) => p.key === 'macro-refresh-rate');
+}
+
+test('tentativa de refresh que falha carimba janela curta, nao a hora cheia', async () => {
+  const { env, puts } = envComPutsGravados();
+  const stubBase = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    if (String(url).includes('openrouter.ai')) return new Response('upstream down', { status: 503 });
+    return stubBase(url, init);
+  };
+
+  const r = await handleMacroApi(req(), env);
+  assert.equal(r.status, 503, 'sem fallback estatico, a cascata falhada devolve 503');
+
+  const carimbos = carimbosDeRate(puts);
+  assert.ok(carimbos.length > 0, 'a janela precisa ser carimbada para conter estouro de manada');
+  assert.equal(
+    carimbos[carimbos.length - 1].opts?.expirationTtl,
+    60,
+    'tentativa que nao fechou nao pode bloquear a proxima por 1h',
+  );
+});
+
+test('refresh que fecha a cascata carimba a hora cheia', async () => {
+  const { env, puts } = envComPutsGravados();
+
+  const r = await handleMacroApi(req(), env);
+  assert.equal(r.status, 200);
+
+  const carimbos = carimbosDeRate(puts);
+  assert.ok(carimbos.length > 0);
+  assert.equal(
+    carimbos[carimbos.length - 1].opts?.expirationTtl,
+    3600,
+    'sucesso mantem a janela de 1h que protege o custo da cascata',
+  );
+});
+
+test('leitura implicita com cache vazio responde fallback e regenera em background', async () => {
+  const { env } = envComPutsGravados({ withStaticFallback: true });
+  const background = [];
+  const ctx = { waitUntil: (p) => background.push(p) };
+
+  const r = await handleMacroApi(req(), env, {}, ctx);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.data.eyebrow, 'estatico', 'visitante recebe o fallback na hora, sem esperar os ~40s');
+  assert.equal(background.length, 1, 'a cascata precisa ir para o ctx.waitUntil');
+
+  await Promise.all(background);
+  const gravado = JSON.parse(await env.CACHE.get('macro-api'));
+  assert.equal(
+    gravado.data.eyebrow,
+    'Cenário teste',
+    'o KV precisa ficar gravado mesmo que o cliente feche a aba',
+  );
+});
+
+test('sem ctx a leitura implicita continua aguardando a cascata em foreground', async () => {
+  const { env } = envComPutsGravados({ withStaticFallback: true });
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.cache, false, 'sem waitUntil disponivel o comportamento antigo se mantem');
+  assert.equal(body.data.eyebrow, 'Cenário teste');
+});
+
+test('carimbo legado (inteiro solto) continua sendo respeitado como janela de 1h', async () => {
+  const env = makeEnv({ withStaticFallback: true });
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 120));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(body.note, 'refresh_janela_ativa', 'chave gravada pela versao anterior do Worker nao pode ser ignorada');
+  assert.equal(openRouterCalls, 0);
+});

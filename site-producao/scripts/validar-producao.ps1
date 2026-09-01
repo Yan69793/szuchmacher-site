@@ -101,7 +101,10 @@ $checks = @(
     # tres nomes. Com ele, so casa definicao ou chamada. Testado nos dois
     # sentidos contra o HTML servido: as tres ausentes, e `desenharBenchmark(`
     # presente como controle de que a busca com parentese funciona.
-    @{ Url = "$MULTI/"; Status = 200;
+    # O mecanismo do app saiu do HTML para assets/multi-app-2.js na Fase B do
+    # CSP, e as tres ancoras acompanharam: e o asset servido que precisa nao
+    # ter o parser de taxa do payload, e a assinatura e a fonte unica abaixo.
+    @{ Url = "$MULTI/assets/multi-app-2.js"; Status = 200;
        NaoContem = @('parseTaxaMacro(', 'syncTaxasCenarioFromAtivos(', 'syncSimConfigsFromAtivos(');
        Rotulo = 'multi: premissa de retorno nao vem do payload macro' }
     # Assinatura direta do mesmo bug, independente do mecanismo: no cenario base
@@ -115,11 +118,11 @@ $checks = @(
     # ativo. A premissa de ouro agora mora na linha do simConfigs, e a ancora
     # acompanhou. Inclui `pess: 0.04` porque e o que torna a busca literal unica
     # da linha do ouro; revisao da premissa pessimista exige atualizar aqui.
-    @{ Url = "$MULTI/"; Status = 200; Contem = "'g-prazo', pess: 0.04,  base: 0.";
+    @{ Url = "$MULTI/assets/multi-app-2.js"; Status = 200; Contem = "'g-prazo', pess: 0.04,  base: 0.";
        Rotulo = 'multi: cenario base com premissa de ouro positiva' }
     # A fonte unica em si. Sem isso, uma regressao que reintroduza um taxasCenario
     # mantido a mao passa pelas duas checagens acima e volta a divergir do card.
-    @{ Url = "$MULTI/"; Status = 200; Contem = 'function rebuildTaxasCenario(';
+    @{ Url = "$MULTI/assets/multi-app-2.js"; Status = 200; Contem = 'function rebuildTaxasCenario(';
        Rotulo = 'multi: taxasCenario derivado de simConfigs (fonte unica)' }
 
     @{ Url = "$MULTI/sitemap.xml";                      Status = 200; Contem = 'multi-assets.com';

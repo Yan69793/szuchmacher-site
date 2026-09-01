@@ -200,7 +200,11 @@ try {
     exit 0
 } catch {
     Write-Log "ERRO: $($_.Exception.Message)"
-    & $ALERT -Subject "[Szuchmacher] Falha na automacao de macro agent" -Body "run-macro-agent.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nErro: $($_.Exception.Message)`n`nLog: $LOG"
+    $alertaOk = & $ALERT -Subject "[Szuchmacher] Falha na automacao de macro agent" -Body "run-macro-agent.ps1 falhou em $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss').`n`nErro: $($_.Exception.Message)`n`nLog: $LOG"
+    # Mesmo motivo do run-agenda-agent.ps1: alerta que nao sai precisa aparecer no
+    # log, porque a task roda com janela oculta e o Write-Host se perde.
+    if ($alertaOk) { Write-Log 'Alerta por e-mail: enviado.' }
+    else { Write-Log 'Alerta por e-mail: NAO ENVIADO, ver saida de send-alert-email.ps1.' }
     exit 1
 } finally {
     if ((Get-Location).Path -eq $YAN) { Pop-Location }

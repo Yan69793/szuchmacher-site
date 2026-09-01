@@ -21,6 +21,42 @@ function Reset-Dir([string]$Path) {
 # em 19/07/2026. Agora o build falha e o deploy nao chega a rodar.
 $script:Faltando = @()
 
+# Carimbo de versao por hash de conteudo. F5 cache-busting: o HTML referencia
+# /assets/X.css?v=<hash8>, onde hash e dos primeiros 8 hex do SHA256 do proprio
+# asset em public/. Quando o asset muda, a URL muda, e o navegador refaz o fetch
+# em vez de servir a copia antiga do cache. Quando nao muda, a URL fica estavel e
+# o cache e reaproveitado. Elimina o ?v= manual e a inconsistencia de versoes
+# esquecidas. Se o HTML referencia um asset que nao existe em public/, o build
+# falha, o mesmo tratamento de arquivo sumido do source.
+function Add-VersionStamps([string]$SiteDir, [string]$AssetsDir) {
+    $htmls = @(Get-ChildItem -Path $SiteDir -File | Where-Object {
+        $_.Extension -eq '.html' -or $_.Extension -eq ''
+    })
+    foreach ($h in $htmls) {
+        $content = [IO.File]::ReadAllText($h.FullName)
+        $pattern = '/assets/([A-Za-z0-9_.-]+\.(?:css|js))(\?[^"'']*)?'
+        if ([regex]::IsMatch($content, $pattern)) {
+            $hashCache = @{}
+            $new = [regex]::Replace($content, $pattern, {
+                param($m)
+                $name = $m.Groups[1].Value
+                if (-not $hashCache.ContainsKey($name)) {
+                    $asset = Join-Path $AssetsDir $name
+                    if (-not (Test-Path $asset)) {
+                        throw "Asset referenciado em HTML nao existe em public/: $name ($($h.FullName))"
+                    }
+                    $hashCache[$name] = (Get-FileHash $asset -Algorithm SHA256).Hash.Substring(0, 8)
+                }
+                "/assets/$name`?v=$($hashCache[$name])"
+            })
+            if ($new -ne $content) {
+                [IO.File]::WriteAllText($h.FullName, $new)
+                Write-Host "  STAMP  $($h.Name)" -ForegroundColor DarkGray
+            }
+        }
+    }
+}
+
 function Copy-IfExists([string]$Src, [string]$Dst) {
     if (-not (Test-Path $Src)) {
         Write-Host "  SKIP   $Src" -ForegroundColor Yellow
@@ -51,6 +87,53 @@ function Copy-Tree([string]$Src, [string]$Dst, [string]$Filter) {
     return $true
 }
 
+# Guarda do data-ev. A Fase B do CSP trocou os handlers inline do
+# multiasset-app.html por delegacao via data-ev, mas um descasamento de chave
+# (HTML `eN` x mapa `N`) deixou os 109 handlers mortos sem erro visivel.
+# Este check confere, antes do deploy, que todo data-ev="eN" do HTML tem um
+# handler 'N' no mapa EVENTS do multi-app-2.js e vice-versa. Descasar reprova
+# o build e o deploy nao roda, igual ao tratamento de arquivo sumido.
+function Test-MultiDataEv([string]$HtmlPath, [string]$JsPath) {
+    $html = [IO.File]::ReadAllText($HtmlPath)
+    $js   = [IO.File]::ReadAllText($JsPath)
+    $htmlKeys = @{}
+    foreach ($m in [regex]::Matches($html, 'data-ev="(e\d+)"')) {
+        $htmlKeys[$m.Groups[1].Value] = $true
+    }
+    $jsKeys = @{}
+    foreach ($m in [regex]::Matches($js, "(?m)^\s*'(\d+)':\s*\{\s*t:")) {
+        $jsKeys[$m.Groups[1].Value] = $true
+    }
+    $problemas = @()
+    foreach ($hk in $htmlKeys.Keys) {
+        $n = $hk.Substring(1)
+        if (-not $jsKeys.ContainsKey($n)) { $problemas += "HTML data-ev '$hk' sem handler '$n' no EVENTS" }
+    }
+    foreach ($jk in $jsKeys.Keys) {
+        $e = "e$jk"
+        if (-not $htmlKeys.ContainsKey($e)) { $problemas += "EVENTS '$jk' sem data-ev '$e' no HTML" }
+    }
+    return $problemas
+}
+
+# Guarda do class fundido. O transform da Fase B (estilo inline -> classes
+# utilitarias) colou `class=` na tag ou no atributo anterior em dezenas de
+# pontos do multiasset-app.html: `<pclass=`, `<divclass=`, `href="..."class=`.
+# Isso vira tag desconhecida para o parser e a classe cai, quebrando layout
+# sem 404 nem erro de console. Este check reprova o build se achar a cola,
+# no mesmo padrao de arquivo sumido e do descasamento data-ev.
+function Test-FusedAttrs([string]$HtmlPath) {
+    $html = [IO.File]::ReadAllText($HtmlPath)
+    $problemas = @()
+    foreach ($m in [regex]::Matches($html, '<([a-z][a-z0-9]*)class=')) {
+        $problemas += "tag '<$($m.Groups[1].Value)>' fundida com class"
+    }
+    foreach ($m in [regex]::Matches($html, '"class=')) {
+        $problemas += 'atributo fundido com class (valor"class=)'
+    }
+    return $problemas
+}
+
 Write-Host "`n=== BUILD CLOUDFLARE PUBLIC ===" -ForegroundColor Cyan
 Reset-Dir $OUT
 New-Item -ItemType Directory -Path $SZ -Force | Out-Null
@@ -72,7 +155,18 @@ $szFiles = @(
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'regulatorio-panel.js')
+# Estilos e scripts que sairam dos blocos inline de cada pagina na Fase A do CSP.
+# Se um arquivo novo entrar, precisa entrar aqui: o HTML referencia em /assets/,
+# o build falha se o asset nao existir em public/. Ordem e irrelevante.
+$szAssets = @(
+    'sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js',
+    'regulatorio-panel.js',
+    # Fase A: CSS extraido dos <style> inline por pagina
+    'sz-index-1.js', 'sz-relatorios-1.js', 'sz-relatorios-2.js', 'sz-relatorios-3.js',
+    'sz-relatorios.css', 'sz-honorarios.css', 'sz-assinatura-1.js', 'sz-assinatura.css',
+    'sz-privacidade.css', 'sz-cv.css', 'sz-metodologia-1.js', 'sz-metodologia.css',
+    'sz-consultoria.css', 'sz-utilities.css'
+)
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
@@ -89,6 +183,24 @@ Copy-IfExists (Join-Path $ROOT 'consultoria.html') (Join-Path $MULTI 'consultori
 Copy-IfExists (Join-Path $ROOT 'macro_data.json') (Join-Path $MULTI 'macro_data.json') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'og-cover.jpg') (Join-Path $MULTI 'og-cover.jpg') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\sz-config.js') (Join-Path $MULTI 'assets\sz-config.js') | Out-Null
+# Fase A do CSP: as paginas compartilhadas (consultoria, metodologia, privacidade)
+# tiveram os estilos e scripts inline externados. O mesmo HTML serve os dois
+# dominios, entao os assets precisam existir nos dois lados, senao o Add-VersionStamps
+# do multi falha (referencia /assets/ sem arquivo correspondente em public/).
+Copy-IfExists (Join-Path $ROOT 'assets\sz-consultoria.css') (Join-Path $MULTI 'assets\sz-consultoria.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-metodologia.css') (Join-Path $MULTI 'assets\sz-metodologia.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-metodologia-1.js') (Join-Path $MULTI 'assets\sz-metodologia-1.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-privacidade.css') (Join-Path $MULTI 'assets\sz-privacidade.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\sz-utilities.css') (Join-Path $MULTI 'assets\sz-utilities.css') | Out-Null
+# Fase B do CSP: o multiasset-app.html externalizou o bloco <style> e os 3
+# scripts executaveis, e os atributos style viraram classes utilitarias.
+# O index.html do multi referencia estes 5 assets, entao precisam existir em
+# public/multi/assets/ senao o Add-VersionStamps falha na Fase A/B.
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app.css') (Join-Path $MULTI 'assets\multi-app.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-utilities.css') (Join-Path $MULTI 'assets\multi-utilities.css') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app-1.js') (Join-Path $MULTI 'assets\multi-app-1.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app-2.js') (Join-Path $MULTI 'assets\multi-app-2.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\multi-app-3.js') (Join-Path $MULTI 'assets\multi-app-3.js') | Out-Null
 # Politica de privacidade. multi-assets.com coleta e-mail no popup do simulador e
 # ate 26/07/2026 respondia 404 em /privacidade.html e /privacidade: coleta sem
 # aviso ao titular. Copiada nas duas formas, com e sem extensao, igual consultoria.
@@ -119,6 +231,10 @@ foreach ($f in @('favicon.ico', 'favicon.svg', 'apple-touch-icon.png')) {
     Copy-IfExists (Join-Path $ROOT $f) (Join-Path $MULTI $f) | Out-Null
 }
 
+# --- Cache-busting por hash ------------------------------------------------
+Add-VersionStamps $SZ (Join-Path $SZ 'assets')
+Add-VersionStamps $MULTI (Join-Path $MULTI 'assets')
+
 # --- Verificacao de saida -----------------------------------------------------
 # Confere o resultado em public/, nao a lista de copias. Pega tambem o caso em
 # que a copia falhou sem erro, que a contagem de SKIP sozinha nao pegaria.
@@ -133,14 +249,23 @@ $obrigatorios = @(
     'multi\privacidade.html', 'multi\privacidade',
     'multi\metodologia.html', 'multi\metodologia',
     'multi\sitemap.xml',
-    'multi\og-cover.jpg', 'multi\assets\sz-config.js'
+    'multi\og-cover.jpg', 'multi\assets\sz-config.js',
+    'multi\assets\multi-app.css', 'multi\assets\multi-utilities.css',
+    'multi\assets\multi-app-1.js', 'multi\assets\multi-app-2.js', 'multi\assets\multi-app-3.js'
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })
 
-if ($script:Faltando.Count -gt 0 -or $ausentes.Count -gt 0) {
+# Guarda do data-ev e do class fundido: le do resultado em public/, mesmo
+# criterio do $obrigatorios.
+$multiDataEvProblemas = @(Test-MultiDataEv (Join-Path $MULTI 'index.html') (Join-Path $MULTI 'assets\multi-app-2.js'))
+$multiFusedProblemas = @(Test-FusedAttrs (Join-Path $MULTI 'index.html'))
+
+if ($script:Faltando.Count -gt 0 -or $ausentes.Count -gt 0 -or $multiDataEvProblemas.Count -gt 0 -or $multiFusedProblemas.Count -gt 0) {
     Write-Host "`n=== BUILD REPROVADO ===" -ForegroundColor Red
-    foreach ($f in $script:Faltando) { Write-Host "  fonte ausente:  $f" -ForegroundColor Red }
-    foreach ($f in $ausentes)        { Write-Host "  saida ausente:  $f" -ForegroundColor Red }
+    foreach ($f in $script:Faltando)      { Write-Host "  fonte ausente:  $f" -ForegroundColor Red }
+    foreach ($f in $ausentes)             { Write-Host "  saida ausente:  $f" -ForegroundColor Red }
+    foreach ($p in $multiDataEvProblemas) { Write-Host "  data-ev:  $p" -ForegroundColor Red }
+    foreach ($p in $multiFusedProblemas)  { Write-Host "  class:  $p" -ForegroundColor Red }
     throw "Build incompleto. Deploy abortado para nao publicar 404 em producao."
 }
 
@@ -153,13 +278,13 @@ Write-Host "`n$($obrigatorios.Count) arquivos obrigatorios conferidos em public/
 # a defesa aqui e nunca deixar o campo confidencial chegar a saida do build.
 $vazamentoNome = @(Get-ChildItem -Path $OUT -Recurse -Filter 'regulatorio-interno.json' -File)
 $vazamentoCampo = @(Get-ChildItem -Path $OUT -Recurse -Filter '*.json' -File |
-    Select-String -Pattern 'impacto_interno' -List)
+    Select-String -Pattern 'impacto_por_caso' -List)
 
 if ($vazamentoNome.Count -gt 0 -or $vazamentoCampo.Count -gt 0) {
     Write-Host "`n=== BUILD REPROVADO: VAZAMENTO DE DADO PRIVADO ===" -ForegroundColor Red
     foreach ($f in $vazamentoNome)  { Write-Host "  arquivo interno na saida:  $($f.FullName)" -ForegroundColor Red }
-    foreach ($f in $vazamentoCampo) { Write-Host "  campo 'impacto_interno' em:  $($f.Path)" -ForegroundColor Red }
-    throw "regulatorio-interno.json ou o campo impacto_interno apareceu em public/. Deploy abortado."
+    foreach ($f in $vazamentoCampo) { Write-Host "  campo 'impacto_por_caso' em:  $($f.Path)" -ForegroundColor Red }
+    throw "regulatorio-interno.json ou o campo impacto_por_caso apareceu em public/. Deploy abortado."
 }
 
 Write-Host "Build concluido: $OUT" -ForegroundColor Green

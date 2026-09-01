@@ -47,16 +47,52 @@ Registrar ""
 # Le a versao com 100% do trafego. Vale para antes e depois do deploy: parsear a
 # saida do deploy nao funciona, porque o deploy-cloudflare.ps1 manda o wrangler
 # para Out-Host, que escreve no console e nao na saida capturavel.
-function Get-VersaoViva {
-    Push-Location $WORKER
-    try { $s = (npx wrangler deployments status 2>&1 | Out-String) } finally { Pop-Location }
-    # O wrangler colore a saida com sequencias ANSI quando o terminal aceita
-    # (medido em 15/08/2026: ESC[39m ESC[90m entre "(100%)" e o ID). Sem o
-    # strip, o regex nao casa e o deploy aborta com a versao legivel na tela.
-    $limpo = [regex]::Replace($s, [string][char]27 + '\[[0-9;]*[A-Za-z]', '')
+# O wrangler colore a saida com sequencias ANSI quando o terminal aceita
+# (medido em 15/08/2026: ESC[39m ESC[90m entre "(100%)" e o ID). Sem o
+# strip, o regex nao casa e o deploy aborta com a versao legivel na tela.
+function Get-IdDeVersao([string]$saida) {
+    $limpo = [regex]::Replace($saida, [string][char]27 + '\[[0-9;]*[A-Za-z]', '')
     $mm = [regex]::Match($limpo, '\(100%\)\s+([0-9a-f-]{36})')
-    if ($mm.Success) { return @{ Id = $mm.Groups[1].Value; Bruto = $s } }
-    return @{ Id = $null; Bruto = $s }
+    if ($mm.Success) { return $mm.Groups[1].Value }
+    return $null
+}
+
+function Read-DeploymentsStatus {
+    Push-Location $WORKER
+    try { return (npx wrangler deployments status 2>&1 | Out-String) } finally { Pop-Location }
+}
+
+function Get-VersaoViva {
+    $s = Read-DeploymentsStatus
+    $id = Get-IdDeVersao $s
+    if ($id) { return @{ Id = $id; Bruto = $s; ViaOauth = $false } }
+
+    # CLOUDFLARE_API_TOKEN persistido (cfut_) tem precedencia sobre o login OAuth
+    # do wrangler e nem sempre carrega o escopo desta leitura. Em 31/08/2026 a
+    # publicacao abortou aqui com 10000 (Authentication error) seguido de 9109
+    # (Invalid access token), enquanto o OAuth respondia normalmente na mesma
+    # maquina. invalidate-worker-cache.ps1, attach-worker-domains.ps1 e outros
+    # quatro scripts deste diretorio ja tiram a variavel do processo pelo mesmo
+    # motivo; este ficou de fora e o sintoma foi abortar sem alvo de rollback.
+    #
+    # A troca so acontece quando a primeira leitura nao resolve o ID, entao o
+    # caminho normal continua sendo o token e nada muda quando ele funciona.
+    if (-not $env:CLOUDFLARE_API_TOKEN) { return @{ Id = $null; Bruto = $s; ViaOauth = $false } }
+
+    $tokenAmbiente = $env:CLOUDFLARE_API_TOKEN
+    try {
+        [Environment]::SetEnvironmentVariable('CLOUDFLARE_API_TOKEN', $null, 'Process')
+        $sOauth = Read-DeploymentsStatus
+    } finally {
+        # Escopo de processo: sem isto o deploy logo abaixo rodaria sem o token.
+        $env:CLOUDFLARE_API_TOKEN = $tokenAmbiente
+    }
+
+    $idOauth = Get-IdDeVersao $sOauth
+    if ($idOauth) { return @{ Id = $idOauth; Bruto = $sOauth; ViaOauth = $true } }
+
+    $juntos = $s.TrimEnd() + "`n`n--- segunda tentativa, sem CLOUDFLARE_API_TOKEN ---`n" + $sOauth.TrimEnd()
+    return @{ Id = $null; Bruto = $juntos; ViaOauth = $false }
 }
 
 # O validador imprime com Write-Host, que tambem nao e capturavel. Por isso a
@@ -96,6 +132,12 @@ if (-not $vv.Id) {
 }
 $versaoAnterior = $vv.Id
 Registrar "Versao viva antes de publicar: ``$versaoAnterior``"
+if ($vv.ViaOauth) {
+    # Nao e fatal, mas precisa ficar no log: significa que o token do ambiente
+    # nao esta lendo deployments e o deploy logo abaixo pode falhar pelo mesmo
+    # motivo. Se aparecer de novo, conferir o escopo do cfut_ persistido.
+    Registrar "AVISO: leitura so passou sem o CLOUDFLARE_API_TOKEN, via OAuth do wrangler." 'Yellow'
+}
 Registrar ""
 
 if ($Simular) {

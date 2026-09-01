@@ -1,7 +1,15 @@
 ﻿# invalidate-worker-cache.ps1 - limpa caches KV do Worker sz-sites (sem API Purge)
-# Uso: .\scripts\invalidate-worker-cache.ps1 [-RefreshMacro]
+# Uso: .\scripts\invalidate-worker-cache.ps1 [-RefreshMacro] [-IncludeMacro]
+#
+# -RefreshMacro  aquece o macro chamando macro_api.php?cron=1 (custa cascata LLM)
+# -IncludeMacro  APAGA tambem a chave macro-api. So use quando o FORMATO do
+#                payload mudou e o valor antigo precisa sumir do KV. Fora disso,
+#                nao apague: o -RefreshMacro sobrescreve o cache de qualquer
+#                jeito, e apagar antes abre uma janela de cache vazio que a
+#                reposicao automatica nem sempre fecha (DIAGNOSTICO-2026-08-31,
+#                secao 7.1).
 
-param([switch]$RefreshMacro)
+param([switch]$RefreshMacro, [switch]$IncludeMacro)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -10,7 +18,14 @@ $WORKER = Join-Path (Split-Path -Parent $PSScriptRoot) 'cloudflare-workers\sz-si
 $KV_ID  = 'fd40efe1057c4c54b3d33277d4665434'
 # ntnb-scenarios entrou depois do deploy da fase 2 (15/08/2026): o payload
 # legado no KV (source defaults, preco 95) sobrevive ate 2h sem esta chave.
-$KEYS   = @('macro-api', 'macro-panel', 'market-data', 'ntnb-scenarios')
+#
+# macro-api saiu do conjunto padrao em 31/08/2026. As tres chaves abaixo sao
+# baratas de reconstruir (segundos, sem LLM); macro-api custa a cascata inteira
+# (~40s, OpenRouter pago) e ficava vazia do deploy ate o cron da segunda
+# seguinte quando a reposicao falhava. Passar -IncludeMacro so em mudanca de
+# formato do payload.
+$KEYS   = @('macro-panel', 'market-data', 'ntnb-scenarios')
+if ($IncludeMacro) { $KEYS = @('macro-api') + $KEYS }
 
 Push-Location $WORKER
 

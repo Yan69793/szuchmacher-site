@@ -211,15 +211,28 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     if (!t) {
       t = document.createElement('div');
       t.id = 'sz-toast';
-      t.style.cssText = [
-        'position:fixed', 'bottom:28px', 'left:50%', 'transform:translateX(-50%) translateY(20px)',
-        'background:#0b1630', 'color:#fff', 'padding:12px 22px', 'border-radius:100px',
-        'font:500 13px/1.3 system-ui,-apple-system,sans-serif', 'letter-spacing:0.02em',
-        'box-shadow:0 12px 40px rgba(0,0,0,0.35),0 2px 8px rgba(0,0,0,0.2)',
-        'border:1px solid rgba(201,168,76,0.35)',
-        'z-index:9999', 'opacity:0', 'transition:opacity .25s ease,transform .25s ease',
-        'pointer-events:none', 'max-width:86vw', 'text-align:center'
-      ].join(';');
+      // Estilos em propriedades individuais, nao cssText: a CSP de
+      // szuchmacher.com.br nao tem unsafe-inline em style-src, e o setter
+      // de cssText e tratado como estilo inline e bloqueado. Atribuicao
+      // direta de propriedade (CSSOM) nunca e bloqueada.
+      t.style.position = 'fixed';
+      t.style.bottom = '28px';
+      t.style.left = '50%';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+      t.style.background = '#0b1630';
+      t.style.color = '#fff';
+      t.style.padding = '12px 22px';
+      t.style.borderRadius = '100px';
+      t.style.font = '500 13px/1.3 system-ui,-apple-system,sans-serif';
+      t.style.letterSpacing = '0.02em';
+      t.style.boxShadow = '0 12px 40px rgba(0,0,0,0.35),0 2px 8px rgba(0,0,0,0.2)';
+      t.style.border = '1px solid rgba(201,168,76,0.35)';
+      t.style.zIndex = '9999';
+      t.style.opacity = '0';
+      t.style.transition = 'opacity .25s ease,transform .25s ease';
+      t.style.pointerEvents = 'none';
+      t.style.maxWidth = '86vw';
+      t.style.textAlign = 'center';
       document.body.appendChild(t);
     }
     t.textContent = msg;
