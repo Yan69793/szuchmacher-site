@@ -6,5 +6,50 @@
     "disciplina_en": "Factual chronology with primary source. No investment recommendation; possible outcomes describe the regulatory/legal mechanism, not an asset thesis."
   },
   "gerado": "2026-09-01T08:00:00-03:00",
-  "casos": []
+  "casos": [
+    {
+      "id": "aneel-caducidade-enel-sp-2026",
+      "titulo": "Processo de caducidade antecipada da concessão — Enel São Paulo",
+      "titulo_en": "Early forfeiture proceeding — Enel São Paulo distribution concession",
+      "categoria": "concessao",
+      "status": "decisao_pendente",
+      "orgao": "ANEEL",
+      "quem_decide": "Diretoria da ANEEL recomenda; decisão final de extinção do contrato é do Ministério de Minas e Energia (MME)",
+      "quem_decide_en": "ANEEL's board recommends; the Ministry of Mines and Energy (MME) holds final authority to decree contract forfeiture",
+      "proximo_prazo": {
+        "data": "2026-09-03",
+        "descricao": "Prazo de 10 dias corridos para alegações finais da Enel, contados do encerramento da fase de instrução em 24/08"
+      },
+      "cronologia": [
+        {
+          "data": "2024-11-03",
+          "evento": "Temporal de grande porte na Grande São Paulo causa apagão prolongado; ANEEL abre processo administrativo para apurar eventual caducidade da concessão da Enel São Paulo",
+          "evento_en": "Major storm causes prolonged blackout in greater São Paulo; ANEEL opens administrative proceeding to assess possible forfeiture of Enel São Paulo's concession",
+          "fonte": "ANEEL"
+        },
+        {
+          "data": "2026-08-24",
+          "evento": "Diretoria da ANEEL rejeita por unanimidade o pedido de perícia independente da Enel e encerra a fase de instrução do processo, concedendo 10 dias corridos para alegações finais",
+          "evento_en": "ANEEL's board unanimously rejects Enel's request for an independent expert review and closes the evidentiary phase, granting 10 continuous days for final arguments",
+          "fonte": "XP Investimentos — Radar Energia",
+          "link": "https://conteudos.xpi.com.br/acoes/relatorios/aneel-rejeita-pericia-e-leva-processo-de-caducidade-da-enel-sp-a-fase-final-agosto/"
+        }
+      ],
+      "desfechos_possiveis": [
+        "Diretoria da ANEEL recomenda a caducidade ao MME; o processo segue para decisão ministerial sobre extinção antecipada do contrato (vigente até 2028)",
+        "Diretoria da ANEEL não recomenda a caducidade; a concessão permanece com o operador atual, sujeita ao processo paralelo de renovação",
+        "Precedente de transferência de controle (caso Enel Goiás): em vez de extinção, a concessão pode ser mantida com repasse de controle societário a novo operador, mediante autorização da ANEEL"
+      ],
+      "desfechos_possiveis_en": [
+        "ANEEL's board recommends forfeiture to the MME, which then rules on early termination of the contract (currently valid through 2028)",
+        "ANEEL's board does not recommend forfeiture; the concession remains with the current operator, subject to the parallel renewal request",
+        "Control-transfer precedent (Enel Goiás case): instead of termination, the concession could be maintained under new ownership via an ANEEL-authorized change of corporate control"
+      ],
+      "fontes_primarias": [
+        "ANEEL — processo administrativo de caducidade (relatoria da diretora Agnes Costa)",
+        "XP Investimentos — Radar Energia"
+      ],
+      "atualizado_em": "2026-09-01"
+    }
+  ]
 }
