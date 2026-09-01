@@ -62,7 +62,7 @@ Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
     'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
-    'relatorio_cache.json',
+    'relatorio_cache.json', 'regulatorio-data.json',
     'og-cover.jpg', 'logo.png',
     'favicon.ico', 'favicon.svg', 'apple-touch-icon.png',
     # Trajetoria profissional. Fora do menu e com noindex: acesso so por link
@@ -72,7 +72,7 @@ $szFiles = @(
 )
 foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f) | Out-Null }
 
-$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js')
+$szAssets = @('sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js', 'regulatorio-panel.js')
 foreach ($f in $szAssets) {
     Copy-IfExists (Join-Path $ROOT "assets\$f") (Join-Path $SZ "assets\$f") | Out-Null
 }
@@ -126,7 +126,7 @@ $obrigatorios = @(
     'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
     'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
     'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
-    'sz\relatorio_cache.json',
+    'sz\relatorio_cache.json', 'sz\regulatorio-data.json',
     'sz\cv.html', 'sz\Yan_Szuchmacher_CV_PT.pdf', 'sz\Yan_Szuchmacher_CV_EN.pdf',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
@@ -145,4 +145,21 @@ if ($script:Faltando.Count -gt 0 -or $ausentes.Count -gt 0) {
 }
 
 Write-Host "`n$($obrigatorios.Count) arquivos obrigatorios conferidos em public/." -ForegroundColor DarkGray
+
+# --- Trava anti-vazamento: mapa interno de emissores impactados ---------------
+# regulatorio-interno.json (dados-privados/, fora da arvore deste script) e uso
+# exclusivo em conversa individual com cliente (CVM Res. 19/2021). serveStatic()
+# no Worker serve cru qualquer coisa que exista em public/, sem allowlist, entao
+# a defesa aqui e nunca deixar o campo confidencial chegar a saida do build.
+$vazamentoNome = @(Get-ChildItem -Path $OUT -Recurse -Filter 'regulatorio-interno.json' -File)
+$vazamentoCampo = @(Get-ChildItem -Path $OUT -Recurse -Filter '*.json' -File |
+    Select-String -Pattern 'impacto_interno' -List)
+
+if ($vazamentoNome.Count -gt 0 -or $vazamentoCampo.Count -gt 0) {
+    Write-Host "`n=== BUILD REPROVADO: VAZAMENTO DE DADO PRIVADO ===" -ForegroundColor Red
+    foreach ($f in $vazamentoNome)  { Write-Host "  arquivo interno na saida:  $($f.FullName)" -ForegroundColor Red }
+    foreach ($f in $vazamentoCampo) { Write-Host "  campo 'impacto_interno' em:  $($f.Path)" -ForegroundColor Red }
+    throw "regulatorio-interno.json ou o campo impacto_interno apareceu em public/. Deploy abortado."
+}
+
 Write-Host "Build concluido: $OUT" -ForegroundColor Green

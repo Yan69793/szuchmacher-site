@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-08-24 (agente: Claude)
+Última atualização: 2026-09-01 (agente: Claude)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -67,6 +67,10 @@ muda quando checagem nova entra, use a da saída real do script.
 - **Drift de deploy não commitado.** `cv.html` + PDFs do CV já no ar, mas a feature e a entrada no `build-cloudflare-public.ps1` não existem em nenhum commit. `check-macro-cron.ps1`, `register-*.ps1` e `send-alert-email.ps1` também têm mudança não commitada (watchdog de 24/08 roda código não versionado). Commit pendente. Detalhe: §7.2/§7.3 do mesmo DIAGNOSTICO.
 - `agenda-cron.php` do cPanel pendente de desligamento; P3-15 (calendários 2026 hardcoded) é sub-item e resolve junto.
 - Itens de escopo próprio do §Q: CSP sem unsafe-inline e F5 cache-busting.
+- Tracker de processos regulatórios/jurídicos (caso ANEEL/Enel SP):
+  infraestrutura implementada em 01/09, nada deployado nem populado.
+  Detalhe: `site-producao/CLAUDE.md`, seção "Tracker de processos
+  regulatórios em acompanhamento" e item 5 de "Pendências abertas".
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
 
 ## Estado em 2026-08-19

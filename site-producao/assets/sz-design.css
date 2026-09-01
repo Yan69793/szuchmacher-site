@@ -1209,6 +1209,114 @@ header.is-scrolled {
   opacity: 1;
 }
 
+/* Situações regulatórias/jurídicas em acompanhamento */
+.situacoes .section-title {
+  font-size: clamp(1.75rem, 2.8vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: var(--tracking-display);
+  max-width: 26ch;
+  margin: 10px 0;
+}
+
+.situacoes > .container > p {
+  max-width: 560px;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.situacoes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+}
+
+.situacao-card {
+  background: var(--surface-soft);
+  padding: 28px 30px;
+}
+
+.situacao-card .mp-ev-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.situacao-status {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  color: var(--gold);
+  border: 1px solid var(--line-strong);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.situacao-card .mp-ev-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--text);
+  letter-spacing: -0.005em;
+}
+
+.situacao-card .mp-ev-desc {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.situacao-card .mp-ev-desc strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.situacao-cronologia {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.situacao-cronologia .mp-ev-title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.86rem;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.situacao-cronologia .mp-ev-src {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.situacao-cronologia .mp-ev-src a {
+  color: var(--gold);
+}
+
+.situacoes .mp-disclaimer {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 0.74rem;
+  color: var(--muted);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  max-width: 760px;
+}
+
 /* Market sample */
 .market-wrap {
   background: linear-gradient(180deg, #07111f 0%, var(--navy) 100%);
