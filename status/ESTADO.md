@@ -478,10 +478,18 @@ mesmo padrão, com restore num `finally` porque `Env:` é escopo de processo e o
 rollback chama o deploy com `&`. Quando o fallback é usado, o log registra um
 aviso, porque isso indica que o token do ambiente não serve.
 
-**Dívida que sobra.** Sete scripts hoje carregam workaround para contornar um
+**Dívida que sobra.** ~~Sete scripts hoje carregam workaround para contornar um
 token que não serve para nada. Decidir entre rotacionar o `cfut_` com os escopos
 certos ou apagar a variável persistida de vez, já que o OAuth resolve tudo.
-Remover a causa elimina os sete workarounds.
+Remover a causa elimina os sete workarounds.~~
+
+**Corrigido em 01/09 por auditoria arquivo por arquivo.** O parágrafo acima
+estava errado em três pontos e fica riscado como registro. São **4 scripts** com
+a guarda, não sete, `invalidate-worker-cache.ps1`, `attach-worker-domains.ps1`,
+`publicar-com-rollback.ps1` e `deploy-cloudflare.ps1`. A **variável persistida já
+não existe** em escopo nenhum, então a guarda é no-op hoje. E o **token que
+sobrou no `.env` funciona**, não é o sub-escopado que quebrou o deploy. Detalhe e
+sondagem na seção de 01/09.
 
 Commitado e enviado ao origin em dois commits: `8d29aec` (fix(csp), os três
 arquivos de código) e `5b5defe` (docs(estado)). Branch sincronizada, restam só
@@ -664,3 +672,77 @@ função que hoje pertence ao `scheduled()` do Worker e ao `macro_api.php`. As
 cancelar a HostGator é preciso saber o que essas 5 entradas fazem, se alguma
 ainda alimenta algo e se alguma duplica trabalho que o Worker já faz. Nada foi
 tocado nelas.
+
+### Auditoria da dívida do `cfut_` (01/09)
+
+Pedida para decidir se dava para remover os workarounds. A conclusão é que
+**não se remove**, e que o que estava errado era a documentação, não o código.
+
+**São 4 guardas, não sete.** Conferido arquivo por arquivo, quem de fato retira a
+variável do processo é `attach-worker-domains.ps1:19`, `deploy-cloudflare.ps1:39`,
+`invalidate-worker-cache.ps1:42` e `publicar-com-rollback.ps1:84`. Um quinto,
+`setup-cloudflare-token.ps1:51`, apaga a variável persistida do usuário, mas isso
+é a migração deliberada para o token viver no `.env`, não guarda. Os três que a
+documentação e o comentário do `deploy-cloudflare.ps1` nomeavam como tendo o
+mesmo comportamento, `purge-cloudflare.ps1`, `cleanup-dns-cloudflare.ps1` e
+`setup-cf-purge-token.ps1`, **nunca removeram variável nenhuma**, são
+consumidores que leem token do `.env`. O comentário falso foi corrigido no
+próprio script em 01/09.
+
+**A premissa da guarda não existe mais nesta máquina.** `CLOUDFLARE_API_TOKEN`
+está ausente em User, em Machine e no processo. Sem variável persistida não há
+precedência sobre o OAuth, então as 4 guardas são no-op hoje. O wrangler também
+não lê o `site-producao/.env` para autenticar, e não existe `.env` nem
+`.dev.vars` em `cloudflare-workers/sz-sites/`.
+
+**O token que sobrou no `.env` não é o quebrado.** Sondagem read-only, token só
+em header, nada mutado:
+
+```
+/user/tokens/verify                        200  success
+/user                                      200
+/accounts                                  200  1 conta
+/zones                                     200  4 zonas
+/accounts/{id}/workers/scripts             200  22 scripts
+/accounts/{id}/workers/services/sz-sites   200
+/accounts/{id}/storage/kv/namespaces       200  10 namespaces
+```
+
+O diagnóstico de 31/08 registrou `9109` em `/accounts` e incapacidade de ler User
+Details. Este lê tudo, inclusive Workers e KV. Ou foi rotacionado, ou o valor do
+`.env` nunca foi o valor que estava no ambiente. Não dá para saber qual, a
+variável antiga já não existe para comparar.
+
+**Decisão, manter as 4 guardas.** Custam cinco linhas cada, escopo de processo,
+restore em `finally`, e cobrem uma falha que bloqueou publicação duas vezes em
+31/08. Máquina nova, CI ou setup antigo que volte a definir a variável cai no
+mesmo buraco sem elas. O `cfut_` também não é inútil, é o fallback de credencial
+do `purge-cloudflare.ps1`, já que `CLOUDFLARE_PURGE_TOKEN` não existe no `.env`.
+Nenhum token foi criado, rotacionado ou revogado nesta auditoria.
+
+### P3 do `usd_brl` fechado (01/09)
+
+O achado de 31/08, `usd_brl` em stale no `relatorio-prices.php`, não reproduz.
+Leitura de produção em 01/09 02:14 BRT:
+
+```json
+{"ok":true,"usd_brl":5.1823,"ibovespa":177418.78,"sp500":7686.14,"wti":87.03,
+ "stale":[],"generated_at":"01/09/2026, 02:06 BRT","source_state":"cache"}
+```
+
+`stale` vazio, os quatro ativos com valor e carimbo de seis minutos antes.
+
+### Outras conferências desta rodada, sem ação
+
+O cache macro sobreviveu aos 429 do deploy de 01/09. `/health` traz
+`macro_cache: "01/09/2026, 01:29 BRT"` e a leitura pública responde `cache: true`
+**sem** o campo `note`, que é o discriminador entre KV real e fallback estático.
+O fix `e757bac` segurou no cenário que o motivou.
+
+O `mailto:` em `assinatura.html:122` e `:141` não é drift de checkout. É o
+fallback estático, reescrito em runtime por `assets/sz-config.js:307` e `:314`
+para a URL Stripe live quando a guarda `ready()` passa.
+
+Os quatro PNG soltos na raiz deixaram de ser P3 porque foram commitados em
+`0b8bb99`. Versionar 581 KB de screenshot datado na raiz, sem nada referenciando,
+é discutível, mas está feito e desfazer não é ganho.

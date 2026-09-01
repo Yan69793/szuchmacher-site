@@ -247,23 +247,32 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
-1. **Cron nativo do macro ainda sem prova de disparo automático.** Watchdog
-   semanal no ar desde 22/08: `Szuchmacher-MacroCronWatchdog` (segunda 09:00
-   BRT) roda `scripts/check-macro-cron.ps1`, compara `macro_cron_last.ts` em
-   `/health` com a segunda mais recente 03:00 UTC ±2 h e, se o carimbo não
-   cair na janela, dispara `run-macro-cron.ps1` (reserva HTTP) e e-mail.
-   Só o dispatcher escreve o carimbo (`runScheduledMacro`). Refresh via
-   `cron=1` não toca. One-shot `CheckMacroCron-2026-08-24` foi substituída
-   por essa task. Primeira prova real: 24/08 09:00. Se a máquina estiver
-   desligada, `StartWhenAvailable` dispara no boot. Se o nativo falhar de
-   novo, a reserva segura o painel e o e-mail pede caso no suporte CF
-   (eventos `origin=cron` no Observability). Não meter essa checagem no
-   `validar-producao.ps1` (portão de deploy).
+1. ~~**Cron nativo do macro ainda sem prova de disparo automático.**~~
+   **Fechado em 31/08, reconferido em 01/09.** O disparo nativo aconteceu
+   sozinho e deixou carimbo. Leitura de `/health` em 01/09 02:13 BRT:
+   `macro_cron_last` com `ts=1788145255`, `cron: "0 3 * * MON"`, `ok: true`,
+   `status: 200`, `generated_at: "31/08/2026, 00:01 BRT"` e `ms: 39888`.
+   Só o dispatcher escreve esse carimbo (`runScheduledMacro`), refresh via
+   `cron=1` não toca, então ele é prova de despacho e não de chamada manual.
+
+   O watchdog `Szuchmacher-MacroCronWatchdog` (segunda 09:00 BRT,
+   `scripts/check-macro-cron.ps1`) continua no ar como reserva e não deve ser
+   removido. Ele compara o carimbo com a segunda mais recente 03:00 UTC ±2 h e,
+   se não cair na janela, dispara `run-macro-cron.ps1` e e-mail. Se a máquina
+   estiver desligada, `StartWhenAvailable` dispara no boot. Segue valendo a
+   regra de não meter essa checagem no `validar-producao.ps1`, que é portão de
+   deploy.
 2. ~~CSP sem unsafe-inline no multi (Fase B).~~ **Fechado em 31/08.** Os 136
    handlers e 257 estilos inline do `multiasset-app.html` foram externalizados
    e o CSP saiu estrito nos dois domínios. Detalhe em "Resolvidas em 2026-08-31".
-3. **F5 cache-busting** manual e inconsistente (P2 no doc original, escopo
-   próprio).
+3. ~~**F5 cache-busting** manual e inconsistente (P2 no doc original).~~
+   **Fechado em 31/08 (`488b830`, deploy `2851bcaa`), reconferido em 01/09.**
+   `Add-VersionStamps` em `scripts/build-cloudflare-public.ps1:31` reescreve as
+   referências `/assets/*.css|js` no HTML copiado para `?v=<hash8>`, os 8
+   primeiros hex do SHA256 do próprio asset. URL muda quando o asset muda e
+   fica estável quando não muda. Conferido no HTML servido em 01/09,
+   `sz-design.css?v=0D2D1EB5` e `sz-config.js?v=A3034F50`. As checagens do
+   `validar-producao.ps1` usam URL limpa, sem `?v=`, por isso continuam válidas.
 4. ~~**Limpeza opcional no cPanel**, desligar o `agenda-cron.php`.~~
    **Fechado em 01/09 por verificação direta no painel.** Não existe tarefa
    Cron nenhuma contendo `agenda-cron.php`. O painel tem 3 entradas para

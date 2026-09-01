@@ -30,10 +30,24 @@ Push-Location $WORKER
 # workers_scripts em write, que e o que o deploy precisa. Tirar a variavel do
 # processo derruba a precedencia e o wrangler cai no OAuth.
 #
-# invalidate-worker-cache.ps1, attach-worker-domains.ps1, purge-cloudflare.ps1,
-# cleanup-dns-cloudflare.ps1 e os dois setup-*.ps1 ja faziam isto. Este script
-# tinha ficado de fora e era o unico ponto que ainda quebrava a publicacao.
-# Escopo de processo, a variavel persistida do usuario continua intacta.
+# Fazem a mesma guarda, e so estes quatro: invalidate-worker-cache.ps1,
+# attach-worker-domains.ps1, publicar-com-rollback.ps1 e este. Uma versao
+# anterior deste comentario listava purge-cloudflare.ps1, cleanup-dns-cloudflare.ps1
+# e os setup-*.ps1 como se tambem removessem a variavel, e isso era falso: eles
+# apenas LEEM um token do .env e nunca mexeram no ambiente. Corrigido em
+# 01/09/2026 depois de conferir arquivo por arquivo.
+#
+# Estado medido em 01/09/2026: a variavel persistida nao existe mais em escopo
+# nenhum (User, Machine e Processo ausentes), entao esta guarda e no-op hoje, e
+# o token que sobrou no .env responde 200 em /user, /accounts, /zones,
+# workers/scripts, workers/services/sz-sites e storage/kv/namespaces, ou seja,
+# nao e o token sub-escopado que quebrou o deploy em 31/08.
+#
+# A guarda fica de proposito. Custa cinco linhas, tem escopo de processo com
+# restore no finally, e cobre um modo de falha que bloqueou publicacao duas
+# vezes. Maquina nova, CI ou setup antigo que volte a definir a variavel cai
+# no mesmo buraco sem ela. Escopo de processo, a variavel persistida do usuario
+# (quando existir) continua intacta.
 $tokenAmbiente = $env:CLOUDFLARE_API_TOKEN
 if ($tokenAmbiente) {
     [Environment]::SetEnvironmentVariable('CLOUDFLARE_API_TOKEN', $null, 'Process')
