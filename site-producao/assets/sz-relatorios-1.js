@@ -31,6 +31,14 @@
       if (el) el.innerHTML = html;
     }
 
+    /* O gerador nem sempre emite what_could_go_wrong. O bloco nasce oculto no
+       HTML e so aparece quando ha conteudo do dia, para nao deixar texto
+       generico de produto ocupando o lugar de conteudo editorial. */
+    function mostrar(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('u-displaynone');
+    }
+
     function setCard(id, value, label) {
       var card = document.getElementById(id);
       if (!card) return;
@@ -54,10 +62,13 @@
       if (r.what_could_go_wrong) {
         setHTML('relSubnoteErrar',
           '<strong>O que poderia nos fazer errar.</strong> ' + r.what_could_go_wrong);
+        mostrar('relSubnoteErrar');
       }
+      /* next_week e nome legado do campo. O gerador enche com a agenda da
+         proxima sessao, nao da proxima semana, entao o rotulo e neutro. */
       if (r.next_week) {
         setHTML('relSubnoteProxSemana',
-          '<strong>Na próxima semana.</strong> ' + r.next_week);
+          '<strong>No radar.</strong> ' + r.next_week);
       }
       setText('relSubnoteFonte', r.source_note);
 
