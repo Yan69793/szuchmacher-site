@@ -22,6 +22,11 @@ _fontes-img/
 site-producao/diagnosticos/
 agenda-corrigida.png
 
+# Mapa interno de emissores impactados por processos regulatorios/juridicos
+# (regulatorio-interno.json) — uso exclusivo em conversa individual com
+# cliente, CVM Res. 19/2021. Nunca commitar, nunca copiar para site-producao/.
+dados-privados/
+
 # Credenciais — nunca versionar. Guardar em gerenciador de senhas, não em arquivo.
 *.key
 *.pem

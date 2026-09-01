@@ -77,6 +77,72 @@ labels, hover sem bounce, grids com gap 1px, `border-radius: 0`.
 
 ---
 
+## Tracker de processos regulatórios/jurídicos em acompanhamento
+
+Capacidade genérica adicionada em 2026-09-01, motivada pelo processo de
+caducidade antecipada da concessão da Enel São Paulo na ANEEL (instrução
+encerrada em 24/08/2026). Antes disso o site não tinha formato para
+"situação em andamento com desfecho incerto, que afeta ativos cobertos".
+Padrão de curadoria manual (como `agenda-data.json`), sem agente Python.
+
+**Escopo público vs. interno — mesma lógica do Radar ROIC.** O bloco
+público (`regulatorio-data.json` → `/assets/regulatorio.php` →
+`assets/regulatorio-panel.js` → `<section id="situacoes">` em `index.html`,
+entre `#antecipacao` e `#autoridade`) só mostra cronologia factual com
+fonte, prazo, quem decide e desfechos possíveis genéricos — nunca uma tese
+de compra/venda por ativo. Isso é a mesma linha que levou à descontinuação
+do Radar ROIC (ver "Resolvidas em 2026-07-22" abaixo): ranking/tese por
+ativo público exige registro de analista (CVM Res. 20/2021), que Yan não
+tem; o mapa de quais emissores são beneficiados/prejudicados por caso é
+conteúdo de consultoria individualizada (Res. 19/2021), nunca publicado.
+
+**Achado de arquitetura do Worker, relevante para qualquer feature futura
+com dado sensível, não só esta.** `serveStatic()` em `src/index.js` serve
+cru qualquer arquivo presente em `public/`, sem allowlist — é assim que
+`agenda-data.json` hoje responde tanto via `/assets/agenda.php` quanto
+direto em `/agenda-data.json`. Não existe truque de handler que blinde um
+campo dentro de um arquivo que o build copia: a proteção tem que ser o
+dado nunca chegar à saída do build. Por isso o mapa interno
+(`impacto_por_caso`) mora em três camadas independentes de defesa, não uma:
+
+1. **Fora da árvore**: `dados-privados/regulatorio-interno.json` fica na
+   raiz do repo, fora de `site-producao/` — o `build-cloudflare-public.ps1`
+   nem tem como referenciá-lo por engano.
+2. **Gitignored**: `dados-privados/` no `.gitignore` raiz — nunca entra no
+   histórico do git.
+3. **Trava ativa no build**: `build-cloudflare-public.ps1` varre a saída
+   (`public/`) ao final procurando o nome `regulatorio-interno.json` e a
+   string `impacto_por_caso` em qualquer `.json` copiado; se achar, aborta
+   o build com `throw` antes de qualquer deploy.
+
+**Schema de `casos[]`** em `regulatorio-data.json` (campos que
+`assets/regulatorio-panel.js` espera; nenhum é obrigatório, ausente só
+significa que aquele trecho do card não renderiza):
+`id` (slug estável, nunca reutilizar/renomear), `titulo`, `status`
+(`aberto` | `em_instrucao` | `decisao_pendente` | `resolvido`), `orgao`,
+`quem_decide`, `proximo_prazo.data` + `proximo_prazo.descricao`,
+`cronologia[]` com `data` + `evento` + `fonte` + `link` (`link` só vira
+`<a>` clicável se começar com `http://`/`https://`; qualquer outro valor é
+descartado e só o texto da fonte aparece), `desfechos_possiveis[]`
+(lista de mecanismos possíveis, nunca uma recomendação de compra/venda).
+
+Quando este bloco já estiver em produção, adicionar ao `validar-producao.ps1`
+(regra do `CLAUDE.md` raiz: checagem nova só entra depois que a mudança já
+está no ar): `regulatorio-data.json` e `/assets/regulatorio.php` respondem
+200, e `NaoContem: 'impacto_por_caso'` nos dois.
+
+**Placement**: bloco dedicado (`#situacoes`), não aninhado em
+`#antecipacao`. `renderAgenda()` em `macro-panel.js` sempre tem fallback
+(`renderCadenciaInstitucional()`) porque a agenda nunca fica vazia; um
+tracker de casos regulatórios é o oposto — o normal é 0 casos ativos, sem
+"cadência" que sirva de fallback. O grid de `#antecipacao` também tem
+cardinalidade fixa (4 indicadores, 7 dias), incompatível com 0..N casos de
+cronologia própria. Padrão de mercado usado como referência: tracker
+estilo docket (data/status/próximo passo/fonte), próximo do que ClearView
+Energy Partners e EQ Research (PolicyVista) fazem para risco regulatório.
+
+---
+
 ## Protocolo obrigatório
 
 1. **Diagnóstico antes de qualquer edição.** Confirmar arquivo e linha com evidência antes de tocar código.
@@ -290,6 +356,15 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    estrito para qualquer host, sem branch por host. Domínio futuro não mapeado
    cai no estrito, não herda política fraca por omissão. Teste no
    `headers.test.mjs`. Publicado com a Fase B (Worker `b767ba10`), gate 34/34.
+6. **Tracker de processos regulatórios/jurídicos: infraestrutura pronta,
+   nada publicado.** Código implementado em 2026-09-01 (handler, rota,
+   bloco `#situacoes` em `index.html` escondido por padrão, schema dos dois
+   arquivos vazios, trava anti-vazamento no build) — detalhe na seção
+   própria acima. Falta: (a) deploy explícito via
+   `publicar-com-rollback.ps1`; (b) curadoria manual do caso Enel/ANEEL em
+   `regulatorio-data.json` + `dados-privados/regulatorio-interno.json`,
+   feita pelo Yan; (c) entradas novas em `validar-producao.ps1`, só depois
+   do deploy.
 
 ### Resolvidas em 2026-08-31
 

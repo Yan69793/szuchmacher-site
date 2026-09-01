@@ -3,6 +3,7 @@ import { handleMarketData } from './handlers/market-data.js';
 import { handleMacroApi } from './handlers/macro-api.js';
 import { handleMacroPanel } from './handlers/macro-panel.js';
 import { handleAgenda } from './handlers/agenda.js';
+import { handleRegulatorio } from './handlers/regulatorio.js';
 import { handleFechamento } from './handlers/fechamento.js';
 import { handleStripeWebhook } from './handlers/stripe-webhook.js';
 import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
@@ -27,6 +28,7 @@ const API_ROUTES = {
   '/macro_api.php': (req, env, ctx) => handleMacroApi(req, env, {}, ctx),
   '/assets/macro.php': (req, env, ctx) => handleMacroPanel(env, req),
   '/assets/agenda.php': (req, env, ctx) => handleAgenda(env, req),
+  '/assets/regulatorio.php': (req, env, ctx) => handleRegulatorio(env, req),
   '/stripe-webhook': (req, env, ctx) => handleStripeWebhook(req, env, ctx),
   '/relatorio-signup': (req, env, ctx) => handleRelatorioSignup(req, env),
   '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env, ctx),
