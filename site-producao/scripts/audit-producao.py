@@ -6,6 +6,15 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Console do Windows abre em cp1252 quando o stdout e redirecionado (ex.: `>
+# arquivo.log` no Git Bash). O relatorio tem seta unicode ('->' vira '→'
+# em alguns trechos), e print() sem isto derruba o script com
+# UnicodeEncodeError depois que todo o resto ja rodou. sys.stdout so tem
+# reconfigure() no Python 3.7+; guarda por getattr para nao quebrar em
+# interpretador mais antigo.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 from playwright.sync_api import sync_playwright
 
 BASE = "https://szuchmacher.com.br"
@@ -20,11 +29,16 @@ ENDPOINTS = [
     "agenda-data.json",
     "assets/agenda.php",
     "assets/macro.php",
+    # Radar Geopolítico (2026-09-07)
+    "assets/regulatorio.php",
+    "assets/geopolitica.php",
+    "geopolitica-data.json",
 ]
 
 PAGES = [
     {"url": f"{BASE}/", "name": "home"},
     {"url": f"{BASE}/multiasset-app.html", "name": "multiasset-app"},
+    {"url": f"{BASE}/geopolitica.html", "name": "geopolitica"},
 ]
 
 VIEWPORTS = [

@@ -55,6 +55,13 @@ $checks = @(
     # --- endpoints ---
     @{ Url = "$SZ/prices.php";        Status = 200; Contem = '"ok"' }
     @{ Url = "$SZ/market-data.php";   Status = 200; Contem = '"ok"' }
+    # Radar Geopolitico (2026-09-07): pagina, endpoint e edicao semanal.
+    # A home deve carregar o painel (script module referenciado); o endpoint
+    # precisa devolver o JSON de edicao com schema v1.
+    @{ Url = "$SZ/geopolitica.html";       Status = 200; Contem = 'geoPage' }
+    @{ Url = "$SZ/assets/geopolitica.php"; Status = 200; Contem = '"schema_version"'; Timeout = 30 }
+    @{ Url = "$SZ/geopolitica-data.json";  Status = 200; MinBytes = 500 }
+    @{ Url = "$SZ/";                       Status = 200; Contem = 'radarGeopolitico' }
     # Fontes do market-data morrendo em silencio (incidente NTNB11: brapi 401
     # por meses sem alerta nenhum). A ordem do array stale e deterministica no
     # handler (ibov, sp500, wti, treasury10y, ntnb11), entao o literal casa

@@ -1,0 +1,521 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-07T19:40:00-03:00",
+  "week": {
+    "iso": "2026-W38",
+    "start": "2026-09-14",
+    "end": "2026-09-20",
+    "label": "14 a 20 de setembro de 2026"
+  },
+  "executive_summary": "A guerra entre EUA-Israel e Irã reduziu o fluxo do Estreito de Hormuz de cerca de 20 milhões de bpd para estimados 6–8 milhões de bpd, mantendo o prêmio de guerra no petróleo (WTI ~US$ 92,70; Brent ~US$ 97,00) e o alerta de Goldman Sachs para US$ 120. Na Europa, a AfD ficou a três cadeiras da maioria na Saxônia-Anhalt e tenta formar governo, enquanto a diplomacia EUA-Rússia congela (consulado alemão fechado em São Petersburgo). Na Ucrânia, enviados de Trump alternaram Moscou e Kiev sem cessar-fogo à vista. A semana que vem empilha BCE (10/09), FOMC com projeções (15–16/09) e COPOM (16/09) sobre um cenário de energia cara e comércio em fragmentação, com terras raras chinesas congeladas semanas antes da cúpula Xi–Trump.",
+  "confidence": {
+    "overall": "media",
+    "nota": "Fatos de guerra dependem de cobertura em zona de censura e de estimativas de operadores de navegação; os números de fluxo do Hormuz são estimativas da imprensa de energia, não dado oficial. As datas de bancos centrais vêm de fontes oficiais. Níveis de mercado: fechamento de 04/09 e pregão de 07/09/2026. Sem probabilidades numéricas em nenhuma tese."
+  },
+  "themes": [
+    {
+      "id": "hormuz-guerra-ira",
+      "titulo": "Guerra EUA-Israel x Irã pressiona o Estreito de Hormuz",
+      "nivel_risco": "critico",
+      "fato": "O tráfego de navios no Estreito de Hormuz caiu de forma acentuada na guerra entre EUA-Israel e Irã; estimativas de operadores publicadas pela imprensa de energia apontam queda do fluxo de petróleo de ~20 milhões de bpd para 6–8 milhões de bpd. O Irã anunciou que controlará um novo corredor de navegação no estreito, enquanto os EUA insistem que a via está 'totalmente aberta'. Ataques houthis atingiram novamente a refinaria Jizan, da Saudi Aramco.",
+      "impacto_mercados": "Prêmio de guerra no petróleo com WTI a ~US$ 92,70 e Brent a ~US$ 97,00, e benchmark índio acima de US$ 100; Goldman Sachs alerta para US$ 120 se os riscos de navegação aumentarem. Energia cara alimenta inflação global e endurece o dilema dos bancos centrais na semana de decisões.",
+      "proximo_gatilho": "Resposta dos EUA ao corredor declarado pelo Irã e o eventual reinício das exportações de LNG do Catar (seis navios movidos em direção ao Golfo).",
+      "confianca": "media",
+      "regions": ["oriente_medio", "energia_commodities", "riscos_sistemicos"],
+      "assets": ["petroleo", "ouro", "treasury", "brl"],
+      "sources": [
+        { "url": "https://www.aljazeera.com/", "titulo": "Hormuz shipping traffic falls sharply as US insists waterway 'fully open'", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+        { "url": "https://oilprice.com/", "titulo": "Iran Says It Will Control New Hormuz Shipping Corridor", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+        { "url": "https://oilprice.com/", "titulo": "Iran War Forces a Rewrite of Global Oil Trade Routes (fluxo de ~20 milhões bpd para 6–8 milhões bpd)", "data": "2026-09-05", "tipo": "mercado", "veiculo": "OilPrice" },
+        { "url": "https://www.cfr.org/global-conflict-tracker", "titulo": "Global Conflict Tracker — Conflict With Iran", "data": "2026-09-07", "tipo": "analise", "veiculo": "CFR" }
+      ]
+    },
+    {
+      "id": "comercio-terras-raras",
+      "titulo": "Terras raras chinesas congeladas e cúpula Xi–Trump à vista",
+      "nivel_risco": "elevado",
+      "fato": "Empresas chinesas de terras raras congelaram exportações aos EUA semanas antes da cúpula entre Xi Jinping e Donald Trump. Em paralelo, Trump ameaçou bloquear as vendas da Bombardier canadense se os aviões não forem fabricados nos EUA, e a Rússia afirmou que continuará vendendo petróleo à Índia apesar de ameaça tarifária americana.",
+      "impacto_mercados": "Risco de escalada tarifária em cadeias de defesa, eletrônicos e automotivo; pressão sobre câmbios de emergentes e spreads de crédito; produtores de minerais críticos fora da China ganham relevância estratégica e prêmio de segurança de suprimento.",
+      "proximo_gatilho": "Cúpula Xi–Trump (janela de setembro, data oficial a confirmar) e a resposta dos EUA ao congelamento chinês de terras raras.",
+      "confianca": "media",
+      "regions": ["comercio_sancoes", "china_asia", "eua"],
+      "assets": ["acoes", "credito", "commodities", "brl"],
+      "sources": [
+        { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
+        { "url": "https://www.scmp.com/news/china", "titulo": "As clock counts down to Trump summit, Xi boosts global clout with diplomatic blitz", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
+        { "url": "https://apnews.com/", "titulo": "Trump threatens to block Canada's Bombardier sales unless planes made in US", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+        { "url": "https://oilprice.com/", "titulo": "Russia Vows to Keep Selling Oil to India Despite U.S. Tariff Threat", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" }
+      ]
+    },
+    {
+      "id": "alemanha-afd",
+      "titulo": "AfD a três cadeiras da maioria na Saxônia-Anhalt",
+      "nivel_risco": "elevado",
+      "fato": "A AfD venceu a eleição estadual na Saxônia-Anhalt, ficou a três cadeiras da maioria absoluta e tenta formar governo estadual, argumentando que 'a democracia exige' cooperação. O chanceler Friedrich Merz disse estar chocado com o resultado, mas reforçou as reformas impopulares. Em retaliação ao incidente de drone em Leipzig, a Rússia fechou o consulado alemão em São Petersburgo, e a Alemanha planeja escudos antidrone em várias cidades.",
+      "impacto_mercados": "Prêmio político no euro e em spreads de crédito da zona do euro; risco para a agenda reformista alemã e para o sentimento nos setores exportadores; a defesa antídron vira linha orçamentária estrutural na Europa.",
+      "proximo_gatilho": "Negociações de formação de governo na Saxônia-Anhalt e a decisão do BCE em 10/09.",
+      "confianca": "alta",
+      "regions": ["europa", "riscos_sistemicos"],
+      "assets": ["acoes", "credito", "dolar"],
+      "sources": [
+        { "url": "https://apnews.com/", "titulo": "Germany's Merz shocked by far-right state election triumph but doubles down on unpopular reforms", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+        { "url": "https://www.bbc.com/news/world", "titulo": "Germany's far-right AfD says 'democracy demands' parties work with them after state election win", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+        { "url": "https://apnews.com/", "titulo": "AfD party's landslide win in eastern Germany tests country's 'firewall' against the far right", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+        { "url": "https://apnews.com/", "titulo": "Russia shuts German consulate in St. Petersburg in tit-for-tat move after Leipzig drone incident", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" }
+      ]
+    },
+    {
+      "id": "ucrania-diplomacia-inverno",
+      "titulo": "Ucrânia: enviados dos EUA entre Moscou e Kiev, guerra sem cessar-fogo",
+      "nivel_risco": "elevado",
+      "fato": "Os enviados de Trump Steve Witkoff e Jared Kushner se reuniram com Putin em Moscou e seguiram para conversas em Kiev (06–07/09). Zelensky avaliou que a guerra tende a continuar no inverno; os alertas aéreos em Kiev bateram recorde com ataques russos ininterruptos, agora com drones a jato até três vezes mais rápidos que os de pistão. A Rússia abriu a primeira ponte rodoviária com a Coreia do Norte.",
+      "impacto_mercados": "Prêmio de risco europeu permanece; gás e grãos sensíveis a escalada; indústria de defesa europeia com demanda estrutural; sem cessar-fogo, o regime de sanções segue sem alívio e o petróleo russo segue redirecionado à Ásia com desconto.",
+      "proximo_gatilho": "Desdobramento das conversas em Kiev e a próxima onda de ataques de drone a infraestrutura energética.",
+      "confianca": "alta",
+      "regions": ["russia_ucrania", "europa", "energia_commodities"],
+      "assets": ["commodities", "credito", "dolar"],
+      "sources": [
+        { "url": "https://www.dw.com/europe", "titulo": "Witkoff and Kushner hold Ukraine talks after meeting Putin", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+        { "url": "https://www.dw.com/europe", "titulo": "Ukraine: Zelenskyy says war looks set to go on into winter", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+        { "url": "https://www.bbc.com/news/world", "titulo": "Kyiv air raid alerts at record high as Russia launches round-the-clock strikes", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+        { "url": "https://www.csis.org/analysis", "titulo": "From Shahed to Geran: How Russia Continues to Reinvent the One-Way Attack Drone", "data": "2026-09-04", "tipo": "analise", "veiculo": "CSIS" }
+      ]
+    },
+    {
+      "id": "agenda-juros-global",
+      "titulo": "BCE, FOMC e COPOM colidem com o prêmio geopolítico",
+      "nivel_risco": "moderado",
+      "fato": "O BCE reúne-se em 10/09; o FOMC se reúne em 15–16/09 com projeções econômicas e o mercado dividido entre manutenção e alta de 25 bps (leituras de FedWatch oscilaram entre ~35% e ~55% conforme os dados de emprego); o COPOM se reúne em 16/09 com Selic em 14,00% e Focus projetando 13,75% para o fim de 2026. O Treasury de 10 anos opera a ~4,78%, perto do topo de 52 semanas.",
+      "impacto_mercados": "Semana de decisões define curvas de juros globais; o choque de energia complica a comunicação dos bancos centrais; dólar e ouro reagem à surpresa relativa entre o que o Fed comunicar e o que o mercado precificar.",
+      "proximo_gatilho": "BCE em 10/09, FOMC em 15–16/09 (com Summary of Economic Projections) e COPOM em 16/09.",
+      "confianca": "alta",
+      "regions": ["eua", "europa", "panorama_global"],
+      "assets": ["juros_globais", "treasury", "curva_di", "dolar"],
+      "sources": [
+        { "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", "titulo": "ECB — Official interest rates; próxima coletiva de política monetária em 10/09/2026", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Banco Central Europeu" },
+        { "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "titulo": "Federal Reserve — FOMC meeting calendars (reunião de 15–16/09/2026, com projeções)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Federal Reserve" },
+        { "url": "https://szuchmacher.com.br/macro_data.json", "titulo": "Selic 14,00%, COPOM 16/09, Focus: Selic YE26 13,75% e IPCA 5,01% (carimbo 04/09/2026)", "data": "2026-09-04", "tipo": "interna", "veiculo": "BCB/Focus via macro_data.json" }
+      ]
+    },
+    {
+      "id": "energia-logistica-ia",
+      "titulo": "Energia: falta de bunker, SPR depletado e demanda elétrica de IA",
+      "nivel_risco": "moderado",
+      "fato": "Refinarias priorizando diesel criam risco de escassez de óleo combustível para navios, com as guerras do Irã e da Ucrânia apertando a oferta de bunker. O SPR dos EUA segue depletado, ampliando a volatilidade potencial do petróleo; a gasolina bateu US$ 4/galão no Labor Day, recorde para a data. A Coreia do Sul estuda uma planta de gás de US$ 22,3 bilhões no Texas para alimentar data centers de IA.",
+      "impacto_mercados": "Frete e custos logísticos em alta pressionam margens industriais e inflação logística; gás/LNG americano e utilities captam a demanda elétrica de IA; a baixa capacidade de resposta do SPR amplia qualquer choque de oferta no petróleo.",
+      "proximo_gatilho": "Estoques semanais da EIA e qualquer anúncio de liberação ou recomposição do SPR.",
+      "confianca": "media",
+      "regions": ["energia_commodities", "riscos_sistemicos"],
+      "assets": ["petroleo", "commodities", "credito"],
+      "sources": [
+        { "url": "https://oilprice.com/", "titulo": "Shipping Fuel Shortage Looms as Refiners Prioritize Diesel", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+        { "url": "https://www.aljazeera.com/", "titulo": "Iran and Ukraine wars: Why ship fuel is running short, and why it matters", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+        { "url": "https://www.bbc.com/news/world", "titulo": "Americans react to record high Labor Day fuel prices (gasolina acima de US$ 4/galão)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+        { "url": "https://oilprice.com/", "titulo": "South Korea Eyes $22.3 Billion Texas Gas Plant to Power AI Data Centers", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" }
+      ]
+    }
+  ],
+  "regions": {
+    "panorama_global": {
+      "titulo": "Panorama global",
+      "material": true,
+      "resumo": "Duas guerras ativas (Irã e Ucrânia), um ciclo de comércio em fragmentação e uma semana consecutiva de decisões de bancos centrais definem o mapa de risco. O ponto central é o Estreito de Hormuz: não é um bloqueio declarado, mas o fluxo caiu a uma fração do normal e o prêmio de risco já está no preço do petróleo.",
+      "teses": [
+        {
+          "fato": "O fluxo de petróleo pelo Hormuz caiu de ~20 milhões de bpd para estimados 6–8 milhões de bpd desde o agravamento da guerra, segundo levantamento da imprensa de energia com dados de operadores; o Irã anunciou um corredor de navegação sob seu controle e os EUA negam o bloqueio.",
+          "interpretacao": "A leitura é de um mercado com prêmio geopolítico permanente e sem folga de oferta: qualquer incidente adicional precifica em segundos. A queda de tráfego funciona como imposto logístico difuso — frete, seguro e bunker mais caros para todos os importadores.",
+          "cenario_base": "O prêmio persiste com oscilações: Hormuz segue parcialmente operável, com escolta naval e corredores alternativos, petróleo em faixa elevada (~US$ 85–105 no WTI) e bancos centrais comunicando vigilância sem prometer alívio.",
+          "risco_alternativo": "Fechamento efetivo ou prolongado do estreito, ou ataque a terminal crítico (LNG do Catar): petróleo acima de US$ 120 (cenário apontado por Goldman Sachs), reascensão inflacionária global e bancos centrais forçados a retomar endurecimento.",
+          "gatilhos": [
+            "Resposta militar/diplomática dos EUA ao corredor iraniano",
+            "Reinício das exportações de LNG do Catar (seis tankers movidos)",
+            "Novos ataques houthi a infraestrutura saudita"
+          ],
+          "ativos": ["petroleo", "gas", "ouro", "treasury", "emfx"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://www.aljazeera.com/", "titulo": "Hormuz shipping traffic falls sharply as US insists waterway 'fully open'", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+            { "url": "https://oilprice.com/", "titulo": "Iran War Forces a Rewrite of Global Oil Trade Routes", "data": "2026-09-05", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://oilprice.com/", "titulo": "Goldman Sachs Warns Oil Could Hit $120 as Shipping Risks Rise", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" }
+          ]
+        }
+      ]
+    },
+    "eua": {
+      "titulo": "EUA",
+      "material": true,
+      "resumo": "O Fed entra na reunião de 15–16/09 com projeções e mercado dividido entre manutenção e alta de 25 bps, num segundo semestre em que a guerra devolveu a inflação de energia à agenda. Em casa, a agenda comercial segue agressiva (ameaça à Bombardier) e o ano eleitoral das midterms entra na reta final.",
+      "teses": [
+        {
+          "fato": "A reunião do FOMC de 15–16/09 é a segunda com Summary of Economic Projections do ano; leituras de FedWatch publicadas na imprensa oscilaram de ~65% para ~35% e de volta a ~55% de chance de alta de 25 bps conforme os dados de emprego de julho e agosto.",
+          "interpretacao": "O Fed opera com política restritiva contra um choque de oferta energético que ele não controla. Uma alta em plena guerra seria uma mensagem de que a inflação de energia está contaminando expectativas — a comunicação importa tanto quanto a decisão.",
+          "cenario_base": "Manutenção dos juros com guiamento hawkish e dot plot mostrando menos afrouxamento adiante; curva do Treasury segue com prêmio de termo, 10 anos oscilando em torno de 4,75–4,85%.",
+          "risco_alternativo": "Alta de 25 bps surpreendente: realocações bruscas em dólar (DXY acima de 101) e pressão extra sobre emergentes, incluindo o real.",
+          "gatilhos": [
+            "Comunicado e projeções do FOMC em 16/09",
+            "Dados de emprego e CPI anteriores à reunião",
+            "Liberação ou recomposição do SPR em resposta ao choque de energia"
+          ],
+          "ativos": ["treasury", "dolar", "acoes"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "titulo": "Federal Reserve — FOMC meeting calendars", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Federal Reserve" },
+            { "url": "https://coingape.com/", "titulo": "FOMC Meeting Sept. 2026: Date, Schedule, Expectations and How To Watch?", "data": "2026-09-05", "tipo": "secundaria", "veiculo": "CoinGape (sinal de expectativa, não fato)" },
+            { "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX", "titulo": "CBOE 10-Year Treasury Yield 4,784% (fechamento 04/09/2026)", "data": "2026-09-04", "tipo": "mercado", "veiculo": "Yahoo Finance" }
+          ]
+        }
+      ]
+    },
+    "europa": {
+      "titulo": "Europa",
+      "material": true,
+      "resumo": "A eleição da Saxônia-Anhalt colocou a AfD a três cadeiras da maioria estadual e testou o 'cinturão de fogo' partidário alemão, enquanto a segurança de drones passa da conversa para o orçamento (escudos urbanos após o incidente de Leipzig) e a diplomacia com a Rússia congela. O BCE decide em 10/09 sob prêmio de energia.",
+      "teses": [
+        {
+          "fato": "A AfD venceu na Saxônia-Anhalt, ficou a três cadeiras da maioria e tenta formar governo; Merz reforçou as reformas impopulares; a Rússia fechou o consulado alemão em São Petersburgo em retaliação ao incidente de drone em Leipzig; a Alemanha planeja unidades rápidas antídron em várias cidades.",
+          "interpretacao": "Fragmentação política e segurança interna avançam juntas: quanto maior o custo político da reforma fiscal alemã, menor a folga do bloco para resposta fiscal comum — e maior a dependência da política monetária do BCE em um cenário de energia cara.",
+          "cenario_base": "Negociação estadual longa e inconclusiva; o 'firewall' se sustenta no nível federal, mas se desgasta nos estados; BCE mantém taxa e sinaliza data-dependência em 10/09.",
+          "risco_alternativo": "AfD entra num governo estadual como parceiro dominante: prêmio de risco nos spreads do euro, euro mais fraco contra o dólar e revisão de gastos de defesa em alta.",
+          "gatilhos": [
+            "Resultado das negociações de governo na Saxônia-Anhalt",
+            "Decisão e coletiva do BCE em 10/09",
+            "Novos incidentes de drone e resposta orçamentária alemã"
+          ],
+          "ativos": ["eur", "credito", "acoes-europa", "defesa"],
+          "confianca": "alta",
+          "sources": [
+            { "url": "https://apnews.com/", "titulo": "Germany's Merz shocked by far-right state election triumph but doubles down on unpopular reforms", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+            { "url": "https://www.bbc.com/news/world", "titulo": "Germany's far-right AfD says 'democracy demands' parties work with them after state election win", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+            { "url": "https://www.dw.com/europe", "titulo": "Germany plans anti-drone shield over Leipzig attack", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+            { "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", "titulo": "ECB — Official interest rates e calendário de política", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Banco Central Europeu" }
+          ]
+        }
+      ]
+    },
+    "china_asia": {
+      "titulo": "China / Ásia",
+      "material": true,
+      "resumo": "A uma cúpula Xi–Trump de distância, Pequim combina alavancas comerciais (terras raras), diplomacia alternativa (Catar, Ártico, Ásia Central) e modernização militar (Taiwã). Nos mercados asiáticos, o destaque segue a demanda por chips, com rali de semicondutores em Tóquio e Seul.",
+      "teses": [
+        {
+          "fato": "Empresas chinesas de terras raras congelaram exportações aos EUA semanas antes da cúpula Xi–Trump; Xi intensificou a diplomacia com Eurasia e Oriente Médio; Taiwan anunciou unidade de guerra cibernética com apoio dos EUA; a ferrovia China–Quirguistão–Uzbequistão, que contorna a Rússia, atingiu marco de túnel.",
+          "interpretacao": "A China negocia de posição de alavanca de suprimento: terras raras e rotas alternativas reduzem a eficácia de sanções americanas e elevam o custo de uma escalada — para os dois lados. A demanda por chips mantém a Ásia do Norte como epicentro do ciclo de capex de IA.",
+          "cenario_base": "Tensão controlada até a cúpula, com concessões parciais em terras raras em troca de alívio tarifário; semicondutores seguem como trade estrutural dominante na região.",
+          "risco_alternativo": "Ruptura da cúpula com congelamento total de terras raras e novas restrições de exportação: choque direto em eletrônicos, automotivo e defesa globais, com picos de volatilidade em ações de tecnologia.",
+          "gatilhos": [
+            "Cúpula Xi–Trump (janela de setembro)",
+            "Sinais de retomada ou prolongamento do congelamento de terras raras",
+            "Passos da unidade de guerra cibernética de Taiwan"
+          ],
+          "ativos": ["acoes-china", "semicondutores", "commodities", "emfx"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://www.scmp.com/news/china", "titulo": "As clock counts down to Trump summit, Xi boosts global clout with diplomatic blitz", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
+            { "url": "https://www.scmp.com/news/china", "titulo": "Taiwan sets up US-backed cyber unit to hunt hidden military threats", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
+            { "url": "https://apnews.com/", "titulo": "Global shares are mixed as chipmaker shares rally in Tokyo and Seoul", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" }
+          ]
+        }
+      ]
+    },
+    "oriente_medio": {
+      "titulo": "Oriente Médio",
+      "material": true,
+      "resumo": "A guerra EUA-Israel x Irã é o centro de gravidade do risco global na semana. Ao redor dela: Houthis contra a Arábia Saudita, cessar-fogo Israel–Hezbollah em risco no Líbano, Irã sob pressão interna e o Catar como mediador e exportador de LNG.",
+      "teses": [
+        {
+          "fato": "Ataques houthis atingiram novamente a refinaria Jizan da Saudi Aramco; ataques israelenses no sul do Líbano mataram 12 pessoas e o Líbano afirma que a escalada jeopardiza o cessar-fogo mediado pelos EUA com o Hezbollah; o Irã anunciou o fim gradual do subsídio à importação de gasolina e enfrenta grupos armados étnicos internos.",
+          "interpretacao": "A pressão externa e interna sobre o Irã aumenta o valor da alavanca de Hormuz: à medida que a economia doméstica aperta (fim do subsídio de gasolina), a tentação de escalar no estreito cresce, não diminui.",
+          "cenario_base": "Guerra de atrito com prêmio de risco constante: ataques a infraestrutura seguem, Hormuz parcialmente operável, mediação do Catar evita escalada máxima.",
+          "risco_alternativo": "Destruição de terminal crítico ou resposta iraniana direta a bases dos EUA: petróleo e gás com gap de alta, aviação e frete redirecionados, refúgio (ouro, Treasury curto) em demanda.",
+          "gatilhos": [
+            "Próximos ataques houthi ou resposta saudita",
+            "Deterioração ou reconstituição do cessar-fogo Israel–Hezbollah",
+            "Efeitos sociais do fim do subsídio de gasolina no Irã"
+          ],
+          "ativos": ["petroleo", "gas", "ouro", "credito-em"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://oilprice.com/", "titulo": "Saudi Aramco's Jizan Refinery Hit Again as Houthi Attacks Escalate", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://apnews.com/", "titulo": "Israeli airstrikes on a village in southern Lebanon kill 12 people, including 2 children", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+            { "url": "https://www.aljazeera.com/", "titulo": "Iran to phase out petrol import subsidy, vice president says", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+            { "url": "https://www.scmp.com/news/china", "titulo": "China vows deeper cooperation with Qatar in energy and Middle East de-escalation", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" }
+          ]
+        }
+      ]
+    },
+    "russia_ucrania": {
+      "titulo": "Rússia / Ucrânia",
+      "material": true,
+      "resumo": "Sem cessar-fogo à vista, a semana misturou diplomacia de alto nível (enviados de Trump em Moscou e Kiev) com escalada técnica (drones a jato, ataques contínuos a Kiev) e alinhamentos periféricos (ponte rodoviária Rússia–Coreia do Norte, consulado alemão fechado).",
+      "teses": [
+        {
+          "fato": "Witkoff e Kushner se reuniram com Putin e seguiram para Kiev (06–07/09); Zelensky disse que a guerra deve se estender ao inverno; alertas aéreos em Kiev bateram recorde; a Rússia inaugurou a primeira ponte rodoviária com a Coreia do Norte; a CEO da Rosneft afirmou que 'a China comanda o mercado de petróleo, não a OPEC'.",
+          "interpretacao": "A diplomacia corre em paralelo à guerra sem mecanismo de enforcement: a Rússia consolida redes de escape (China, Coreia do Norte, Índia via petróleo) enquanto pressiona com drones. Para os mercados, a tese relevante é de persistência — energia e grãos com prêmio por mais tempo.",
+          "cenario_base": "Guerra prolongada sem ruptura diplomática total; sanções mantidas; petróleo russo segue para a Ásia com desconto; Europa acelera defesa e diversificação de energia.",
+          "risco_alternativo": "Colapso das conversas com escalada contra infraestrutura de exportação ucraniana e europeia (grãos, gás): picos em commodities agrícolas e gás europeu.",
+          "gatilhos": [
+            "Resultado das conversas em Kiev",
+            "Próxima rodada de ataques de drone a infraestrutura",
+            "Sinais de maior integração Rússia–China–Coreia do Norte"
+          ],
+          "ativos": ["graos", "gas", "defesa", "credito-europa"],
+          "confianca": "alta",
+          "sources": [
+            { "url": "https://www.dw.com/europe", "titulo": "Witkoff and Kushner hold Ukraine talks after meeting Putin", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+            { "url": "https://www.dw.com/europe", "titulo": "Ukraine: Zelenskyy says war looks set to go on into winter", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+            { "url": "https://www.dw.com/europe", "titulo": "Russia opens first road bridge with North Korea", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+            { "url": "https://oilprice.com/", "titulo": "Rosneft CEO: China Calls The Shots in Oil Markets, Not OPEC", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" }
+          ]
+        }
+      ]
+    },
+    "energia_commodities": {
+      "titulo": "Energia e commodities",
+      "material": true,
+      "resumo": "Complexo energético com prêmio de guerra, logística marítima sob estresse (bunker escasso, frete redirecionado) e demanda estrutural de eletricidade por IA. Ouro opera como refúgio com memória de pico.",
+      "teses": [
+        {
+          "fato": "WTI ~US$ 92,70 e Brent ~US$ 97,00 (07/09); benchmark índio de petróleo acima de US$ 100; roteiros de tanker sendo reescritos com o Hormuz a 6–8 milhões de bpd; escassez de óleo para navios por priorização de diesel; ouro spot a US$ 4.405,10/oz, com topo de 52 semanas em US$ 5.586,20.",
+          "interpretacao": "A curva de energia precifica interrupção recorrente, não catástrofe. O ouro, apesar de longe do topo do ano, mantém o papel de seguro contra o cenário em que o Fed precisa apertar com a economia desacelerando.",
+          "cenario_base": "Petróleo em faixa elevada com picos por manchete; bunker e frete pressionando custos logísticos até o fim do ano; ouro sustentado entre refúgio e compras de banco central.",
+          "risco_alternativo": "Desescalada rápida na guerra do Irã: retorno de fluxos pelo Hormuz e correção de prêmio no petróleo de dois dígitos, com alívio de custo para indústria e consumo.",
+          "gatilhos": [
+            "Estoques semanais da EIA",
+            "Progresso do reinício de cargas de LNG do Catar",
+            "Fluxos de ETF e compras oficiais de ouro"
+          ],
+          "ativos": ["petroleo", "gas", "ouro", "frete", "commodities"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://oilprice.com/", "titulo": "WTI Crude $92.70 / Brent Crude $97.00 (cotações, 07/09/2026)", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://oilprice.com/", "titulo": "India's Crude Oil Benchmark Tops $100 as Middle East War Escalates", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://www.kitco.com/charts/gold", "titulo": "Live Gold Price: US$ 4.405,10/oz (-0,54%) em 07/09/2026, NY", "data": "2026-09-07", "tipo": "mercado", "veiculo": "Kitco" }
+          ]
+        }
+      ]
+    },
+    "comercio_sancoes": {
+      "titulo": "Comércio e sanções",
+      "material": true,
+      "resumo": "A semana soma ameaças tarifárias em frentes novas (Canadá/Bombardier, Índia via petróleo russo) à alavanca chinesa de terras raras, semanas antes da cúpula Xi–Trump. O regime de sanções à Rússia segue sem alívio.",
+      "teses": [
+        {
+          "fato": "Trump ameaçou bloquear as vendas da Bombardier se os aviões não forem fabricados nos EUA; a Rússia declarou que seguirá vendendo petróleo à Índia apesar de ameaça tarifária dos EUA; empresas chinesas de terras raras congelaram exportações aos EUA; a AGOA (comércio EUA–África) foi estendida por dois anos com agenda de renovação aberta.",
+          "interpretacao": "O comércio mundial segue se reorganizando em blocos e acordos bilaterais de propósito. Para investidores, o efeito marginal é de custo: cadeias mais caras, duplicação de estoques e prêmio permanente em minerais críticos e semicondutores.",
+          "cenario_base": "Negociações pendulares até a cúpula Xi–Trump; tarifas pontuais sem ruptura sistêmica; sanções à Rússia mantidas com brechas para petróleo destinado à Índia e à China.",
+          "risco_alternativo": "Generalização de tarifas retaliatórias (Canadá, UE, China) no mesmo trimestre: choque de custo simultâneo com o de energia, comprimindo margens corporativas e spreads de crédito.",
+          "gatilhos": [
+            "Cúpula Xi–Trump",
+            "Resposta formal do Canadá à ameaça sobre a Bombardier",
+            "Medidas tarifárias dos EUA sobre compradores de petróleo russo"
+          ],
+          "ativos": ["acoes", "credito", "emfx", "minerais-criticos"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://apnews.com/", "titulo": "Trump threatens to block Canada's Bombardier sales unless planes made in US", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+            { "url": "https://oilprice.com/", "titulo": "Russia Vows to Keep Selling Oil to India Despite U.S. Tariff Threat", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://www.csis.org/analysis", "titulo": "U.S.-Africa Trade at a Crossroads: A Moment for New Thinking", "data": "2026-09-03", "tipo": "analise", "veiculo": "CSIS" }
+          ]
+        }
+      ]
+    },
+    "riscos_sistemicos": {
+      "titulo": "Riscos sistêmicos",
+      "material": true,
+      "resumo": "Três vetores de contágio nesta edição: logística marítima (bunker e frete), política monetária em semana decisiva com energia cara, e o ciclo de capex de IA concentrando capital em infraestrutura energética. A eles se soma o risco político europeu.",
+      "teses": [
+        {
+          "fato": "A escassez de bunker por priorização de diesel eleva custos de toda a cadeia marítima; o SPR americano depletado reduz a capacidade de resposta a choques; o mercado dividido no FOMC eleva a sensibilidade das curvas a surpresa; a África e a periferia do euro acumulam estresses próprios (Sudão em guerra civil, Sérvia em crise pós-Mladić).",
+          "interpretacao": "Nenhum desses vetores, isolado, é sistêmico. O risco é a correlação: um choque de Hormuz na mesma semana de um FOMC hawkish e de frete em alta transferiria o estresse do preço da energia para o crédito — primeiro em high yield e emergentes.",
+          "cenario_base": "Estresse contido: volatilidade acima da média em curvas, frete e crédito, sem quebra de liquidez; correções de ações compradas em profundidade absorvidas.",
+          "risco_alternativo": "Eventos correlacionados (bloqueio de Hormuz + surpresa hawkish + falência de operador de frete alavancado): reaparecimento de stress de liquidez em crédito e emergentes, com refúgio em ouro e Treasury curto.",
+          "gatilhos": [
+            "FOMC 15–16/09 e BCE 10/09",
+            "Índices de frete marítimo (Capees/Supramax) e prêmios de seguro de guerra",
+            "Movimentos de spread em high yield e CDS de emergentes"
+          ],
+          "ativos": ["credito", "ouro", "treasury", "vol"],
+          "confianca": "media",
+          "sources": [
+            { "url": "https://oilprice.com/", "titulo": "Shipping Fuel Shortage Looms as Refiners Prioritize Diesel", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+            { "url": "https://news.un.org/en/", "titulo": "UN News — Sudan: outside forces fuel the war (relatório)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
+            { "url": "https://www.bbc.com/news/world", "titulo": "Thousands turn out in Serbia for funeral of Ratko Mladić (crise política nos Bálcãs)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+            { "url": "https://www.cfr.org/global-conflict-tracker", "titulo": "CFR Global Conflict Tracker — 27 conflitos monitorados", "data": "2026-09-07", "tipo": "analise", "veiculo": "CFR" }
+          ]
+        }
+      ]
+    }
+  },
+  "market_impacts": {
+    "petroleo": {
+      "direcao": "alta",
+      "comentario": "Prêmio de guerra com Hormuz a 6–8 milhões de bpd: WTI ~US$ 92,70 e Brent ~US$ 97,00. Goldman Sachs sinaliza US$ 120 em escalada; desescalada devolveria o prêmio rapidamente."
+    },
+    "inflacao": {
+      "direcao": "alta",
+      "comentario": "Energia cara (gasolina >US$ 4/galão nos EUA no Labor Day, benchmark índio >US$ 100) mais frete e bunker em alta transmitem-se a custos logísticos e núcleos importados com defasagem de um a dois trimestres."
+    },
+    "juros_globais": {
+      "direcao": "volatil",
+      "comentario": "BCE 10/09, FOMC 15–16/09 com projeções e COPOM 16/09 no mesmo pacote: expectativa dividida entre manutenção e alta no Fed, com prêmio de energia limitando qualquer narrativa de afrouxamento."
+    },
+    "treasury": {
+      "direcao": "alta",
+      "comentario": "10 anos a ~4,78%, perto do topo de 52 semanas (4,81%): prêmio de termo sustentado por inflação de energia, oferta fiscal e menor expectativa de cortes; refúgio de curta duração em episódios de escalada."
+    },
+    "dolar": {
+      "direcao": "volatil",
+      "comentario": "DXY a ~99,18 no miolo da faixa de 52 semanas (95,55–101,80): refúgio geopolítico sustenta, mas a chance de alta de juros no Fed é a variável dominante da semana."
+    },
+    "ouro": {
+      "direcao": "alta",
+      "comentario": "Spot em US$ 4.405,10/oz (-0,54% no dia), bem abaixo do topo de 52 semanas (US$ 5.586,20): prêmio de guerra reativado e demanda de refúgio sustentam a tendência enquanto Hormuz seguir instável."
+    },
+    "acoes": {
+      "direcao": "neutro",
+      "comentario": "S&P 500 a ~7.718, perto do recorde de 52 semanas (7.816,70), com rali de semicondutores em Tóquio/Seul compensando risco tarifário e de energia; concentração em IA segue a principal fragilidade."
+    },
+    "credito": {
+      "direcao": "alta",
+      "comentario": "Spreads pressionados por energia, frete e incerteza tarifária; periferia do euro soma prêmio político (AfD); emergentes sensíveis a dólar e a commodity prices."
+    },
+    "commodities": {
+      "direcao": "alta",
+      "comentario": "Complexo energético lidera (petróleo, gás, bunker); minerais críticos com prêmio estratégico pelo congelamento chinês; grãos vigilantes à Ucrânia; metais industriais refém do ciclo chinês de infraestrutura."
+    },
+    "brasil": {
+      "direcao": "neutro",
+      "comentario": "Pré-sal captura o prêmio do Brent (~US$ 97) e o agronegócio segue fornecendo ambos os blocos; contrapeso: prêmio de risco global, dólar e juros domésticos altos. COPOM em 16/09 com Selic em 14,00%."
+    },
+    "curva_di": {
+      "direcao": "volatil",
+      "comentario": "Focus projeta Selic de 13,75% no fim de 2026 (contra 14,00% hoje) e IPCA de 5,01%, acima da meta: a curva DI precifica afrouxamento gradual e fica sensível a surpresa do FOMC e ao câmbio."
+    },
+    "brl": {
+      "direcao": "volatil",
+      "comentario": "PTAX a ~R$ 5,10 (04/09) e Focus com câmbio de R$ 5,20 para o fim do ano: termos de troca favoráveis (petróleo e commodities) contra o risco-off geopolítico e o diferencial de juros global."
+    }
+  },
+  "scenarios": [
+    {
+      "tipo": "base",
+      "titulo": "Prêmio persistente sem bloqueio total",
+      "probabilidade": null,
+      "descricao": "Hormuz segue parcialmente operável sob tensão, guerras do Irã e da Ucrânia em atrito sem escalada máxima, comércio pendular até a cúpula Xi–Trump e bancos centrais em vigilância.",
+      "implicacoes": "Petróleo em faixa elevada (~US$ 85–105 WTI), curvas de juros voláteis com prêmio de termo, ouro sustentado, ações neutras com rotação defensiva, spreads de crédito levemente mais largos."
+    },
+    {
+      "tipo": "alternativo",
+      "titulo": "Escalada no Golfo",
+      "probabilidade": null,
+      "descricao": "Fechamento efetivo do corredor de Hormuz ou ataque a terminal crítico de LNG/petróleo, com resposta militar ampliada dos EUA.",
+      "implicacoes": "Petróleo acima de US$ 120 (cenário sinalizado por Goldman Sachs), reascensão inflacionária global, FOMC forcado a endurecer, realocação para refúgio (ouro, Treasury curto, dólar) e alargamento de spreads."
+    },
+    {
+      "tipo": "cauda",
+      "titulo": "Choque logístico correlacionado",
+      "probabilidade": null,
+      "descricao": "Bloqueio prolongado do estreito combinado com surpresa hawkish do Fed e estresse de frete alavancado no mesmo trimestre.",
+      "implicacoes": "Risco de stress de liquidez em crédito privado e emergentes, com contágio por margens e funding; cenário de recessão energética com ações e crédito pressionados simultaneamente."
+    },
+    {
+      "tipo": "alternativo",
+      "titulo": "Desescalada em duas frentes",
+      "probabilidade": null,
+      "descricao": "Arranjo na guerra do Irã (mediação do Catar) e entendimento parcial na cúpula Xi–Trump, com retomada de fluxos e alívio tarifário.",
+      "implicacoes": "Correção de prêmio no petróleo, alívio de custos logísticos, risk-on moderado com curvas de juros caindo pela inflação de energia; melhor desempenho relativo de emergentes, incluindo o real."
+    }
+  ],
+  "triggers": [
+    {
+      "janela": "10/09/2026",
+      "evento": "Decisão e coletiva do Banco Central Europeu",
+      "relevancia": "Primeira leitura oficial de como o BCE pesa o prêmio de energia contra a desaceleração; referência para o euro e spreads da zona do euro."
+    },
+    {
+      "janela": "15–16/09/2026",
+      "evento": "FOMC com Summary of Economic Projections",
+      "relevancia": "Mercado dividido entre manutenção e alta de 25 bps; o dot plot define a trajetória de juros americanos para o fim de 2026."
+    },
+    {
+      "janela": "16/09/2026",
+      "evento": "Reunião do COPOM",
+      "relevancia": "Selic em 14,00% e Focus projetando 13,75% no fim do ano: a comunicação sobre o início do ciclo de cortes é o gatilho da curva DI."
+    },
+    {
+      "janela": "Imediato",
+      "evento": "Resposta dos EUA ao corredor de navegação declarado pelo Irã em Hormuz",
+      "relevancia": "Define se o prêmio de guerra no petróleo se consolida ou se estabiliza."
+    },
+    {
+      "janela": "Imediato",
+      "evento": "Negociações de formação de governo na Saxônia-Anhalt (AfD)",
+      "relevancia": "Teste do 'firewall' alemão; prêmio político no euro se a AfD avançar."
+    },
+    {
+      "janela": "Setembro (data a confirmar)",
+      "evento": "Cúpula Xi–Trump",
+      "relevancia": "Terras raras e tarifas em jogo: define o rumo do comércio mundial no último trimestre."
+    },
+    {
+      "janela": "Próximas semanas",
+      "evento": "Desdobramento das conversas de paz dos enviados dos EUA em Kiev",
+      "relevancia": "Sem cessar-fogo, prêmio de risco europeu e commodities agrícolas seguem sustentados."
+    },
+    {
+      "janela": "Semanal",
+      "evento": "Estoques de petróleo da EIA e prêmios de frete/seguro de guerra",
+      "relevancia": "Confirmam se o mercado físico segue apertado além do prêmio financeiro."
+    }
+  ],
+  "sources": [
+    { "url": "https://www.aljazeera.com/", "titulo": "Hormuz shipping traffic falls sharply as US insists waterway 'fully open'", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+    { "url": "https://www.aljazeera.com/", "titulo": "Iran's top diplomat calls for Islamic nations' unity against US-Israeli aggression", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+    { "url": "https://www.aljazeera.com/", "titulo": "Iran to phase out petrol import subsidy, vice president says", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+    { "url": "https://www.aljazeera.com/", "titulo": "Iran and Ukraine wars: Why ship fuel is running short, and why it matters", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
+    { "url": "https://apnews.com/", "titulo": "Germany's Merz shocked by far-right state election triumph but doubles down on unpopular reforms", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+    { "url": "https://apnews.com/", "titulo": "AfD party's landslide win in eastern Germany tests country's 'firewall' against the far right", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+    { "url": "https://apnews.com/", "titulo": "Russia shuts German consulate in St. Petersburg in tit-for-tat move after Leipzig drone incident", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+    { "url": "https://apnews.com/", "titulo": "Israeli airstrikes on a village in southern Lebanon kill 12 people, including 2 children", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+    { "url": "https://apnews.com/", "titulo": "Trump threatens to block Canada's Bombardier sales unless planes made in US", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+    { "url": "https://apnews.com/", "titulo": "Global shares are mixed as chipmaker shares rally in Tokyo and Seoul", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
+    { "url": "https://www.bbc.com/news/world", "titulo": "Germany's far-right AfD says 'democracy demands' parties work with them after state election win", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+    { "url": "https://www.bbc.com/news/world", "titulo": "Thousands turn out in Serbia for funeral of Ratko Mladić", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+    { "url": "https://www.bbc.com/news/world", "titulo": "Kyiv air raid alerts at record high as Russia launches round-the-clock strikes", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+    { "url": "https://www.bbc.com/news/world", "titulo": "Americans react to record high Labor Day fuel prices", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
+    { "url": "https://www.dw.com/europe", "titulo": "Witkoff and Kushner hold Ukraine talks after meeting Putin", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+    { "url": "https://www.dw.com/europe", "titulo": "Ukraine: Zelenskyy says war looks set to go on into winter", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+    { "url": "https://www.dw.com/europe", "titulo": "Germany plans anti-drone shield over Leipzig attack", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+    { "url": "https://www.dw.com/europe", "titulo": "EU's von der Leyen pledges $232 million Greenland investment", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+    { "url": "https://www.dw.com/europe", "titulo": "Russia opens first road bridge with North Korea", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
+    { "url": "https://news.un.org/en/", "titulo": "Security Council: Addressing the legacy of Syria's chemical weapons", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
+    { "url": "https://news.un.org/en/", "titulo": "West Bank: UN rights report warns of forcible displacement from refugee camps", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
+    { "url": "https://news.un.org/en/", "titulo": "Cold, displaced and in darkness: Ukrainian civilians brace for another winter of war", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
+    { "url": "https://www.scmp.com/news/china", "titulo": "As clock counts down to Trump summit, Xi boosts global clout with diplomatic blitz", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
+    { "url": "https://www.scmp.com/news/china", "titulo": "Taiwan sets up US-backed cyber unit to hunt hidden military threats", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
+    { "url": "https://www.scmp.com/news/china", "titulo": "China vows deeper cooperation with Qatar in energy and Middle East de-escalation", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
+    { "url": "https://oilprice.com/", "titulo": "Iran Says It Will Control New Hormuz Shipping Corridor", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "Iran War Forces a Rewrite of Global Oil Trade Routes (Hormuz: ~20 milhões bpd para 6–8 milhões bpd)", "data": "2026-09-05", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "Goldman Sachs Warns Oil Could Hit $120 as Shipping Risks Rise", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "India's Crude Oil Benchmark Tops $100 as Middle East War Escalates", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "Qatar Moves Six LNG Tankers Toward Gulf as Export Restart Looms", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "Shipping Fuel Shortage Looms as Refiners Prioritize Diesel", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "Saudi Aramco's Jizan Refinery Hit Again as Houthi Attacks Escalate", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://oilprice.com/", "titulo": "Russia Vows to Keep Selling Oil to India Despite U.S. Tariff Threat", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
+    { "url": "https://www.cfr.org/global-conflict-tracker", "titulo": "Global Conflict Tracker — 27 conflitos monitorados (Irã, Ucrânia, Taiwan, Sudão)", "data": "2026-09-07", "tipo": "analise", "veiculo": "CFR" },
+    { "url": "https://www.csis.org/analysis", "titulo": "From Shahed to Geran: How Russia Continues to Reinvent the One-Way Attack Drone", "data": "2026-09-04", "tipo": "analise", "veiculo": "CSIS" },
+    { "url": "https://www.csis.org/analysis", "titulo": "U.S.-Africa Trade at a Crossroads: A Moment for New Thinking", "data": "2026-09-03", "tipo": "analise", "veiculo": "CSIS" },
+    { "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", "titulo": "ECB — Official interest rates e calendário (coletiva de 10/09/2026)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Banco Central Europeu" },
+    { "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "titulo": "Federal Reserve — FOMC meeting calendars (15–16/09/2026)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Federal Reserve" },
+    { "url": "https://www.kitco.com/charts/gold", "titulo": "Live Gold Price: US$ 4.405,10/oz em 07/09/2026 (NY); topo de 52 semanas US$ 5.586,20", "data": "2026-09-07", "tipo": "mercado", "veiculo": "Kitco" },
+    { "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX", "titulo": "CBOE 10-Year Treasury Yield: 4,784% (04/09/2026)", "data": "2026-09-04", "tipo": "mercado", "veiculo": "Yahoo Finance" },
+    { "url": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB", "titulo": "ICE US Dollar Index: 99,18 (07/09/2026)", "data": "2026-09-07", "tipo": "mercado", "veiculo": "Yahoo Finance" },
+    { "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC", "titulo": "S&P 500: 7.718,60 (04/09/2026); topo de 52 semanas 7.816,70", "data": "2026-09-04", "tipo": "mercado", "veiculo": "Yahoo Finance" },
+    { "url": "https://coingape.com/", "titulo": "FOMC Meeting Sept. 2026: Date, Schedule, Expectations (sinal secundário de expectativa)", "data": "2026-09-05", "tipo": "secundaria", "veiculo": "CoinGape" },
+    { "url": "https://szuchmacher.com.br/macro_data.json", "titulo": "Selic 14,00%, PTAX R$ 5,10, COPOM 16/09, Focus: Selic YE26 13,75%, IPCA 5,01%, câmbio YE26 5,20 (carimbo 04/09/2026)", "data": "2026-09-04", "tipo": "interna", "veiculo": "BCB/Focus via macro_data.json" }
+  ],
+  "disclaimer": "O Radar Geopolítico é uma síntese informativa semanal elaborada a partir de fontes públicas, com registro de URL, veículo, data e tipo de fonte. Fatos materiais exigem no mínimo duas fontes independentes; teses de alto impacto, três. Sinais secundários (redes, fóruns, agregadores) não sustentam afirmação factual isoladamente. Este material tem caráter meramente informativo e institucional, não constitui recomendação, oferta ou análise individualizada de valores mobiliários nos termos da Resolução CVM nº 19/2021, e não apresenta probabilidades numéricas de cenários. Direções de mercado indicam leitura qualitativa de risco, não expectativa de retorno."
+}

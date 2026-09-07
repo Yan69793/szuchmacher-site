@@ -15,6 +15,7 @@ $alvos = @(
     'scripts\run-agenda-agent.ps1',
     'scripts\run-macro-cron.ps1',
     'scripts\run-macro-agent.ps1',
+    'scripts\run-geopolitica-agent.ps1',
     'scripts\check-macro-cron.ps1',
     'scripts\register-agents.ps1',
     'scripts\send-alert-email.ps1'
@@ -46,7 +47,7 @@ foreach ($rel in $alvos) {
 # FALHA-002: scripts chamados DIRETAMENTE pelo Task Scheduler nao podem usar 'Stop' global
 # check-macro-cron.ps1 entrou aqui em 2026-08-27: e chamado direto pelo Task
 # Scheduler (watchdog do cron macro) e estava fora da guarda FALHA-002.
-$taskScripts = @('scripts\run-agenda-agent.ps1', 'scripts\run-macro-cron.ps1', 'scripts\run-macro-agent.ps1', 'scripts\check-macro-cron.ps1')
+$taskScripts = @('scripts\run-agenda-agent.ps1', 'scripts\run-macro-cron.ps1', 'scripts\run-macro-agent.ps1', 'scripts\run-geopolitica-agent.ps1', 'scripts\check-macro-cron.ps1')
 foreach ($rel in $taskScripts) {
     $p = Join-Path $raiz $rel
     if (-not (Test-Path $p)) { continue }

@@ -146,6 +146,9 @@ $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
     'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
     'relatorio_cache.json', 'regulatorio-data.json',
+    # Radar Geopolitico: pagina + edicao semanal corrente (o historico fica
+    # em geopolitica-historico/ e NAO entra no public).
+    'geopolitica.html', 'geopolitica-data.json',
     'og-cover.jpg', 'logo.png',
     'favicon.ico', 'favicon.svg', 'apple-touch-icon.png',
     # Trajetoria profissional. Fora do menu e com noindex: acesso so por link
@@ -161,6 +164,8 @@ foreach ($f in $szFiles) { Copy-IfExists (Join-Path $ROOT $f) (Join-Path $SZ $f)
 $szAssets = @(
     'sz-config.js', 'sz-design.css', 'sz-imagery.css', 'sz-site.js', 'macro-panel.js',
     'regulatorio-panel.js',
+    # Radar Geopolitico: core puro (testado pelo Worker) + painel de renderizacao
+    'geopolitica-core.js', 'geopolitica-panel.js',
     # Fase A: CSS extraido dos <style> inline por pagina
     'sz-index-1.js', 'sz-relatorios-1.js', 'sz-relatorios-2.js', 'sz-relatorios-3.js',
     'sz-relatorios.css', 'sz-honorarios.css', 'sz-assinatura-1.js', 'sz-assinatura.css',
