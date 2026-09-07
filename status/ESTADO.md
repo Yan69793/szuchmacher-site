@@ -751,3 +751,22 @@ para a URL Stripe live quando a guarda `ready()` passa.
 Os quatro PNG soltos na raiz deixaram de ser P3 porque foram commitados em
 `0b8bb99`. Versionar 581 KB de screenshot datado na raiz, sem nada referenciando,
 é discutível, mas está feito e desfazer não é ganho.
+
+### Radar Geopolítico entregue (07/09/2026)
+
+O Radar Geopolítico foi concluído no commit `e4e105d`, com agente semanal,
+fallback de segunda-feira, página completa, painel da home, endpoint do Worker,
+validação de schema, testes específicos e registro dos gatilhos do Task
+Scheduler. O agente usa somente fontes coletadas no dossiê para preencher a
+edição, rejeita URLs fora do dossiê e não aceita probabilidades numéricas.
+
+Gate local verde, Python 8/8, Worker 89/89, scripts verdes, build com 32
+arquivos obrigatórios e validação factual estrutural verde. O deploy foi feito
+com `publicar-com-rollback.ps1`. O portão de produção passou com **38
+verificações, 0 falhas**. A auditoria Playwright de 07/09, relatório
+`diagnosticos/audit-raw-20260907_203257.json`, encontrou 0 endpoints falhos, 0
+páginas falhas e 0 erros HTTP na página do Radar.
+
+O commit ainda precisa ser enviado ao `origin`. As alterações locais de
+`agenda-data.json`, `macro_data.json`, `.codex/`, `.idea/` e `AGENTS.md` não
+fazem parte deste commit e permanecem preservadas.
