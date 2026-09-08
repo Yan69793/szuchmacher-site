@@ -32,16 +32,22 @@ async function fetchBcbCdi() {
   return null;
 }
 
-function computeRates(cdiRate) {
+// Semantica dos cenarios (fechamento P1.4, 08/09/2026): pessimista macro =
+// juros altos em renda fixa. Antes este handler invertia: pess = corte de
+// juros, otim = choque, e o front reaplicava os numeros sobre os cards,
+// deixando a narrativa "Selic ate 17%" com +11%. A direcao foi trocada para
+// casar com o literal curado do motor (cdi pess 0.165/base 0.1425/otim 0.12)
+// e com os textos estaticos do multiasset-app.html.
+export function computeRates(cdiRate) {
   // CDI e essencialmente a Selic menos um pequeno spread (~0,10 pp).
   // Spread dos cenarios e fixo: o CDI nao tem volatilidade de mercado relevante.
-  // Pessimista: ciclo de cortes acelerado → CDI cai ~2 pp
-  // Base: Selic mantida em 14,25% com cortes graduais
-  // Otimista: choque inflacionario → CDI sobe com Selic
+  // Pessimista: choque inflacionario → CDI sobe com a Selic (~2 pp acima)
+  // Base: Selic mantida com cortes graduais
+  // Otimista: ciclo de cortes acelerado → CDI cai ~2 pp
   return {
-    pess: Math.round((cdiRate - 0.025) * 10000) / 10000,
+    pess: Math.round(Math.min(cdiRate + 0.025, 0.18) * 10000) / 10000,
     base: Math.round(cdiRate * 10000) / 10000,
-    otim: Math.round(Math.min(cdiRate + 0.025, 0.18) * 10000) / 10000,
+    otim: Math.round((cdiRate - 0.025) * 10000) / 10000,
   };
 }
 

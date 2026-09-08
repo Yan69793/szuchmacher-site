@@ -19,12 +19,16 @@ $KV_ID  = 'fd40efe1057c4c54b3d33277d4665434'
 # ntnb-scenarios entrou depois do deploy da fase 2 (15/08/2026): o payload
 # legado no KV (source defaults, preco 95) sobrevive ate 2h sem esta chave.
 #
-# macro-api saiu do conjunto padrao em 31/08/2026. As tres chaves abaixo sao
+# macro-api saiu do conjunto padrao em 31/08/2026. As quatro chaves abaixo sao
 # baratas de reconstruir (segundos, sem LLM); macro-api custa a cascata inteira
 # (~40s, OpenRouter pago) e ficava vazia do deploy ate o cron da segunda
 # seguinte quando a reposicao falhava. Passar -IncludeMacro so em mudanca de
 # formato do payload.
-$KEYS   = @('macro-panel', 'market-data', 'ntnb-scenarios')
+#
+# cdi-scenarios entrou em 08/09/2026 junto da troca de semantica (pessimista
+# macro = juros altos em RF): sem apagar a chave, o cache antigo no KV seguia
+# servindo os numeros invertidos por ate ~24h (staleTtl do CDI).
+$KEYS   = @('macro-panel', 'market-data', 'cdi-scenarios', 'ntnb-scenarios')
 if ($IncludeMacro) { $KEYS = @('macro-api') + $KEYS }
 
 Push-Location $WORKER

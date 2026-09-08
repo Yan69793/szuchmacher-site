@@ -1,6 +1,6 @@
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleNtnbScenarios, tradingDayGap } from '../src/handlers/ntnb-scenarios.js';
+import { handleNtnbScenarios, computeRates, tradingDayGap } from '../src/handlers/ntnb-scenarios.js';
 
 const realFetch = globalThis.fetch;
 
@@ -38,6 +38,15 @@ function yahooImaB(price, staleTs = false) {
 
 afterEach(() => { globalThis.fetch = realFetch; });
 
+test('computeRates: NTN-B pessimista (premio expande) > base > otimista (comprime)', () => {
+  // Defaults do modelo: spread IPCA+ 7,5%, IPCA proj 5,5%.
+  const r = computeRates(0.075, 0.055);
+  assert.equal(r.pess, 0.1552, 'pess = premio expande 2 pp');
+  assert.equal(r.base, 0.1341);
+  assert.equal(r.otim, 0.113, 'otim = premio comprime 2 pp');
+  assert.ok(r.pess > r.base && r.base > r.otim, `pess ${r.pess} > base ${r.base} > otim ${r.otim}`);
+});
+
 test('fonte morta: defaults honestos com warning e stale true', async () => {
   globalThis.fetch = async () => jsonRes({}, 500);
   const env = makeEnv();
@@ -67,7 +76,7 @@ test('IB5M11 vivo: source yahoo, sem warning, preco do meta', async () => {
 test('hit de cache NAO apaga a origem real: defaults continuam defaults', async () => {
   const env = makeEnv();
   await env.CACHE.put('ntnb-scenarios', JSON.stringify({
-    rates: { pess: 0.1, base: 0.13, otim: 0.16 },
+    rates: { pess: 0.16, base: 0.13, otim: 0.1 },
     ntnb_price: 95.0,
     ipca_spread: 0.075,
     ts: Math.floor(Date.now() / 1000),
@@ -85,7 +94,7 @@ test('hit de cache NAO apaga a origem real: defaults continuam defaults', async 
 test('cache legacy sem source (era pre-contrato) mapeia para defaults com stale true', async () => {
   const env = makeEnv();
   await env.CACHE.put('ntnb-scenarios', JSON.stringify({
-    rates: { pess: 0.1, base: 0.13, otim: 0.16 },
+    rates: { pess: 0.16, base: 0.13, otim: 0.1 },
     ntnb_price: 95.0,
     ipca_spread: 0.075,
     ts: Math.floor(Date.now() / 1000),
@@ -131,7 +140,7 @@ test('candle de sexta segue fresco num domingo: fonte yahoo, nao defaults (P3-2)
 test('cache de fonte viva devolve source yahoo e stale false', async () => {
   const env = makeEnv();
   await env.CACHE.put('ntnb-scenarios', JSON.stringify({
-    rates: { pess: 0.1, base: 0.13, otim: 0.16 },
+    rates: { pess: 0.16, base: 0.13, otim: 0.1 },
     ntnb_price: 68.5,
     ipca_spread: 0.075,
     ts: Math.floor(Date.now() / 1000),

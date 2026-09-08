@@ -91,16 +91,23 @@ export function tradingDayGap(fromSec, toSec) {
   return gap;
 }
 
-function computeRates(ipcaSpread, ipcaProj) {
+// Semantica dos cenarios (fechamento P1.4, 08/09/2026): pessimista macro =
+// renda fixa com juros altos. Antes este handler invertia: pess = spread
+// comprimido (juro baixo), otim = premio expandido (juro alto), e o front
+// reaplicava os numeros sobre os cards, deixando a narrativa de dominancia
+// fiscal com +11%. A direcao foi trocada para casar com o literal curado do
+// motor (ntnb pess 0.16/base 0.13/otim 0.10) e com os textos estaticos do
+// multiasset-app.html.
+export function computeRates(ipcaSpread, ipcaProj) {
   // Taxa nominal = (1 + IPCA) * (1 + spread) - 1
   const nominalBase = (1 + ipcaProj) * (1 + ipcaSpread) - 1;
 
   // Cenarios: variacao no spread (IPCA projetado e o mesmo nos 3)
-  // Pessimista: comprimindo premio → spread cai 2 pp
+  // Pessimista: premio expande → spread sobe 2 pp (aversao a risco fiscal)
   // Base: spread de mercado
-  // Otimista: premio expande → spread sobe 2 pp
-  const spreadPess = Math.max(0.03, ipcaSpread - 0.02);
-  const spreadOtim = Math.min(0.16, ipcaSpread + 0.02);
+  // Otimista: premio comprime → spread cai 2 pp (arcabouco credivel)
+  const spreadPess = Math.min(0.16, ipcaSpread + 0.02);
+  const spreadOtim = Math.max(0.03, ipcaSpread - 0.02);
 
   const pess = Math.round(((1 + ipcaProj) * (1 + spreadPess) - 1) * 10000) / 10000;
   const base = Math.round(nominalBase * 10000) / 10000;
