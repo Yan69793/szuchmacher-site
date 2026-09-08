@@ -8,6 +8,7 @@
     "dev": "npm run build && wrangler dev"
   },
   "devDependencies": {
+    "playwright": "^1.63.0",
     "wrangler": "^4.112.0"
   }
 }

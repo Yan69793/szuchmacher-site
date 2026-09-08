@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-01 (agente: Claude)
+Última atualização: 2026-09-08 (agente: Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -770,3 +770,45 @@ páginas falhas e 0 erros HTTP na página do Radar.
 O commit ainda precisa ser enviado ao `origin`. As alterações locais de
 `agenda-data.json`, `macro_data.json`, `.codex/`, `.idea/` e `AGENTS.md` não
 fazem parte deste commit e permanecem preservadas.
+
+### Ajuste visual do lead do Radar Geopolítico (08/09/2026)
+
+O resumo introdutório da página recebeu tratamento editorial sem alteração de
+conteúdo ou lógica. O estilo agora limita o lead a 800px, remove o padding
+lateral, usa 17,6px com line-height 1.65, adiciona o eyebrow `CENÁRIO DA
+SEMANA`, mantém uma única divisória após o texto e separa o primeiro card por
+40 a 44px. O hero específico da página também deixou de recortar o título.
+
+Validação local, 89 testes do Worker passaram. A publicação desta correção
+ocorreu em 08/09/2026, versão `5c815744-f604-4a3d-908b-4402553abcce`, com
+38 verificações de produção e 0 falhas. O hash servido de `sz-design.css` é
+`2F3F8223`.
+
+### Automação semanal do Radar Geopolítico (08/09/2026)
+
+O agente agora calcula a janela a partir da data de execução, gera de segunda a
+domingo, formata viradas de mês e ano, exige `generated_at` ISO 8601 com BRT e
+rejeita payloads com `week` incoerente. A execução dominical usa `--force` e o
+runner só usa `--dry-run` em simulação, portanto a edição nova é gravada antes
+da publicação. O prompt também registra a regra de manter materialidade antiga
+explicitamente quando não houver novidade suficiente.
+
+A tarefa `Szuchmacher-GeopoliticaAgent` foi registrada e está `Ready`, com
+domingo às 18:00 e fallback de segunda às 08:00. Testes Python passaram 14/14,
+Worker 89/89, build oficial concluído e o gate de produção passou 38/38. A
+versão publicada é `67232de6-4f0f-49ef-a49f-07c72604b472`. Em produção, home e
+`geopolitica.html` exibem `14 a 20 de setembro de 2026`, com os mesmos dados,
+fundo externo branco e cards alternados.
+### Correção dos 4 P1 do motor financeiro multi-assets (08/09/2026)
+
+Quatro bugs de cálculo foram corrigidos no `assets/multi-app-2.js`:
+
+1. **Comparador modo índice produzia NaN** — `const base = a.serie` atribuía o array inteiro como base, e `v / array` produz NaN. Corrigido para `a.serie[0]`.
+
+2. **CAGR contava aportes como retorno** — `Math.pow(final / Math.max(ini, 1), 1/prazo)` tratava o valor total (inicial + aportes) como se fosse retorno sobre o capital inicial. Substituído pela taxa de entrada do ativo (`a.taxa` / `taxa * 100`).
+
+3. **Drift do Monte Carlo inconsistente** — Usava `taxaAnual - 0.5 * vol²` em vez de `ln(1 + taxaAnual) - 0.5 * vol²`. A diferença é material para ativos de alta volatilidade (BTC: 3,8pp de drift anual). Corrigido em 4 locais de GBM.
+
+4. **Cenários CDI e NTN-B semanticamente invertidos** — `pess: 12% < base: 14,25% < otim: 16,5%` quando em crise (pessimista) juros sobem. Corrigido para `pess: 16,5% > base: 14,25% > otim: 12%` (CDI) e `pess: 16% > base: 13% > otim: 10%` (NTN-B). O portfólio agora usa `taxasAtivo.cdi` e `taxasAtivo.ntnb` em vez das curvas fixas `getSelicAno()` / `getNtnbAno()`.
+
+Testes: 11 novos testes do motor (105 Worker + 14 Python = 130 no total). Gate local 6/7 (falha pré-existente do `validar-design`), produção 38/38. Commit `[hash]`, deploy via `publicar-com-rollback.ps1`.

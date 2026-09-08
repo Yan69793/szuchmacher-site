@@ -308,8 +308,8 @@ const simConfigs = {
     platinum: { ini: 'p-inicial', ap: 'p-aporte', prazo: 'p-prazo', pess: -0.05, base: 0.06,  otim: 0.20,  prefix: 'p', sel: 'pess' },
     copper:   { ini: 'cu-inicial',ap: 'cu-aporte',prazo: 'cu-prazo',pess: -0.08, base: 0.08,  otim: 0.20,  prefix: 'cu', sel: 'pess' },
     btc:      { ini: 'b-inicial', ap: 'b-aporte', prazo: 'b-prazo', pess: null,  base: 0.40,  otim: 1.20,  prefix: 'b', sel: 'pess' },
-    cdi:      { ini: 'c-inicial', ap: 'c-aporte', prazo: 'c-prazo', pess: 0.12,  base: 0.1425, otim: 0.165, prefix: 'c', sel: 'pess' },
-    ntnb:     { ini: 'n-inicial', ap: 'n-aporte', prazo: 'n-prazo', pess: 0.10,  base: 0.13,   otim: 0.16,  prefix: 'n', sel: 'pess' },
+    cdi:      { ini: 'c-inicial', ap: 'c-aporte', prazo: 'c-prazo', pess: 0.165, base: 0.1425, otim: 0.12,  prefix: 'c', sel: 'pess' },
+    ntnb:     { ini: 'n-inicial', ap: 'n-aporte', prazo: 'n-prazo', pess: 0.16,  base: 0.13,   otim: 0.10,  prefix: 'n', sel: 'pess' },
     usdbrl:   { ini: 'u-inicial', ap: 'u-aporte', prazo: 'u-prazo', pess: -0.10, base: 0.0,    otim: 0.10,  prefix: 'u', sel: 'pess' },
 };
 
@@ -622,7 +622,7 @@ function recalcComparador() {
         if (compModo === 'absoluto') {
             data = a.serie;
         } else if (compModo === 'indice') {
-            const base = a.serie;
+            const base = a.serie[0];
             data = a.serie.map(v => (v / base) * 100);
         } else {
             data = a.serie.map((v, i) => {
@@ -663,7 +663,7 @@ function recalcComparador() {
         const final = a.serie[a.serie.length - 1];
         const totalInv = a.ini + a.ap * 12 * prazo;
         const ret  = ((final - totalInv) / totalInv) * 100;
-        const cagr = (Math.pow(final / Math.max(a.ini, 1), 1 / prazo) - 1) * 100;
+        const cagr = a.taxa;
         const retColor = ret >= 0 ? '#4caf7d' : '#e05c5c';
         const rank  = rawSeries.slice().sort((x, y) => y.serie[y.serie.length - 1] - x.serie[x.serie.length - 1]).findIndex(x => x.key === a.key) + 1;
         const rankBadge = rank <= 3 ? `<span class="rank-badge">${rank}º</span>` : '';
@@ -1026,14 +1026,14 @@ function desenharBenchmark() {
     function portfolioAno(y) {
         const selic = getSelicAno(y);
         const ntnb  = getNtnbAno(y);
-        return (ntnb  * pNtnb)
-             + (selic * pCdi)
+        return ((taxasAtivo.ntnb || ntnb)  * pNtnb)
+             + ((taxasAtivo.cdi || selic) * pCdi)
              + ((taxasAtivo.ouro || taxasAtivo.gold) * pOuro)
              + ((taxasAtivo.prata || taxasAtivo.silver) * pPrata)
              + ((taxasAtivo.platina || taxasAtivo.platinum) * pPlat)
              + ((taxasAtivo.cobre || taxasAtivo.copper) * pCobre)
              + (taxasAtivo.btc * pBtc)
-             + (selic * pRes);
+             + ((taxasAtivo.cdi || selic) * pRes);
     }
 
     const seriePort  = [val];
@@ -1240,9 +1240,9 @@ function _runPortfolioMC() {
     // Taxa base por chave de ativo
     function _baseTaxa(key, y) {
         switch(key) {
-            case 'ntnb':     return getNtnbAno(y);
-            case 'cdi':      return getSelicAno(y);
-            case 'reserva':  return getSelicAno(y);
+            case 'ntnb':     return taxasAtivo.ntnb || getNtnbAno(y);
+            case 'cdi':      return taxasAtivo.cdi || getSelicAno(y);
+            case 'reserva':  return taxasAtivo.cdi || getSelicAno(y);
             case 'gold':     return taxasAtivo.gold || taxasAtivo.ouro || 0.10;
             case 'silver':   return taxasAtivo.silver || taxasAtivo.prata || 0.10;
             case 'platinum': return taxasAtivo.platinum || taxasAtivo.platina || 0.10;
@@ -1266,7 +1266,7 @@ function _runPortfolioMC() {
                 const base = _baseTaxa(item.key, y);
                 const vol  = VOL_PORT[item.key] || 0.10;
                 // Retorno log-normal individual para cada ativo
-                const drift      = base - 0.5 * vol * vol;
+                const drift      = Math.log(1 + base) - 0.5 * vol * vol;
                 const shock      = vol * randNorm();
                 const assetRet   = Math.exp(drift + shock) - 1;
                 portReturn += w * assetRet;
@@ -1715,7 +1715,7 @@ function _runPortfolioMCGeo() {
 
     function _baseTaxa(key, y) {
         switch(key) {
-            case 'ntnb': return getNtnbAno(y); case 'cdi': return getSelicAno(y); case 'reserva': return getSelicAno(y);
+            case 'ntnb': return taxasAtivo.ntnb || getNtnbAno(y); case 'cdi': return taxasAtivo.cdi || getSelicAno(y); case 'reserva': return taxasAtivo.cdi || getSelicAno(y);
             case 'gold': return taxasAtivo.gold || taxasAtivo.ouro || 0.10;
             case 'silver': return taxasAtivo.silver || taxasAtivo.prata || 0.10;
             case 'platinum': return taxasAtivo.platinum || taxasAtivo.platina || 0.10;
@@ -1733,7 +1733,7 @@ function _runPortfolioMCGeo() {
             var portReturn = 0;
             itens.forEach(function(item) {
                 var w = item.pct / 100, base = _baseTaxa(item.key, y), vol = VOL_PORT[item.key] || 0.10;
-                portReturn += w * (Math.exp(base - 0.5 * vol * vol + vol * randNorm()) - 1);
+                portReturn += w * (Math.exp(Math.log(1 + base) - 0.5 * vol * vol + vol * randNorm()) - 1);
             });
             pv = Math.max(pv * (1 + portReturn), 0); serie.push(pv);
         }
@@ -1753,7 +1753,7 @@ function _runPortfolioMCGeo() {
                     var w = item.pct / 100, geoRet = geo.retornos[item.key];
                     var base = (geoRet !== undefined) ? geoRet : _baseTaxa(item.key, y);
                     var vol = VOL_PORT[item.key] || 0.10;
-                    portReturn += w * (Math.exp(base - 0.5 * vol * vol + vol * randNorm()) - 1);
+                    portReturn += w * (Math.exp(Math.log(1 + base) - 0.5 * vol * vol + vol * randNorm()) - 1);
                 });
                 pv = Math.max(pv * (1 + portReturn), 0); serie.push(pv);
             }
@@ -2006,7 +2006,7 @@ function runMC(inicial, aporte, taxaAnual, volAnual, prazo, N, seed) {
         const serie = [inicial];
         let pv = inicial;
         for (let y = 1; y <= anos; y++) {
-            const drift  = taxaAnual - 0.5 * volAnual * volAnual;
+            const drift = Math.log(1 + taxaAnual) - 0.5 * volAnual * volAnual;
             const shock  = volAnual * _randNorm();
             const aportesAno = aporte * 12;
             pv = Math.max(pv * Math.exp(drift + shock) + aportesAno, 0);
@@ -2109,7 +2109,7 @@ function _renderMCMetrics(asset, result, ini, ap, prazo, taxa, vol, currency) {
     const sharpe  = calcSharpe(taxa, vol, 0.05);
     const maxDD   = calcMaxDrawdown(vol, prazo);
     const retMed  = (((finalMedian - totalInv) / totalInv) * 100).toFixed(0);
-    const cagr    = ((Math.pow(finalMedian / Math.max(ini, 1), 1 / prazo) - 1) * 100).toFixed(1);
+    const cagr    = (taxa * 100).toFixed(1);
     const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', copper: '#b87333', btc: '#f07a40' };
     const color = assetColors[asset] || '#c9a84c';
     const sharpeNum = parseFloat(sharpe);
