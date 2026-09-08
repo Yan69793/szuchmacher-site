@@ -33,7 +33,7 @@ import re
 import sys
 import unicodedata
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 _AGENTS_DIR  = Path(__file__).parent
@@ -63,6 +63,17 @@ LOG_PATH       = LOG_DIR / f"geopolitica_agent_{datetime.now().strftime('%Y%m%d'
 
 STALE_GERACAO_DIAS = 2   # edicao fresca = gerada a partir de (start - 2 dias)
 UA = {"User-Agent": "SzuchmacherGeopoliticaAgent/1.0 (pesquisa editorial)"}
+BRT = timezone(timedelta(hours=-3))
+MESES = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho",
+         "agosto", "setembro", "outubro", "novembro", "dezembro"]
+REGIOES = (
+    "panorama_global", "eua", "europa", "china_asia", "oriente_medio",
+    "russia_ucrania", "energia_commodities", "comercio_sancoes", "riscos_sistemicos",
+)
+MERCADOS = (
+    "petroleo", "inflacao", "juros_globais", "treasury", "dolar", "ouro",
+    "acoes", "credito", "commodities", "brasil", "curva_di", "brl",
+)
 
 
 def log(msg: str):
@@ -249,13 +260,36 @@ def coletar_fonte(f: dict) -> list[dict]:
     return itens
 
 def brt_now() -> datetime:
-    return datetime.now(timezone(timedelta(hours=-3)))
+    return datetime.now(BRT)
 
 
-def segunda_da_semana(d: datetime) -> datetime:
-    """ISO: segunda-feira da semana de d (00:00 BRT)."""
-    base = d.replace(hour=0, minute=0, second=0, microsecond=0)
-    return base - timedelta(days=d.weekday())
+def _rotulo_janela(inicio: date, fim: date) -> str:
+    if inicio.year == fim.year and inicio.month == fim.month:
+        return f"{inicio.day:02d} a {fim.day:02d} de {MESES[fim.month - 1]} de {fim.year}"
+    if inicio.year == fim.year:
+        return (f"{inicio.day:02d} de {MESES[inicio.month - 1]} a "
+                f"{fim.day:02d} de {MESES[fim.month - 1]} de {fim.year}")
+    return (f"{inicio.day:02d} de {MESES[inicio.month - 1]} de {inicio.year} a "
+            f"{fim.day:02d} de {MESES[fim.month - 1]} de {fim.year}")
+
+
+def _semana_a_partir_de(inicio: date, fim: date | None = None) -> tuple[str, str, str, str]:
+    fim = fim or (inicio + timedelta(days=6))
+    iso = f"{inicio.isocalendar().year:04d}-W{inicio.isocalendar().week:02d}"
+    return iso, inicio.isoformat(), fim.isoformat(), _rotulo_janela(inicio, fim)
+
+
+def janela_domingo(data_execucao: date) -> tuple[str, str, str, str]:
+    """Calcula a edição publicada no domingo, de segunda a domingo seguinte."""
+    inicio = data_execucao + timedelta(days=1)
+    fim = inicio + timedelta(days=6 - inicio.weekday())
+    return _semana_a_partir_de(inicio, fim)
+
+
+def janela_segunda(data_execucao: date) -> tuple[str, str, str, str]:
+    """Calcula a edição corrente usada pelo fallback de segunda-feira."""
+    inicio = data_execucao - timedelta(days=data_execucao.weekday())
+    return _semana_a_partir_de(inicio)
 
 
 def semana_alvo() -> tuple[str, str, str, str]:
@@ -266,19 +300,13 @@ def semana_alvo() -> tuple[str, str, str, str]:
     Retorna (iso, start, end, label).
     """
     hoje = brt_now()
-    if hoje.weekday() == 6:            # domingo: a semana que comeca amanha
-        alvo = hoje + timedelta(days=1)
+    if hoje.weekday() == 6:            # domingo: a semana que começa amanhã
+        return janela_domingo(hoje.date())
     elif hoje.weekday() == 0 and hoje.hour < 14:  # segunda cedo: recuperacao
-        alvo = hoje
+        return janela_segunda(hoje.date())
     else:                              # manual: proxima segunda estritamente futura
-        alvo = segunda_da_semana(hoje) + timedelta(days=7)
-    ini = segunda_da_semana(alvo)
-    fim = ini + timedelta(days=6)
-    iso = f"{ini.isocalendar().year:04d}-W{ini.isocalendar().week:02d}"
-    meses = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho",
-             "agosto", "setembro", "outubro", "novembro", "dezembro"]
-    label = f"{ini.day:02d} a {fim.day:02d} de {meses[fim.month - 1]} de {fim.year}"
-    return iso, ini.date().isoformat(), fim.date().isoformat(), label
+        inicio = hoje.date() - timedelta(days=hoje.weekday()) + timedelta(days=7)
+        return _semana_a_partir_de(inicio)
 
 
 # ─── Síntese e contrato de saída ─────────────────────────────────────────────
@@ -354,6 +382,8 @@ acoes, credito, commodities, brasil, curva_di e brl. Cada item tem direcao
 scenarios tem titulo, tipo (base|alternativo|cauda), descricao, implicacoes e probabilidade:null.
 triggers tem evento, janela e relevancia. sources tem url https, titulo, veiculo, data e tipo.
 Não crie fatos, URLs, datas ou fontes fora do dossie. Não use probabilidades numéricas.
+Se não houver novidade material em um tópico, mantenha-o apenas se continuar relevante e
+deixe isso explícito em executive_summary ou confidence.nota.
 O disclaimer deve dizer que o material é informativo e não constitui recomendação.
 
 DOSSIE:
@@ -406,6 +436,22 @@ def validar_payload(data: dict, urls_permitidas: set[str] | None = None) -> list
     week = data.get("week", {})
     if not re.fullmatch(r"\d{4}-W\d{2}", str(week.get("iso", ""))): erros.append("week.iso inválido")
     if not all(isinstance(week.get(k), str) and week[k] for k in ("start", "end", "label")): erros.append("week incompleta")
+    try:
+        inicio = date.fromisoformat(week["start"])
+        fim = date.fromisoformat(week["end"])
+        esperado = _semana_a_partir_de(inicio)
+        if inicio.weekday() != 0 or fim != inicio + timedelta(days=6):
+            erros.append("week não representa uma janela segunda-domingo")
+        if (week.get("iso"), week.get("start"), week.get("end"), week.get("label")) != esperado:
+            erros.append("week.iso, start, end e label são incoerentes")
+    except (KeyError, TypeError, ValueError):
+        erros.append("week.start ou week.end inválido")
+    try:
+        gerada = datetime.fromisoformat(str(data.get("generated_at", "")))
+        if gerada.tzinfo is None or gerada.utcoffset() != timedelta(hours=-3):
+            erros.append("generated_at precisa ser ISO 8601 com timezone BRT")
+    except ValueError:
+        erros.append("generated_at inválido")
     for k in ("executive_summary", "disclaimer"):
         if not isinstance(data.get(k), str) or not data[k].strip(): erros.append(f"{k} vazio")
     themes = data.get("themes")
@@ -419,6 +465,17 @@ def validar_payload(data: dict, urls_permitidas: set[str] | None = None) -> list
             if not isinstance(t.get("sources"), list) or not all(_fonte_valida(f) for f in t["sources"]): erros.append(f"themes[{i}].sources inválidas")
             if len(t.get("sources", [])) < (3 if t.get("nivel_risco") in {"elevado", "critico"} else 2): erros.append(f"themes[{i}] sem fontes independentes suficientes")
     if data.get("confidence", {}).get("overall") not in {"alta", "media", "baixa"}: erros.append("confidence.overall inválido")
+    regions = data.get("regions")
+    if not isinstance(regions, dict) or any(not isinstance(regions.get(id), dict) for id in REGIOES):
+        erros.append("regions incompletas")
+    market_impacts = data.get("market_impacts")
+    if (not isinstance(market_impacts, dict)
+            or any(not isinstance(market_impacts.get(k), dict)
+                   or market_impacts[k].get("direcao") not in {"alta", "baixa", "neutro", "volatil"}
+                   or not isinstance(market_impacts[k].get("comentario"), str)
+                   or not market_impacts[k]["comentario"].strip()
+                   for k in MERCADOS)):
+        erros.append("market_impacts incompletos")
     fontes = data.get("sources")
     if not isinstance(fontes, list) or len(fontes) < 8 or not all(_fonte_valida(f) for f in fontes): erros.append("sources global inválido")
     if urls_permitidas is not None and isinstance(fontes, list):

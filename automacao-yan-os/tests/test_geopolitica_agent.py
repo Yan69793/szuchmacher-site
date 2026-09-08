@@ -1,7 +1,7 @@
 import importlib.util
 import json
 import unittest
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -42,6 +42,18 @@ class GeopoliticaAgentTests(unittest.TestCase):
         with patch.object(geo, "brt_now", return_value=quarta):
             self.assertEqual(geo.semana_alvo()[:3], ("2026-W38", "2026-09-14", "2026-09-20"))
 
+    def test_janela_domingo_respeita_exemplo_de_data_informado(self):
+        self.assertEqual(geo.janela_domingo(date(2026, 9, 7))[1:], ("2026-09-08", "2026-09-13", "08 a 13 de setembro de 2026"))
+
+    def test_janela_domingo_real_inicia_na_segunda(self):
+        self.assertEqual(geo.janela_domingo(date(2026, 9, 6))[:3], ("2026-W37", "2026-09-07", "2026-09-13"))
+
+    def test_janela_domingo_vira_mes(self):
+        self.assertEqual(geo.janela_domingo(date(2026, 9, 27))[1:], ("2026-09-28", "2026-10-04", "28 de setembro a 04 de outubro de 2026"))
+
+    def test_janela_domingo_vira_ano(self):
+        self.assertEqual(geo.janela_domingo(date(2026, 12, 27))[1:], ("2026-12-28", "2027-01-03", "28 de dezembro de 2026 a 03 de janeiro de 2027"))
+
     def test_validar_payload_rejeita_probabilidade_numerica(self):
         data = json.loads((geo.DATA_JSON).read_text(encoding="utf-8"))
         data["scenarios"][0]["probabilidade"] = 0.5
@@ -55,6 +67,17 @@ class GeopoliticaAgentTests(unittest.TestCase):
         data = json.loads(geo.DATA_JSON.read_text(encoding="utf-8"))
         urls = {f["url"] for f in data["sources"]}
         self.assertEqual(geo.validar_payload(data, urls), [])
+
+    def test_validar_payload_rejeita_week_incoerente(self):
+        data = json.loads(geo.DATA_JSON.read_text(encoding="utf-8"))
+        data["week"]["label"] = "14 a 20 de setembro de 2026"
+        data["week"]["end"] = "2026-09-21"
+        self.assertTrue(any("week" in e for e in geo.validar_payload(data)))
+
+    def test_validar_payload_rejeita_generated_at_sem_timezone(self):
+        data = json.loads(geo.DATA_JSON.read_text(encoding="utf-8"))
+        data["generated_at"] = "2026-09-07T19:40:00"
+        self.assertTrue(any("generated_at" in e for e in geo.validar_payload(data)))
 
 
 if __name__ == "__main__":

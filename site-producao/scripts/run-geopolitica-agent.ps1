@@ -57,9 +57,13 @@ try {
     $py = Resolve-Python
     Write-Log ("Python: {0} ({1})" -f $py.Exe, $py.Versao)
 
-    $argsAgent = @('--dry-run')
+    $argsAgent = @()
+    if ($Simular) { $argsAgent += '--dry-run' }
     $agora = Get-Date
-    if ($agora.DayOfWeek -eq 'Monday' -and $agora.Hour -lt 14) {
+    if ($agora.DayOfWeek -eq 'Sunday') {
+        $argsAgent += '--force'
+        Write-Log 'Execucao dominical ativa: regeneracao forcada, sem reutilizar a edicao anterior.'
+    } elseif ($agora.DayOfWeek -eq 'Monday' -and $agora.Hour -lt 14) {
         $argsAgent += '--force'
         Write-Log 'Fallback de segunda-feira ativo: regeracao forcada da semana corrente.'
     }
