@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import {
-  esc, safeHref, isStale, idadeDias, validateSchema, validateFull,
+  esc, safeHref, isStale, idadeDias, validateSchema, validateFull, teaserResumo,
   SCHEMA_VERSION, CHAVES_MERCADO, REGIOES, NIVEIS_RISCO,
 } from '../../../assets/geopolitica-core.js';
 import { handleGeopolitica } from '../src/handlers/geopolitica.js';
@@ -176,4 +176,55 @@ test('handler: repassa o JSON com content-type e CORS quando o asset existe', as
   assert.equal(body.schema_version, 1);
 });
 
+});
+
+test('teaserResumo: para na primeira frase de verdade, ignora ponto de abreviacao', () => {
+  assert.equal(
+    teaserResumo('PIB projetado em 1.92% a.a. evidencia desaceleracao significativa e traz revisao para baixo.'),
+    'PIB projetado em 1.92% a.a. evidencia desaceleracao significativa e traz revisao para baixo.',
+  );
+  assert.equal(
+    teaserResumo('Spread de 7,5 p.p. no trimestre supera o consenso. Mercado revisa curva DI para cima.'),
+    'Spread de 7,5 p.p. no trimestre supera o consenso.',
+  );
+  assert.equal(
+    teaserResumo('O Sr. Fulano afirmou que o cenario e grave. O mercado reagiu mal.'),
+    'O Sr. Fulano afirmou que o cenario e grave.',
+  );
+});
+
+test('teaserResumo: decimal com ponto nunca e confundido com fim de frase', () => {
+  assert.equal(
+    teaserResumo('Peso do indicador em 1.92 no trimestre. Segue acima da media historica.'),
+    'Peso do indicador em 1.92 no trimestre.',
+  );
+});
+
+test('teaserResumo: frase unica sem outro ponto final devolve o texto inteiro', () => {
+  assert.equal(
+    teaserResumo('Frase unica sem outro ponto final alem do encerramento'),
+    'Frase unica sem outro ponto final alem do encerramento',
+  );
+});
+
+test('teaserResumo: multiplas frases normais corta so na primeira', () => {
+  assert.equal(
+    teaserResumo('Consulado alemao fechado em Sao Petersburgo. Enviados de Trump alternaram Moscou e Kiev sem cessar-fogo a vista.'),
+    'Consulado alemao fechado em Sao Petersburgo.',
+  );
+});
+
+test('teaserResumo: pontuacao final colada em aspas/parenteses tambem corta', () => {
+  assert.equal(
+    teaserResumo('Ele afirmou: "a situacao esta grave." O mercado reagiu mal.'),
+    'Ele afirmou: "a situacao esta grave."',
+  );
+  assert.equal(
+    teaserResumo('O ministro perguntou: "vai piorar?" O mercado reagiu com cautela.'),
+    'O ministro perguntou: "vai piorar?"',
+  );
+  assert.equal(
+    teaserResumo('(Fitch rebaixou o rating.) O mercado reagiu com queda forte.'),
+    '(Fitch rebaixou o rating.)',
+  );
 });

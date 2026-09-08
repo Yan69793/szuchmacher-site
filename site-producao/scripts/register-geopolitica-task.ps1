@@ -9,7 +9,10 @@ $script = Join-Path $PSScriptRoot 'run-geopolitica-agent.ps1'
 $acao = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$script`""
 $gatilhos = @(
     (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 18:00),
-    (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
+    # 08:30, nao 08:00: Szuchmacher-AgendaAgent tambem dispara segunda 08:00 e
+    # termina no mesmo publicador (publicar-com-rollback.ps1). O lock la dentro
+    # serializa se ainda colidir, mas nao ha motivo pra mirar o mesmo minuto.
+    (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:30)
 )
 
 if ($Remove) {
@@ -21,4 +24,4 @@ if ($Remove) {
 $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
 Register-ScheduledTask -TaskName $nome -Action $acao -Trigger $gatilhos -Principal $principal -Settings $settings -Description 'Radar Geopolitico semanal, domingo e fallback de segunda-feira.' -Force | Out-Null
-Write-Host "Registrada: $nome, domingo 18:00 e segunda 08:00"
+Write-Host "Registrada: $nome, domingo 18:00 e segunda 08:30"

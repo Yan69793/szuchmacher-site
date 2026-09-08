@@ -194,6 +194,10 @@ try {
     Write-Log "JSON OK: $json"
 
     & $PUBLICAR
+    if ($LASTEXITCODE -eq 2) {
+        Write-Log 'AVISO: outro publicador estava rodando, lock ocupado. Nao e falha, sem alerta. Dado gerado fica pendente para o proximo gatilho.'
+        exit 0
+    }
     if ($LASTEXITCODE -ne 0) { throw "publicar-com-rollback.ps1 falhou (exit $LASTEXITCODE)" }
 
     Write-Log '=== FIM OK ==='

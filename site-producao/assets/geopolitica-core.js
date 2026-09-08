@@ -49,6 +49,38 @@ export function fmtDataBR(iso) {
   return `${d}/${m}/${y}`;
 }
 
+// Abreviações comuns em texto macro/PT-BR cujo ponto não encerra frase
+// (ex. "1,92% a.a. evidencia" não pode cortar em "a.a."). Backup do
+// heurístico principal abaixo, não substitui ele.
+const TEASER_ABREVIACOES_RE = /(?:^|[\s(])(?:a\.a|p\.p|sr|sra|srs|dr|dra|drs|prof|profa|art|arts|n[ºo°]|vs|etc|ex|min|máx|ed|vol|op|cf|cia|ltda|s\.a|jr|eng)\.$/i;
+
+// Primeira frase "de verdade" de um texto, para teaser da home. Um ponto
+// só encerra frase se: (a) for seguido de espaço ou fim de string, (b) não
+// fechar uma abreviação conhecida, e (c) o próximo caractere não-espaço,
+// se for letra, for maiúscula. (c) é o critério robusto, (b) é reforço
+// para os casos comuns onde a próxima palavra também começa com letra
+// minúscula por coincidência. Decimal (1.92) nunca colide, porque nunca
+// tem espaço logo depois do ponto.
+export function teaserResumo(texto) {
+  const str = String(texto ?? '');
+  const limite = /[.!?]+/g;
+  let m;
+  while ((m = limite.exec(str))) {
+    let corte = m.index + m[0].length;
+    // Pontuacao final pode vir colada num fechamento de aspas/parenteses
+    // antes do espaco ("grave." ou "vai piorar?"), tanto faz a ordem.
+    while (corte < str.length && /["'”’)\]]/.test(str[corte])) corte++;
+    const antes = str.slice(0, corte);
+    const resto = str.slice(corte);
+    if (resto.length > 0 && !/^\s/.test(resto)) continue;
+    if (TEASER_ABREVIACOES_RE.test(antes)) continue;
+    const proxima = resto.replace(/^\s+/, '')[0];
+    if (proxima && proxima.toLowerCase() === proxima && proxima.toUpperCase() !== proxima) continue;
+    return antes.trim();
+  }
+  return str.trim();
+}
+
 // Dados de X dias atrás. Stale nunca some o conteúdo: na home o painel inteiro
 // é ocultado (mesmo contrato do regulatório), na página completa um aviso
 // amarelo entra no topo e o conteúdo permanece.

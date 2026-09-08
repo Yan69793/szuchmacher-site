@@ -30,6 +30,7 @@ $WORKER   = Join-Path $RAIZ 'cloudflare-workers\sz-sites'
 $DEPLOY   = Join-Path $PSScriptRoot 'deploy-cloudflare.ps1'
 $VALIDAR  = Join-Path $PSScriptRoot 'validar-producao.ps1'
 $LOGDIR   = Join-Path $RAIZ 'diagnosticos'
+$LOCKFILE = Join-Path $RAIZ 'publicar.lock'
 $carimbo  = Get-Date -Format 'yyyy-MM-dd_HHmm'
 
 if (-not (Test-Path $LOGDIR)) { New-Item -ItemType Directory -Path $LOGDIR -Force | Out-Null }
@@ -119,6 +120,68 @@ function Escrever-Validacao($v) {
     }
 }
 
+# Serializacao entre publicadores concorrentes (ex.: AgendaAgent e
+# GeopoliticaAgent caindo na mesma janela). So um `publicar-com-rollback.ps1`
+# roda por vez: o segundo espera o primeiro liberar em vez de correr junto
+# contra o mesmo Worker. Lock morto (processo que caiu) ou mais velho que
+# $LOCK_MAX_MIN nunca trava publicacao futura de verdade.
+$LOCK_MAX_MIN        = 20
+$LOCK_ESPERA_MAX_MIN = 15
+$LOCK_POLL_SEG        = 10
+
+function Lock-EstaLivre {
+    if (-not (Test-Path $LOCKFILE)) { return $true }
+    $info = $null
+    try { $info = Get-Content $LOCKFILE -Raw -ErrorAction Stop | ConvertFrom-Json } catch { return $true }
+    $vivo = $false
+    if ($info.pid) { $vivo = [bool](Get-Process -Id $info.pid -ErrorAction SilentlyContinue) }
+    $idadeMin = if ($info.inicio) { ((Get-Date) - [datetime]$info.inicio).TotalMinutes } else { [double]::PositiveInfinity }
+    return -not ($vivo -and $idadeMin -lt $LOCK_MAX_MIN)
+}
+
+function Adquirir-Lock {
+    $esperado = 0
+    $avisou = $false
+    while (-not (Lock-EstaLivre)) {
+        if (-not $avisou) {
+            Registrar "Outra publicacao em andamento (lock ``$LOCKFILE``). Aguardando liberar (ate $LOCK_ESPERA_MAX_MIN min)..." 'Yellow'
+            $avisou = $true
+        }
+        if ($esperado -ge ($LOCK_ESPERA_MAX_MIN * 60)) {
+            return @{ Ok = $false; Motivo = "lock ocupado ha mais de $LOCK_ESPERA_MAX_MIN min, desisti de esperar" }
+        }
+        Start-Sleep -Seconds $LOCK_POLL_SEG
+        $esperado += $LOCK_POLL_SEG
+    }
+    $conteudo = @{ pid = $PID; inicio = (Get-Date).ToString('o') } | ConvertTo-Json -Compress
+    try {
+        # New-Item falha se outro processo ganhou a corrida entre o Lock-EstaLivre
+        # acima e aqui. E o unico ponto que precisa ser de fato atomico.
+        New-Item -ItemType File -Path $LOCKFILE -ErrorAction Stop | Out-Null
+        Set-Content -Path $LOCKFILE -Value $conteudo -Encoding utf8
+        return @{ Ok = $true }
+    } catch {
+        return @{ Ok = $false; Motivo = "corrida ao adquirir o lock: $($_.Exception.Message)" }
+    }
+}
+
+function Liberar-Lock {
+    Remove-Item -Path $LOCKFILE -ErrorAction SilentlyContinue
+}
+
+$adq = Adquirir-Lock
+if (-not $adq.Ok) {
+    # Nunca chamar Liberar-Lock aqui: o lock que existe agora e de outro
+    # processo, nao foi este que criou. Apagar o lock alheio derruba a
+    # serializacao inteira (achado de revisao, reproduzido isolado: processo
+    # A publicando, processo B estoura o tempo de espera e apaga o lock de A,
+    # um terceiro processo C ve via livre e corre por cima do A).
+    Registrar "ABORTADO: $($adq.Motivo)." 'Red'
+    Registrar "Nao e falha de deploy, e concorrencia entre publicadores. Rode de novo." 'Yellow'
+    $linhas | Set-Content -Path $LOG -Encoding utf8
+    exit 2
+}
+
 # --- 1. versao viva, alvo do rollback ---------------------------------------
 $vv = Get-VersaoViva
 $status = $vv.Bruto
@@ -127,6 +190,7 @@ if (-not $vv.Id) {
     Registrar "ABORTADO: nao consegui ler a versao viva do Worker." 'Red'
     Registrar "Sem alvo de rollback, publicar seria apostar. Saida do wrangler:" 'Red'
     Registrar '```'; Registrar $status.Trim(); Registrar '```'
+    Liberar-Lock
     $linhas | Set-Content -Path $LOG -Encoding utf8
     exit 1
 }
@@ -143,6 +207,7 @@ Registrar ""
 if ($Simular) {
     Registrar "Modo simulacao. Nada foi publicado." 'Yellow'
     Registrar "Rollback iria para: $versaoAnterior"
+    Liberar-Lock
     $linhas | Set-Content -Path $LOG -Encoding utf8
     exit 0
 }
@@ -186,6 +251,7 @@ if (-not $deployOk) {
     } else {
         Registrar "FALHOU. Versao viva continua $versaoAnterior, producao intocada." 'Red'
     }
+    Liberar-Lock
     $linhas | Set-Content -Path $LOG -Encoding utf8
     exit 1
 }
@@ -204,6 +270,7 @@ Escrever-Validacao $val
 if ($val.Ok) {
     Registrar ""
     Registrar "PUBLICACAO CONFIRMADA. Producao validada na versao $versaoNova." 'Green'
+    Liberar-Lock
     $linhas | Set-Content -Path $LOG -Encoding utf8
     Write-Host "`nRelatorio: $LOG" -ForegroundColor DarkGray
     exit 0
@@ -231,6 +298,7 @@ if (-not $rbOk) {
     Registrar "Intervencao manual necessaria:" 'Red'
     Registrar "    cd $WORKER"
     Registrar "    npx wrangler rollback $versaoAnterior -y"
+    Liberar-Lock
     $linhas | Set-Content -Path $LOG -Encoding utf8
     exit 1
 }
@@ -250,6 +318,7 @@ if ($val2.Ok) {
     Registrar "A falha e anterior a este deploy, entao rollback nao resolve. Investigar a mao."
 }
 
+Liberar-Lock
 $linhas | Set-Content -Path $LOG -Encoding utf8
 Write-Host "`nRelatorio: $LOG" -ForegroundColor DarkGray
 exit 1

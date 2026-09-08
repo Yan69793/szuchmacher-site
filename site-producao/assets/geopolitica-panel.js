@@ -1,6 +1,6 @@
 /** Renderiza o Radar Geopolítico na home e na página completa. */
 import {
-  esc, safeHref, fmtDataBR, isStale, validateFull,
+  esc, safeHref, fmtDataBR, isStale, validateFull, teaserResumo,
   CHAVES_MERCADO, REGIOES,
 } from './geopolitica-core.js';
 
@@ -32,7 +32,7 @@ function cardTema(t) {
 }
 
 function renderHome(data, section, panel) {
-  panel.innerHTML = `<p class="geo-resumo">${esc(data.executive_summary)}</p><div class="situacoes-grid">${data.themes.map(cardTema).join('')}</div><div class="geo-cta-row"><a href="${PAGINA}" class="btn" data-ga="cta_geopolitica" data-ga-location="radar_home">Ver análise semanal completa</a><span class="geo-stamp">Edição ${esc(data.week.label)} · atualizada em ${esc(fmtDataBR(data.generated_at))}</span></div><p class="mp-disclaimer">Radar Geopolítico: síntese informativa de fontes públicas com leitura de impactos prováveis em mercados. Não constitui recomendação nem análise individualizada de valores mobiliários (Resolução CVM nº 19/2021). Sem probabilidades numéricas.</p>`;
+  panel.innerHTML = `<p class="geo-resumo geo-resumo--teaser">${esc(teaserResumo(data.executive_summary))}</p><div class="geo-cta-row"><a href="${PAGINA}" class="btn" data-ga="cta_geopolitica" data-ga-location="radar_home">Ver análise semanal completa</a><span class="geo-stamp">Edição ${esc(data.week.label)} · atualizada em ${esc(fmtDataBR(data.generated_at))}</span></div><p class="mp-disclaimer">Radar Geopolítico: síntese informativa de fontes públicas com leitura de impactos prováveis em mercados. Não constitui recomendação nem análise individualizada de valores mobiliários (Resolução CVM nº 19/2021). Sem probabilidades numéricas.</p>`;
   panel.dataset.loading = '0';
   panel.dataset.state = 'ready';
   section.style.display = 'block';

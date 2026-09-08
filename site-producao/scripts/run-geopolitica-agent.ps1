@@ -83,6 +83,10 @@ try {
         exit 0
     }
     & $PUBLICAR
+    if ($LASTEXITCODE -eq 2) {
+        Write-Log 'AVISO: outro publicador (provavelmente AgendaAgent) estava rodando, lock ocupado. Nao e falha, sem alerta. Edicao gerada fica pendente para o proximo gatilho.'
+        exit 0
+    }
     if ($LASTEXITCODE -ne 0) { throw "publicar-com-rollback.ps1 falhou (exit $LASTEXITCODE)" }
     Write-Log 'Publicado e validado pelo publicador com rollback.'
     Write-Log '=== FIM OK ==='

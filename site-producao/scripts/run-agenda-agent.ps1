@@ -231,6 +231,11 @@ try {
     & $PUBLICAR
     $codigo = $LASTEXITCODE
 
+    if ($codigo -eq 2) {
+        Write-Log 'AVISO: outro publicador (provavelmente GeopoliticaAgent) estava rodando, lock ocupado. Nao e falha, sem alerta. agenda-data.json gerado fica pendente para o proximo gatilho.'
+        exit 0
+    }
+
     $rel = Get-ChildItem (Join-Path $ROOT 'diagnosticos') -Filter 'publicacao_*.md' -ErrorAction SilentlyContinue |
            Sort-Object LastWriteTime -Descending | Select-Object -First 1
     $relTxt = if ($rel) { $rel.FullName } else { '(relatorio nao encontrado)' }
