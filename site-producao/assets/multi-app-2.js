@@ -58,6 +58,33 @@ function calcFinal(inicial, aporte, taxa, prazo) {
     return s[s.length - 1];
 }
 
+// CAGR efetivo/implícito da projeção com aportes: taxa anual T tal que
+// calcFinal(ini, aporteMensal, T, prazo) === final. calcFinal é estritamente
+// crescente em T; resolve por bisseção. Com aporte 0 reduz à fórmula de fluxo
+// único. Devolve taxa decimal (0.093 = 9,3% a.a.) ou null em caso degenerado.
+function cagrComAportes(ini, aporteMensal, prazoAnos, final) {
+    if (!isFinite(final) || final <= 0) return null;
+    let lo = -0.95;
+    let hi = 5.0;
+    const f = t => calcFinal(ini, aporteMensal, t, prazoAnos) - final;
+    while (f(hi) <= 0 && hi < 1e9) hi *= 4;
+    while (f(lo) >= 0 && lo > -0.999999) lo = (lo - 1) / 2;
+    for (let i = 0; i < 200; i++) {
+        const mid = (lo + hi) / 2;
+        if (f(mid) >= 0) hi = mid; else lo = mid;
+    }
+    return (lo + hi) / 2;
+}
+
+// Comparador modo índice: reescala a série para 100 no ano 0. Base degenerada
+// (0, NaN, negativa, vazia) devolve série plana em 100, sem NaN/Infinity.
+function normalizarIndice(serie) {
+    if (!Array.isArray(serie) || !serie.length) return [];
+    const base = serie[0];
+    if (isFinite(base) && base > 0) return serie.map(v => (v / base) * 100);
+    return serie.map(() => 100);
+}
+
 function fmt(n, decimals = 2) {
     return n.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
@@ -622,8 +649,7 @@ function recalcComparador() {
         if (compModo === 'absoluto') {
             data = a.serie;
         } else if (compModo === 'indice') {
-            const base = a.serie[0];
-            data = a.serie.map(v => (v / base) * 100);
+            data = normalizarIndice(a.serie);
         } else {
             data = a.serie.map((v, i) => {
                 const totalInv = a.ini + a.ap * 12 * i;
@@ -663,7 +689,8 @@ function recalcComparador() {
         const final = a.serie[a.serie.length - 1];
         const totalInv = a.ini + a.ap * 12 * prazo;
         const ret  = ((final - totalInv) / totalInv) * 100;
-        const cagr = a.taxa;
+        const cagrImpl = cagrComAportes(a.ini, a.ap, prazo, final);
+        const cagr = cagrImpl == null ? null : cagrImpl * 100;
         const retColor = ret >= 0 ? '#4caf7d' : '#e05c5c';
         const rank  = rawSeries.slice().sort((x, y) => y.serie[y.serie.length - 1] - x.serie[x.serie.length - 1]).findIndex(x => x.key === a.key) + 1;
         const rankBadge = rank <= 3 ? `<span class="rank-badge">${rank}º</span>` : '';
@@ -672,7 +699,7 @@ function recalcComparador() {
             <td class="u-colorvarmuted-fontfamilydmmonomonospace">$ ${fmt(totalInv, 0)}</td>
             <td class="u-fontfamilydmmonomonospace" data-color="${a.color}">${fmtUSD(final)}</td>
             <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${ret >= 0 ? '+' : ''}${fmt(ret,1)}%</td>
-            <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${cagr >= 0 ? '+' : ''}${fmt(cagr,1)}% a.a.</td>
+            <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${cagr == null ? 'n/d' : (cagr >= 0 ? '+' : '') + fmt(cagr,1)}% a.a.</td>
         </tr>`;
     }).join('');
 }
@@ -2109,7 +2136,8 @@ function _renderMCMetrics(asset, result, ini, ap, prazo, taxa, vol, currency) {
     const sharpe  = calcSharpe(taxa, vol, 0.05);
     const maxDD   = calcMaxDrawdown(vol, prazo);
     const retMed  = (((finalMedian - totalInv) / totalInv) * 100).toFixed(0);
-    const cagr    = (taxa * 100).toFixed(1);
+    const cagrImpl = cagrComAportes(ini, ap, prazo, finalMedian);
+    const cagr    = cagrImpl == null ? 'n/d' : (cagrImpl * 100).toFixed(1);
     const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', copper: '#b87333', btc: '#f07a40' };
     const color = assetColors[asset] || '#c9a84c';
     const sharpeNum = parseFloat(sharpe);
