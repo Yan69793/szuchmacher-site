@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-08 (agente: Cline)
+Última atualização: 2026-09-08 (agentes: Cline e Claude)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -822,3 +822,15 @@ Auditoria sobre o commit funcional `6e67675` apontou três divergências do plan
 3. **Textos estáticos dos cards CDI/NTN-B invertidos (P1.4)** — os cards lêem as premissas de `simConfigs` com o pessimista em juros altos e o otimista em juros baixos, mas os rótulos fixos do `multiasset-app.html` descreviam o contrário (Conservador mostrava `+12%` e texto de corte de Selic; Agressivo `+16,5%` e choque inflacionário). Conteúdo interno trocado mantendo ids, classes e cores: CDI pess `+16,5% a.a.`/choque, otim `+12% a.a.`/cortes; NTN-B pess `+16% a.a.`/dominância fiscal, otim `+10% a.a.`/compressão de prêmio. Base/Moderado intactos.
 
 Teste novo `tests/p1-gaps.test.mjs` (12 casos, mesmo estilo self-contained de extração por regex do `multi-app-2-engine.test.mjs`): recuperação determinística da taxa, equivalência sem aportes, drag de vol na mediana do MC, guarda do índice em base degenerada e impacto real dos cenários na carteira (bloco NTN-B+CDI+reserva estrito pessimista>base>otimista nos três perfis; reserva de 12% do conservador = `peso × simConfigs.cdi[cenário]`; total do conservador pessimista `0.140125 >` base `0.1365375`, invertido antes da premissa plana por cenário). Suíte do Worker subiu para 117/117. Gate produção 38/38. Commit `ae77060`, deploy `707f48cc-2414-4712-8766-b73094af7e57`.
+
+### Redesign do Radar Geopolítico commitado e revalidado (08/09/2026, fim de tarde)
+
+A working tree carregava a iteração visual de 08/09 que **já estava publicada** (deploys `5c815744` e `67232de6`) mas nunca commitada. O drift confirmado era zero: `geopolitica.html`, `index.html`, `sz-design.css` e `geopolitica-panel.js` do build local byte-idênticos ao que produção servia. O commit de hoje apenas faz o histórico refletir o estado publicado, e o redeploy saiu idempotente.
+
+Validação feita antes de publicar: drift zero nos 4 arquivos; testes Python do agente 14/14 (rodados nos três venvs); build com 32 obrigatórios; Playwright contra produção em 1280 e 390 com 0 erro de console na página geopolitica, 6 âncoras da `.geo-nav` navegando sem esconder título sob o header sticky, eyebrow `CENÁRIO DA SEMANA`, cards de temas alternando `rgb(230,227,222)`/`rgb(247,243,234)`, fundo branco full-bleed na `.geo-pagina` e sem overflow horizontal. Relatório `diagnosticos/publicacao_2026-09-08_1724.md`.
+
+Limpeza e commits: 42 PNG soltos na raiz apagados (não versionados). `agenda-data.json` e `macro_data.json` ficaram fora do commit, são artefato de pipeline da rotina. Dois commits no origin: `1ba0c3b` (redesign: nav por âncoras, eyebrow, cards alternados, CTA da home) e `f9fa57e` (automação: janela por data de execução, domingo com `--force`, validação de `week`/`generated_at`/`regions`/`market_impacts`).
+
+Deploy com `publicar-com-rollback.ps1`: versão `41d27485-a6b9-493b-aac5-7116ecca591e`, build 32/32, KV invalidado e macro regenerado às 17:26 BRT (`cache=False`, geração real), gate 38/38. O wrangler registrou "No updated asset files to upload", coerente com a idempotência. Este mesmo deploy levou ao ar o commit `53306ad` (semântica dos handlers `/api/cdi-scenarios` e `/api/ntnb-scenarios` alinhada à direção aprovada, pessimista = juros altos em RF), que estava commitado e pushed mas sem publicação registrada. Item 2 do operador fecha aqui.
+
+Pendências que seguem abertas, inalteradas: cancelamento da HostGator exige mapear as 5 crons do cPanel (`macro_cron.php` x3, `focus_cron.php` x2); tracker regulatório ANEEL/Enel tem infra pronta mas nada deployado nem populado.
