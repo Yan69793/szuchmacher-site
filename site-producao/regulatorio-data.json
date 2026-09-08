@@ -31,8 +31,8 @@
           "data": "2026-08-24",
           "evento": "Diretoria da ANEEL rejeita por unanimidade o pedido de perícia independente da Enel e encerra a fase de instrução do processo, concedendo 10 dias corridos para alegações finais",
           "evento_en": "ANEEL's board unanimously rejects Enel's request for an independent expert review and closes the evidentiary phase, granting 10 continuous days for final arguments",
-          "fonte": "XP Investimentos — Radar Energia",
-          "link": "https://conteudos.xpi.com.br/acoes/relatorios/aneel-rejeita-pericia-e-leva-processo-de-caducidade-da-enel-sp-a-fase-final-agosto/"
+          "fonte": "ANEEL — decisão de 24/08/2026",
+          "link": "https://www.gov.br/aneel/pt-br/assuntos/noticias/2026-defeso-eleitoral/aneel-nega-pedido-de-prova-pericial-feito-pela-enel-distribuicao-sao-paulo/"
         }
       ],
       "desfechos_possiveis": [
@@ -46,10 +46,10 @@
         "Control-transfer precedent (Enel Goiás case): instead of termination, the concession could be maintained under new ownership via an ANEEL-authorized change of corporate control"
       ],
       "fontes_primarias": [
-        "ANEEL — processo administrativo de caducidade (relatoria da diretora Agnes Costa)",
-        "XP Investimentos — Radar Energia"
+        "ANEEL — decisão de 24/08/2026 sobre prova pericial e alegações finais",
+        "ANEEL — decisão de 11/08/2026 sobre continuidade do processo e competência do MME"
       ],
-      "atualizado_em": "2026-09-01"
+      "atualizado_em": "2026-09-08"
     }
   ]
 }

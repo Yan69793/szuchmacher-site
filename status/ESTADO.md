@@ -123,13 +123,25 @@ muda quando checagem nova entra, use a da saída real do script.
   `agenda-data.json` e `macro_data.json` no `public/` do Worker.
   **Atualizado em 01/09.** O passo "desligar o `agenda-cron.php`" saiu do caminho
   crítico, esse cron não existe no painel. No lugar dele entrou um passo maior e
-  ainda não feito, mapear as 5 tarefas Cron que de fato existem no cPanel, 3 de
-  `macro_cron.php` e 2 de `focus_cron.php`, antes de cancelar a conta.
-- Tracker de processos regulatórios/jurídicos (caso ANEEL/Enel SP):
-  infraestrutura implementada em 01/09, nada deployado nem populado.
-  Detalhe: `site-producao/CLAUDE.md`, seção "Tracker de processos
-  regulatórios em acompanhamento" e item correspondente de "Pendências
-  abertas".
+  ainda não feito, concluir a inspeção manual das 2 tarefas `focus_cron.php`
+  antes de cancelar a conta.
+- **Item 3 — crons HostGator, FECHADO.** As 3 `macro_cron.php` legadas foram
+  classificadas como **SUBSTITUÍDAS**. As 2 `focus_cron.php` também foram
+  classificadas como **SUBSTITUÍDAS**. `focus_cron.php` apenas consultava
+  Focus/BCB e gravava `focus_data.json`; nenhum consumidor atual de
+  `focus_data.json` foi encontrado. A funcionalidade equivalente existe na
+  infraestrutura atual. Não há dependência funcional da HostGator identificada
+  no projeto. Nenhum item foi alterado na HostGator.
+- **Item 4 — Tracker regulatório ANEEL/Enel, FECHADO.** Curadoria factual
+  atualizada em `2026-09-08`, com fonte oficial ANEEL para a decisão de
+  `24/08/2026` e decisões oficiais de `24/08/2026` e `11/08/2026` nas fontes
+  primárias. `status` permanece `decisao_pendente`, prazo permanece `03/09/2026`
+  e impacto regulatório não foi alterado. Commit `f2153dd`. Deploy explícito
+  confirmado na versão `723b5605-ad1d-44c7-85b8-3078b8de8ddc`. Suíte local do
+  Worker passou `121/121`; gate passou `38 verificações, 0 falha`. Endpoint
+  `/assets/regulatorio.php` respondeu `200` e devolveu o caso
+  `aneel-caducidade-enel-sp-2026` com `atualizado_em=2026-09-08` e fonte oficial.
+  `dados-privados/regulatorio-interno.json` não foi alterado.
 - Detalhe de todos os itens: `site-producao/CLAUDE.md`, seção "Pendências abertas".
 
 ## Estado em 2026-08-19
@@ -375,7 +387,9 @@ publica `agenda-data.json` e `macro_data.json` no `public/` do Worker via
 **Correção de 01/09.** A frase acima sobre "desligar o `agenda-cron.php` do
 cPanel" está errada e fica aqui só como registro. Esse cron não existe no
 painel, ver a seção de 01/09. O inventário real de cron no cPanel são 5
-entradas, `macro_cron.php` e `focus_cron.php`, e nenhuma delas foi mapeada.
+entradas, `macro_cron.php` e `focus_cron.php`. As três `macro_cron.php` e as
+duas `focus_cron.php` foram identificadas como legadas e substituídas pela
+infraestrutura atual.
 
 ### Fechamento de 31/08: dois bugs silenciosos da Fase B corrigidos
 
@@ -833,4 +847,4 @@ Limpeza e commits: 42 PNG soltos na raiz apagados (não versionados). `agenda-da
 
 Deploy com `publicar-com-rollback.ps1`: versão `41d27485-a6b9-493b-aac5-7116ecca591e`, build 32/32, KV invalidado e macro regenerado às 17:26 BRT (`cache=False`, geração real), gate 38/38. O wrangler registrou "No updated asset files to upload", coerente com a idempotência. Este mesmo deploy levou ao ar o commit `53306ad` (semântica dos handlers `/api/cdi-scenarios` e `/api/ntnb-scenarios` alinhada à direção aprovada, pessimista = juros altos em RF), que estava commitado e pushed mas sem publicação registrada. Item 2 do operador fecha aqui.
 
-Pendências que seguem abertas, inalteradas: cancelamento da HostGator exige mapear as 5 crons do cPanel (`macro_cron.php` x3, `focus_cron.php` x2); tracker regulatório ANEEL/Enel tem infra pronta mas nada deployado nem populado.
+Pendências que seguem abertas: nenhuma nesta rodada.
