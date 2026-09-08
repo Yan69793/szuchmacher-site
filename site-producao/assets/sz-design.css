@@ -1239,6 +1239,14 @@ header.is-scrolled {
   padding: 28px 30px;
 }
 
+.geo-pagina .situacoes-grid > .geo-card:nth-child(odd) {
+  background: #e6e3de;
+}
+
+.geo-pagina .situacoes-grid > .geo-card:nth-child(even) {
+  background: #f7f3ea;
+}
+
 .situacao-card .mp-ev-head,
 .geo-card .mp-ev-head {
   display: flex;
@@ -1321,9 +1329,31 @@ header.is-scrolled {
   max-width: 760px;
 }
 
+.geo-panel {
+  max-width: 760px;
+}
+
+.geo-panel .geo-resumo--teaser {
+  max-width: 680px;
+  margin: 0 0 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
 /* Radar Geopolítico (home + geopolitica.html). Reaproveita tokens e o
    vocabulário do painel regulatório (situacoes-grid, situacao-card,
    mp-ev-head/mp-ev-title) e acrescenta o vocabulário de risco/confiança. */
+
+/* Fundo branco real da seção completa (geopolitica.html). Sem isto, o
+   resumo herda body { background: var(--bg) } = #f3f1ec, que não é
+   branco puro e lê como cinza/off-white perto dos cards (--surface-soft
+   #f8f6f2). Full-bleed na seção inteira, não só no parágrafo, para não
+   sobrar friso cinza nas laterais nem criar aparência de card. Medido
+   em produção: rgb(243,241,236) antes, rgb(255,255,255) depois. */
+.geo-pagina {
+  background: #fff;
+}
+
 .geo-resumo {
   max-width: 720px;
   font-size: 1.02rem;
@@ -1332,6 +1362,69 @@ header.is-scrolled {
   margin: 0 0 34px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--line);
+}
+
+.geo-resumo--pagina {
+  max-width: 800px;
+  margin: 0 0 44px;
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.geo-edicao {
+  max-width: 800px;
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.geo-page-eyebrow {
+  display: block;
+  max-width: 800px;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.2;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold);
+}
+
+.geo-nav {
+  background: #fff;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.geo-nav .container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.geo-nav a {
+  flex: 0 0 auto;
+  padding: 15px 0 14px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.geo-nav a:hover,
+.geo-nav a:focus-visible {
+  color: var(--navy);
 }
 
 .geo-blocos {
@@ -1423,6 +1516,12 @@ a.geo-src-item:hover { text-decoration: underline; }
   font-weight: 400;
   letter-spacing: var(--tracking-display);
   margin: 0 0 10px;
+}
+
+.geo-secao:first-of-type h2 {
+  margin-bottom: 40px;
+  overflow: visible;
+  line-height: 1.15;
 }
 
 .geo-secao p.geo-regiao-resumo {
@@ -1717,6 +1816,10 @@ a.geo-src-item:hover { text-decoration: underline; }
 }
 
 /* Página completa */
+.geo-hero {
+  overflow: visible;
+}
+
 .geo-hero p {
   max-width: 720px;
 }

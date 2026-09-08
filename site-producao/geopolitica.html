@@ -52,7 +52,7 @@
   <!-- Configuração central (Clarity + Formspree). Editar IDs em /assets/sz-config.js -->
   <script src="/assets/sz-config.js?v=20260719"></script>
 
-  <link rel="stylesheet" href="/assets/sz-design.css?v=20260718c" />
+  <link rel="stylesheet" href="/assets/sz-design.css?v=20260908a" />
   <link rel="stylesheet" href="/assets/sz-imagery.css?v=20260718b" />
 </head>
 <body data-page="geopolitica">
@@ -88,8 +88,20 @@
       </div>
     </section>
 
-    <section class="section geo-pagina">
+    <nav class="geo-nav" aria-label="Navegação do Radar Geopolítico">
       <div class="container">
+        <a href="#geo-visao-geral">Visão geral</a>
+        <a href="#geo-temas">Temas</a>
+        <a href="#geo-regioes">Regiões</a>
+        <a href="#geo-mercados">Mercados</a>
+        <a href="#geo-cenarios">Cenários</a>
+        <a href="#geo-fontes">Fontes</a>
+      </div>
+    </nav>
+
+    <section id="geo-visao-geral" class="section geo-pagina">
+      <div class="container">
+        <span class="geo-page-eyebrow">CENÁRIO DA SEMANA</span>
         <div id="geoPage" data-state="loading">
           <div class="geo-vazio geo-vazio--loading">Carregando a edição semanal…</div>
         </div>
