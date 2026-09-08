@@ -805,10 +805,20 @@ Quatro bugs de cálculo foram corrigidos no `assets/multi-app-2.js`:
 
 1. **Comparador modo índice produzia NaN** — `const base = a.serie` atribuía o array inteiro como base, e `v / array` produz NaN. Corrigido para `a.serie[0]`.
 
-2. **CAGR contava aportes como retorno** — `Math.pow(final / Math.max(ini, 1), 1/prazo)` tratava o valor total (inicial + aportes) como se fosse retorno sobre o capital inicial. Substituído pela taxa de entrada do ativo (`a.taxa` / `taxa * 100`).
+2. **CAGR contava aportes como retorno** — `Math.pow(final / Math.max(ini, 1), 1/prazo)` tratava o valor total (inicial + aportes) como se fosse retorno sobre o capital inicial. No commit `6e67675` passou a ecoar a taxa de entrada (`a.taxa` / `taxa * 100`); no fechamento das lacunas (`ae77060`) virou CAGR efetivo/implícito da projeção, resolvido por bisseção em `cagrComAportes`, no comparador e na métrica do Monte Carlo (a mediana P50 entrega valor abaixo da taxa de entrada por drag de vol, sem ecoar premissa).
 
 3. **Drift do Monte Carlo inconsistente** — Usava `taxaAnual - 0.5 * vol²` em vez de `ln(1 + taxaAnual) - 0.5 * vol²`. A diferença é material para ativos de alta volatilidade (BTC: 3,8pp de drift anual). Corrigido em 4 locais de GBM.
 
 4. **Cenários CDI e NTN-B semanticamente invertidos** — `pess: 12% < base: 14,25% < otim: 16,5%` quando em crise (pessimista) juros sobem. Corrigido para `pess: 16,5% > base: 14,25% > otim: 12%` (CDI) e `pess: 16% > base: 13% > otim: 10%` (NTN-B). O portfólio agora usa `taxasAtivo.cdi` e `taxasAtivo.ntnb` em vez das curvas fixas `getSelicAno()` / `getNtnbAno()`.
 
 Testes: 11 novos testes do motor (105 Worker + 14 Python = 130 no total). Gate local 6/7 (falha pré-existente do `validar-design`), produção 38/38. Commit `6e67675`, deploy `a3ce2490-2827-43ca-840b-c2b255379ddf`.
+
+### Fechamento das lacunas restantes dos 4 P1 (08/09/2026)
+
+Auditoria sobre o commit funcional `6e67675` apontou três divergências do plano aprovado, fechadas no commit `ae77060`:
+
+1. **CAGR efetivo/implícito por bisseção (P1.2)** — helper `cagrComAportes` resolve a taxa anual que reproduz o valor final de `calcSerie` dadas entrada, aporte mensal e prazo. Aplicado no comparador (linha CAGR do ativo) e na métrica do Monte Carlo (`_renderMCMetrics`, CAGR da mediana P50). Resultado é derivado da projeção, não eco da premissa: no determinístico recupera a taxa de entrada; na mediana do MC fica abaixo dela (drag de vol), coerente com o teste `P1.2: mediana do Monte Carlo produz CAGR implicito abaixo da taxa de entrada`.
+2. **Guarda no modo índice do comparador (P1.1)** — `normalizarIndice` reescala a série por `serie[0]` e devolve série plana em 100 quando a base é degenerada (0, NaN, negativa, vazia), sem NaN/Infinity. Cobre o caso em que a série inteira é zero (inicial e aporte zerados).
+3. **Textos estáticos dos cards CDI/NTN-B invertidos (P1.4)** — os cards lêem as premissas de `simConfigs` com o pessimista em juros altos e o otimista em juros baixos, mas os rótulos fixos do `multiasset-app.html` descreviam o contrário (Conservador mostrava `+12%` e texto de corte de Selic; Agressivo `+16,5%` e choque inflacionário). Conteúdo interno trocado mantendo ids, classes e cores: CDI pess `+16,5% a.a.`/choque, otim `+12% a.a.`/cortes; NTN-B pess `+16% a.a.`/dominância fiscal, otim `+10% a.a.`/compressão de prêmio. Base/Moderado intactos.
+
+Teste novo `tests/p1-gaps.test.mjs` (12 casos, mesmo estilo self-contained de extração por regex do `multi-app-2-engine.test.mjs`): recuperação determinística da taxa, equivalência sem aportes, drag de vol na mediana do MC, guarda do índice em base degenerada e impacto real dos cenários na carteira (bloco NTN-B+CDI+reserva estrito pessimista>base>otimista nos três perfis; reserva de 12% do conservador = `peso × simConfigs.cdi[cenário]`; total do conservador pessimista `0.140125 >` base `0.1365375`, invertido antes da premissa plana por cenário). Suíte do Worker subiu para 117/117. Gate produção 38/38. Commit `ae77060`, deploy `707f48cc-2414-4712-8766-b73094af7e57`.
