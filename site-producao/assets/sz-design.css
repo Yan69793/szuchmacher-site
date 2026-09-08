@@ -16,6 +16,7 @@
   --muted: #5c6574;
   --line: rgba(12, 21, 36, 0.09);
   --line-strong: rgba(12, 21, 36, 0.14);
+  --red: #9c3b3b;
   --max: 1120px;
   --radius: 0px;
   --font-serif: 'Prata', Georgia, 'Times New Roman', serif;
@@ -1232,12 +1233,14 @@ header.is-scrolled {
   background: var(--line);
 }
 
-.situacao-card {
+.situacao-card,
+.geo-card {
   background: var(--surface-soft);
   padding: 28px 30px;
 }
 
-.situacao-card .mp-ev-head {
+.situacao-card .mp-ev-head,
+.geo-card .mp-ev-head {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1256,7 +1259,8 @@ header.is-scrolled {
   white-space: nowrap;
 }
 
-.situacao-card .mp-ev-title {
+.situacao-card .mp-ev-title,
+.geo-card .mp-ev-title {
   font-family: var(--font-serif);
   font-weight: 400;
   font-size: 1.15rem;
@@ -1385,7 +1389,7 @@ header.is-scrolled {
 .geo-fontes {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
   min-width: 0;
   flex: 1;
 }
@@ -1399,7 +1403,7 @@ header.is-scrolled {
   line-height: 1.6;
 }
 
-a.geo-src-item { color: var(--gold); }
+a.geo-src-item { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
 a.geo-src-item:hover { text-decoration: underline; }
 
 .geo-cta-row {
