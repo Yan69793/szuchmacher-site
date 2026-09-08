@@ -811,4 +811,4 @@ Quatro bugs de cálculo foram corrigidos no `assets/multi-app-2.js`:
 
 4. **Cenários CDI e NTN-B semanticamente invertidos** — `pess: 12% < base: 14,25% < otim: 16,5%` quando em crise (pessimista) juros sobem. Corrigido para `pess: 16,5% > base: 14,25% > otim: 12%` (CDI) e `pess: 16% > base: 13% > otim: 10%` (NTN-B). O portfólio agora usa `taxasAtivo.cdi` e `taxasAtivo.ntnb` em vez das curvas fixas `getSelicAno()` / `getNtnbAno()`.
 
-Testes: 11 novos testes do motor (105 Worker + 14 Python = 130 no total). Gate local 6/7 (falha pré-existente do `validar-design`), produção 38/38. Commit `[hash]`, deploy via `publicar-com-rollback.ps1`.
+Testes: 11 novos testes do motor (105 Worker + 14 Python = 130 no total). Gate local 6/7 (falha pré-existente do `validar-design`), produção 38/38. Commit `6e67675`, deploy via `publicar-com-rollback.ps1`.
