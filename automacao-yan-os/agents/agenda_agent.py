@@ -291,6 +291,37 @@ def et_para_brt(data_str: str, hora_et: str) -> str:
     return f"{total // 60:02d}:{total % 60:02d}"
 
 
+def _ultimo_domingo(ano: int, mes: int) -> date:
+    """Último domingo do mês (marcos do horário de verão da UE)."""
+    if mes == 12:
+        d = date(ano, 12, 31)
+    else:
+        d = date(ano, mes + 1, 1) - timedelta(days=1)
+    while d.isoweekday() != 7:  # 7 = domingo
+        d -= timedelta(days=1)
+    return d
+
+
+def is_eu_dst(d: date) -> bool:
+    """CEST vigente na data? Regra UE: do último domingo de março (inclusive)
+    ao último domingo de outubro (exclusive). Às 14:15 locais a troca do dia
+    já aconteceu (02:00/03:00), então a regra de data vale para o horário do
+    comunicado do BCE."""
+    inicio = _ultimo_domingo(d.year, 3)
+    fim = _ultimo_domingo(d.year, 10)
+    return inicio <= d < fim
+
+
+def cet_para_brt(data_str: str, hora_cet: str) -> str:
+    """Converte HH:MM em horário da Europa Central (CET/CEST) para BRT
+    (America/Sao_Paulo, UTC-3 fixo, sem DST desde 2019)."""
+    d = date.fromisoformat(data_str)
+    h, m = (int(x) for x in hora_cet.split(":"))
+    offset = 5 if is_eu_dst(d) else 4  # CEST=UTC+2 -> BRT-5 ; CET=UTC+1 -> BRT-4
+    total = (h * 60 + m - offset * 60) % (24 * 60)
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
 def ref_mes_anterior(data_str: str) -> tuple[int, int]:
     """Mês/ano de referência = mês anterior ao mês da data de divulgação."""
     d = date.fromisoformat(data_str)
@@ -556,11 +587,10 @@ def _eventos_ecb(ini: str, fim: str) -> list[dict]:
     for data_str in ECB_2026:
         if not na_janela(data_str, ini, fim):
             continue
-        # CET/CEST → BRT: summer (Mar-Oct) UTC+2→BRT+5, winter UTC+1→BRT+4
-        d = date.fromisoformat(data_str)
-        is_summer = d.month in (3, 4, 5, 6, 7, 8, 9, 10)
-        offset = 5 if is_summer else 4
-        hora = f"{14 + offset:02d}:15"
+        # CET/CEST → BRT: subtrai o offset (CEST=UTC+2 → BRT-5; CET=UTC+1 → BRT-4).
+        # Bug de 09/09/2026: o código somava o offset (14+5=19:15); o certo é
+        # 14:15 CEST = 09:15 BRT. Regra UE real de DST, não o mês do ano.
+        hora = cet_para_brt(data_str, "14:15")
         eventos.append({
             "data": data_str,
             "hora_brt": hora,
