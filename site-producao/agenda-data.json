@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "2026-08-30",
+    "version": "2026-09-09",
     "curator": "Szuchmacher Consultoria",
     "fontes_primarias": [
       "IBGE — Calendário de divulgações (API v3/calendario)",
@@ -21,25 +21,14 @@
       "en"
     ]
   },
-  "gerado": "2026-08-30T08:00:02-03:00",
+  "gerado": "2026-09-09T19:51:17-03:00",
   "janela": {
-    "inicio": "2026-08-31",
-    "fim": "2026-09-04"
+    "inicio": "2026-09-07",
+    "fim": "2026-09-11"
   },
   "eventos": [
     {
-      "data": "2026-08-31",
-      "hora_brt": "06:00",
-      "regiao": "EU",
-      "evento": "Zona do Euro — IPC Flash",
-      "evento_en": "Eurozone — CPI Flash Estimate",
-      "descricao": "Estimativa preliminar da inflação ao consumidor na Zona do Euro (índice cheio e núcleo). Divulgado pelo Eurostat. Principal dado de inflação para o BCE antes da decisão de juros seguinte.",
-      "descricao_en": "Preliminary Eurozone CPI estimate (headline and core) by Eurostat. Key inflation data point ahead of ECB rate decisions.",
-      "fonte": "Eurostat",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-08-31",
+      "data": "2026-09-07",
       "hora_brt": "08:25",
       "regiao": "BR",
       "evento": "Boletim Focus",
@@ -50,40 +39,7 @@
       "relevancia": "alta"
     },
     {
-      "data": "2026-09-01",
-      "hora_brt": "09:00",
-      "regiao": "BR",
-      "evento": "Sistema de Contas Nacionais Trimestrais",
-      "evento_en": "Sistema de Contas Nacionais Trimestrais",
-      "descricao": "Divulgação programada do IBGE: Sistema de Contas Nacionais Trimestrais.",
-      "descricao_en": "Scheduled IBGE release: Sistema de Contas Nacionais Trimestrais.",
-      "fonte": "IBGE",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-09-01",
-      "hora_brt": "22:00",
-      "regiao": "CN",
-      "evento": "China — PMI Industrial (NBS)",
-      "evento_en": "China — Manufacturing PMI (NBS)",
-      "descricao": "Índice de Gerentes de Compras da indústria chinesa, compilado pelo NBS. Abaixo de 50 indica contração. Indicador antecedente de atividade industrial e demanda por commodities. Também relevante o Caixin PMI (setor privado, ~2 dias depois).",
-      "descricao_en": "China manufacturing PMI by NBS. Below 50 signals contraction. Leading indicator for industrial activity and commodity demand.",
-      "fonte": "NBS China",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-09-02",
-      "hora_brt": "09:00",
-      "regiao": "BR",
-      "evento": "Pesquisa Industrial Mensal: Produção Física - Brasil",
-      "evento_en": "Pesquisa Industrial Mensal: Produção Física - Brasil",
-      "descricao": "Divulgação programada do IBGE: Pesquisa Industrial Mensal: Produção Física - Brasil.",
-      "descricao_en": "Scheduled IBGE release: Pesquisa Industrial Mensal: Produção Física - Brasil.",
-      "fonte": "IBGE",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-09-02",
+      "data": "2026-09-09",
       "hora_brt": "11:30",
       "regiao": "US",
       "evento": "EUA — Estoques de petróleo bruto (EIA)",
@@ -94,7 +50,51 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-09-03",
+      "data": "2026-09-10",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Industrial Mensal: Produção Física - Regional",
+      "evento_en": "Pesquisa Industrial Mensal: Produção Física - Regional",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Industrial Mensal: Produção Física - Regional.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Industrial Mensal: Produção Física - Regional.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-09-10",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Mensal de Serviços",
+      "evento_en": "Pesquisa Mensal de Serviços",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Mensal de Serviços.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Mensal de Serviços.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-09-10",
+      "hora_brt": "09:15",
+      "regiao": "EU",
+      "evento": "BCE — Decisão de juros na Zona do Euro",
+      "evento_en": "ECB — Eurozone Rate Decision",
+      "descricao": "Decisão do European Central Bank sobre as três taxas de juro de referência (deposit facility, MRO, MLF). A presidente Christine Lagarde concede coletiva às 14:45 CET. Impacto direto no euro (EUR/USD) e nos juros soberanos da Zona do Euro.",
+      "descricao_en": "ECB decision on the three key interest rates (deposit facility, MRO, MLF). President Lagarde holds press conference at 14:45 CET. Direct impact on EUR/USD and Eurozone sovereign yields.",
+      "fonte": "ECB",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-09-10",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Índice de Preços ao Produtor (PPI) — agosto/2026",
+      "evento_en": "Producer Price Index (PPI) — August 2026",
+      "descricao": "Inflação no atacado nos EUA. Antecede pressões de custo que se transmitem ao consumidor e complementa a leitura do CPI para o Fed.",
+      "descricao_en": "US wholesale inflation. Signals cost pressures that feed through to consumers and complements the CPI read for the Fed.",
+      "fonte": "BLS",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-09-10",
       "hora_brt": "09:30",
       "regiao": "US",
       "evento": "EUA — Novos pedidos de seguro-desemprego",
@@ -105,13 +105,46 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-09-04",
+      "data": "2026-09-10",
+      "hora_brt": "22:30",
+      "regiao": "CN",
+      "evento": "China — IPC ao consumidor (CPI)",
+      "evento_en": "China — Consumer Price Index (CPI)",
+      "descricao": "Inflação ao consumidor na China. Leituras baixas sinalizam risco deflacionário e fraqueza de demanda doméstica, com impacto em commodities e moedas de países exportadores de matérias-primas (BRL, AUD, NZD, CLP).",
+      "descricao_en": "China consumer inflation. Low readings signal deflation risk and weak domestic demand, impacting commodities and commodity-exporting currencies (BRL, AUD, NZD, CLP).",
+      "fonte": "NBS China",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-09-11",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Índice Nacional de Preços ao Consumidor Amplo",
+      "evento_en": "Índice Nacional de Preços ao Consumidor Amplo",
+      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor Amplo.",
+      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor Amplo.",
+      "fonte": "IBGE",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-09-11",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Índice Nacional de Preços ao Consumidor",
+      "evento_en": "Índice Nacional de Preços ao Consumidor",
+      "descricao": "Divulgação programada do IBGE: Índice Nacional de Preços ao Consumidor.",
+      "descricao_en": "Scheduled IBGE release: Índice Nacional de Preços ao Consumidor.",
+      "fonte": "IBGE",
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-09-11",
       "hora_brt": "09:30",
       "regiao": "US",
-      "evento": "Payroll (Nonfarm Payrolls) — agosto/2026",
-      "evento_en": "Nonfarm Payrolls — August 2026",
-      "descricao": "Principal termômetro do mercado de trabalho americano. Surpresas no NFP movem o dólar, os Treasuries e, por extensão, o real e a curva de juros brasileira.",
-      "descricao_en": "Primary US labor market gauge. NFP surprises move the USD, Treasuries, and consequently BRL and the Brazilian rate curve.",
+      "evento": "Índice de Preços ao Consumidor (CPI) — agosto/2026",
+      "evento_en": "Consumer Price Index (CPI) — August 2026",
+      "descricao": "Inflação ao consumidor nos EUA, cheia e núcleo. Principal referência de curto prazo para a trajetória de juros do Fed e para o apetite a risco global.",
+      "descricao_en": "US consumer inflation, headline and core. The key near-term input for the Fed's rate path and global risk appetite.",
       "fonte": "BLS",
       "relevancia": "alta"
     }
