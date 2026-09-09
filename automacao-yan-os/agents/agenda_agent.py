@@ -322,6 +322,18 @@ def cet_para_brt(data_str: str, hora_cet: str) -> str:
     return f"{total // 60:02d}:{total % 60:02d}"
 
 
+def londres_para_brt(data_str: str, hora_londres: str) -> str:
+    """Converte HH:MM em hora do Reino Unido (BST/GMT) para BRT.
+    A regra de DST do UK é a UE (último domingo de março a último domingo de
+    outubro), por isso reutilizamos is_eu_dst (mesmo calendário de troca).
+    BST=UTC+1 -> BRT-4 ; GMT=UTC+0 -> BRT-3."""
+    d = date.fromisoformat(data_str)
+    h, m = (int(x) for x in hora_londres.split(":"))
+    offset = 4 if is_eu_dst(d) else 3  # BST -> BRT-4 ; GMT -> BRT-3
+    total = (h * 60 + m - offset * 60) % (24 * 60)
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
 def ref_mes_anterior(data_str: str) -> tuple[int, int]:
     """Mês/ano de referência = mês anterior ao mês da data de divulgação."""
     d = date.fromisoformat(data_str)
@@ -627,11 +639,10 @@ def _eventos_boe(ini: str, fim: str) -> list[dict]:
     for data_str in BOE_2026:
         if not na_janela(data_str, ini, fim):
             continue
-        # UK → BRT: summer (BST=UTC+1) → BRT+4; winter (GMT=UTC+0) → BRT+3
-        d = date.fromisoformat(data_str)
-        is_summer = d.month in (3, 4, 5, 6, 7, 8, 9, 10)
-        offset = 4 if is_summer else 3
-        hora = f"{12 + offset:02d}:00"
+        # UK → BRT: restamos el offset (BST=UTC+1 → BRT-4; GMT=UTC+0 → BRT-3).
+        # Bug de 09/09/2026: el código sumaba (12+4=16:00); lo correcto es
+        # 12:00 BST = 08:00 BRT. Regla real UE (is_eu_dst), no el mes del año.
+        hora = londres_para_brt(data_str, "12:00")
         eventos.append({
             "data": data_str,
             "hora_brt": hora,
