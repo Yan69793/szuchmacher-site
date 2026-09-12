@@ -311,7 +311,7 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 
 Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34 naquela
-publicação, 38/38 conferido em 11/09/2026, com
+publicação, 46/46 conferido em 11/09/2026, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
 1. ~~**Cron nativo do macro ainda sem prova de disparo automático.**~~
@@ -369,7 +369,7 @@ publicação, 38/38 conferido em 11/09/2026, com
    `/assets/regulatorio.php`.
 
    **O que falta é só o item (c)**, a entrada nova no `validar-producao.ps1`. O
-   portão tem 38 checagens e nenhuma toca o `regulatorio`, conferido por `grep`
+   portão tem 46 checagens e nenhuma toca o `regulatorio`, conferido por `grep`
    no script em 11/09. Quem cobre o endpoint hoje é o
    `scripts/audit-producao.py`, que roda na auditoria e não na rotina de deploy.
    Detalhe do fechamento dos dois primeiros passos em `../status/ESTADO.md`,

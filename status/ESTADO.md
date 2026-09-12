@@ -44,7 +44,7 @@ com o detalhe completo lá:
 cd site-producao; .\scripts\validar-producao.ps1
 ```
 
-38 verificações em szuchmacher.com.br + multi-assets.com (páginas, assets,
+46 verificações em szuchmacher.com.br + multi-assets.com (páginas, assets,
 endpoints, redirects). Checagem de conteúdo, não só status HTTP. A contagem
 muda quando checagem nova entra, use a da saída real do script.
 

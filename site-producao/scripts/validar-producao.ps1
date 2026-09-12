@@ -80,6 +80,16 @@ $checks = @(
     @{ Url = "$SZ/assets/macro.php";  Status = 200 }
     @{ Url = "$SZ/assets/agenda.php"; Status = 200 }
 
+    # Arquivos sensiveis no dominio sz. O gate nunca checou esses quatro, quem
+    # fazia isso era o Bloco F da skill de auditoria, a mao. Mesma lacuna que o
+    # lado multi tinha, e o custo de fechar e o mesmo. Os quatro respondem 404
+    # hoje, conferido a mao em 11/09/2026, entao a checagem entra com o
+    # comportamento ja em producao (regra do projeto).
+    @{ Url = "$SZ/config.php";     Status = 404; Rotulo = 'sz: config.php nao servido' }
+    @{ Url = "$SZ/.env";           Status = 404; Rotulo = 'sz: .env nao servido' }
+    @{ Url = "$SZ/wrangler.toml";  Status = 404; Rotulo = 'sz: wrangler.toml nao servido' }
+    @{ Url = "$SZ/wrangler.jsonc"; Status = 404; Rotulo = 'sz: wrangler.jsonc nao servido' }
+
     # --- redirects que precisam continuar redirecionando ---
     @{ Url = "$SZ/ebook";           Status = 301; Rotulo = 'ebook -> home' }
     @{ Url = "$SZ/multiasset.html"; Status = 301; Rotulo = 'multiasset.html -> multi-assets.com' }
