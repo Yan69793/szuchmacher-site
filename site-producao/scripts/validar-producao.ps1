@@ -138,6 +138,18 @@ $checks = @(
     @{ Url = "$MULTI/prices.php";                       Status = 200; Contem = '"ok"' }
     @{ Url = "$MULTI/assets/video/demo-multiasset.mp4"; Status = 200; MinBytes = 100000 }
     @{ Url = "$MULTI/assets/sz-config.js";              Status = 200 }
+
+    # Arquivos sensiveis no dominio multi. O gate checava esses quatro so no
+    # szuchmacher desde sempre, e nenhum script da rotina olhava o multi, entao
+    # uma regressao que passasse a servir config.php ou .env ali ficaria
+    # invisivel. A auditoria de 11/09/2026 conferiu a mao que os quatro
+    # respondem 404, e a checagem entra agora, com o comportamento ja em
+    # producao (regra do projeto). Continua sem checar corpo, o discriminador
+    # aqui e o status.
+    @{ Url = "$MULTI/config.php";     Status = 404; Rotulo = 'multi: config.php nao servido' }
+    @{ Url = "$MULTI/.env";           Status = 404; Rotulo = 'multi: .env nao servido' }
+    @{ Url = "$MULTI/wrangler.toml";  Status = 404; Rotulo = 'multi: wrangler.toml nao servido' }
+    @{ Url = "$MULTI/wrangler.jsonc"; Status = 404; Rotulo = 'multi: wrangler.jsonc nao servido' }
 )
 
 # HttpClient em vez de Invoke-WebRequest: o cmdlet lanca
