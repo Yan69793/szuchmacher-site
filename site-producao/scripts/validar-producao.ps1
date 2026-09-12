@@ -80,6 +80,21 @@ $checks = @(
     @{ Url = "$SZ/assets/macro.php";  Status = 200 }
     @{ Url = "$SZ/assets/agenda.php"; Status = 200 }
 
+    # Tracker regulatorio. Era o item (c) de 2026-09-01, que pedia checagem no
+    # gate depois do deploy; o endpoint e o bloco #situacoes sairam em 08/09 e a
+    # checagem so entra agora, com o comportamento ja em producao. A ancora e o
+    # literal `atualizado_em`, estavel, e nao a data, que muda a cada curadoria.
+    @{ Url = "$SZ/assets/regulatorio.php"; Status = 200; Contem = 'atualizado_em';
+       Rotulo = 'regulatorio.php: endpoint do tracker servindo curadoria' }
+    # A trava anti-vazamento existia so no build-cloudflare-public.ps1, que
+    # aborta o deploy. Nada conferia o que a producao serve de fato, e trava de
+    # build nao cobre regressao de rota depois de publicada.
+    @{ Url = "$SZ/regulatorio-interno.json"; Status = 404;
+       Rotulo = 'sz: regulatorio-interno.json nao servido' }
+    @{ Url = "$SZ/assets/regulatorio.php"; Status = 200;
+       NaoContem = 'impacto_por_caso';
+       Rotulo = 'sz: payload regulatorio sem o campo interno impacto_por_caso' }
+
     # Arquivos sensiveis no dominio sz. O gate nunca checou esses quatro, quem
     # fazia isso era o Bloco F da skill de auditoria, a mao. Mesma lacuna que o
     # lado multi tinha, e o custo de fechar e o mesmo. Os quatro respondem 404

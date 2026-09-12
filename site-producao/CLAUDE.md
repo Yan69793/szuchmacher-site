@@ -311,7 +311,7 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 
 Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34 naquela
-publicação, 46/46 conferido em 11/09/2026, com
+publicação, 49/49 conferido em 11/09/2026, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
 1. ~~**Cron nativo do macro ainda sem prova de disparo automático.**~~
@@ -359,21 +359,21 @@ publicação, 46/46 conferido em 11/09/2026, com
    cai no estrito, não herda política fraca por omissão. Teste no
    `headers.test.mjs`. Publicado com a Fase B (Worker `b767ba10`), gate 34/34
    naquela publicação.
-6. **Tracker de processos regulatórios/jurídicos: dois dos três passos
-   fechados.** O código de 2026-09-01 (handler, rota, bloco `#situacoes` em
-   `index.html` escondido por padrão, schema dos dois arquivos e trava
-   anti-vazamento no build) saiu do papel em 08/09, com curadoria do caso
-   Enel/ANEEL, commit `f2153dd`, deploy
-   `723b5605-ad1d-44c7-85b8-3078b8de8ddc`, suíte do Worker `121/121` e gate
-   `38/38`. Leitura de produção em 11/09 devolve `atualizado_em=2026-09-08` no
-   `/assets/regulatorio.php`.
+6. ~~**Tracker de processos regulatórios/jurídicos.**~~ **Fechado em
+   11/09/2026, riscado no mesmo dia.** Os três passos fecharam. (a) O código de
+   2026-09-01 (handler, rota, bloco `#situacoes` em `index.html` escondido por
+   padrão, schema dos dois arquivos e trava anti-vazamento no build) foi
+   publicado em 08/09, commit `f2153dd`, versão
+   `723b5605-ad1d-44c7-85b8-3078b8de8ddc`, suíte do Worker `121/121`. (b) A
+   curadoria do caso Enel/ANEEL saiu com `atualizado_em=2026-09-08`. (c) As
+   entradas no gate entraram em 11/09, três checagens novas: o endpoint servindo
+   curadoria, o 404 do `regulatorio-interno.json` e a ausência do campo interno
+   `impacto_por_caso` no payload público. Portão em `49/49`.
 
-   **O que falta é só o item (c)**, a entrada nova no `validar-producao.ps1`. O
-   portão tem 46 checagens e nenhuma toca o `regulatorio`, conferido por `grep`
-   no script em 11/09. Quem cobre o endpoint hoje é o
-   `scripts/audit-producao.py`, que roda na auditoria e não na rotina de deploy.
-   Detalhe do fechamento dos dois primeiros passos em `../status/ESTADO.md`,
-   item 4 de 2026-09-01.
+   A trava anti-vazamento existia só no `build-cloudflare-public.ps1`, que
+   aborta o deploy, e trava de build não cobre regressão de rota já publicada.
+   Foi por isso que a checagem de produção entrou no mesmo pacote.
+   Detalhe em `../status/ESTADO.md`, item 4 de 2026-09-01.
 
 ### Resolvidas em 2026-08-31
 
