@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-08 (agentes: Cline e Claude)
+Última atualização: 2026-09-11 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -44,7 +44,7 @@ com o detalhe completo lá:
 cd site-producao; .\scripts\validar-producao.ps1
 ```
 
-34 verificações em szuchmacher.com.br + multi-assets.com (páginas, assets,
+38 verificações em szuchmacher.com.br + multi-assets.com (páginas, assets,
 endpoints, redirects). Checagem de conteúdo, não só status HTTP. A contagem
 muda quando checagem nova entra, use a da saída real do script.
 
@@ -848,3 +848,29 @@ Limpeza e commits: 42 PNG soltos na raiz apagados (não versionados). `agenda-da
 Deploy com `publicar-com-rollback.ps1`: versão `41d27485-a6b9-493b-aac5-7116ecca591e`, build 32/32, KV invalidado e macro regenerado às 17:26 BRT (`cache=False`, geração real), gate 38/38. O wrangler registrou "No updated asset files to upload", coerente com a idempotência. Este mesmo deploy levou ao ar o commit `53306ad` (semântica dos handlers `/api/cdi-scenarios` e `/api/ntnb-scenarios` alinhada à direção aprovada, pessimista = juros altos em RF), que estava commitado e pushed mas sem publicação registrada. Item 2 do operador fecha aqui.
 
 Pendências que seguem abertas: nenhuma nesta rodada.
+
+### Sincronização da skill de auditoria (11/09/2026)
+
+Revisão da skill `szuchmacher-audit` contra produção, sem deploy. Os cinco drifts
+encontrados foram corrigidos na própria skill, e os três docs de contagem foram
+atualizados:
+
+- `validar-producao.ps1` tem **38** verificações, não 34. Este arquivo, `AGENTS.md`
+  e `CLAUDE.md` diziam 34; as três linhas foram corrigidas.
+- `/stripe-webhook` sem assinatura responde **401**, não 400 (`src/handlers/stripe-webhook.js`:
+  "Sem assinatura valida, devolve 401"). Leitura viva confirmou 401.
+- `agenda-data.json` vive em `cloudflare-workers/sz-sites/public/sz/`, não em
+  `public/sz/assets/`. Campo `janela` presente, `meta.version` = `2026-09-10`.
+- A tabela de endpoints da skill omitia `API_ROUTES` que entraram depois:
+  `/relatorio-prices.php`, `/assets/regulatorio.php`, `/assets/geopolitica.php`,
+  `/api/cdi-scenarios` e `/api/usdbrl-scenarios`. Todas respondem 200 em produção.
+- `Szuchmacher-GeopoliticaAgent` (dom 18:00, fallback seg 08:30) é task deste
+  projeto, não estava na lista da skill.
+
+Conferências vivas desta rodada, sem ação: `/health` com `kv: ok` e
+`macro_cron_last` em `cron: "0 3 * * MON"` (ts 1788750064, segunda 07/09 00:01 BRT);
+`/assets/macro.php` com `selic_meta` e `cambio_ptax`; `/api/ntnb-scenarios` com
+`source: "yahoo"`; `/assets/regulatorio.php` com `atualizado_em=2026-09-08`;
+`/assets/geopolitica.php` com `schema_version: 1` e `week.label` "14 a 20 de
+setembro de 2026"; headers estritos e `X-Served-By: sz-sites-worker` nos dois
+domínios; `config.php`, `.env`, `wrangler.toml` e `wrangler.jsonc` em 404.
