@@ -310,7 +310,8 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 ## Pendências abertas (prioridade)
 
 Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
-`b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34, com
+`b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34 naquela
+publicação, 38/38 conferido em 11/09/2026, com
 `ntnb11` no `NaoContem` depois que o IB5M11 já estava em produção (`f4308a7`).
 
 1. ~~**Cron nativo do macro ainda sem prova de disparo automático.**~~
@@ -350,21 +351,29 @@ Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
    `$fomc_2026` moram dentro do próprio `agenda-cron.php` e não são lidos
    por mais nada. Detalhe da evidência em `../status/ESTADO.md`, seção de
    01/09.
-5. **CSP fail-open para host desconhecido.** Fechado em 31/08, e com a Fase B
-   o allowlist `MULTI_HOSTS` foi removido de vez: `buildCSP` em
+5. ~~**CSP fail-open para host desconhecido.**~~ **Fechado em 31/08, riscado em
+   11/09/2026 depois de reconferir os headers dos dois domínios em produção.**
+   Com a Fase B o allowlist `MULTI_HOSTS` foi removido de vez: `buildCSP` em
    `cloudflare-workers/sz-sites/src/utils/headers.js` emite hoje o mesmo CSP
    estrito para qualquer host, sem branch por host. Domínio futuro não mapeado
    cai no estrito, não herda política fraca por omissão. Teste no
-   `headers.test.mjs`. Publicado com a Fase B (Worker `b767ba10`), gate 34/34.
-6. **Tracker de processos regulatórios/jurídicos: infraestrutura pronta,
-   nada publicado.** Código implementado em 2026-09-01 (handler, rota,
-   bloco `#situacoes` em `index.html` escondido por padrão, schema dos dois
-   arquivos vazios, trava anti-vazamento no build) — detalhe na seção
-   própria acima. Falta: (a) deploy explícito via
-   `publicar-com-rollback.ps1`; (b) curadoria manual do caso Enel/ANEEL em
-   `regulatorio-data.json` + `dados-privados/regulatorio-interno.json`,
-   feita pelo Yan; (c) entradas novas em `validar-producao.ps1`, só depois
-   do deploy.
+   `headers.test.mjs`. Publicado com a Fase B (Worker `b767ba10`), gate 34/34
+   naquela publicação.
+6. **Tracker de processos regulatórios/jurídicos: dois dos três passos
+   fechados.** O código de 2026-09-01 (handler, rota, bloco `#situacoes` em
+   `index.html` escondido por padrão, schema dos dois arquivos e trava
+   anti-vazamento no build) saiu do papel em 08/09, com curadoria do caso
+   Enel/ANEEL, commit `f2153dd`, deploy
+   `723b5605-ad1d-44c7-85b8-3078b8de8ddc`, suíte do Worker `121/121` e gate
+   `38/38`. Leitura de produção em 11/09 devolve `atualizado_em=2026-09-08` no
+   `/assets/regulatorio.php`.
+
+   **O que falta é só o item (c)**, a entrada nova no `validar-producao.ps1`. O
+   portão tem 38 checagens e nenhuma toca o `regulatorio`, conferido por `grep`
+   no script em 11/09. Quem cobre o endpoint hoje é o
+   `scripts/audit-producao.py`, que roda na auditoria e não na rotina de deploy.
+   Detalhe do fechamento dos dois primeiros passos em `../status/ESTADO.md`,
+   item 4 de 2026-09-01.
 
 ### Resolvidas em 2026-08-31
 

@@ -21,3 +21,9 @@ cd site-producao; .\scripts\validar-producao.ps1
 Checagem nova neste script só entra **depois** que a mudança correspondente já está em produção. `publicar-com-rollback.ps1` roda este gate, e a rotina automática da agenda (domingo, segunda e quinta às 08:00) usa esse script: uma checagem vermelha ali dispara rollback e e-mail de alerta.
 
 O FTP é legado desde a migração para Cloudflare Workers (2026-06-17). O deploy primário é `.\scripts\deploy-cloudflare.ps1`.
+
+## Pendências abertas
+
+O canon é `status/ESTADO.md`, seção `## Itens abertos`. Esta seção existe como ponteiro, não como lista, porque a varredura de workspace (`scan-pendencias.ps1`) procura exatamente este cabeçalho e, sem ele, lê só a lista detalhada de `site-producao/CLAUDE.md`, que já divergiu do estado real uma vez.
+
+A lista detalhada, item por item, com prioridade, é `site-producao/CLAUDE.md`, seção `## Pendências abertas (prioridade)`. Ao fechar um item, atualizar as duas.
