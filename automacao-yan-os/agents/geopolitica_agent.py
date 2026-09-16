@@ -482,6 +482,13 @@ def _dossie(grupos: list[dict], mercados: list[dict], semana: tuple[str, str, st
             "Cada fato material deve manter pelo menos duas fontes independentes.",
             "Teses de risco elevado ou critico devem manter pelo menos tres fontes.",
             "probabilidade de todo cenario deve ser null, sem percentuais inventados.",
+            # As nove chaves de regions e o enum de confidence.overall sao
+            # reprovados por validar_payload quando faltam e os modelos testados
+            # (deepseek-flash e deepseek-v4-pro) omitiram justamente esses dois
+            # pontos: o prompt dizia "as nove chaves do dossie" sem lista-las.
+            f"regions precisa ter exatamente estas nove chaves: {', '.join(REGIOES)}.",
+            "confidence precisa de overall ('alta', 'media' ou 'baixa') e nota (string).",
+            f"market_impacts precisa ter exatamente estas chaves: {', '.join(MERCADOS)}.",
         ],
     }, ensure_ascii=False, indent=2)
 
@@ -491,6 +498,7 @@ def sintetizar(grupos: list[dict], mercados: list[dict], semana: tuple[str, str,
         raise RuntimeError("requests não instalado")
     cadeia = _config_llm()
     iso, inicio, fim, label = semana
+    regioes_txt = ", ".join(REGIOES)
     prompt = f"""Gere a edição semanal do Radar Geopolítico em PT-BR.
 Retorne somente JSON válido, sem markdown, com exatamente estes campos de alto nível:
 schema_version, generated_at, week, executive_summary, disclaimer, confidence,
@@ -499,7 +507,8 @@ themes, regions, market_impacts, scenarios, triggers, sources.
 Contrato: schema_version=1; week={{iso:'{iso}', start:'{inicio}', end:'{fim}', label:'{label}'}}.
 themes tem 4 a 6 itens com id, titulo, fato, impacto_mercados, proximo_gatilho,
 nivel_risco (baixo|moderado|elevado|critico), confianca (alta|media|baixa) e sources.
-regions contém as nove chaves exigidas no dossie, cada uma com titulo, resumo e teses.
+confidence tem overall (alta|media|baixa) e nota (string).
+regions contém as nove chaves exatas {regioes_txt}, cada uma com titulo, resumo e teses.
 Cada tese tem fato, interpretacao, cenario_base, risco_alternativo, gatilhos, confianca e sources.
 market_impacts contém petroleo, inflacao, juros_globais, treasury, dolar, ouro,
 acoes, credito, commodities, brasil, curva_di e brl. Cada item tem direcao
