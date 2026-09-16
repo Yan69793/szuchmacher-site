@@ -86,6 +86,14 @@ $checks = @(
     # literal `atualizado_em`, estavel, e nao a data, que muda a cada curadoria.
     @{ Url = "$SZ/assets/regulatorio.php"; Status = 200; Contem = 'atualizado_em';
        Rotulo = 'regulatorio.php: endpoint do tracker servindo curadoria' }
+    # O CLAUDE.md pede a checagem nos dois caminhos publicos desde que o bloco
+    # entrou em producao; o gate so cobria o endpoint. O arquivo cru tambem e
+    # servido pelo serveStatic() do Worker, sem allowlist, entao um vazamento
+    # pode aparecer por ele mesmo com o endpoint limpo. Mesma ancora literal do
+    # endpoint (atualizado_em), que e estavel e nao muda a cada curadoria.
+    @{ Url = "$SZ/regulatorio-data.json"; Status = 200; Contem = 'atualizado_em';
+       NaoContem = 'impacto_por_caso';
+       Rotulo = 'regulatorio-data.json: curadoria publica sem o campo interno' }
     # A trava anti-vazamento existia so no build-cloudflare-public.ps1, que
     # aborta o deploy. Nada conferia o que a producao serve de fato, e trava de
     # build nao cobre regressao de rota depois de publicada.

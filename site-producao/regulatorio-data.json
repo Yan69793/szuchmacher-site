@@ -1,11 +1,11 @@
 {
   "meta": {
-    "version": "2026-09-01",
+    "version": "2026-09-16",
     "curator": "Szuchmacher Consultoria",
     "disciplina": "Cronologia factual com fonte primária. Sem recomendação de investimento; desfechos possíveis descrevem o mecanismo regulatório/jurídico, não uma tese de ativo.",
     "disciplina_en": "Factual chronology with primary source. No investment recommendation; possible outcomes describe the regulatory/legal mechanism, not an asset thesis."
   },
-  "gerado": "2026-09-01T08:00:00-03:00",
+  "gerado": "2026-09-16T16:55:00-03:00",
   "casos": [
     {
       "id": "aneel-caducidade-enel-sp-2026",
@@ -17,15 +17,34 @@
       "quem_decide": "Diretoria da ANEEL recomenda; decisão final de extinção do contrato é do Ministério de Minas e Energia (MME)",
       "quem_decide_en": "ANEEL's board recommends; the Ministry of Mines and Energy (MME) holds final authority to decree contract forfeiture",
       "proximo_prazo": {
-        "data": "2026-09-03",
-        "descricao": "Prazo de 10 dias corridos para alegações finais da Enel, contados do encerramento da fase de instrução em 24/08"
+        "data": null,
+        "descricao": "Sem data definida: com a instrução encerrada e as alegações finais apresentadas em 03/09/2026, o caso aguarda deliberação da Diretoria da ANEEL sobre a recomendação de caducidade"
       },
       "cronologia": [
         {
-          "data": "2024-11-03",
-          "evento": "Temporal de grande porte na Grande São Paulo causa apagão prolongado; ANEEL abre processo administrativo para apurar eventual caducidade da concessão da Enel São Paulo",
-          "evento_en": "Major storm causes prolonged blackout in greater São Paulo; ANEEL opens administrative proceeding to assess possible forfeiture of Enel São Paulo's concession",
-          "fonte": "ANEEL"
+          "data": "2023-11-03",
+          "evento": "Temporal de grande porte na Grande São Paulo causa apagão prolongado; evento que motivou a maior multa administrativa aplicada pela ANEEL à Enel SP, de R$ 165 milhões, com exigibilidade suspensa por decisão judicial",
+          "evento_en": "Major storm causes prolonged blackout in greater São Paulo; the event behind ANEEL's largest administrative fine against Enel SP (R$ 165 million), whose enforceability is suspended by court order",
+          "fonte": "O Globo, 21/10/2024 — multa da ANEEL pelo evento de 03/11/2023"
+        },
+        {
+          "data": "2024-10-21",
+          "evento": "ANEEL emite o Termo de Intimação nº 49/2024 à Enel São Paulo, com relatório de falhas e transgressões, após o evento climático extremo de 11/10/2024; é a apuração que dá origem ao processo de recomendação de caducidade",
+          "evento_en": "ANEEL issues Intimation Term No. 49/2024 against Enel São Paulo with a report of failures and breaches, after the extreme weather event of 11/10/2024; this assessment is the origin of the forfeiture recommendation proceeding",
+          "fonte": "ANEEL — Termo de Intimação nº 49/2024, de 21/10/2024"
+        },
+        {
+          "data": "2026-04-07",
+          "evento": "Diretoria da ANEEL instaura, em Reunião Pública Ordinária, o processo administrativo de avaliação de recomendação de caducidade do contrato de concessão da Enel SP; a concessionária tem prazo para se manifestar",
+          "evento_en": "ANEEL's board opens, in a public ordinary meeting, the administrative proceeding to assess a forfeiture recommendation for Enel SP's concession contract; the utility is given a deadline to respond",
+          "fonte": "ANEEL — notícia oficial de 07/04/2026",
+          "link": "https://www.gov.br/aneel/pt-br/assuntos/noticias/2026/aneel-inicia-processo-de-recomendacao-de-caducidade-do-contrato-de-concessao-da-enel-sp"
+        },
+        {
+          "data": "2026-08-11",
+          "evento": "Diretoria da ANEEL rejeita o recurso da Enel contra a instauração do processo; a apuração segue em curso na agência, sob relatoria da diretora Agnes Costa",
+          "evento_en": "ANEEL's board rejects Enel's appeal against the opening of the proceeding; the case continues at the agency under rapporteur-director Agnes Costa",
+          "fonte": "Diretoria Colegiada da ANEEL, reunião de 11/08/2026 (Agência iNFRA; CNN Brasil)"
         },
         {
           "data": "2026-08-24",
@@ -33,6 +52,13 @@
           "evento_en": "ANEEL's board unanimously rejects Enel's request for an independent expert review and closes the evidentiary phase, granting 10 continuous days for final arguments",
           "fonte": "ANEEL — decisão de 24/08/2026",
           "link": "https://www.gov.br/aneel/pt-br/assuntos/noticias/2026-defeso-eleitoral/aneel-nega-pedido-de-prova-pericial-feito-pela-enel-distribuicao-sao-paulo/"
+        },
+        {
+          "data": "2026-09-03",
+          "evento": "Enel apresenta suas alegações finais, pedindo o reconhecimento de nulidades e o arquivamento do processo; subsidiariamente requer perícia técnica ou medida menos gravosa. O pedido de reconsideração contra a decisão de 24/08, protocolado em 02/09, segue pendente de julgamento",
+          "evento_en": "Enel files its final arguments, seeking a finding of nullities and the closing of the case; alternatively it requests an expert review or a less severe measure. Its motion for reconsideration of the 24/08 decision, filed on 02/09, is still pending",
+          "fonte": "Enel SP — Carta 277-2026-RB, alegações finais de 03/09/2026",
+          "link": "https://static.poder360.com.br/uploads/2026/09/Carta-Enel-SP-277-2026-RB-Novas-Alegacoes-Finais_v03-09-2026.pdf"
         }
       ],
       "desfechos_possiveis": [
@@ -46,10 +72,13 @@
         "Control-transfer precedent (Enel Goiás case): instead of termination, the concession could be maintained under new ownership via an ANEEL-authorized change of corporate control"
       ],
       "fontes_primarias": [
+        "ANEEL — Termo de Intimação nº 49/2024, de 21/10/2024",
+        "ANEEL — notícia oficial de 07/04/2026 (instauração do processo de recomendação de caducidade)",
+        "ANEEL — decisão da Diretoria de 11/08/2026 (rejeição do recurso contra a instauração)",
         "ANEEL — decisão de 24/08/2026 sobre prova pericial e alegações finais",
-        "ANEEL — decisão de 11/08/2026 sobre continuidade do processo e competência do MME"
+        "Enel SP — Carta 277-2026-RB, alegações finais de 03/09/2026"
       ],
-      "atualizado_em": "2026-09-08"
+      "atualizado_em": "2026-09-16"
     }
   ]
 }
