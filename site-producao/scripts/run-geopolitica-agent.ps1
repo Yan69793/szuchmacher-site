@@ -1,7 +1,8 @@
 # run-geopolitica-agent.ps1, gera a edicao semanal e publica com rollback.
-# Gatilho normal: domingo. Gatilho de recuperacao: segunda antes das 14:00 BRT.
-# O agente calcula a semana alvo, preserva historico e valida o JSON antes de
-# qualquer publicacao. A segunda usa --force para recuperar uma falha de domingo.
+# Gatilho normal: domingo (regeracao forcada). Gatilho de recuperacao: segunda
+# antes das 14:00 BRT, que regera apenas se a edicao da semana corrente estiver
+# ausente ou velha. O agente calcula a semana alvo, preserva historico e valida o
+# JSON antes de qualquer publicacao.
 
 param([switch]$Simular)
 
@@ -64,8 +65,12 @@ try {
         $argsAgent += '--force'
         Write-Log 'Execucao dominical ativa: regeneracao forcada, sem reutilizar a edicao anterior.'
     } elseif ($agora.DayOfWeek -eq 'Monday' -and $agora.Hour -lt 14) {
-        $argsAgent += '--force'
-        Write-Log 'Fallback de segunda-feira ativo: regeracao forcada da semana corrente.'
+        # Sem --force de proposito: o agente so regera se a edicao da semana
+        # corrente estiver ausente ou velha (guarda de frescor). Com --force a
+        # segunda repagava a sintese do domingo em toda semana saudavel.
+        # Prova A/B 16/09/2026: edicao fresca sem --force = exit 0 sem chamada
+        # LLM; mesma edicao com --force = coleta completa + chamada LLM.
+        Write-Log 'Fallback de segunda-feira ativo: regera somente se a edicao da semana estiver ausente ou velha.'
     }
 
     $env:YAN_OS_BATCH = '1'
