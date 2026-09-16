@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleMacroApi, normalizarAtivos, coerceLlmContent } from '../src/handlers/macro-api.js';
+import { handleMacroApi, normalizarAtivos, coerceLlmContent, buildLlmChain, parseAffordableTokens } from '../src/handlers/macro-api.js';
 import { runScheduledMacro } from '../src/index.js';
 
 const realFetch = globalThis.fetch;
@@ -442,4 +442,246 @@ test('carimbo legado (inteiro solto) continua sendo respeitado como janela de 1h
 
   assert.equal(body.note, 'refresh_janela_ativa', 'chave gravada pela versao anterior do Worker nao pode ser ignorada');
   assert.equal(openRouterCalls, 0);
+});
+
+// --- Cadeia de provedores (P1-001, 16/09/2026) -----------------------------
+// A conta OpenRouter das chaves desta maquina esta com credito zerado (medido:
+// 304.005857678 de uso contra 304.0 de credito) e rejeita o refresh com HTTP
+// 402 ANTES de chegar ao modelo quando o max_tokens pedido nao cabe no saldo
+// ("can only afford 7763"). Eram esses dois defeitos que deixavam o refresh em
+// 503: perna unica e retry inexistente. Os testes abaixo cobrem a cadeia com
+// DeepSeek e o rebaixamento de max_tokens.
+
+// Corpo real do 402 de affordability, colado do endpoint em 16/09/2026.
+const MSG_402_AFFORD = JSON.stringify({
+  error: {
+    message:
+      'This request requires more credits, or fewer max_tokens. You requested up to 8192 tokens, but can only afford 4096. To increase, visit https://openrouter.ai/settings/credits and add more credits',
+    code: 402,
+    metadata: { limit_source: 'openrouter_credits' },
+  },
+});
+
+function resposta402(corpo = MSG_402_AFFORD) {
+  return new Response(corpo, { status: 402, headers: { 'Content-Type': 'application/json' } });
+}
+
+function corpoOk(eyebrow) {
+  return jsonRes({ choices: [{ message: { content: JSON.stringify({ eyebrow }) } }] });
+}
+
+// Stub por perna: cada entrada e uma funcao (init, n) => Response ou um Response.
+function stubCadeia({ openrouter, deepseek } = {}) {
+  const chamadas = { openrouter: [], deepseek: [] };
+  globalThis.fetch = async (url, init) => {
+    const u = String(url);
+    if (u.includes('bcdata.sgs.432')) return jsonRes([{ valor: '14.75', data: '05/08/2026' }]);
+    if (u.includes('bcdata.sgs.1')) return jsonRes([{ valor: '5.20', data: '05/08/2026' }]);
+    if (u.includes('ExpectativasMercadoAnuais')) return jsonRes({ value: [{ Mediana: 14.5 }] });
+    if (u.includes('deepseek.com')) {
+      chamadas.deepseek.push(init);
+      return typeof deepseek === 'function' ? deepseek(init, chamadas.deepseek.length) : (deepseek ?? corpoOk('via-deepseek'));
+    }
+    if (u.includes('openrouter.ai')) {
+      chamadas.openrouter.push(init);
+      return typeof openrouter === 'function' ? openrouter(init, chamadas.openrouter.length) : (openrouter ?? corpoOk('via-openrouter'));
+    }
+    return jsonRes({});
+  };
+  return chamadas;
+}
+
+function envCadeia(extra = {}) {
+  return { ...makeEnv(), DEEPSEEK_KEY: 'sk-deepseek-teste-123', ...extra };
+}
+
+test('buildLlmChain: auto prioriza a perna com credito e so usa chave configurada', () => {
+  const semDeepseek = makeEnv();
+  assert.deepEqual(buildLlmChain(semDeepseek).map((p) => p.id), ['openrouter']);
+
+  const completa = envCadeia();
+  assert.deepEqual(buildLlmChain(completa).map((p) => p.id), ['deepseek', 'openrouter']);
+
+  assert.deepEqual(
+    buildLlmChain(envCadeia({ MACRO_LLM_PROVIDER: 'openrouter,deepseek' })).map((p) => p.id),
+    ['openrouter', 'deepseek'],
+  );
+  assert.deepEqual(
+    buildLlmChain(envCadeia({ MACRO_LLM_PROVIDER: 'openrouter' })).map((p) => p.id),
+    ['openrouter'],
+  );
+  assert.deepEqual(buildLlmChain({}).map((p) => p.id), [], 'sem chave nenhuma nao ha perna');
+  assert.deepEqual(
+    buildLlmChain({ OPENROUTER_KEY: 'chave-sem-prefixo' }).map((p) => p.id),
+    [],
+    'secret OpenRouter truncado/errado nao pode virar perna',
+  );
+});
+
+test('parseAffordableTokens le o N do corpo real do 402', () => {
+  assert.equal(parseAffordableTokens(MSG_402_AFFORD), 4096);
+  assert.equal(parseAffordableTokens('saldo insuficiente'), null);
+  assert.equal(parseAffordableTokens(null), null);
+});
+
+test('auto: a cascata fecha pelo DeepSeek e nao toca a OpenRouter sem credito', async () => {
+  const chamadas = stubCadeia();
+  const env = envCadeia();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(body.cache, false);
+  assert.equal(body.data.eyebrow, 'via-deepseek');
+  assert.equal(chamadas.deepseek.length, 1);
+  assert.equal(chamadas.openrouter.length, 0, 'a perna sem credito nao pode ser queimada a cada refresh');
+
+  const envio = JSON.parse(chamadas.deepseek[0].body);
+  assert.equal(chamadas.deepseek[0].headers.Authorization, 'Bearer sk-deepseek-teste-123');
+  assert.equal(envio.model, 'deepseek-flash');
+  assert.equal(envio.max_tokens, 16384, 'a perna de raciocinio precisa de orcamento para reasoning + conteudo');
+  assert.deepEqual(envio.response_format, { type: 'json_object' });
+
+  const gravado = JSON.parse(await env.CACHE.get('macro-api'));
+  assert.equal(gravado.data.eyebrow, 'via-deepseek');
+});
+
+test('perna primaria falhando cai para a seguinte em vez de devolver 503', async () => {
+  const chamadas = stubCadeia({ deepseek: new Response('unauthorized', { status: 401 }), openrouter: corpoOk('via-openrouter') });
+  const env = envCadeia();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.data.eyebrow, 'via-openrouter');
+  assert.equal(chamadas.deepseek.length, 1);
+  assert.equal(chamadas.openrouter.length, 1);
+});
+
+test('402 de affordability rebaixa o max_tokens e repete a MESMA perna', async () => {
+  const chamadas = stubCadeia({
+    openrouter: (init, n) => (n === 1 ? resposta402() : corpoOk('depois-do-rebaixe')),
+  });
+  const env = envCadeia({ MACRO_LLM_PROVIDER: 'openrouter' });
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.data.eyebrow, 'depois-do-rebaixe');
+  assert.equal(chamadas.openrouter.length, 2, 'o 402 de saldo nao pode ser terminal');
+  assert.equal(JSON.parse(chamadas.openrouter[0].body).max_tokens, 8192);
+  assert.equal(JSON.parse(chamadas.openrouter[1].body).max_tokens, 4096, 'o retry usa o N do corpo, nao uma constante nova');
+});
+
+test('402 sem N parseavel nao gera retry e a perna falha uma vez so', async () => {
+  const chamadas = stubCadeia({ openrouter: () => resposta402('{"error":{"message":"Insufficient credits"}}') });
+  const env = envCadeia({ MACRO_LLM_PROVIDER: 'openrouter' });
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 503);
+  assert.equal(body.error, 'OpenRouter falhou');
+  assert.equal(body.status, 402);
+  assert.equal(chamadas.openrouter.length, 1);
+});
+
+test('saldo residual abaixo do piso nao vira retry (payload do macro nao caberia)', async () => {
+  const chamadas = stubCadeia({
+    openrouter: () => resposta402('{"error":{"message":"You requested up to 8192 tokens, but can only afford 300."}}'),
+  });
+  const env = envCadeia({ MACRO_LLM_PROVIDER: 'openrouter' });
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  assert.equal(r.status, 503);
+  assert.equal(chamadas.openrouter.length, 1);
+});
+
+test('todas as pernas falhando: 503 com o motivo de cada uma e sem vazar chave', async () => {
+  const chamadas = stubCadeia({
+    deepseek: () => new Response('{"error":"saldo"}', { status: 402 }),
+    openrouter: () => resposta402('{"error":{"message":"Insufficient credits","code":402}}'),
+  });
+  const env = envCadeia();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 503);
+  assert.equal(body.ok, false);
+  assert.equal(body.error, 'OpenRouter falhou', 'a ultima perna da a cara do erro');
+  assert.deepEqual(body.provedores_falhos, [
+    { provedor: 'DeepSeek', status: 402 },
+    { provedor: 'OpenRouter', status: 402 },
+  ]);
+  assert.equal(chamadas.deepseek.length, 1);
+  assert.equal(chamadas.openrouter.length, 1);
+  const serializado = JSON.stringify(body);
+  assert.ok(!serializado.includes('sk-deepseek-teste-123'), 'a resposta nao pode ecoar a chave');
+  assert.ok(!serializado.includes('sk-teste-123'), 'a resposta nao pode ecoar a chave');
+});
+
+test('200 com conteudo vazio nao vence a perna: a cascata segue para a proxima', async () => {
+  const chamadas = stubCadeia({
+    deepseek: () => jsonRes({ choices: [{ finish_reason: 'length', message: { content: '' } }] }),
+    openrouter: () => corpoOk('via-openrouter'),
+  });
+  const env = envCadeia();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.data.eyebrow, 'via-openrouter', 'perna com resposta vazia nao pode fechar a cascata');
+  assert.equal(chamadas.deepseek.length, 1);
+  assert.equal(chamadas.openrouter.length, 1);
+});
+
+test('conteudo cortado no teto (finish_reason=length) nao vence a perna', async () => {
+  const chamadas = stubCadeia({
+    deepseek: () => jsonRes({ choices: [{ finish_reason: 'length', message: { content: '{"eyebrow":"cortado"' } }] }),
+    openrouter: () => corpoOk('via-openrouter'),
+  });
+  const env = envCadeia();
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200, 'JSON cortado nao pode virar 503 se a proxima perna responde');
+  assert.equal(body.data.eyebrow, 'via-openrouter');
+  assert.equal(chamadas.deepseek.length, 1);
+  assert.equal(chamadas.openrouter.length, 1);
+});
+
+test('todas as pernas falhando na leitura implicita: cai no fallback estatico', async () => {
+  stubCadeia({ deepseek: () => new Response('down', { status: 500 }), openrouter: () => resposta402() });
+  const env = { ...makeEnv({ withStaticFallback: true }), DEEPSEEK_KEY: 'sk-deepseek-teste-123' };
+  await env.CACHE.put('macro-refresh-rate', String(Math.floor(Date.now() / 1000) - 7200));
+
+  const r = await handleMacroApi(req(), env);
+  const body = await r.json();
+
+  assert.equal(r.status, 200);
+  assert.equal(body.cache, true);
+  assert.equal(body.data.eyebrow, 'estatico');
+});
+
+test('sem nenhuma chave o Worker devolve 503 explicito, nao erro opaco', async () => {
+  const env = { ...makeEnv(), OPENROUTER_KEY: undefined };
+  const r = await handleMacroApi(req(), env, { forceRefresh: true });
+  const body = await r.json();
+  assert.equal(r.status, 503);
+  assert.match(body.error, /Nenhum provedor de LLM/);
 });

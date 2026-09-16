@@ -19,6 +19,11 @@
   //   STRIPE_WEBHOOK_SECRET   — whsec_... do dashboard Stripe > Developers > Webhooks
   //   RESEND_API_KEY           — re_... do dashboard Resend > API Keys
   //   BRIEFING_FETCH_TOKEN     — token de leitura do Worker briefing (ja existente)
+  //   OPENROUTER_KEY           — chave OpenRouter do macro-api (2a perna da cadeia)
+  //   DEEPSEEK_KEY             — chave de api.deepseek.com, 1a perna do macro-api desde
+  //                              16/09/2026 (P1-001). Gravar/atualizar com
+  //                              scripts/set-deepseek-secret.ps1, que le DEEPSEEK_API_KEY
+  //                              do ambiente do usuario e nunca imprime a chave.
   // REMOVIDO em 30/07/2026: bloco `routes` com os quatro hostnames.
   // Os mesmos quatro hostnames ja estao ligados a este Worker como Custom Domain,
   // criados por scripts/attach-worker-domains.ps1 e confirmados na API em 30/07/2026:

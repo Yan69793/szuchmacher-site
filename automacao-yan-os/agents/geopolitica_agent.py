@@ -3,8 +3,9 @@
 geopolitica_agent.py — Agente do Radar Geopolítico Semanal
 szuchmacher.com.br
 
-Pipeline: pesquisar -> deduplicar -> validar fontes -> sintetizar (OpenRouter,
-mesmo provider do MacroAgent no Worker) -> gerar JSON -> validar schema ->
+Pipeline: pesquisar -> deduplicar -> validar fontes -> sintetizar (cadeia de
+provedores: DeepSeek primeiro quando ha chave, OpenRouter como segunda perna,
+mesmo contrato do MacroAgent no Worker) -> gerar JSON -> validar schema ->
 gravar edicao + historico. A publicacao fica a cargo do runner PowerShell
 (scripts/run-geopolitica-agent.ps1), que usa publicar-com-rollback.ps1,
 exatamente como o par macro_agent.py / run-macro-agent.ps1.
@@ -29,6 +30,7 @@ Deve ser rodado a partir de automacao-yan-os/ (importa config do data/).
 import argparse
 import shutil
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -311,24 +313,147 @@ def semana_alvo() -> tuple[str, str, str, str]:
 
 # ─── Síntese e contrato de saída ─────────────────────────────────────────────
 
-def _config_openrouter() -> tuple[str, str, str]:
-    """Lê apenas configuração local. Nunca imprime a chave nem a inclui na URL."""
+DEEPSEEK_URL_PADRAO = "https://api.deepseek.com/chat/completions"
+DEEPSEEK_MODELO_PADRAO = "deepseek-v4-pro"
+# Teto de saida por provedor. A OpenRouter aceitava 12000 no modelo da cadeia.
+# O DeepSeek desta conta e modelo de raciocinio: parte do orcamento de
+# max_tokens vai para reasoning_content antes de sair conteudo. Medido em
+# 16/09/2026: com max_tokens=400 a resposta voltou com content vazio e
+# reasoning_tokens=400 (finish_reason=length) e a edicao morreu em "nao devolveu
+# um objeto JSON"; com folga de sobra o JSON sai inteiro. O teto do endpoint
+# aceita 128000, entao o Radar pede 32768 e nao herda o teto da OpenRouter.
+LLM_MAX_TOKENS = {"openrouter": 12000, "deepseek": 32768}
+# Piso do retry por saldo: abaixo disso o payload do Radar nao caberia.
+LLM_MIN_AFFORDABLE_TOKENS = 1024
+
+
+def _campo_config(nome: str, padrao: str = "") -> str:
     if not CONFIG_PHP.exists():
         raise RuntimeError(f"config.php ausente: {CONFIG_PHP}")
     texto = CONFIG_PHP.read_text(encoding="utf-8")
+    m = re.search(r"define\('" + re.escape(nome) + r"'\s*,\s*'([^']*)'\)", texto)
+    return m.group(1) if m else padrao
 
-    def campo(nome: str, padrao: str = "") -> str:
-        m = re.search(r"define\('" + re.escape(nome) + r"'\s*,\s*'([^']*)'\)", texto)
-        return m.group(1) if m else padrao
 
-    chave = campo("OPENROUTER_KEY")
-    url = campo("OPENROUTER_URL", "https://openrouter.ai/api/v1/chat/completions")
-    modelo = campo("OPENROUTER_MODEL", "anthropic/claude-haiku-4-5")
-    if not chave:
+def _config_llm() -> list[dict]:
+    """Cadeia de provedores do sintetizador, na ordem de tentativa.
+
+    Nunca imprime a chave nem a inclui na URL. 'auto' (padrao) tenta o DeepSeek
+    primeiro quando a chave existe: a conta OpenRouter desta maquina esta com
+    credito zerado (medido em 16/09/2026: total_credits 304 contra total_usage
+    304.005857678) e todo POST com max_tokens 12000 morria em HTTP 402 antes de
+    chegar ao modelo. GEOPOLITICA_LLM_PROVIDER aceita uma ordem explicita
+    separada por virgula ('openrouter,deepseek').
+    """
+    chave_or = _campo_config("OPENROUTER_KEY")
+    if not chave_or:
         raise RuntimeError("OPENROUTER_KEY ausente em config.php")
-    if not url.startswith("https://"):
+    url_or = _campo_config("OPENROUTER_URL", "https://openrouter.ai/api/v1/chat/completions")
+    modelo_or = _campo_config("OPENROUTER_MODEL", "anthropic/claude-haiku-4-5")
+    if not url_or.startswith("https://"):
         raise RuntimeError("OPENROUTER_URL precisa usar HTTPS")
-    return chave, url, modelo
+
+    # Chave do DeepSeek: ambiente primeiro (variavel de usuario da maquina, sem
+    # copia em arquivo versionado) e config.php como alternativa local.
+    chave_ds = (os.environ.get("DEEPSEEK_API_KEY") or os.environ.get("DEEPSEEK_KEY")
+                or _campo_config("DEEPSEEK_KEY")).strip()
+    url_ds = (os.environ.get("DEEPSEEK_URL") or _campo_config("DEEPSEEK_URL", DEEPSEEK_URL_PADRAO)).strip()
+    modelo_ds = (os.environ.get("DEEPSEEK_MODEL") or _campo_config("DEEPSEEK_MODEL", DEEPSEEK_MODELO_PADRAO)).strip()
+
+    catalogo = {
+        "openrouter": {"id": "openrouter", "label": "OpenRouter", "url": url_or,
+                       "chave": chave_or, "modelo": modelo_or,
+                       "max_tokens": LLM_MAX_TOKENS["openrouter"]},
+        "deepseek": {"id": "deepseek", "label": "DeepSeek", "url": url_ds,
+                     "chave": chave_ds, "modelo": modelo_ds,
+                     "max_tokens": _max_tokens_env("DEEPSEEK_MAX_TOKENS", LLM_MAX_TOKENS["deepseek"])},
+    }
+    pedido = (os.environ.get("GEOPOLITICA_LLM_PROVIDER") or "auto").strip().lower()
+    ids = [p.strip() for p in pedido.split(",") if p.strip() in catalogo]
+    ordem = (["deepseek", "openrouter"] if catalogo["deepseek"]["chave"] else ["openrouter"]) \
+        if (pedido == "auto" or not ids) else ids
+    return [catalogo[i] for i in ordem if catalogo[i]["chave"]]
+
+
+def _max_tokens_env(nome: str, padrao: int) -> int:
+    try:
+        n = int(str(os.environ.get(nome) or "").strip())
+        return n if n > 0 else padrao
+    except (TypeError, ValueError):
+        return padrao
+
+
+def _post_llm(provedor: dict, prompt: str) -> tuple[bool, str]:
+    """Uma chamada ao provedor. (True, conteudo) no sucesso, (False, motivo) na falha.
+
+    O motivo nunca carrega a chave: so o rotulo do provedor, o status e um
+    trecho do corpo devolvido pelo servico.
+    """
+    max_tokens = provedor["max_tokens"]
+    ultimo = f"{provedor['label']} sem tentativa"
+    for _ in range(2):
+        try:
+            resposta = requests.post(
+                provedor["url"],
+                headers={
+                    "Authorization": f"Bearer {provedor['chave']}",
+                    "HTTP-Referer": "https://szuchmacher.com.br",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": provedor["modelo"],
+                    "max_tokens": max_tokens,
+                    "temperature": 0.1,
+                    # Modo JSON do provedor: sem ele o payload de ~60 KB do Radar
+                    # voltou com erro de sintaxe no fim do documento (medido em
+                    # 16/09/2026: "Expecting ',' delimiter: line 1097"), que a
+                    # decodificacao restrita do json_object elimina.
+                    "response_format": {"type": "json_object"},
+                    "messages": [
+                        {"role": "system", "content": "Editor factual. Responda somente JSON válido."},
+                        {"role": "user", "content": prompt},
+                    ],
+                },
+                timeout=180,
+            )
+        except Exception as e:  # rede/DNS/timeout: nao derruba a cascata, so a perna
+            return False, f"{provedor['label']} indisponivel: {e}"
+        if resposta.status_code == 200:
+            try:
+                corpo = resposta.json()
+                escolha = corpo["choices"][0]
+                conteudo = escolha["message"].get("content") or ""
+            except Exception as e:
+                return False, f"{provedor['label']} resposta ilegivel: {e}"
+            if conteudo.strip():
+                uso = (corpo.get("usage") or {})
+                log(f"{provedor['label']} ok: finish={escolha.get('finish_reason')} "
+                    f"saida={uso.get('completion_tokens')} reasoning={uso.get('completion_tokens_details', {}).get('reasoning_tokens')} "
+                    f"bateu_no_teto={'sim' if escolha.get('finish_reason') == 'length' else 'nao'}")
+                if escolha.get("finish_reason") == "length":
+                    # Bateu no teto: o JSON vem cortado e nao ha como salvar a
+                    # edicao. Falha explicita para a proxima perna responder.
+                    return False, f"{provedor['label']} bateu no teto de max_tokens ({max_tokens}) com conteudo cortado"
+                return True, conteudo
+            # 200 com conteudo vazio: modelo de raciocinio que gastou todo o
+            # max_tokens em reasoning_content (finish_reason=length). Nao e
+            # sucesso, e a proxima perna responde.
+            return False, (f"{provedor['label']} devolveu conteudo vazio "
+                           f"(finish_reason={escolha.get('finish_reason')}, "
+                           f"reasoning_tokens={(corpo.get('usage') or {}).get('completion_tokens_details', {}).get('reasoning_tokens')})")
+        corpo = (resposta.text or "")[:200]
+        ultimo = f"{provedor['label']} HTTP {resposta.status_code}"
+        # 402 de saldo: o corpo diz quantos tokens ainda cabem, e a mesma
+        # chamada passa com esse numero. Sem isso, saldo residual e inutil.
+        afford = re.search(r"can only afford (\d+)", resposta.text or "")
+        if resposta.status_code == 402 and afford:
+            n = int(afford.group(1))
+            if LLM_MIN_AFFORDABLE_TOKENS <= n < max_tokens:
+                log(f"{provedor['label']} 402: rebaixando max_tokens {max_tokens} -> {n}")
+                max_tokens = n
+                continue
+        return False, f"{ultimo}: {corpo}"
+    return False, ultimo
 
 
 def pesquisar(minimo_fontes: int) -> tuple[list[dict], list[dict]]:
@@ -364,7 +489,7 @@ def _dossie(grupos: list[dict], mercados: list[dict], semana: tuple[str, str, st
 def sintetizar(grupos: list[dict], mercados: list[dict], semana: tuple[str, str, str, str]) -> dict:
     if requests is None:
         raise RuntimeError("requests não instalado")
-    chave, url, modelo = _config_openrouter()
+    cadeia = _config_llm()
     iso, inicio, fim, label = semana
     prompt = f"""Gere a edição semanal do Radar Geopolítico em PT-BR.
 Retorne somente JSON válido, sem markdown, com exatamente estes campos de alto nível:
@@ -388,31 +513,24 @@ O disclaimer deve dizer que o material é informativo e não constitui recomenda
 
 DOSSIE:
 {_dossie(grupos, mercados, semana)}"""
-    resposta = requests.post(
-        url,
-        headers={
-            "Authorization": f"Bearer {chave}",
-            "HTTP-Referer": "https://szuchmacher.com.br",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": modelo,
-            "max_tokens": 12000,
-            "temperature": 0.1,
-            "messages": [
-                {"role": "system", "content": "Editor factual. Responda somente JSON válido."},
-                {"role": "user", "content": prompt},
-            ],
-        },
-        timeout=180,
-    )
-    if resposta.status_code != 200:
-        raise RuntimeError(f"OpenRouter HTTP {resposta.status_code}")
-    bruto = resposta.json()["choices"][0]["message"]["content"].strip()
+    bruto = None
+    falhas: list[str] = []
+    nome_provedor = "nenhum provedor"
+    for provedor in cadeia:
+        ok, saida = _post_llm(provedor, prompt)
+        if ok:
+            log(f"Síntese via {provedor['label']} ({provedor['modelo']})")
+            bruto = saida.strip()
+            nome_provedor = provedor["label"]
+            break
+        falhas.append(saida)
+        log(f"AVISO síntese: {saida}")
+    if bruto is None:
+        raise RuntimeError("síntese falhou em todos os provedores: " + " | ".join(falhas))
     bruto = re.sub(r"^```(?:json)?\s*|\s*```$", "", bruto, flags=re.I)
     trecho = re.search(r"\{[\s\S]*\}", bruto)
     if not trecho:
-        raise RuntimeError("OpenRouter não devolveu um objeto JSON")
+        raise RuntimeError(f"{nome_provedor} não devolveu um objeto JSON (len={len(bruto)})")
     try:
         payload = json.loads(trecho.group(0))
     except json.JSONDecodeError as e:

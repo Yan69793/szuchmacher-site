@@ -6,6 +6,38 @@ const CACHE_TTL = 7 * 24 * 3600;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OPENROUTER_MODEL = 'anthropic/claude-haiku-4-5';
 
+// Cadeia de provedores (16/09/2026, P1-001). Ate aqui o handler falava com uma
+// unica perna, a OpenRouter, e a conta dessas chaves esta com credito zerado:
+// medido no endpoint oficial, 304.005857678 de uso contra 304.0 de credito
+// comprado. O modo de falha nao e "sem credito nenhum": a OpenRouter rejeita
+// antes de chegar ao modelo quando o max_tokens pedido nao cabe no saldo
+// (HTTP 402 "can only afford 7763"), entao o refresh morria com 503 mesmo com a
+// chave valida. O DeepSeek (api.deepseek.com, contrato de resposta identico ao
+// da OpenAI/OpenRouter) e a segunda perna: mesma conta de operador, credito
+// proprio, e fecha a cascata sem depender de recarga da OpenRouter.
+const DEEPSEEK_URL_DEFAULT = 'https://api.deepseek.com/chat/completions';
+const DEEPSEEK_MODEL_DEFAULT = 'deepseek-flash';
+const LLM_MAX_TOKENS_DEFAULT = 8192;
+// Os modelos DeepSeek desta conta sao de raciocinio: parte do orcamento de
+// `max_tokens` vai para `reasoning_content` antes de sair qualquer conteudo.
+// Medido em 16/09/2026 no endpoint: com max_tokens=400 a resposta voltou com
+// content vazio e reasoning_tokens=400 (finish_reason=length); com max_tokens
+// 3000 o JSON saiu completo. Por isso a perna DeepSeek pede o dobro do teto da
+// OpenRouter, em vez de herdar 8192 e devolver conteudo vazio.
+const DEEPSEEK_MAX_TOKENS_DEFAULT = 16384;
+
+// Retry por affordability: quando o 402 traz "can only afford N", o mesmo
+// provedor aceita a mesma chamada com max_tokens=N. Abaixo deste piso o payload
+// do macro nao cabe e insistir so queima a latencia do visitante.
+const LLM_MIN_AFFORDABLE_TOKENS = 1024;
+
+export function parseAffordableTokens(errBody) {
+  const m = /can only afford (\d+)/i.exec(String(errBody ?? ''));
+  if (!m) return null;
+  const n = parseInt(m[1], 10);
+  return Number.isFinite(n) ? n : null;
+}
+
 async function bcbSgs(serie) {
   const r = await fetchJsonStrict(
     `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${serie}/dados/ultimos/1?formato=json`,
@@ -254,10 +286,129 @@ async function loadStaticMacro(env, request) {
   return null;
 }
 
-function resolveOpenRouterKey(env) {
-  const raw = env.OPENROUTER_KEY;
+function resolveSecret(env, name) {
+  const raw = env == null ? null : env[name];
   if (raw == null) return '';
   return String(raw).trim();
+}
+
+function positiveInt(raw, fallback) {
+  const n = parseInt(String(raw ?? '').trim(), 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+// Monta a cadeia de provedores na ordem de tentativa.
+// 'auto' (padrao) tenta DeepSeek primeiro quando a chave existe: a perna
+// OpenRouter esta com credito zerado e todo refresh comecava por um 402
+// garantido. A OpenRouter continua na cadeia como segunda perna, para voltar a
+// funcionar no dia em que a conta for recarregada, sem precisar de novo deploy.
+// MACRO_LLM_PROVIDER aceita uma ordem explicita separada por virgula
+// ('openrouter,deepseek' ou 'deepseek,openrouter') e so ignora provedor sem
+// chave configurada. Uma perna so ('openrouter') tambem e aceita.
+export function buildLlmChain(env) {
+  const pref = (resolveSecret(env, 'MACRO_LLM_PROVIDER') || 'auto').toLowerCase();
+  const openrouter = {
+    id: 'openrouter',
+    label: 'OpenRouter',
+    url: resolveSecret(env, 'OPENROUTER_URL') || OPENROUTER_URL,
+    key: resolveSecret(env, 'OPENROUTER_KEY'),
+    model: resolveSecret(env, 'OPENROUTER_MODEL') || OPENROUTER_MODEL,
+    maxTokens: positiveInt(resolveSecret(env, 'OPENROUTER_MAX_TOKENS'), LLM_MAX_TOKENS_DEFAULT),
+  };
+  const deepseek = {
+    id: 'deepseek',
+    label: 'DeepSeek',
+    url: resolveSecret(env, 'DEEPSEEK_URL') || DEEPSEEK_URL_DEFAULT,
+    key: resolveSecret(env, 'DEEPSEEK_KEY') || resolveSecret(env, 'DEEPSEEK_API_KEY'),
+    model: resolveSecret(env, 'DEEPSEEK_MODEL') || DEEPSEEK_MODEL_DEFAULT,
+    maxTokens: positiveInt(resolveSecret(env, 'DEEPSEEK_MAX_TOKENS'), DEEPSEEK_MAX_TOKENS_DEFAULT),
+  };
+  // A OpenRouter tem historico de secret truncado/errado em producao, entao
+  // mantem a guarda de prefixo. A chave do DeepSeek so precisa existir.
+  const disponivel = (p) => (p.id === 'openrouter' ? p.key.startsWith('sk-') : p.key.length > 0);
+  const catalogo = { openrouter, deepseek };
+  const pedidas = pref.split(',').map((s) => s.trim()).filter((id) => catalogo[id]);
+  const ordem = pref === 'auto' || pedidas.length === 0
+    ? (disponivel(deepseek) ? ['deepseek', 'openrouter'] : ['openrouter'])
+    : pedidas;
+  return ordem.map((id) => catalogo[id]).filter(disponivel);
+}
+
+// Uma chamada a um provedor da cadeia. Devolve {ok,res} no sucesso e
+// {ok:false,status,error} na falha, sem nunca ecoar a chave no erro.
+async function callLlmProvider(provider, prompt) {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${provider.key}`,
+  };
+  if (provider.id === 'openrouter') {
+    headers['HTTP-Referer'] = 'https://szuchmacher.com.br';
+    headers['X-Title'] = 'Szuchmacher Macro API';
+  }
+  let maxTokens = provider.maxTokens;
+  let ultimo = { status: null, error: 'sem tentativa' };
+  for (let tentativa = 0; tentativa < 2; tentativa++) {
+    let res;
+    try {
+      res = await fetch(provider.url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: provider.model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.2,
+          max_tokens: maxTokens,
+          response_format: { type: 'json_object' },
+        }),
+      });
+    } catch (e) {
+      return { ok: false, status: null, error: `fetch falhou: ${e?.message ?? e}` };
+    }
+    if (!res.ok) {
+      const errBody = (await res.text()).slice(0, 500);
+      ultimo = { status: res.status, error: errBody.slice(0, 300) };
+      // 402 de saldo: o corpo diz quantos tokens ainda cabem, e a mesma chamada
+      // passa com esse numero. Sem isso, todo saldo residual era inutil e o
+      // visitante recebia 503 com a conta ainda capaz de responder.
+      const afford = res.status === 402 ? parseAffordableTokens(errBody) : null;
+      if (afford != null && afford < maxTokens && afford >= LLM_MIN_AFFORDABLE_TOKENS) {
+        console.warn(`[macro-api] ${provider.label} 402: rebaixando max_tokens ${maxTokens} -> ${afford}`);
+        maxTokens = afford;
+        continue;
+      }
+      return { ok: false, ...ultimo };
+    }
+    // 200 sem conteudo util nao e sucesso: o modelo de raciocinio pode ter
+    // gastado todo o max_tokens em reasoning_content (finish_reason=length) ou
+    // devolvido resposta ilegivel. Sem isto a perna "venceria" com texto vazio
+    // e a cascata morreria em 503 sem consultar a proxima.
+    let orJson;
+    try {
+      orJson = await res.json();
+    } catch (e) {
+      return { ok: false, status: res.status, error: `resposta ilegivel: ${e?.message ?? e}` };
+    }
+    const escolha = orJson?.choices?.[0];
+    const finish = escolha?.finish_reason ?? escolha?.native_finish_reason ?? null;
+    const conteudo = coerceLlmContent(escolha?.message?.content).trim();
+    if (!conteudo) {
+      console.error(`[macro-api] ${provider.label} resposta vazia`, { finish, status: res.status });
+      return {
+        ok: false,
+        status: res.status,
+        error: `resposta vazia (finish_reason=${finish})`,
+      };
+    }
+    if (finish === 'length') {
+      // Bateu no teto de max_tokens: o JSON volta cortado e nao ha como salvar
+      // o payload. Falha explicita para a proxima perna responder em vez de
+      // devolver 503 depois de um JSON.parse que nunca ia fechar.
+      console.error(`[macro-api] ${provider.label} bateu no teto de max_tokens`, { finish });
+      return { ok: false, status: res.status, error: `conteudo cortado (finish_reason=length, max_tokens=${maxTokens})` };
+    }
+    return { ok: true, content: conteudo, finish };
+  }
+  return { ok: false, ...ultimo };
 }
 
 const CRON_HEADER = 'X-Cron-Secret';
@@ -426,14 +577,15 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
 
   return await gerarMacro(env, request, { cors, forceRefresh });
 
-  // Cascata completa: BCB + Focus + OpenRouter + persistencia. Extraida em funcao
+  // Cascata completa: BCB + Focus + LLM (cadeia DeepSeek/OpenRouter) +
+  // persistencia. Extraida em funcao
   // para o caminho de leitura conseguir embrulhar em singleFlight.
   async function gerarMacro(env, request, { cors, forceRefresh }) {
-  const key = resolveOpenRouterKey(env);
-  if (!key || !key.startsWith('sk-')) {
+  const chain = buildLlmChain(env);
+  if (chain.length === 0) {
     if (forceRefresh) {
       return jsonResponse(
-        { ok: false, error: 'OPENROUTER_KEY inválida ou ausente no Worker' },
+        { ok: false, error: 'Nenhum provedor de LLM configurado no Worker (OPENROUTER_KEY ou DEEPSEEK_KEY)' },
         { status: 503, headers: cors },
       );
     }
@@ -446,7 +598,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         data: fallback.data,
       }, { headers: cors });
     }
-    return jsonResponse({ ok: false, error: 'OPENROUTER_KEY não configurada' }, { status: 503, headers: cors });
+    return jsonResponse({ ok: false, error: 'Nenhum provedor de LLM configurado no Worker' }, { status: 503, headers: cors });
   }
 
   const selicSgs = await bcbSgs(432);
@@ -500,27 +652,22 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     focus_pib: focusFmt(focusPib, (v) => `${v}%`),
   });
 
-  const orHeaders = new Headers({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${key}`,
-    'HTTP-Referer': 'https://szuchmacher.com.br',
-    'X-Title': 'Szuchmacher Macro API',
-  });
+  // Cadeia de provedores: a primeira perna que responder fecha a cascata. A
+  // falha de uma perna nao aborta o refresh, so registra o motivo e passa para
+  // a seguinte. So quando TODAS falham o visitante recebe 503.
+  const falhas = [];
+  let llm = null;
+  for (const provider of chain) {
+    const out = await callLlmProvider(provider, prompt);
+    if (out.ok) {
+      llm = { provider, content: out.content, finish: out.finish };
+      break;
+    }
+    falhas.push({ provedor: provider.label, status: out.status ?? null });
+    console.error('[macro-api] LLM falhou:', provider.label, out.status ?? '', out.error ?? '');
+  }
 
-  const orRes = await fetch(OPENROUTER_URL, {
-    method: 'POST',
-    headers: orHeaders,
-    body: JSON.stringify({
-      model: OPENROUTER_MODEL,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.2,
-      max_tokens: 8192,
-      response_format: { type: 'json_object' },
-    }),
-  });
-
-  if (!orRes.ok) {
-    const errBody = (await orRes.text()).slice(0, 300);
+  if (!llm) {
     if (!forceRefresh) {
       const fallback = await loadStaticMacro(env, request);
       if (fallback?.data) {
@@ -532,21 +679,15 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
         }, { headers: cors });
       }
     }
-    console.error('OpenRouter failed:', orRes.status);
+    const ultima = falhas[falhas.length - 1] ?? {};
     return jsonResponse(
-      { ok: false, error: 'OpenRouter falhou', status: orRes.status },
+      { ok: false, error: `${ultima.provedor ?? 'LLM'} falhou`, status: ultima.status ?? null, provedores_falhos: falhas },
       { status: 503, headers: cors },
     );
   }
 
-  const orJson = await orRes.json();
-  const choice = orJson?.choices?.[0];
-  const finish = choice?.finish_reason ?? choice?.native_finish_reason ?? null;
-  const content = coerceLlmContent(choice?.message?.content);
-  if (!content) {
-    console.error('[macro-api] OpenRouter resposta vazia', { finish, status: orRes.status });
-    return jsonResponse({ ok: false, error: 'OpenRouter resposta inválida' }, { status: 503, headers: cors });
-  }
+  const content = llm.content;
+  const finish = llm.finish ?? null;
 
   let data;
   try {
