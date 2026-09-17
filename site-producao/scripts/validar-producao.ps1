@@ -102,6 +102,15 @@ $checks = @(
     @{ Url = "$SZ/assets/regulatorio.php"; Status = 200;
        NaoContem = 'impacto_por_caso';
        Rotulo = 'sz: payload regulatorio sem o campo interno impacto_por_caso' }
+    # O bloco #situacoes voltou ao index.html em 16/09/2026 (commit 2540a3c),
+    # depois de ter saido em e4e105d, quando o radar geopolitico herdou o slot.
+    # O sintoma foi silencioso: o asset regulatorio-panel.js continuava servido e
+    # o endpoint respondia, mas sem o #situacoes na home o painel saia cedo no
+    # `if (!el || !panel) return;` e nada no gate reprovava. A checagem entra com
+    # o comportamento ja em producao (regra do projeto) e a ancora e o id do
+    # bloco, que e o que o painel consulta.
+    @{ Url = "$SZ/"; Status = 200; Contem = 'id="situacoes"';
+       Rotulo = 'sz: home com o bloco do tracker regulatorio (#situacoes)' }
 
     # Arquivos sensiveis no dominio sz. O gate nunca checou esses quatro, quem
     # fazia isso era o Bloco F da skill de auditoria, a mao. Mesma lacuna que o
