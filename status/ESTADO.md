@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-11 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-09-12 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -67,6 +67,25 @@ muda quando checagem nova entra, use a da saída real do script.
 
 ## Itens abertos
 
+- **P1-001, crédito OpenRouter esgotado, aberto em 12/09.** A conta da chave de
+  `config.php` (rótulo `sk-or-v1-ca7...ca6`) está acima do teto comprado:
+  `total_credits 299`, `total_usage 299.198780305`, e o provedor autoriza 47
+  tokens de saída. O agente do Radar falha com 402 e o Worker do macro pede
+  8192 tokens na mesma conta. Enquanto isso não for resolvido, a rotina de
+  domingo 18:00 e o cron nativo de segunda 00:01 BRT operam sem margem.
+  Detalhe no Estado em 2026-09-12.
+- **P1-002, `Szuchmacher-GeopoliticaAgent` nunca disparou por agenda, aberto em
+  12/09.** `LastRunTime 30.nov.1999`, `LastTaskResult 267011`,
+  `NextRunTime 13.set.2026 18:00`. A edição de 07/09 veio de execução manual.
+  Depois de destravar o crédito, conferir o disparo real de domingo e o
+  fallback de segunda.
+- **P2-001, USD/BRL, fechado em 12/09.** Correção publicada no Worker
+  `sz-sites`, versão `75340377-1ff3-484a-b2ba-eafd07271020`, com `source`,
+  `served_from`, `cache_state`, `quote_at`, `fetched_at`, `stale` e `warning`.
+  O gate pós deploy passou com 49 verificações e 0 falhas.
+- **P3-001, documentação operacional, fechado em 12/09.** `CLAUDE.md` agora
+  trata FTP como legado, identifica `env.ASSETS` como origem dos assets e inclui
+  `Szuchmacher-GeopoliticaAgent` na tabela do projeto.
 - ~~**Cron nativo, causa raiz corrigida em 24/08, prova real pendente.**~~
   **Fechado em 31/08 com prova.** A Cloudflare numera dia da semana como Quartz
   (`1` = domingo), então `0 3 * * 1` agendava domingo. Schedule trocado para
@@ -874,3 +893,180 @@ Conferências vivas desta rodada, sem ação: `/health` com `kv: ok` e
 `/assets/geopolitica.php` com `schema_version: 1` e `week.label` "14 a 20 de
 setembro de 2026"; headers estritos e `X-Served-By: sz-sites-worker` nos dois
 domínios; `config.php`, `.env`, `wrangler.toml` e `wrangler.jsonc` em 404.
+
+### Radar Geopolitico republicado por excecao manual (12/09/2026)
+
+A edicao no ar estava correta quanto a semana, W38 de 14 a 20 de setembro, e foi
+substituida por uma com fatos mais recentes, de 12/09. Publicacao pelo
+`publicar-com-rollback.ps1`, versao `f6249043-ac60-432e-b666-a8872239ed8b`, gate
+49/49. A edicao anterior esta em
+`site-producao/geopolitica-historico/20260912_074658_geopolitica-data.json`,
+pasta que passou a existir nesta rodada.
+
+O caminho normal nao funcionou, e o motivo e credito, nao codigo. O agente
+abortou com `OpenRouter HTTP 402`. A resposta do provedor ao proprio pedido diz
+que a conta autoriza 47 tokens de saida e que a origem do limite e
+`openrouter_credits`, com `GET /credits` devolvendo `total_credits 299` e
+`total_usage 299.198780305`. A chave e a de `site-producao/config.php`.
+
+As quatro vias de geracao, medidas nesta maquina.
+
+| via | estado |
+|---|---|
+| OpenRouter (chave do `config.php`) | 402, 47 tokens de saida autorizaveis |
+| Anthropic API (`ANTHROPIC_API_KEY` do `.env`) | 400, saldo insuficiente na API |
+| Qwen (`QWEN_API_KEY` do `.env`) | 403 `AccessDenied.Unpurchased` em todos os modelos |
+| OpenRouter free tier | funciona, com teto real de 32768 tokens de saida |
+
+A edicao publicada foi composta nesta sessao, com o mesmo dossie coletado, as
+mesmas regras editoriais e o mesmo validador do agente, usando o modelo DeepSeek.
+O caminho anterior tentou o free tier do OpenRouter e serviu de prova negativa,
+que fica registrada para nao ser repetida. O modelo gratuito chutou URLs de
+fonte. Das cinco divergencias, tres eram o endereco real sem o parametro de RSS e
+uma estava sem esquema, todas resolvidas por correspondencia de titulo contra o
+dossie, e uma URL nao teve correspondencia e foi descartada, sem nenhum tema cair
+abaixo do minimo de fontes. O texto das regioes tambem veio sem acentuacao, com
+267 trocas normalizando isso mais erros lexicais como `escaladar`, `wider
+conflict` e `hazardos climaticos`.
+
+Na versao publicada, as fontes nao sao transcritas a mao. Cada citacao e
+resolvida por indice do dossie coletado, entao nenhuma URL pode divergir da
+coleta por erro de digitacao. Conferencia das 44 URLs distintas citadas: todas
+responderam HTTP 200.
+
+Conferencia factual das alegacoes centrais contra o dossie, todas com lastro em
+manchete real: oleoduto leste-oeste saudita fechado apos ataque lancado do Iraque
+(BBC e OilPrice), 5,7 milhoes de bpd de corte projetado pela IEA (OilPrice),
+fretes de superpetroleiros a US$ 800 mil por dia (OilPrice), petroleo acima de
+US$ 100 (OilPrice), avancos houthis em Bab al-Mandeb (BBC e OilPrice), cupula do
+BRICS em Nova Deli (Al Jazeera), Xi pedindo papel do bloco no Oriente Medio
+(SCMP), G20 em Miami com oferta de encontro entre Zelenskyy e Putin (DW) e AfD na
+Saxonia-Anhalt (DW).
+
+Dois achados operacionais no mesmo dia.
+
+A `Szuchmacher-GeopoliticaAgent` nunca disparou por agenda. `LastRunTime` em
+30.nov.1999, `LastTaskResult 267011`, `NextRunTime` em 13.set.2026 18:00. A
+edicao de 07/09 veio de execucao manual, no mesmo dia em que a task foi
+registrada. O log de 08/09 tem nove abortos com `menos de 2 fontes primarias
+vivas`, e nesta verificacao a coleta estava sadia, com 106 grupos deduplicados e
+9 fontes vivas, entao aquele aborto foi transitorio.
+
+O mesmo teto de credito ameaca o Worker. `macro-api.js` pede `max_tokens: 8192`
+na mesma conta. O cache macro segue em `11/09/2026, 18:03 BRT` com `kv: ok` no
+`/health`, entao a geracao de 11/09 passou antes da exaustao. Os dois deploys de
+hoje tentaram aquecer o macro e falharam, com 503 na primeira tentativa e 429 nas
+seguintes. Sem credito, o cron de segunda 14/09 as 00:01 BRT tende a falhar e o
+painel cai no estatico, que e o cenario silent-green ja corrigido em 31/08 para o
+caso do cache vazio. Nao confirmei a conta da chave do Worker, que e secret e nao
+e legivel.
+
+Verificacao colada.
+
+```
+agente Python, --force                    abortou: OpenRouter HTTP 402
+validador do agente (validar_payload)     zero erro, 47 fontes todas do dossie
+contrato do browser (validateFull)        ok, 6 temas, 9 regioes, 47 fontes
+checagem das URLs citadas                 44 distintas, 44 responderam HTTP 200
+node --test tests/*.test.mjs              pass 126, fail 0
+publicar-com-rollback.ps1                 49 verificacoes, 0 falha
+producao /assets/geopolitica.php          generated_at 2026-09-12T08:08:27-03:00
+pagina renderizada (Playwright)           6 temas, 9 regioes, 12 mercados,
+                                          3 cenarios, 9 gatilhos, sem stale
+```
+
+### Fase 0 do plano de design executada, instrumentos e baseline (18/09/2026)
+
+Antes de tocar em CSS, os dois linters de design foram consertados e ganharam um
+pre-voo de veredito unico. Os dois falhavam, e o que eles escondiam importa mais
+que as correcoes em si.
+
+`audit-domain-palette.ps1` quebrava na primeira pagina com `PropertyNotFoundStrict`:
+a funcao `Get-Issues` devolve array vazio, o PowerShell unrolla isso para `$null`
+e `$null.Count` e erro de terminacao sob `Set-StrictMode`. Ou seja, o linter que
+existe para provar separacao de paleta entre os dois dominios nao checava pagina
+nenhuma. Corrigido nas duas ocorrencias (local e `-Live`), e ao voltar a rodar
+ele reportou duas violacoes que nunca tinham aparecido.
+
+Essas duas viraram falso positivo por evidencia, nao por conveniencia. O
+`ysz-stack--dark` em `assinatura.html:215` e `honorarios.html:337` e o lockup do
+rodape, e nessas paginas o rodape e navy: `sz-assinatura.css:112` e
+`sz-honorarios.css:124` definem `footer{background:var(--navy)}`, o mesmo padrao
+de `sz-cv.css:365` e `sz-privacidade.css:34`. A regra olhava a pagina inteira e
+reprovava o uso correto. Remover a classe, que era o caminho obvio, deixaria o
+rodape ilegivel, contraste 1,03:1 medido contra o fundo claro. A checagem agora
+ignora o bloco `footer`.
+
+`validar-design.ps1` tinha dois defeitos piores. Varria `public/`, que e saida de
+build ignorada pelo git, entao cada achado aparecia duas vezes e o gate reprovava
+pelo mesmo defeito em arquivo que nao e fonte. E a checagem de CSS apontava para
+`sz-tokens.css` e `sz-base.css`, que nunca existiram neste repo: a regra de
+`--radius` morria no `Test-Path` e o lint nunca olhou CSS nenhum. Agora aponta
+para `sz-design.css`, onde `--radius: 0px` passa.
+
+O linter de paleta cobria 5 paginas sz e listava 3 arquivos inexistentes. Passou
+a cobrir as 7 reais. `geopolitica.html` e `cv.html` ficavam sem cobertura, e
+`metodologia.html` entra como multi com prova de producao: responde 200 em
+`multi-assets.com/metodologia` e 404 em `szuchmacher.com.br/metodologia.html`.
+
+O `R$ 2 bi` do `cv.html:111` era violacao de copy, nao falso positivo do lint. O
+CV em PDF, fonte canonica da pagina, escreve `R$ 2 bilhoes` nas tres ocorrencias
+(Pagina 1, e as duas em Diferenciais). A pagina abreviava e o lint estava certo.
+
+Instrumentos novos. `scripts/pre-flight-design.ps1` da um comando e um veredito,
+somando os dois linters as medidas do plano, familias de fonte e links
+duplicados, colisao de namespace entre os dominios, nomes de classe acima de 40
+chars, piso de fonte e inventario de breakpoints. Nao publica e nao escreve
+arquivo. `scripts/baseline-frontend.mjs` sobe servidor estatico local com shim de
+`/assets/geopolitica.php` para o painel do Radar renderizar igual ao Worker, e
+captura 6 paginas x 5 viewports com print e metrica.
+
+Baseline medido, 30 capturas, todas HTTP 200 e zero erro de console. O que ele
+ja provou:
+
+- Fonte minima renderizada de **8,6px** nas paginas sz, vinda de 12 valores `rem`
+  entre 0,5 e 0,74 no `sz-design.css`. Uma checagem so de `px` nao pegaria.
+- `metodologia.html` com **47 elementos em overflow horizontal** em 320 e 390.
+  Unico caso de overflow do conjunto.
+- Breakpoints vivos no `sz-design.css`: 380, 520, 640, 860, 900, 980, 1100.
+- Familias aplicadas nas paginas sz: Prata, Public Sans, JetBrains Mono, Manrope e
+  Playfair Display. As duas ultimas vem do lockup, que e o alvo do C1.
+
+Duas correcoes ao plano, por medicao.
+
+O C8 afirmava que `.hero-metrics` ficaria com 4 colunas em 320px. Nao fica. A
+medicao em 320/390/768/1024/1440 da `.hero-metrics` 1/1/2/4/4, `.method-grid`
+1/1/1/4/4 e `.pillars-grid` 1/1/1/3/3. Nenhum grid tem coluna de sobra no
+celular. O que existe de real e um degrau faltando na faixa de tablet, onde
+`.method-grid` e `.pillars-grid` ficam em 1 coluna em 768 e saltam direto para 4
+e 3 em 1024.
+
+O C4 tratava `metodologia.html` como desvio do sistema sz a migrar. Ela e pagina
+do dominio multi, entao o stack Playfair e DM Sans dela e escolha do outro
+dominio, nao violacao. Migrar seria decisao de produto, nao correcao de lint.
+
+Terceiro achado, de produto. `.situacoes-grid` e `flex` em todos os viewports,
+nao grid, apesar do nome.
+
+Verificacao colada.
+
+```
+validar-design.ps1              0 erro(s), 1 aviso(s)   EXIT=0
+audit-domain-palette.ps1        7 PASS SZ, 3 INFO MULTI EXIT=0
+pre-flight-design.ps1           12 falha(s) dura(s)     EXIT=1
+baseline-frontend.mjs           30 capturas, 30 HTTP 200, 0 erro de console
+```
+
+As 12 falhas duras do pre-voo sao exatamente o trabalho que sobra: C1 e C2
+(familias e links duplicados), C11 (`.geo-card`) e C13 (as 6 `.u-*` e os 13 nomes
+de classe acima de 40 chars). Nao sao estado novo, sao o plano medido.
+
+Commit `0841106`, 5 arquivos, so os da Fase 0. O pre-voo nao foi plugado no
+publicador ainda: isso e o C14, que toca o pipeline compartilhado. E a Fase 0
+ficou em `master` de proposito, porque e camada aditiva que nao muda o que
+produz. A decisao de isolar as Fases 1 a 3 em worktree ou branch fica para antes
+da primeira cirurgia de CSS, quando a rotina que publica a partir desta arvore
+passa a importar.
+
+O `R$ 2 bilhoes` do `cv.html` so vai ao ar na proxima publicacao, junto com
+qualquer outro deploy.
