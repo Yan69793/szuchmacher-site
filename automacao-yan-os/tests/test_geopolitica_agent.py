@@ -80,9 +80,46 @@ class GeopoliticaAgentTests(unittest.TestCase):
         self.assertTrue(any("week" in e for e in geo.validar_payload(data)))
 
     def test_validar_payload_rejeita_generated_at_sem_timezone(self):
-        data = json.loads(geo.DATA_JSON.read_text(encoding="utf-8"))
+        data = json.loads((geo.DATA_JSON).read_text(encoding="utf-8"))
         data["generated_at"] = "2026-09-07T19:40:00"
         self.assertTrue(any("generated_at" in e for e in geo.validar_payload(data)))
+
+    @staticmethod
+    def _fonte(n, tipo="primaria"):
+        return {"url": f"https://exemplo{n}.example/x", "titulo": f"t{n}",
+                "veiculo": f"v{n}", "data": "2026-09-18", "tipo": tipo}
+
+    def test_ajustar_niveis_risco_rebaixa_tema_alto_impacto_com_duas_fontes(self):
+        payload = {"themes": [
+            {"nivel_risco": "elevado", "sources": [self._fonte(1), self._fonte(2)]},
+            {"nivel_risco": "critico", "sources": [self._fonte(1), self._fonte(2), self._fonte(3)]},
+            {"nivel_risco": "moderado", "sources": [self._fonte(1)]},
+        ]}
+        ajustes = geo.ajustar_niveis_risco(payload)
+        self.assertEqual(payload["themes"][0]["nivel_risco"], "moderado")
+        self.assertEqual(payload["themes"][1]["nivel_risco"], "critico")
+        self.assertEqual(payload["themes"][2]["nivel_risco"], "moderado")
+        self.assertEqual(len(ajustes), 1)
+        self.assertIn("themes[0]", ajustes[0])
+
+    def test_ajustar_niveis_risco_nao_conta_fonte_invalida(self):
+        # Duas fontes validas mais uma sem tipo reconhecido: a terceira nao conta
+        # e o tema cai, sem que nenhuma fonte seja removida do payload.
+        invalida = {"url": "https://exemplo9.example/x", "titulo": "t9",
+                    "veiculo": "v9", "data": "2026-09-18", "tipo": "blog"}
+        payload = {"themes": [{"nivel_risco": "elevado",
+                               "sources": [self._fonte(1), self._fonte(2), invalida]}]}
+        ajustes = geo.ajustar_niveis_risco(payload)
+        self.assertEqual(payload["themes"][0]["nivel_risco"], "moderado")
+        self.assertEqual(len(payload["themes"][0]["sources"]), 3, "nenhuma fonte e removida")
+        self.assertEqual(len(ajustes), 1)
+
+    def test_ajustar_niveis_risco_sem_mudanca_nao_reporta(self):
+        payload = {"themes": [
+            {"nivel_risco": "critico", "sources": [self._fonte(1), self._fonte(2), self._fonte(3)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(1)]},
+        ]}
+        self.assertEqual(geo.ajustar_niveis_risco(payload), [])
 
 
 class CadeiaDeProvedoresTests(unittest.TestCase):
