@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-12 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-09-18 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -1070,3 +1070,28 @@ passa a importar.
 
 O `R$ 2 bilhoes` do `cv.html` so vai ao ar na proxima publicacao, junto com
 qualquer outro deploy.
+
+### Correcao do agente geopolitico sem o credito OpenRouter (18/09/2026)
+
+O fallback DeepSeek do `geopolitica_agent.py` (cadeia do commit `c61271c`)
+reprovava a edicao no validador. Reproduzido nesta sessao com `deepseek-v4-pro`:
+o payload veio com shape de fontes correto, mas dois de cinco temas marcados
+`elevado` traziam apenas duas fontes, e a regra editorial exige tres para tese de
+alto impacto. O erro de shape de 16/09 (`themes[*].sources invalidas`) nao
+reproduziu. Os logs de 13/09 e 14/09 tinham abortado antes disso, em HTTP 402.
+
+Correcao por post-processamento, como o proprio commit `815c1da` apontava.
+`ajustar_niveis_risco()` rebaixa para `moderado` o tema `elevado`/`critico` com
+menos de tres fontes validas. Nenhuma fonte e criada, removida ou alterada, e
+nenhum fato reescrito. Validado contra o payload real capturado: dois erros antes,
+zero depois, niveis finais `['moderado','critico','moderado','moderado','elevado']`.
+
+A prova e do post-processador contra amostra real. O caminho ponta a ponta com
+publicacao nao foi reexecutado, e o credito OpenRouter segue esgotado (P1-001),
+que e o bloqueio de origem e nao se resolve por codigo.
+
+Tambem nesta sessao: `headers.js` (CSP com os dois `sha256` de `style-src`) e os
+docs pendentes foram commitados para destravar a guarda de working tree do
+`Szuchmacher-AgendaAgent`, que abortou em 17/09 por causa deles. `nul` na raiz e
+tres `.hermes-tmp.*` em `tests/` removidos.
+

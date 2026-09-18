@@ -2,7 +2,7 @@
 
 Fonte: `Logo YSZ design-handoff.zip` (Claude Design), aprovado como "Logo final — Szuchmacher Consultoria".
 Escopo desta fase: **Site institucional** (`E:\Diretorio\Claude\Site\site-producao\`), como projeto de referência.
-Fases seguintes (após aprovação visual desta): VIX Radar, Jarvis, graphify, Radar Quant Brasil, MultiAsset-Supabase.
+Fases seguintes (após aprovação visual desta): VIX Radar, graphify, Radar Quant Brasil, MultiAsset-Supabase.
 Fora de escopo (decidido): Jornada Interior (marca "Maia Veras", incompatível).
 
 ## Status: ✅ implementado e verificado (2026-07-19)

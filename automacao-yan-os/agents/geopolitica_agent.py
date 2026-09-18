@@ -615,6 +615,34 @@ def validar_payload(data: dict, urls_permitidas: set[str] | None = None) -> list
     return erros
 
 
+def _fontes_validas_tema(t: dict) -> list[dict]:
+    s = t.get("sources")
+    if not isinstance(s, list):
+        return []
+    return [f for f in s if _fonte_valida(f)]
+
+
+def ajustar_niveis_risco(payload: dict) -> list[str]:
+    """Rebaixa tema elevado/critico que nao sustenta o minimo de tres fontes.
+
+    O contrato editorial exige tres fontes independentes para tese de alto
+    impacto, mas o sintetizador marca 'elevado' com duas fontes de forma
+    intermitente (medido em 18/09/2026 com deepseek-v4-pro: dois de cinco temas).
+    Em vez de reprovar a edicao inteira, o tema volta a 'moderado', que e o
+    nivel coerente com o lastro que ele de fato tem. Nenhuma fonte e criada,
+    removida ou alterada, e nenhum fato e reescrito.
+    """
+    ajustes: list[str] = []
+    for i, t in enumerate(payload.get("themes", [])):
+        if not isinstance(t, dict):
+            continue
+        if t.get("nivel_risco") in {"elevado", "critico"} and len(_fontes_validas_tema(t)) < 3:
+            antes = t.get("nivel_risco")
+            t["nivel_risco"] = "moderado"
+            ajustes.append(f"themes[{i}] {antes} -> moderado (fontes insuficientes para alto impacto)")
+    return ajustes
+
+
 def salvar(data: dict, dry_run: bool) -> None:
     if dry_run:
         log("DRY-RUN: payload validado; nenhum arquivo final alterado")
@@ -655,6 +683,8 @@ def main() -> int:
         raise RuntimeError(f"itens deduplicados abaixo do mínimo: {len(grupos)} < {args.itens_min}")
     mercados = niveis_mercado()
     payload = sintetizar(grupos, mercados, semana)
+    for aviso in ajustar_niveis_risco(payload):
+        log(f"AVISO nivel_risco ajustado: {aviso}")
     urls_permitidas = {i["url"] for g in grupos for i in [g] if i.get("url")}
     erros = validar_payload(payload, urls_permitidas)
     if erros:

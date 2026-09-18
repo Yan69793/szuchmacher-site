@@ -8,7 +8,7 @@ function buildCSP() {
   return [
     "default-src 'self'",
     "script-src 'self' https://www.clarity.ms https://scripts.clarity.ms https://plausible.io https://s3.tradingview.com https://s.tradingview.com https://cdnjs.cloudflare.com https://static.cloudflareinsights.com",
-    "style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+    "style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog=' 'sha256-JyHF32z4Ou/Ujas95CX3WgBqlTt7Dxzo/fQG5/5oBo8='",
     "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
     "img-src 'self' data: https://s3.tradingview.com https://static.cloudflareinsights.com https://*.clarity.ms https://c.bing.com https://szuchmacher.com.br https://multi-assets.com",
     "connect-src 'self' https://szuchmacher.com.br https://multi-assets.com https://economia.awesomeapi.com.br https://api.bcb.gov.br https://brapi.dev https://brasilapi.com.br https://api.coingecko.com https://www.clarity.ms https://*.clarity.ms https://c.clarity.ms https://plausible.io https://formspree.io https://query1.finance.yahoo.com https://cloudflareinsights.com",

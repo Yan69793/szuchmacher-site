@@ -43,20 +43,15 @@ falha nas tasks dos outros projetos aqui é caminho errado.
 
 ### Cloud Routine — pipeline remoto de domingo
 
-Existe uma rotina que roda na nuvem (Claude Code Remote), sem depender desta
-máquina: **`szuchmacher-domingo`**, cron `0 11 * * 0` (domingo 08:00 BRT),
-environment `env_01DW1CsRC9cNGdotEAxnnJqk`, repo `yan69793/szuchmacher-site`.
-Ela coleta dados macro, gera `macro_data.json` e `agenda-data.json`, e publica
-via FTP no HostGator.
+Há documentação histórica de uma rotina remota chamada **`szuchmacher-domingo`**,
+que coletava dados e usava FTP. O estado atual do Site não comprova essa rotina
+como escritor ativo, e o FTP permanece legado para rollback. O Worker serve os
+assets pelo binding `env.ASSETS`, não por arquivos enviados ao HostGator.
 
-Isso significa que:
-- Domingo de manhã o Worker **não** é a única via de publicação. A rotina remota
-  sobe arquivos por FTP que o Worker serve do mesmo `public/`.
-- A task local `Szuchmacher-AgendaAgent` também roda domingo 08:00. As duas
-  podem colidir. A local publica via `publicar-com-rollback.ps1` (com
-  validação e rollback), a remota vai direto por FTP.
-- Desligar o Worker pensando que só a máquina local publica vai quebrar a
-  rotina remota em silêncio.
+A fonte operacional deste projeto é a `Szuchmacher-AgendaAgent`, que publica
+por `publicar-com-rollback.ps1`, com build, invalidação e validação. Qualquer
+rotina remota deve ser tratada como dependência externa até sua execução atual
+ser conferida no painel correspondente.
 
 Documentação completa em `docs/controle-remoto-claude-code.md`.
 
@@ -234,6 +229,7 @@ deste projeto estão na tabela abaixo. As demais são do
 | Task / gatilho | Schedule | O que faz |
 |----------------|----------|-----------|
 | `Szuchmacher-AgendaAgent` | dom+seg+qui 08:00 | Gera e publica `agenda-data.json` (escritor de produção) |
+| `Szuchmacher-GeopoliticaAgent` | domingo 18:00, fallback segunda 08:30 | Gera e publica a edição semanal do Radar Geopolítico |
 | Cron do Worker `sz-sites` | segunda 00:00 BRT (`0 3 * * MON` UTC) | Regenera o macro (`forceRefresh` interno). Primário. Disparo sem confirmação desde 17/08 |
 | `Szuchmacher-MacroCronWatchdog` | segunda 09:00 BRT | Lê `macro_cron_last.ts` em `/health`. Se o nativo não deixou carimbo nesta segunda, chama `run-macro-cron.ps1` e avisa por e-mail. Fora do scheduler da Cloudflare |
 | `Szuchmacher-MacroCron` | **desabilitada 15/08/2026** | Competia com o deploy das 08h, 429, alarme falso |
@@ -308,6 +304,25 @@ fechamento da Mirabaud, extrai conteúdo e atualiza `index.html` e
 
 
 ## Pendências abertas (prioridade)
+
+Auditoria de 12/09/2026, relatório `diagnosticos/DIAGNOSTICO-2026-09-12.md`.
+
+- **P1-001, crédito OpenRouter esgotado, aberto em 12/09.** A conta da chave de
+  `config.php` está acima do teto comprado e autoriza 47 tokens de saída. O
+  agente do Radar falha com 402 e o `macro-api.js` pede 8192 tokens na mesma
+  conta. A edição do Radar de 12/09 foi gerada por exceção manual e publicada na
+  versão `f6249043-ac60-432e-b666-a8872239ed8b`, gate 49/49.
+  Detalhe em `../status/ESTADO.md`, seção de 12/09.
+- **P1-002, `Szuchmacher-GeopoliticaAgent` nunca disparou por agenda, aberto em
+  12/09.** `LastRunTime` em 30.nov.1999 e `LastTaskResult 267011`. Conferir o
+  disparo de domingo e o fallback de segunda depois de destravar o crédito.
+- **P2-001, USD/BRL, fechado em 12/09.** Correção publicada no Worker
+  `sz-sites`, com procedência, idade e estado do cache separados, PTAX como
+  referência diária explícita e consumidor rotulado. Gate pós deploy 49/49.
+- **P3-001, documentação operacional, fechado em 12/09.** As seções
+  Dependências cruzadas e Cloud Routine foram alinhadas com `status/ESTADO.md`.
+  FTP aparece como legado, `env.ASSETS` como origem dos assets e
+  `GeopoliticaAgent` consta na tabela deste projeto.
 
 Fase 2 no ar desde 15/08/2026 08:17 BRT (Worker `f08d6f46`, rollback
 `b4c3ba12`). Relatório: `diagnosticos/FASE2-2026-08-15.md`. Gate 34/34 naquela
