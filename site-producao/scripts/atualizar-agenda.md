@@ -14,7 +14,7 @@ Scheduler (Szuchmacher-AgendaAgent, dom + seg + qui 08:00).
 
 ## Fluxo manual (se a automação falhar)
 
-1. `cd E:\Diretorio\Claude\Site\automacao-yan-os`
+1. `cd E:\Diretorio\Claude\FREQUENTE\Site\automacao-yan-os`
 2. Ativar venv e rodar: `python agents\agenda_agent.py`
 3. Conferir `E:\Diretorio\Claude\Site\site-producao\agenda-data.json`
 4. Publicar: `cd ..\site-producao\scripts && .\publicar-com-rollback.ps1`

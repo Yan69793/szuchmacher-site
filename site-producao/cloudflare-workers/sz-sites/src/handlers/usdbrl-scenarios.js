@@ -1,51 +1,93 @@
 // Handler: /api/usdbrl-scenarios
-// Busca cotacao USD/BRL da AwesomeAPI, calcula volatilidade implicita
-// e constroi cenarios direcionais de cambio. Cache em KV por 30min.
-// Diferente dos outros ativos: USD/BRL e uma aposta direcional,
-// nao long-only. O investidor aposta na direcao do cambio.
+// Cotacao primaria AwesomeAPI, com procedencia e idade separadas do estado do KV.
 
 import { fetchJson, jsonResponse } from '../utils/http.js';
 import { readCache, writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
 
 const CACHE_KEY = 'usdbrl-scenarios';
-const CACHE_TTL = 1800; // 30 minutos
+const CACHE_TTL = 1800;
 const DEFAULTS = { bid: 5.09, ask: 5.11, vol: 0.12 };
+const SOURCES = new Set(['awesomeapi', 'bcb_ptax', 'defaults']);
 
-async function fetchAwesome() {
-  const data = await fetchJson(
-    'https://economia.awesomeapi.com.br/json/last/USD-BRL',
-    { timeout: 8000 }
-  );
-  if (!data?.USDBRL) return null;
+function nowSeconds() { return Math.floor(Date.now() / 1000); }
 
-  const q = data.USDBRL;
-  const bid = parseFloat(q.bid);
-  const ask = parseFloat(q.ask);
-  if (!bid || bid <= 0) return null;
+function finitePositive(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : null;
+}
 
+function validSource(source) { return SOURCES.has(source); }
+
+export function validCache(cache) {
+  return Boolean(cache && validSource(cache.source) && finitePositive(cache.usdbrl_bid)
+    && cache.rates && Number.isFinite(Number(cache.rates.pess))
+    && Number.isFinite(Number(cache.rates.base)) && Number.isFinite(Number(cache.rates.otim))
+    && finitePositive(cache.quote_at));
+}
+
+export function responseFromCache(cache, cacheState, warning = null) {
+  const fallback = cache.source !== 'awesomeapi' || cacheState !== 'fresh';
   return {
-    bid,
-    ask: ask || bid,
-    high: parseFloat(q.high) || bid,
-    low: parseFloat(q.low) || bid,
-    varBid: parseFloat(q.varBid) || 0,
-    pctChange: parseFloat(q.pctChange) || 0,
+    ok: true,
+    rates: cache.rates,
+    usdbrl_bid: cache.usdbrl_bid,
+    usdbrl_vol: cache.usdbrl_vol,
+    generated_at: cache.quote_at,
+    quote_at: cache.quote_at,
+    fetched_at: cache.fetched_at ?? cache.ts ?? cache.quote_at,
+    source: cache.source,
+    served_from: 'kv',
+    cache_state: cacheState,
+    stale: fallback,
+    warning: warning ?? cache.warning ?? (fallback ? 'upstream_unavailable' : null),
   };
 }
 
-function computeRates(bid, volAnual) {
-  // USD/BRL e direcional: nao existe "retorno esperado positivo" como nos outros ativos.
-  // O cenario base e neutro (cambio estavel, retorno 0%). O spread dos cenarios
-  // reflete a volatilidade cambial: quanto maior a vol, maior o spread.
-  //
-  // Pessimista: BRL deprecia (USD sobe) — investidor perde em BRL
-  //   Retorno negativo proporcional a meia-volatilidade
-  // Base: cambio estavel — retorno ~0%
-  // Otimista: BRL aprecia (USD cai) — investidor ganha com a queda
-  //   Retorno positivo proporcional a meia-volatilidade
+async function fetchAwesome() {
+  const data = await fetchJson('https://economia.awesomeapi.com.br/json/last/USD-BRL', { timeout: 8000 });
+  const quote = data?.USDBRL;
+  const bid = finitePositive(quote?.bid);
+  if (!bid) return null;
+  return {
+    bid,
+    ask: finitePositive(quote.ask) ?? bid,
+    high: finitePositive(quote.high) ?? bid,
+    low: finitePositive(quote.low) ?? bid,
+    quoteAt: finitePositive(quote.timestamp),
+  };
+}
 
-  var halfSpread = volAnual * 1.2; // 1.2 sigma para o spread
+function bcbDateParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date).reduce((result, part) => {
+    if (part.type !== 'literal') result[part.type] = part.value;
+    return result;
+  }, {});
+  return `${parts.month}-${parts.day}-${parts.year}`;
+}
 
+async function fetchBcbPtax() {
+  let date = new Date();
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const dataCotacao = bcbDateParts(date);
+    const url = 'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/'
+      + `CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dataCotacao}'&$top=1&$format=json`;
+    const data = await fetchJson(url, { timeout: 8000 });
+    const row = data?.value?.[0];
+    const bid = finitePositive(row?.cotacaoCompra);
+    const ask = finitePositive(row?.cotacaoVenda);
+    if (bid && ask) {
+      const quoteAt = Date.parse(row.dataHoraCotacao) / 1000;
+      return { bid, ask, high: bid, low: bid, quoteAt: Number.isFinite(quoteAt) ? quoteAt : nowSeconds() };
+    }
+    date = new Date(date.getTime() - 86400000);
+  }
+  return null;
+}
+
+export function computeRates(bid, volAnual) {
+  const halfSpread = volAnual * 1.2;
   return {
     pess: Math.round(-halfSpread * 10000) / 10000,
     base: 0.0,
@@ -54,96 +96,43 @@ function computeRates(bid, volAnual) {
 }
 
 function computeVol(quote) {
-  // Volatilidade implicita diaria a partir do range high-low
   if (!quote.high || !quote.low || !quote.bid) return DEFAULTS.vol;
-  var rangePct = (quote.high - quote.low) / quote.bid;
-  // Anualizar: range diario * sqrt(252)
-  var annualVol = rangePct * Math.sqrt(252);
-  // Clamp entre 8% e 25%
-  return Math.max(0.08, Math.min(0.25, annualVol));
+  const rangePct = (quote.high - quote.low) / quote.bid;
+  return Math.max(0.08, Math.min(0.25, rangePct * Math.sqrt(252)));
 }
 
 async function revalidate(env) {
-  var quote = await fetchAwesome();
-  var source = 'live';
+  let quote = await fetchAwesome();
+  let source = 'awesomeapi';
+  let warning = null;
 
   if (!quote) {
-    // Fallback para cache stale se existir. `ts` e `generated_at` fazem trabalhos
-    // diferentes: `ts` é o relógio de frescor que o gate de fora usa pra decidir
-    // 'cache' vs 'stale' — sem avançá-lo aqui, toda request pelo próximo CACHE_TTL
-    // cairia em 'stale' de novo e disparava uma cascata de upstream a cada uma.
-    // `generated_at` é a idade real da última cotação ao vivo — grudar os dois no
-    // mesmo valor faria uma cotação de horas atrás parecer capturada agora.
-    var cache = await readCache(env.CACHE, CACHE_KEY);
-    if (cache) {
-      var geradoEm = cache.generated_at ?? cache.ts;
-      await writeCache(env.CACHE, CACHE_KEY, {
-        rates: cache.rates,
-        usdbrl_bid: cache.usdbrl_bid,
-        usdbrl_vol: cache.usdbrl_vol,
-        generated_at: geradoEm,
-        ts: Math.floor(Date.now() / 1000),
-      }, staleTtl(CACHE_TTL));
-      return {
-        ok: true,
-        rates: cache.rates,
-        usdbrl_bid: cache.usdbrl_bid,
-        usdbrl_vol: cache.usdbrl_vol,
-        generated_at: geradoEm,
-        source: 'stale',
-      };
-    }
-    // Sem cache, usa defaults
-    quote = { bid: DEFAULTS.bid, ask: DEFAULTS.ask };
-    source = 'defaults';
+    const cache = await readCache(env.CACHE, CACHE_KEY);
+    if (validCache(cache)) return responseFromCache(cache, 'stale', 'upstream_unavailable');
+    quote = await fetchBcbPtax();
+    source = quote ? 'bcb_ptax' : 'defaults';
+    warning = quote ? 'daily_reference' : 'no_upstream_data';
+    quote ??= { bid: DEFAULTS.bid, ask: DEFAULTS.ask, high: DEFAULTS.bid, low: DEFAULTS.bid };
   }
 
-  var vol = computeVol(quote);
-  var rates = computeRates(quote.bid, vol);
-  var ts = Math.floor(Date.now() / 1000);
-
-  await writeCache(env.CACHE, CACHE_KEY, {
-    rates,
-    usdbrl_bid: quote.bid,
-    usdbrl_vol: vol,
-    generated_at: ts,
-    ts,
-  }, staleTtl(CACHE_TTL));
-
-  return {
-    ok: true,
-    rates,
-    usdbrl_bid: quote.bid,
-    usdbrl_vol: vol,
-    generated_at: ts,
-    source,
+  const fetchedAt = nowSeconds();
+  const quoteAt = quote.quoteAt ?? fetchedAt;
+  const vol = computeVol(quote);
+  const payload = {
+    rates: computeRates(quote.bid, vol), usdbrl_bid: quote.bid, usdbrl_vol: vol,
+    quote_at: quoteAt, fetched_at: fetchedAt, source, served_from: 'upstream',
+    cache_state: source === 'awesomeapi' ? 'fresh' : 'fallback', stale: source !== 'awesomeapi',
+    warning, ts: fetchedAt,
   };
+  await writeCache(env.CACHE, CACHE_KEY, payload, staleTtl(CACHE_TTL));
+  return { ...responseFromCache(payload, payload.cache_state, warning), served_from: 'upstream' };
 }
 
 export async function handleUsdbrlScenarios(env, ctx) {
-  var res = await readCacheOrRevalidate(
-    env.CACHE,
-    CACHE_KEY,
-    CACHE_TTL,
-    ctx,
-    function () { return revalidate(env); }
-  );
-
-  if (res.cached) {
-    return jsonResponse(
-      {
-        ok: true,
-        rates: res.cached.rates,
-        usdbrl_bid: res.cached.usdbrl_bid,
-        usdbrl_vol: res.cached.usdbrl_vol,
-        generated_at: res.cached.generated_at ?? res.cached.ts,
-        source: res.state,
-      },
-      { headers: { 'Cache-Control': 'public, max-age=900' } }
-    );
+  const res = await readCacheOrRevalidate(env.CACHE, CACHE_KEY, CACHE_TTL, ctx, () => revalidate(env));
+  if (res.cached && validCache(res.cached)) {
+    const cacheState = res.state === 'cache' ? 'fresh' : res.state;
+    return jsonResponse(responseFromCache(res.cached, cacheState), { headers: { 'Cache-Control': 'public, max-age=900' } });
   }
-
-  return jsonResponse(await revalidate(env), {
-    headers: { 'Cache-Control': 'public, max-age=900' },
-  });
+  return jsonResponse(await revalidate(env), { headers: { 'Cache-Control': 'public, max-age=900' } });
 }

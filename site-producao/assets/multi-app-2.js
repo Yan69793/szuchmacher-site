@@ -452,6 +452,17 @@ function applyScenarioRates(asset, r) {
                 var macroUsd = document.getElementById('macro-usd');
                 if (macroUsd) macroUsd.textContent = d.usdbrl_bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
+            var sourceLabel = document.getElementById('macro-usd-source');
+            if (sourceLabel) {
+                var labels = {
+                    awesomeapi: 'comercial',
+                    bcb_ptax: 'referência diária',
+                    defaults: 'premissa sem fonte',
+                };
+                var stateLabel = d.cache_state === 'stale' ? 'cache vencido' : (labels[d.source] || 'origem desconhecida');
+                sourceLabel.textContent = stateLabel;
+                sourceLabel.title = d.warning || d.source || '';
+            }
             var labelPess = document.getElementById('u-rate-cons');
             var labelBase = document.getElementById('u-rate-mod');
             var labelOtim = document.getElementById('u-rate-agr');

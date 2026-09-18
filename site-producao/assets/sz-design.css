@@ -2610,3 +2610,6 @@ footer {
 .ysz-stack--dark .ysz-stack__icon{border-color:#c9a565;color:#f1ede6}
 .ysz-stack--dark .ysz-stack__firm{color:#f1ede6}
 .ysz-stack--dark .ysz-stack__descriptor{color:#c9a565}
+
+/* Esconderho por defeito; o JS revela (el.style.display = 'block') que sobrevive ao CSP */
+.situacoes { display: none; }

@@ -1,348 +1,733 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-07T19:40:00-03:00",
+  "generated_at": "2026-09-12T08:08:27-03:00",
   "week": {
     "iso": "2026-W38",
     "start": "2026-09-14",
     "end": "2026-09-20",
     "label": "14 a 20 de setembro de 2026"
   },
-  "executive_summary": "A guerra entre EUA-Israel e Irã reduziu o fluxo do Estreito de Hormuz de cerca de 20 milhões de bpd para estimados 6–8 milhões de bpd, mantendo o prêmio de guerra no petróleo (WTI ~US$ 92,70; Brent ~US$ 97,00) e o alerta de Goldman Sachs para US$ 120. Na Europa, a AfD ficou a três cadeiras da maioria na Saxônia-Anhalt e tenta formar governo, enquanto a diplomacia EUA-Rússia congela (consulado alemão fechado em São Petersburgo). Na Ucrânia, enviados de Trump alternaram Moscou e Kiev sem cessar-fogo à vista. A semana que vem empilha BCE (10/09), FOMC com projeções (15–16/09) e COPOM (16/09) sobre um cenário de energia cara e comércio em fragmentação, com terras raras chinesas congeladas semanas antes da cúpula Xi–Trump.",
+  "executive_summary": "A semana de 14 a 20 de setembro de 2026 abre com o Golfo Pérsico no centro do risco. A Arábia Saudita fechou o oleoduto leste-oeste depois de ataque com drones lançados do Iraque, justamente a rota que contorna o Estreito de Hormuz, e os houthis avançaram sobre Bab al-Mandeb, estreitando o controle da navegação no Mar Vermelho. O petróleo passou de US$ 100, o frete de superpetroleiros chegou a US$ 800 mil por dia e a IEA projeta corte de 5,7 milhões de bpd na oferta global, com a recuperação do Golfo empurrada para 2027. Na Europa, a Rússia atingiu navios cargueiros e usinas siderúrgicas na Ucrânia, drones russos chegaram à Moldávia e à Romênia, e a ONU fala do inverno mais duro desde a invasão em larga escala. A cúpula do BRICS abriu em Nova Délhi com Xi Jinping pedindo papel do bloco no Oriente Médio, e a China exigiu que os EUA parem a espionagem. Nos EUA, o 25º aniversário do 11 de setembro recolocou o contraterrorismo na agenda e a Casa Branca avalia a Lei de Produção de Defesa com as refinarias no limite. Nos níveis coletados, o Treasury 10 anos está em 4,975%, o DXY em 99,095, o S&P 500 em 7.656,98, o ouro em US$ 4.408,90 e a Selic em 14,00%.",
+  "disclaimer": "Material informativo e institucional do Radar Geopolítico. Não constitui oferta, solicitação ou recomendação de investimento, nem análise individualizada de valores mobiliários, nos termos da Resolução CVM nº 19/2021. As teses indicam direção e condicionantes, sem probabilidades numéricas. Rentabilidade passada não representa garantia de resultados futuros.",
   "confidence": {
     "overall": "media",
-    "nota": "Fatos de guerra dependem de cobertura em zona de censura e de estimativas de operadores de navegação; os números de fluxo do Hormuz são estimativas da imprensa de energia, não dado oficial. As datas de bancos centrais vêm de fontes oficiais. Níveis de mercado: fechamento de 04/09 e pregão de 07/09/2026. Sem probabilidades numéricas em nenhuma tese."
+    "nota": "Os fatos centrais vêm de veículos primários com cobertura própria (BBC, Al Jazeera, Deutsche Welle, ONU News, South China Morning Post) e os dados de energia de fontes de mercado e de análise (OilPrice, CSIS, CFR). Fluxo, frete e projeção de oferta são estimativas publicadas, não dado oficial. Níveis de mercado coletados no fechamento de 11/09/2026. Sem probabilidades numéricas em nenhuma tese."
   },
   "themes": [
     {
-      "id": "hormuz-guerra-ira",
-      "titulo": "Guerra EUA-Israel x Irã pressiona o Estreito de Hormuz",
+      "id": "oleoduto-leste-oeste-saudita",
+      "titulo": "Oleoduto leste-oeste saudita fechado após ataque com drones do Iraque",
       "nivel_risco": "critico",
-      "fato": "O tráfego de navios no Estreito de Hormuz caiu de forma acentuada na guerra entre EUA-Israel e Irã; estimativas de operadores publicadas pela imprensa de energia apontam queda do fluxo de petróleo de ~20 milhões de bpd para 6–8 milhões de bpd. O Irã anunciou que controlará um novo corredor de navegação no estreito, enquanto os EUA insistem que a via está 'totalmente aberta'. Ataques houthis atingiram novamente a refinaria Jizan, da Saudi Aramco.",
-      "impacto_mercados": "Prêmio de guerra no petróleo com WTI a ~US$ 92,70 e Brent a ~US$ 97,00, e benchmark índio acima de US$ 100; Goldman Sachs alerta para US$ 120 se os riscos de navegação aumentarem. Energia cara alimenta inflação global e endurece o dilema dos bancos centrais na semana de decisões.",
-      "proximo_gatilho": "Resposta dos EUA ao corredor declarado pelo Irã e o eventual reinício das exportações de LNG do Catar (seis navios movidos em direção ao Golfo).",
-      "confianca": "media",
-      "regions": ["oriente_medio", "energia_commodities", "riscos_sistemicos"],
-      "assets": ["petroleo", "ouro", "treasury", "brl"],
-      "sources": [
-        { "url": "https://www.aljazeera.com/", "titulo": "Hormuz shipping traffic falls sharply as US insists waterway 'fully open'", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-        { "url": "https://oilprice.com/", "titulo": "Iran Says It Will Control New Hormuz Shipping Corridor", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-        { "url": "https://oilprice.com/", "titulo": "Iran War Forces a Rewrite of Global Oil Trade Routes (fluxo de ~20 milhões bpd para 6–8 milhões bpd)", "data": "2026-09-05", "tipo": "mercado", "veiculo": "OilPrice" },
-        { "url": "https://www.cfr.org/global-conflict-tracker", "titulo": "Global Conflict Tracker — Conflict With Iran", "data": "2026-09-07", "tipo": "analise", "veiculo": "CFR" }
-      ]
-    },
-    {
-      "id": "comercio-terras-raras",
-      "titulo": "Terras raras chinesas congeladas e cúpula Xi–Trump à vista",
-      "nivel_risco": "elevado",
-      "fato": "Empresas chinesas de terras raras congelaram exportações aos EUA semanas antes da cúpula entre Xi Jinping e Donald Trump. Em paralelo, Trump ameaçou bloquear as vendas da Bombardier canadense se os aviões não forem fabricados nos EUA, e a Rússia afirmou que continuará vendendo petróleo à Índia apesar de ameaça tarifária americana.",
-      "impacto_mercados": "Risco de escalada tarifária em cadeias de defesa, eletrônicos e automotivo; pressão sobre câmbios de emergentes e spreads de crédito; produtores de minerais críticos fora da China ganham relevância estratégica e prêmio de segurança de suprimento.",
-      "proximo_gatilho": "Cúpula Xi–Trump (janela de setembro, data oficial a confirmar) e a resposta dos EUA ao congelamento chinês de terras raras.",
-      "confianca": "media",
-      "regions": ["comercio_sancoes", "china_asia", "eua"],
-      "assets": ["acoes", "credito", "commodities", "brl"],
-      "sources": [
-        { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
-        { "url": "https://www.scmp.com/news/china", "titulo": "As clock counts down to Trump summit, Xi boosts global clout with diplomatic blitz", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
-        { "url": "https://apnews.com/", "titulo": "Trump threatens to block Canada's Bombardier sales unless planes made in US", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-        { "url": "https://oilprice.com/", "titulo": "Russia Vows to Keep Selling Oil to India Despite U.S. Tariff Threat", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" }
-      ]
-    },
-    {
-      "id": "alemanha-afd",
-      "titulo": "AfD a três cadeiras da maioria na Saxônia-Anhalt",
-      "nivel_risco": "elevado",
-      "fato": "A AfD venceu a eleição estadual na Saxônia-Anhalt, ficou a três cadeiras da maioria absoluta e tenta formar governo estadual, argumentando que 'a democracia exige' cooperação. O chanceler Friedrich Merz disse estar chocado com o resultado, mas reforçou as reformas impopulares. Em retaliação ao incidente de drone em Leipzig, a Rússia fechou o consulado alemão em São Petersburgo, e a Alemanha planeja escudos antidrone em várias cidades.",
-      "impacto_mercados": "Prêmio político no euro e em spreads de crédito da zona do euro; risco para a agenda reformista alemã e para o sentimento nos setores exportadores; a defesa antídron vira linha orçamentária estrutural na Europa.",
-      "proximo_gatilho": "Negociações de formação de governo na Saxônia-Anhalt e a decisão do BCE em 10/09.",
       "confianca": "alta",
-      "regions": ["europa", "riscos_sistemicos"],
-      "assets": ["acoes", "credito", "dolar"],
+      "fato": "A Arábia Saudita fechou o oleoduto leste-oeste após ataque com drones lançados do Iraque. É a rota que contorna o Estreito de Hormuz e escoa o petróleo do Golfo para o Mar Vermelho, e a análise do setor descreve esse desvio como crítico e sob ameaça. A IEA projeta queda de 5,7 milhões de bpd na oferta global, com a recuperação do Golfo empurrada para 2027.",
+      "impacto_mercados": "O petróleo passou de US$ 100 e o frete de superpetroleiros atingiu US$ 800 mil por dia, pressionando custo logístico, inflação de energia e o dilema dos bancos centrais na semana de decisões.",
+      "proximo_gatilho": "Restauração da capacidade do oleoduto e resposta militar à origem do ataque.",
       "sources": [
-        { "url": "https://apnews.com/", "titulo": "Germany's Merz shocked by far-right state election triumph but doubles down on unpopular reforms", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-        { "url": "https://www.bbc.com/news/world", "titulo": "Germany's far-right AfD says 'democracy demands' parties work with them after state election win", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-        { "url": "https://apnews.com/", "titulo": "AfD party's landslide win in eastern Germany tests country's 'firewall' against the far right", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-        { "url": "https://apnews.com/", "titulo": "Russia shuts German consulate in St. Petersburg in tit-for-tat move after Leipzig drone incident", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" }
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c62m933465eo?at_medium=RSS&at_campaign=rss",
+          "titulo": "Saudi Arabia shuts key oil pipeline after drone attack launched from Iraq",
+          "veiculo": "BBC News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://oilprice.com/Latest-Energy-News/World-News/Drone-Strikes-Hit-Saudi-Arabias-Vital-East-West-Oil-Pipeline.html",
+          "titulo": "Drone Strikes Hit Saudi Arabia’s Vital East-West Oil Pipeline",
+          "veiculo": "OilPrice",
+          "data": "2026-09-12",
+          "tipo": "mercado"
+        },
+        {
+          "url": "https://oilprice.com/Energy/Crude-Oil/Saudi-Arabias-Critical-Oil-Bypass-Comes-Under-Threat.html",
+          "titulo": "Saudi Arabia’s Critical Oil Bypass Comes Under Threat",
+          "veiculo": "OilPrice",
+          "data": "2026-09-12",
+          "tipo": "mercado"
+        },
+        {
+          "url": "https://oilprice.com/Latest-Energy-News/World-News/IEA-Sees-57-Million-Bpd-Oil-Supply-Plunge-as-Gulf-Recovery-Slips-to-2027.html",
+          "titulo": "IEA Sees 5.7 Million Bpd Oil Supply Plunge as Gulf Recovery Slips to 2027",
+          "veiculo": "OilPrice",
+          "data": "2026-09-12",
+          "tipo": "mercado"
+        }
       ]
     },
     {
-      "id": "ucrania-diplomacia-inverno",
-      "titulo": "Ucrânia: enviados dos EUA entre Moscou e Kiev, guerra sem cessar-fogo",
-      "nivel_risco": "elevado",
-      "fato": "Os enviados de Trump Steve Witkoff e Jared Kushner se reuniram com Putin em Moscou e seguiram para conversas em Kiev (06–07/09). Zelensky avaliou que a guerra tende a continuar no inverno; os alertas aéreos em Kiev bateram recorde com ataques russos ininterruptos, agora com drones a jato até três vezes mais rápidos que os de pistão. A Rússia abriu a primeira ponte rodoviária com a Coreia do Norte.",
-      "impacto_mercados": "Prêmio de risco europeu permanece; gás e grãos sensíveis a escalada; indústria de defesa europeia com demanda estrutural; sem cessar-fogo, o regime de sanções segue sem alívio e o petróleo russo segue redirecionado à Ásia com desconto.",
-      "proximo_gatilho": "Desdobramento das conversas em Kiev e a próxima onda de ataques de drone a infraestrutura energética.",
+      "id": "bab-al-mandeb-houthis",
+      "titulo": "Houthis avançam sobre Bab al-Mandeb e apertam o Mar Vermelho",
+      "nivel_risco": "critico",
       "confianca": "alta",
-      "regions": ["russia_ucrania", "europa", "energia_commodities"],
-      "assets": ["commodities", "credito", "dolar"],
+      "fato": "Os houthis reivindicaram avanço relevante no Iêmen e estreitaram o controle da rota de navegação do Mar Vermelho, com combates renovados no sudoeste do país, aumento do deslocamento de civis e reunião de emergência do Conselho de Segurança da ONU sobre o Iêmen. A leitura da BBC é que o avanço rápido pode abrir uma nova dimensão na guerra com o Irã.",
+      "impacto_mercados": "Risco de interrupção em Bab al-Mandeb ameaça o fluxo de petróleo do Golfo, encarece o frete e eleva o prêmio de seguro marítimo, com efeito direto em commodities e inflação.",
+      "proximo_gatilho": "Escalada militar houthi ou resposta naval internacional no estreito.",
       "sources": [
-        { "url": "https://www.dw.com/europe", "titulo": "Witkoff and Kushner hold Ukraine talks after meeting Putin", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-        { "url": "https://www.dw.com/europe", "titulo": "Ukraine: Zelenskyy says war looks set to go on into winter", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-        { "url": "https://www.bbc.com/news/world", "titulo": "Kyiv air raid alerts at record high as Russia launches round-the-clock strikes", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-        { "url": "https://www.csis.org/analysis", "titulo": "From Shahed to Geran: How Russia Continues to Reinvent the One-Way Attack Drone", "data": "2026-09-04", "tipo": "analise", "veiculo": "CSIS" }
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c23x72yx2rvo?at_medium=RSS&at_campaign=rss",
+          "titulo": "Houthis claim major advance in Yemen and tighten grip on Red Sea shipping lane",
+          "veiculo": "BBC News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c3v4zgzr1kxo?at_medium=RSS&at_campaign=rss",
+          "titulo": "Lightning Houthi advance in Yemen may bring dangerous new dimension to Iran war",
+          "veiculo": "BBC News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://oilprice.com/Energy/Energy-General/Houthis-Advance-on-Bab-al-Mandeb-as-Saudi-Oil-Route-Comes-Under-Threat.html",
+          "titulo": "Houthis Advance on Bab al-Mandeb as Saudi Oil Route Comes Under Threat",
+          "veiculo": "OilPrice",
+          "data": "2026-09-12",
+          "tipo": "mercado"
+        },
+        {
+          "url": "https://news.un.org/feed/view/en/story/2026/09/1168309",
+          "titulo": "Security Council LIVE: Fresh attacks prompt emergency meeting on Yemen",
+          "veiculo": "ONU News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/9/12/fighting-re-erupts-in-yemen-and-civilians-are-paying-the-price?traffic_source=rss",
+          "titulo": "Fighting re-erupts in Yemen and civilians are paying the price",
+          "veiculo": "Al Jazeera",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        }
       ]
     },
     {
-      "id": "agenda-juros-global",
-      "titulo": "BCE, FOMC e COPOM colidem com o prêmio geopolítico",
+      "id": "brics-nova-delhi",
+      "titulo": "Cúpula do BRICS em Nova Délhi e a disputa pela ordem global",
+      "nivel_risco": "elevado",
+      "confianca": "media",
+      "fato": "A cúpula do BRICS abriu em Nova Délhi em meio a guerras, tensões globais e tarifas comerciais. Xi Jinping pediu que o bloco desempenhe seu papel na paz do Oriente Médio, e analistas apontam divisões internas que podem frear o avanço do grupo depois de 20 anos de expansão.",
+      "impacto_mercados": "A articulação de um multilateralismo alternativo tende a fragmentar sistemas de pagamento e fluxos comerciais, com efeito de médio prazo sobre o dólar e sobre prêmios de risco em emergentes.",
+      "proximo_gatilho": "Declaração final da cúpula e acordos bilaterais sobre energia e moedas.",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/9/12/brics-summit-opens-in-new-delhi-amid-wars-global-tensions-tariffs?traffic_source=rss",
+          "titulo": "BRICS summit opens in New Delhi amid wars, global tensions, tariffs",
+          "veiculo": "Al Jazeera",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3367303/chinese-leader-xi-urges-brics-play-its-due-role-bringing-peace-middle-east?utm_source=rss_feed",
+          "titulo": "Chinese leader Xi urges Brics to play its ‘due role’ in bringing peace to Middle East",
+          "veiculo": "South China Morning Post",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3367252/internal-splits-threaten-slow-brics-progress-bloc-looks-back-20-years-growth?utm_source=rss_feed",
+          "titulo": "Internal splits threaten to slow Brics’ progress as bloc looks back on 20 years of growth",
+          "veiculo": "South China Morning Post",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        }
+      ]
+    },
+    {
+      "id": "russia-ucrania-inverno",
+      "titulo": "Rússia amplia ataques e drones chegam à Moldávia e à Romênia",
+      "nivel_risco": "elevado",
+      "confianca": "alta",
+      "fato": "A Rússia atingiu navios cargueiros e usinas siderúrgicas na Ucrânia, e drones russos chegaram à Moldávia e à Romênia. A ONU afirma que os ataques a Chernobyl jogam com a segurança de milhões de pessoas e que a Ucrânia enfrenta o inverno mais duro desde a invasão em larga escala.",
+      "impacto_mercados": "Instabilidade energética na Europa e contágio do conflito para países da OTAN no Leste mantêm o prêmio de risco elevado e sustentam o gasto de defesa.",
+      "proximo_gatilho": "Encontro proposto por Zelenskyy com Putin no G20 em Miami e as conversas dos enviados Witkoff e Kushner.",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/9/12/russia-strikes-cargo-vessels-steel-plants-across-ukraine?traffic_source=rss",
+          "titulo": "Russia strikes cargo vessels, steel plants across Ukraine",
+          "veiculo": "Al Jazeera",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cwyz59yyqk4o?at_medium=RSS&at_campaign=rss",
+          "titulo": "Ukraine faces 'toughest winter' since Russia's full-scale invasion, UN official tells BBC",
+          "veiculo": "BBC News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://news.un.org/feed/view/en/story/2026/09/1168312",
+          "titulo": "Ukraine: Drone attacks on Chornobyl are ‘gambling with the safety of millions of people’",
+          "veiculo": "ONU News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.dw.com/en/russia-s-drone-war-comes-to-moldova-and-romania/a-79239591?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Russia&apos;s drone war comes to Moldova and Romania",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.dw.com/en/dw-exclusive-zelenskyy-offers-to-meet-putin-at-g20-in-miami/a-79241703?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "DW exclusive: Zelenskyy offers to meet Putin at G20 in Miami",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.dw.com/en/us-envoys-witkoff-and-kushner-hold-ukraine-talks-after-meeting-putin/a-79054779?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "US envoys Witkoff and Kushner hold Ukraine talks after meeting Putin",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        }
+      ]
+    },
+    {
+      "id": "11-de-setembro-contraterrorismo",
+      "titulo": "25 anos do 11 de setembro e o contraterrorismo na era de IA e drones",
       "nivel_risco": "moderado",
-      "fato": "O BCE reúne-se em 10/09; o FOMC se reúne em 15–16/09 com projeções econômicas e o mercado dividido entre manutenção e alta de 25 bps (leituras de FedWatch oscilaram entre ~35% e ~55% conforme os dados de emprego); o COPOM se reúne em 16/09 com Selic em 14,00% e Focus projetando 13,75% para o fim de 2026. O Treasury de 10 anos opera a ~4,78%, perto do topo de 52 semanas.",
-      "impacto_mercados": "Semana de decisões define curvas de juros globais; o choque de energia complica a comunicação dos bancos centrais; dólar e ouro reagem à surpresa relativa entre o que o Fed comunicar e o que o mercado precificar.",
-      "proximo_gatilho": "BCE em 10/09, FOMC em 15–16/09 (com Summary of Economic Projections) e COPOM em 16/09.",
       "confianca": "alta",
-      "regions": ["eua", "europa", "panorama_global"],
-      "assets": ["juros_globais", "treasury", "curva_di", "dolar"],
+      "fato": "Os Estados Unidos marcaram 25 anos dos ataques de 11 de setembro, com debates sobre o que a inteligência sabia antes, o efeito da Guerra ao Terror na política europeia e a adaptação do contraterrorismo à IA e aos drones. O Conselho de Segurança tratou do tema, e um relatório da ONU aponta que a propaganda terrorista avança mais rápido que os esforços globais de contenção.",
+      "impacto_mercados": "Pressão por mais gasto em defesa, vigilância e tecnologia, com risco regulatório crescente para empresas de IA.",
+      "proximo_gatilho": "Novas políticas de contraterrorismo com foco em IA e drones.",
       "sources": [
-        { "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", "titulo": "ECB — Official interest rates; próxima coletiva de política monetária em 10/09/2026", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Banco Central Europeu" },
-        { "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "titulo": "Federal Reserve — FOMC meeting calendars (reunião de 15–16/09/2026, com projeções)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Federal Reserve" },
-        { "url": "https://szuchmacher.com.br/macro_data.json", "titulo": "Selic 14,00%, COPOM 16/09, Focus: Selic YE26 13,75% e IPCA 5,01% (carimbo 04/09/2026)", "data": "2026-09-04", "tipo": "interna", "veiculo": "BCB/Focus via macro_data.json" }
+        {
+          "url": "https://www.bbc.co.uk/news/articles/clyjqvjzlwno?at_medium=RSS&at_campaign=rss",
+          "titulo": "'Never, ever forget' - America marks 25th anniversary of 9/11 attacks",
+          "veiculo": "BBC News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://news.un.org/feed/view/en/story/2026/09/1168318",
+          "titulo": "Security Council LIVE: Ambassadors mark 9/11 with counter-terrorism push on AI and drones",
+          "veiculo": "ONU News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://news.un.org/feed/view/en/story/2026/09/1168313",
+          "titulo": "Terrorist propaganda is outpacing global efforts to stop it, UN report finds",
+          "veiculo": "ONU News",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.csis.org/analysis",
+          "titulo": "Adapting to the New Terrorism Landscape 25 Years After 9/11",
+          "veiculo": "CSIS",
+          "data": "2026-09-12",
+          "tipo": "analise"
+        },
+        {
+          "url": "https://www.aljazeera.com/opinions/2026/9/12/9-11-at-25-how-the-war-on-terror-helped-mainstream-europes-far?traffic_source=rss",
+          "titulo": "9/11 at 25: How the ‘War on Terror’ helped mainstream Europe’s far right",
+          "veiculo": "Al Jazeera",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        }
       ]
     },
     {
-      "id": "energia-logistica-ia",
-      "titulo": "Energia: falta de bunker, SPR depletado e demanda elétrica de IA",
-      "nivel_risco": "moderado",
-      "fato": "Refinarias priorizando diesel criam risco de escassez de óleo combustível para navios, com as guerras do Irã e da Ucrânia apertando a oferta de bunker. O SPR dos EUA segue depletado, ampliando a volatilidade potencial do petróleo; a gasolina bateu US$ 4/galão no Labor Day, recorde para a data. A Coreia do Sul estuda uma planta de gás de US$ 22,3 bilhões no Texas para alimentar data centers de IA.",
-      "impacto_mercados": "Frete e custos logísticos em alta pressionam margens industriais e inflação logística; gás/LNG americano e utilities captam a demanda elétrica de IA; a baixa capacidade de resposta do SPR amplia qualquer choque de oferta no petróleo.",
-      "proximo_gatilho": "Estoques semanais da EIA e qualquer anúncio de liberação ou recomposição do SPR.",
+      "id": "eua-china-taiwan-xi",
+      "titulo": "EUA e China: espionagem, Taiwan e a visita de Xi à Casa Branca",
+      "nivel_risco": "elevado",
       "confianca": "media",
-      "regions": ["energia_commodities", "riscos_sistemicos"],
-      "assets": ["petroleo", "commodities", "credito"],
+      "fato": "A China exigiu que os Estados Unidos parem toda a espionagem e ameaçou retaliação. A disputa sobre IA e Taiwan domina a preparação da visita de Xi Jinping à Casa Branca, enquanto a imprensa estatal afirma que Washington quer Taiwan como bucha de canhão e empresas chinesas de IA evitaram uma delegação americana por receio de sanções.",
+      "impacto_mercados": "Risco de novas sanções tecnológicas e tarifárias amplia a volatilidade cambial e reforça a fragmentação de cadeias de semicondutores e terras raras.",
+      "proximo_gatilho": "Desfecho da visita de Xi a Washington e novos movimentos em torno de Taiwan.",
       "sources": [
-        { "url": "https://oilprice.com/", "titulo": "Shipping Fuel Shortage Looms as Refiners Prioritize Diesel", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-        { "url": "https://www.aljazeera.com/", "titulo": "Iran and Ukraine wars: Why ship fuel is running short, and why it matters", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-        { "url": "https://www.bbc.com/news/world", "titulo": "Americans react to record high Labor Day fuel prices (gasolina acima de US$ 4/galão)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-        { "url": "https://oilprice.com/", "titulo": "South Korea Eyes $22.3 Billion Texas Gas Plant to Power AI Data Centers", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" }
+        {
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3367300/china-urges-us-stop-all-spying-or-face-retaliation-slams-gangster-logic?utm_source=rss_feed",
+          "titulo": "China urges US to ‘stop all spying’ or face retaliation, slams ‘gangster logic’",
+          "veiculo": "South China Morning Post",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3367242/ai-fight-shadows-final-preparations-xi-jinpings-white-house-visit?utm_source=rss_feed",
+          "titulo": "AI fight shadows final preparations for Xi Jinping’s White House visit to meet Donald Trump",
+          "veiculo": "South China Morning Post",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.scmp.com/news/china/politics/article/3367283/us-wants-taiwan-serve-cannon-fodder-against-mainland-china-state-broadcaster-cctv?utm_source=rss_feed",
+          "titulo": "US wants Taiwan to ‘serve as cannon fodder’ against mainland China: state media",
+          "veiculo": "South China Morning Post",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
+          "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
+          "veiculo": "South China Morning Post",
+          "data": "2026-09-12",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.csis.org/analysis",
+          "titulo": "China Continues to Exploit Rare Earth Chokepoints",
+          "veiculo": "CSIS",
+          "data": "2026-09-12",
+          "tipo": "analise"
+        }
       ]
     }
   ],
   "regions": {
     "panorama_global": {
       "titulo": "Panorama global",
+      "resumo": "A ordem internacional em revisão, com guerra no Golfo, atrito entre EUA e China e disputa por foros multilaterais.",
       "material": true,
-      "resumo": "Duas guerras ativas (Irã e Ucrânia), um ciclo de comércio em fragmentação e uma semana consecutiva de decisões de bancos centrais definem o mapa de risco. O ponto central é o Estreito de Hormuz: não é um bloqueio declarado, mas o fluxo caiu a uma fração do normal e o prêmio de risco já está no preço do petróleo.",
       "teses": [
         {
-          "fato": "O fluxo de petróleo pelo Hormuz caiu de ~20 milhões de bpd para estimados 6–8 milhões de bpd desde o agravamento da guerra, segundo levantamento da imprensa de energia com dados de operadores; o Irã anunciou um corredor de navegação sob seu controle e os EUA negam o bloqueio.",
-          "interpretacao": "A leitura é de um mercado com prêmio geopolítico permanente e sem folga de oferta: qualquer incidente adicional precifica em segundos. A queda de tráfego funciona como imposto logístico difuso — frete, seguro e bunker mais caros para todos os importadores.",
-          "cenario_base": "O prêmio persiste com oscilações: Hormuz segue parcialmente operável, com escolta naval e corredores alternativos, petróleo em faixa elevada (~US$ 85–105 no WTI) e bancos centrais comunicando vigilância sem prometer alívio.",
-          "risco_alternativo": "Fechamento efetivo ou prolongado do estreito, ou ataque a terminal crítico (LNG do Catar): petróleo acima de US$ 120 (cenário apontado por Goldman Sachs), reascensão inflacionária global e bancos centrais forçados a retomar endurecimento.",
+          "fato": "Analistas descrevem a guerra em curso como fator que reescreve a ordem mundial, enquanto o secretário-geral da ONU pede investimento em paz e o CSIS argumenta que Hormuz precisa de um arranjo coletivo, não de um condomínio de potências.",
+          "interpretacao": "As instituições multilaterais perdem capacidade de arbitrar ao mesmo tempo em que foros alternativos ganham peso, o que alonga o horizonte de incerteza para comércio e energia.",
+          "cenario_base": "Os conflitos regionais seguem contidos em suas áreas, com custo de energia elevado e negociação caso a caso.",
+          "risco_alternativo": "Sobreposição de crises, com o Golfo e a Ásia Oriental pressionados ao mesmo tempo e sem canal de desescalada.",
           "gatilhos": [
-            "Resposta militar/diplomática dos EUA ao corredor iraniano",
-            "Reinício das exportações de LNG do Catar (seis tankers movidos)",
-            "Novos ataques houthi a infraestrutura saudita"
+            "Declaração final da cúpula do BRICS",
+            "Reunião de emergência do Conselho de Segurança sobre o Iêmen"
           ],
-          "ativos": ["petroleo", "gas", "ouro", "treasury", "emfx"],
           "confianca": "media",
           "sources": [
-            { "url": "https://www.aljazeera.com/", "titulo": "Hormuz shipping traffic falls sharply as US insists waterway 'fully open'", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-            { "url": "https://oilprice.com/", "titulo": "Iran War Forces a Rewrite of Global Oil Trade Routes", "data": "2026-09-05", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://oilprice.com/", "titulo": "Goldman Sachs Warns Oil Could Hit $120 as Shipping Risks Rise", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" }
+            {
+              "url": "https://www.csis.org/analysis",
+              "titulo": "Is the War Rewriting the World Order? | The High Top",
+              "veiculo": "CSIS",
+              "data": "2026-09-12",
+              "tipo": "analise"
+            },
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168301",
+              "titulo": "Guterres urges leaders to invest in peace as conflicts deepen",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.csis.org/analysis",
+              "titulo": "Hormuz Needs a Community, Not a Condominium",
+              "veiculo": "CSIS",
+              "data": "2026-09-12",
+              "tipo": "analise"
+            }
           ]
         }
       ]
     },
     "eua": {
-      "titulo": "EUA",
+      "titulo": "Estados Unidos",
+      "resumo": "Casa Branca na defensiva energética, memória do 11 de setembro e preço do combustível no radar eleitoral.",
       "material": true,
-      "resumo": "O Fed entra na reunião de 15–16/09 com projeções e mercado dividido entre manutenção e alta de 25 bps, num segundo semestre em que a guerra devolveu a inflação de energia à agenda. Em casa, a agenda comercial segue agressiva (ameaça à Bombardier) e o ano eleitoral das midterms entra na reta final.",
       "teses": [
         {
-          "fato": "A reunião do FOMC de 15–16/09 é a segunda com Summary of Economic Projections do ano; leituras de FedWatch publicadas na imprensa oscilaram de ~65% para ~35% e de volta a ~55% de chance de alta de 25 bps conforme os dados de emprego de julho e agosto.",
-          "interpretacao": "O Fed opera com política restritiva contra um choque de oferta energético que ele não controla. Uma alta em plena guerra seria uma mensagem de que a inflação de energia está contaminando expectativas — a comunicação importa tanto quanto a decisão.",
-          "cenario_base": "Manutenção dos juros com guiamento hawkish e dot plot mostrando menos afrouxamento adiante; curva do Treasury segue com prêmio de termo, 10 anos oscilando em torno de 4,75–4,85%.",
-          "risco_alternativo": "Alta de 25 bps surpreendente: realocações bruscas em dólar (DXY acima de 101) e pressão extra sobre emergentes, incluindo o real.",
+          "fato": "A Casa Branca avalia acionar a Lei de Produção de Defesa com as refinarias operando no limite, segundo o setor de energia. O país marcou os 25 anos do 11 de setembro, e há projeção de gasolina a US$ 5 antes das eleições de meio de mandato.",
+          "interpretacao": "Energia cara entra na conta eleitoral e amplia a chance de medidas intervencionistas, o que adiciona ruído regulatório ao refino e à distribuição.",
+          "cenario_base": "Uso pontual de instrumentos de emergência e retórica dura, sem racionamento.",
+          "risco_alternativo": "Intervenção mais ampla na cadeia de refino e combustível, com efeito inflacionário de segunda ordem.",
           "gatilhos": [
-            "Comunicado e projeções do FOMC em 16/09",
-            "Dados de emprego e CPI anteriores à reunião",
-            "Liberação ou recomposição do SPR em resposta ao choque de energia"
+            "Anúncio sobre a Lei de Produção de Defesa",
+            "Calendário oficial do FOMC"
           ],
-          "ativos": ["treasury", "dolar", "acoes"],
           "confianca": "media",
           "sources": [
-            { "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "titulo": "Federal Reserve — FOMC meeting calendars", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Federal Reserve" },
-            { "url": "https://coingape.com/", "titulo": "FOMC Meeting Sept. 2026: Date, Schedule, Expectations and How To Watch?", "data": "2026-09-05", "tipo": "secundaria", "veiculo": "CoinGape (sinal de expectativa, não fato)" },
-            { "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX", "titulo": "CBOE 10-Year Treasury Yield 4,784% (fechamento 04/09/2026)", "data": "2026-09-04", "tipo": "mercado", "veiculo": "Yahoo Finance" }
+            {
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/White-House-Weighs-Defense-Production-Act-as-US-Refineries-Maxed-Out.html",
+              "titulo": "White House Weighs Defense Production Act as U.S. Refineries Maxed Out",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://www.bbc.co.uk/news/articles/clyjqvjzlwno?at_medium=RSS&at_campaign=rss",
+              "titulo": "'Never, ever forget' - America marks 25th anniversary of 9/11 attacks",
+              "veiculo": "BBC News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://oilprice.com/Energy/Energy-General/Jeff-Currie-Sees-5-Gasoline-Before-Midterms.html",
+              "titulo": "Jeff Currie Sees $5 Gasoline Before Midterms",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+              "titulo": "Board of Governors of the Federal Reserve System",
+              "veiculo": "Federal Reserve",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            }
           ]
         }
       ]
     },
     "europa": {
       "titulo": "Europa",
+      "resumo": "Extrema direita em alta na Alemanha, eleição apertada na Suécia e pressão de juros no Reino Unido.",
       "material": true,
-      "resumo": "A eleição da Saxônia-Anhalt colocou a AfD a três cadeiras da maioria estadual e testou o 'cinturão de fogo' partidário alemão, enquanto a segurança de drones passa da conversa para o orçamento (escudos urbanos após o incidente de Leipzig) e a diplomacia com a Rússia congela. O BCE decide em 10/09 sob prêmio de energia.",
       "teses": [
         {
-          "fato": "A AfD venceu na Saxônia-Anhalt, ficou a três cadeiras da maioria e tenta formar governo; Merz reforçou as reformas impopulares; a Rússia fechou o consulado alemão em São Petersburgo em retaliação ao incidente de drone em Leipzig; a Alemanha planeja unidades rápidas antídron em várias cidades.",
-          "interpretacao": "Fragmentação política e segurança interna avançam juntas: quanto maior o custo político da reforma fiscal alemã, menor a folga do bloco para resposta fiscal comum — e maior a dependência da política monetária do BCE em um cenário de energia cara.",
-          "cenario_base": "Negociação estadual longa e inconclusiva; o 'firewall' se sustenta no nível federal, mas se desgasta nos estados; BCE mantém taxa e sinaliza data-dependência em 10/09.",
-          "risco_alternativo": "AfD entra num governo estadual como parceiro dominante: prêmio de risco nos spreads do euro, euro mais fraco contra o dólar e revisão de gastos de defesa em alta.",
+          "fato": "A vitória da AfD na Saxônia-Anhalt gerou ansiedade na comunidade turca e preocupação na economia alemã. A Suécia foi às urnas em disputa apertada, e a votação na Bósnia ficou marcada pelo funeral de Ratko Mladic com honras militares em Belgrado. No Reino Unido, os juros podem subir até quatro vezes no próximo ano.",
+          "interpretacao": "Fragmentação política e fragilidade fiscal reduzem a capacidade europeia de responder de forma coordenada a um choque de energia.",
+          "cenario_base": "Coalizões difíceis e ajuste fiscal gradual, com prêmio de risco estável.",
+          "risco_alternativo": "Governo instável em Berlim combinado a juro alto em Londres pressiona o euro e amplia o spread da periferia.",
           "gatilhos": [
-            "Resultado das negociações de governo na Saxônia-Anhalt",
-            "Decisão e coletiva do BCE em 10/09",
-            "Novos incidentes de drone e resposta orçamentária alemã"
+            "Desdobramentos políticos da vitória da AfD na Saxônia-Anhalt",
+            "Resultado da eleição sueca",
+            "Definição da votação na Bósnia"
           ],
-          "ativos": ["eur", "credito", "acoes-europa", "defesa"],
-          "confianca": "alta",
+          "confianca": "media",
           "sources": [
-            { "url": "https://apnews.com/", "titulo": "Germany's Merz shocked by far-right state election triumph but doubles down on unpopular reforms", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-            { "url": "https://www.bbc.com/news/world", "titulo": "Germany's far-right AfD says 'democracy demands' parties work with them after state election win", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-            { "url": "https://www.dw.com/europe", "titulo": "Germany plans anti-drone shield over Leipzig attack", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-            { "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", "titulo": "ECB — Official interest rates e calendário de política", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Banco Central Europeu" }
+            {
+              "url": "https://www.dw.com/en/turks-in-germany-anxious-after-afd-wins-in-saxony-anhalt/a-79221764?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Turks in Germany anxious after AfD wins in Saxony-Anhalt",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.dw.com/en/german-economy-frets-about-saxony-anhalt-election-results/a-79162871?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "German economy frets about Saxony-Anhalt election results",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.aljazeera.com/news/2026/9/12/sweden-heads-to-the-polls-whats-at-stake-in-the-knife-edge-election?traffic_source=rss",
+              "titulo": "Sweden heads to the polls: What’s at stake in the knife-edge election?",
+              "veiculo": "Al Jazeera",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.dw.com/en/ratko-mladic-s-funeral-casts-shadow-over-bosnia-and-herzegovina-vote/a-79189319?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Ratko Mladic’s funeral casts shadow over Bosnia and Herzegovina vote",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://oilprice.com/Energy/Energy-General/UK-Interest-Rates-Could-Rise-Four-Times-Over-the-Next-Year.html",
+              "titulo": "UK Interest Rates Could Rise Four Times Over the Next Year",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            }
           ]
         }
       ]
     },
     "china_asia": {
-      "titulo": "China / Ásia",
+      "titulo": "China e Ásia",
+      "resumo": "Pequim pressiona Washington, mantém Taiwan no centro e usa terras raras como alavanca.",
       "material": true,
-      "resumo": "A uma cúpula Xi–Trump de distância, Pequim combina alavancas comerciais (terras raras), diplomacia alternativa (Catar, Ártico, Ásia Central) e modernização militar (Taiwã). Nos mercados asiáticos, o destaque segue a demanda por chips, com rali de semicondutores em Tóquio e Seul.",
       "teses": [
         {
-          "fato": "Empresas chinesas de terras raras congelaram exportações aos EUA semanas antes da cúpula Xi–Trump; Xi intensificou a diplomacia com Eurasia e Oriente Médio; Taiwan anunciou unidade de guerra cibernética com apoio dos EUA; a ferrovia China–Quirguistão–Uzbequistão, que contorna a Rússia, atingiu marco de túnel.",
-          "interpretacao": "A China negocia de posição de alavanca de suprimento: terras raras e rotas alternativas reduzem a eficácia de sanções americanas e elevam o custo de uma escalada — para os dois lados. A demanda por chips mantém a Ásia do Norte como epicentro do ciclo de capex de IA.",
-          "cenario_base": "Tensão controlada até a cúpula, com concessões parciais em terras raras em troca de alívio tarifário; semicondutores seguem como trade estrutural dominante na região.",
-          "risco_alternativo": "Ruptura da cúpula com congelamento total de terras raras e novas restrições de exportação: choque direto em eletrônicos, automotivo e defesa globais, com picos de volatilidade em ações de tecnologia.",
+          "fato": "A China pediu que os Estados Unidos parem toda a espionagem e ameaçou retaliação, com a imprensa estatal afirmando que Washington quer Taiwan como bucha de canhão. A disputa sobre IA domina a preparação da visita de Xi Jinping à Casa Branca, e o CSIS aponta que Pequim segue explorando os gargalos de terras raras.",
+          "interpretacao": "Pequim mantém pressão em várias frentes ao mesmo tempo e usa o encontro presidencial como prazo para extrair concessões.",
+          "cenario_base": "A visita presidencial ocorre com acordos parciais, sem ruptura.",
+          "risco_alternativo": "Cancelamento ou esvaziamento do encontro, com escalada em Taiwan e novas restrições de tecnologia.",
           "gatilhos": [
-            "Cúpula Xi–Trump (janela de setembro)",
-            "Sinais de retomada ou prolongamento do congelamento de terras raras",
-            "Passos da unidade de guerra cibernética de Taiwan"
+            "Visita de Xi Jinping à Casa Branca",
+            "Novas medidas sobre Taiwan"
           ],
-          "ativos": ["acoes-china", "semicondutores", "commodities", "emfx"],
           "confianca": "media",
           "sources": [
-            { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://www.scmp.com/news/china", "titulo": "As clock counts down to Trump summit, Xi boosts global clout with diplomatic blitz", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
-            { "url": "https://www.scmp.com/news/china", "titulo": "Taiwan sets up US-backed cyber unit to hunt hidden military threats", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
-            { "url": "https://apnews.com/", "titulo": "Global shares are mixed as chipmaker shares rally in Tokyo and Seoul", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" }
+            {
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3367300/china-urges-us-stop-all-spying-or-face-retaliation-slams-gangster-logic?utm_source=rss_feed",
+              "titulo": "China urges US to ‘stop all spying’ or face retaliation, slams ‘gangster logic’",
+              "veiculo": "South China Morning Post",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3367242/ai-fight-shadows-final-preparations-xi-jinpings-white-house-visit?utm_source=rss_feed",
+              "titulo": "AI fight shadows final preparations for Xi Jinping’s White House visit to meet Donald Trump",
+              "veiculo": "South China Morning Post",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.scmp.com/news/china/politics/article/3367283/us-wants-taiwan-serve-cannon-fodder-against-mainland-china-state-broadcaster-cctv?utm_source=rss_feed",
+              "titulo": "US wants Taiwan to ‘serve as cannon fodder’ against mainland China: state media",
+              "veiculo": "South China Morning Post",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
+              "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
+              "veiculo": "South China Morning Post",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.csis.org/analysis",
+              "titulo": "China Continues to Exploit Rare Earth Chokepoints",
+              "veiculo": "CSIS",
+              "data": "2026-09-12",
+              "tipo": "analise"
+            }
           ]
         }
       ]
     },
     "oriente_medio": {
       "titulo": "Oriente Médio",
+      "resumo": "Golfo sob choque de energia, Iêmen em escalada e risco de expansão do conflito.",
       "material": true,
-      "resumo": "A guerra EUA-Israel x Irã é o centro de gravidade do risco global na semana. Ao redor dela: Houthis contra a Arábia Saudita, cessar-fogo Israel–Hezbollah em risco no Líbano, Irã sob pressão interna e o Catar como mediador e exportador de LNG.",
       "teses": [
         {
-          "fato": "Ataques houthis atingiram novamente a refinaria Jizan da Saudi Aramco; ataques israelenses no sul do Líbano mataram 12 pessoas e o Líbano afirma que a escalada jeopardiza o cessar-fogo mediado pelos EUA com o Hezbollah; o Irã anunciou o fim gradual do subsídio à importação de gasolina e enfrenta grupos armados étnicos internos.",
-          "interpretacao": "A pressão externa e interna sobre o Irã aumenta o valor da alavanca de Hormuz: à medida que a economia doméstica aperta (fim do subsídio de gasolina), a tentação de escalar no estreito cresce, não diminui.",
-          "cenario_base": "Guerra de atrito com prêmio de risco constante: ataques a infraestrutura seguem, Hormuz parcialmente operável, mediação do Catar evita escalada máxima.",
-          "risco_alternativo": "Destruição de terminal crítico ou resposta iraniana direta a bases dos EUA: petróleo e gás com gap de alta, aviação e frete redirecionados, refúgio (ouro, Treasury curto) em demanda.",
+          "fato": "O oleoduto leste-oeste saudita foi fechado após ataque com drones lançados do Iraque, e os Emirados reavaliaram um campus de IA de 5 gigawatts depois de o Irã atingir ativos americanos na região. O Conselho de Segurança se reuniu às pressas sobre o Iêmen, e o acompanhamento do CFR segue tratando a região como o principal foco de conflito aberto.",
+          "interpretacao": "Infraestrutura energética e ativos de tecnologia no Golfo viraram alvo recíproco, o que amplia o custo econômico de cada escalada.",
+          "cenario_base": "Troca de ataques limitada, com o oleoduto voltando parcialmente e prêmio de energia ainda elevado.",
+          "risco_alternativo": "Fechamento prolongado da rota do Mar Vermelho combinado a ataques diretos a ativos americanos, levando o petróleo a patamar muito mais alto.",
           "gatilhos": [
-            "Próximos ataques houthi ou resposta saudita",
-            "Deterioração ou reconstituição do cessar-fogo Israel–Hezbollah",
-            "Efeitos sociais do fim do subsídio de gasolina no Irã"
+            "Reabertura do oleoduto leste-oeste",
+            "Resposta dos Estados Unidos no Golfo"
           ],
-          "ativos": ["petroleo", "gas", "ouro", "credito-em"],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
-            { "url": "https://oilprice.com/", "titulo": "Saudi Aramco's Jizan Refinery Hit Again as Houthi Attacks Escalate", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://apnews.com/", "titulo": "Israeli airstrikes on a village in southern Lebanon kill 12 people, including 2 children", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-            { "url": "https://www.aljazeera.com/", "titulo": "Iran to phase out petrol import subsidy, vice president says", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-            { "url": "https://www.scmp.com/news/china", "titulo": "China vows deeper cooperation with Qatar in energy and Middle East de-escalation", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" }
+            {
+              "url": "https://www.bbc.co.uk/news/articles/c62m933465eo?at_medium=RSS&at_campaign=rss",
+              "titulo": "Saudi Arabia shuts key oil pipeline after drone attack launched from Iraq",
+              "veiculo": "BBC News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Drone-Strikes-Hit-Saudi-Arabias-Vital-East-West-Oil-Pipeline.html",
+              "titulo": "Drone Strikes Hit Saudi Arabia’s Vital East-West Oil Pipeline",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/UAE-Rethinks-5-Gigawatt-AI-Campus-After-Iran-Targets-US-Assets-in-Gulf.html",
+              "titulo": "UAE Rethinks 5-Gigawatt AI Campus After Iran Targets US Assets in Gulf",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168309",
+              "titulo": "Security Council LIVE: Fresh attacks prompt emergency meeting on Yemen",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.cfr.org/global-conflict-tracker",
+              "titulo": "Middle East and North Africa",
+              "veiculo": "CFR",
+              "data": "2026-09-12",
+              "tipo": "analise"
+            }
           ]
         }
       ]
     },
     "russia_ucrania": {
-      "titulo": "Rússia / Ucrânia",
+      "titulo": "Rússia e Ucrânia",
+      "resumo": "Ataques a infraestrutura civil e portuária, drones em países vizinhos e um inverno crítico.",
       "material": true,
-      "resumo": "Sem cessar-fogo à vista, a semana misturou diplomacia de alto nível (enviados de Trump em Moscou e Kiev) com escalada técnica (drones a jato, ataques contínuos a Kiev) e alinhamentos periféricos (ponte rodoviária Rússia–Coreia do Norte, consulado alemão fechado).",
       "teses": [
         {
-          "fato": "Witkoff e Kushner se reuniram com Putin e seguiram para Kiev (06–07/09); Zelensky disse que a guerra deve se estender ao inverno; alertas aéreos em Kiev bateram recorde; a Rússia inaugurou a primeira ponte rodoviária com a Coreia do Norte; a CEO da Rosneft afirmou que 'a China comanda o mercado de petróleo, não a OPEC'.",
-          "interpretacao": "A diplomacia corre em paralelo à guerra sem mecanismo de enforcement: a Rússia consolida redes de escape (China, Coreia do Norte, Índia via petróleo) enquanto pressiona com drones. Para os mercados, a tese relevante é de persistência — energia e grãos com prêmio por mais tempo.",
-          "cenario_base": "Guerra prolongada sem ruptura diplomática total; sanções mantidas; petróleo russo segue para a Ásia com desconto; Europa acelera defesa e diversificação de energia.",
-          "risco_alternativo": "Colapso das conversas com escalada contra infraestrutura de exportação ucraniana e europeia (grãos, gás): picos em commodities agrícolas e gás europeu.",
+          "fato": "A Rússia atingiu navios cargueiros e usinas siderúrgicas na Ucrânia, drones russos chegaram à Moldávia e à Romênia, e a ONU alerta que ataques a Chernobyl comprometem a segurança de milhões de pessoas. Putin negou rumores de nova mobilização, e os enviados Witkoff e Kushner retomaram conversas após encontro com Putin.",
+          "interpretacao": "O conflito se desloca para infraestrutura econômica e para o espaço aéreo de países vizinhos, o que aumenta a chance de incidente envolvendo a OTAN.",
+          "cenario_base": "Guerra de desgaste com ataques a infraestrutura e negociação intermitente.",
+          "risco_alternativo": "Incidente envolvendo país da OTAN que force resposta coletiva e reforce o pacote de sanções.",
           "gatilhos": [
-            "Resultado das conversas em Kiev",
-            "Próxima rodada de ataques de drone a infraestrutura",
-            "Sinais de maior integração Rússia–China–Coreia do Norte"
+            "Encontro proposto por Zelenskyy com Putin no G20 em Miami",
+            "Conversas Witkoff-Kushner"
           ],
-          "ativos": ["graos", "gas", "defesa", "credito-europa"],
           "confianca": "alta",
           "sources": [
-            { "url": "https://www.dw.com/europe", "titulo": "Witkoff and Kushner hold Ukraine talks after meeting Putin", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-            { "url": "https://www.dw.com/europe", "titulo": "Ukraine: Zelenskyy says war looks set to go on into winter", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-            { "url": "https://www.dw.com/europe", "titulo": "Russia opens first road bridge with North Korea", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-            { "url": "https://oilprice.com/", "titulo": "Rosneft CEO: China Calls The Shots in Oil Markets, Not OPEC", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" }
+            {
+              "url": "https://www.aljazeera.com/news/2026/9/12/russia-strikes-cargo-vessels-steel-plants-across-ukraine?traffic_source=rss",
+              "titulo": "Russia strikes cargo vessels, steel plants across Ukraine",
+              "veiculo": "Al Jazeera",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.bbc.co.uk/news/articles/cwyz59yyqk4o?at_medium=RSS&at_campaign=rss",
+              "titulo": "Ukraine faces 'toughest winter' since Russia's full-scale invasion, UN official tells BBC",
+              "veiculo": "BBC News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168312",
+              "titulo": "Ukraine: Drone attacks on Chornobyl are ‘gambling with the safety of millions of people’",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.dw.com/en/putin-rejects-mobilization-rumors-many-russians-unconvinced/a-79193386?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Putin rejects mobilization rumors, many Russians unconvinced",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.dw.com/en/us-envoys-witkoff-and-kushner-hold-ukraine-talks-after-meeting-putin/a-79054779?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "US envoys Witkoff and Kushner hold Ukraine talks after meeting Putin",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            }
           ]
         }
       ]
     },
     "energia_commodities": {
       "titulo": "Energia e commodities",
+      "resumo": "Petróleo acima de US$ 100, frete recorde e corte de oferta projetado pela IEA.",
       "material": true,
-      "resumo": "Complexo energético com prêmio de guerra, logística marítima sob estresse (bunker escasso, frete redirecionado) e demanda estrutural de eletricidade por IA. Ouro opera como refúgio com memória de pico.",
       "teses": [
         {
-          "fato": "WTI ~US$ 92,70 e Brent ~US$ 97,00 (07/09); benchmark índio de petróleo acima de US$ 100; roteiros de tanker sendo reescritos com o Hormuz a 6–8 milhões de bpd; escassez de óleo para navios por priorização de diesel; ouro spot a US$ 4.405,10/oz, com topo de 52 semanas em US$ 5.586,20.",
-          "interpretacao": "A curva de energia precifica interrupção recorrente, não catástrofe. O ouro, apesar de longe do topo do ano, mantém o papel de seguro contra o cenário em que o Fed precisa apertar com a economia desacelerando.",
-          "cenario_base": "Petróleo em faixa elevada com picos por manchete; bunker e frete pressionando custos logísticos até o fim do ano; ouro sustentado entre refúgio e compras de banco central.",
-          "risco_alternativo": "Desescalada rápida na guerra do Irã: retorno de fluxos pelo Hormuz e correção de prêmio no petróleo de dois dígitos, com alívio de custo para indústria e consumo.",
+          "fato": "O petróleo ultrapassou US$ 100 com o ataque ao oleoduto saudita, o frete de superpetroleiros chegou a US$ 800 mil por dia e a IEA projeta queda de 5,7 milhões de bpd na oferta mundial, com recuperação do Golfo apenas em 2027. A contagem de plataformas nos Estados Unidos subiu no mesmo movimento.",
+          "interpretacao": "O choque é de oferta e de logística ao mesmo tempo, combinação que costuma produzir inflação mais persistente do que um choque de demanda.",
+          "cenario_base": "Prêmio de energia elevado com interrupção parcial e volatilidade alta.",
+          "risco_alternativo": "Interrupção prolongada em Bab al-Mandeb que retira lastro do frete e leva o petróleo a patamares extremos.",
           "gatilhos": [
-            "Estoques semanais da EIA",
-            "Progresso do reinício de cargas de LNG do Catar",
-            "Fluxos de ETF e compras oficiais de ouro"
+            "Reabertura do oleoduto leste-oeste",
+            "Avanço houthi sobre Bab al-Mandeb"
           ],
-          "ativos": ["petroleo", "gas", "ouro", "frete", "commodities"],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
-            { "url": "https://oilprice.com/", "titulo": "WTI Crude $92.70 / Brent Crude $97.00 (cotações, 07/09/2026)", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://oilprice.com/", "titulo": "India's Crude Oil Benchmark Tops $100 as Middle East War Escalates", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://www.kitco.com/charts/gold", "titulo": "Live Gold Price: US$ 4.405,10/oz (-0,54%) em 07/09/2026, NY", "data": "2026-09-07", "tipo": "mercado", "veiculo": "Kitco" }
+            {
+              "url": "https://oilprice.com/Energy/Crude-Oil/US-Oil-Rig-Count-Rises-as-Oil-Tops-100.html",
+              "titulo": "U.S. Oil Rig Count Rises as Oil Tops $100",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://oilprice.com/Energy/Energy-General/Supertanker-Rates-Hit-800000-a-Day-as-Gulf-Tensions-Escalate.html",
+              "titulo": "Supertanker Rates Hit $800,000 a Day as Gulf Tensions Escalate",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/IEA-Sees-57-Million-Bpd-Oil-Supply-Plunge-as-Gulf-Recovery-Slips-to-2027.html",
+              "titulo": "IEA Sees 5.7 Million Bpd Oil Supply Plunge as Gulf Recovery Slips to 2027",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            },
+            {
+              "url": "https://oilprice.com/Energy/Energy-General/Houthis-Advance-on-Bab-al-Mandeb-as-Saudi-Oil-Route-Comes-Under-Threat.html",
+              "titulo": "Houthis Advance on Bab al-Mandeb as Saudi Oil Route Comes Under Threat",
+              "veiculo": "OilPrice",
+              "data": "2026-09-12",
+              "tipo": "mercado"
+            }
           ]
         }
       ]
     },
     "comercio_sancoes": {
       "titulo": "Comércio e sanções",
+      "resumo": "Tarifas e sanções tecnológicas como instrumento central da disputa.",
       "material": true,
-      "resumo": "A semana soma ameaças tarifárias em frentes novas (Canadá/Bombardier, Índia via petróleo russo) à alavanca chinesa de terras raras, semanas antes da cúpula Xi–Trump. O regime de sanções à Rússia segue sem alívio.",
       "teses": [
         {
-          "fato": "Trump ameaçou bloquear as vendas da Bombardier se os aviões não forem fabricados nos EUA; a Rússia declarou que seguirá vendendo petróleo à Índia apesar de ameaça tarifária dos EUA; empresas chinesas de terras raras congelaram exportações aos EUA; a AGOA (comércio EUA–África) foi estendida por dois anos com agenda de renovação aberta.",
-          "interpretacao": "O comércio mundial segue se reorganizando em blocos e acordos bilaterais de propósito. Para investidores, o efeito marginal é de custo: cadeias mais caras, duplicação de estoques e prêmio permanente em minerais críticos e semicondutores.",
-          "cenario_base": "Negociações pendulares até a cúpula Xi–Trump; tarifas pontuais sem ruptura sistêmica; sanções à Rússia mantidas com brechas para petróleo destinado à Índia e à China.",
-          "risco_alternativo": "Generalização de tarifas retaliatórias (Canadá, UE, China) no mesmo trimestre: choque de custo simultâneo com o de energia, comprimindo margens corporativas e spreads de crédito.",
+          "fato": "A cúpula do BRICS abriu em Nova Délhi com tarifas no centro da agenda, a China afirmou que empresas de IA evitaram uma delegação americana por medo de sanções, e o CSIS aponta que Pequim segue explorando gargalos de terras raras, além de questionar o déficit comercial americano com o Vietnã.",
+          "interpretacao": "Sanções e tarifas passam a ser usadas como alavanca permanente, o que encarece a reorganização das cadeias produtivas.",
+          "cenario_base": "Escalada medida, com exceções setoriais e custo repassado ao consumidor.",
+          "risco_alternativo": "Restrição coordenada de terras raras e semicondutores que trave setores industriais inteiros.",
           "gatilhos": [
-            "Cúpula Xi–Trump",
-            "Resposta formal do Canadá à ameaça sobre a Bombardier",
-            "Medidas tarifárias dos EUA sobre compradores de petróleo russo"
+            "Declaração final da cúpula do BRICS",
+            "Novas medidas americanas sobre tecnologia chinesa"
           ],
-          "ativos": ["acoes", "credito", "emfx", "minerais-criticos"],
           "confianca": "media",
           "sources": [
-            { "url": "https://apnews.com/", "titulo": "Trump threatens to block Canada's Bombardier sales unless planes made in US", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-            { "url": "https://oilprice.com/", "titulo": "Russia Vows to Keep Selling Oil to India Despite U.S. Tariff Threat", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://www.csis.org/analysis", "titulo": "U.S.-Africa Trade at a Crossroads: A Moment for New Thinking", "data": "2026-09-03", "tipo": "analise", "veiculo": "CSIS" }
+            {
+              "url": "https://www.aljazeera.com/news/2026/9/12/brics-summit-opens-in-new-delhi-amid-wars-global-tensions-tariffs?traffic_source=rss",
+              "titulo": "BRICS summit opens in New Delhi amid wars, global tensions, tariffs",
+              "veiculo": "Al Jazeera",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
+              "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
+              "veiculo": "South China Morning Post",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.csis.org/analysis",
+              "titulo": "China Continues to Exploit Rare Earth Chokepoints",
+              "veiculo": "CSIS",
+              "data": "2026-09-12",
+              "tipo": "analise"
+            },
+            {
+              "url": "https://www.csis.org/analysis",
+              "titulo": "Does Vietnam’s Soaring U.S. Trade Deficit Make It a Bad Actor?",
+              "veiculo": "CSIS",
+              "data": "2026-09-12",
+              "tipo": "analise"
+            }
           ]
         }
       ]
     },
     "riscos_sistemicos": {
       "titulo": "Riscos sistêmicos",
+      "resumo": "Clima extremo, divisão política e terrorismo em ambiente de fragmentação.",
       "material": true,
-      "resumo": "Três vetores de contágio nesta edição: logística marítima (bunker e frete), política monetária em semana decisiva com energia cara, e o ciclo de capex de IA concentrando capital em infraestrutura energética. A eles se soma o risco político europeu.",
       "teses": [
         {
-          "fato": "A escassez de bunker por priorização de diesel eleva custos de toda a cadeia marítima; o SPR americano depletado reduz a capacidade de resposta a choques; o mercado dividido no FOMC eleva a sensibilidade das curvas a surpresa; a África e a periferia do euro acumulam estresses próprios (Sudão em guerra civil, Sérvia em crise pós-Mladić).",
-          "interpretacao": "Nenhum desses vetores, isolado, é sistêmico. O risco é a correlação: um choque de Hormuz na mesma semana de um FOMC hawkish e de frete em alta transferiria o estresse do preço da energia para o crédito — primeiro em high yield e emergentes.",
-          "cenario_base": "Estresse contido: volatilidade acima da média em curvas, frete e crédito, sem quebra de liquidez; correções de ações compradas em profundidade absorvidas.",
-          "risco_alternativo": "Eventos correlacionados (bloqueio de Hormuz + surpresa hawkish + falência de operador de frete alavancado): reaparecimento de stress de liquidez em crédito e emergentes, com refúgio em ouro e Treasury curto.",
+          "fato": "O mundo teve o agosto mais quente já registrado, e a chefe de clima da ONU afirma que a divisão política está minando o combate a uma emergência de segurança econômica. Eventos climáticos extremos tiraram milhões de crianças da escola em 2025, e um relatório da ONU aponta que a propaganda terrorista avança acima da capacidade global de resposta.",
+          "interpretacao": "Riscos climáticos e de segurança deixam de ser eventos separados quando a capacidade de coordenação política está baixa.",
+          "cenario_base": "Eventos extremos recorrentes com resposta fragmentada e custo fiscal crescente.",
+          "risco_alternativo": "Crise climática e atentado de grande porte no mesmo período, sobrecarregando capacidade estatal e o mercado de seguros.",
           "gatilhos": [
-            "FOMC 15–16/09 e BCE 10/09",
-            "Índices de frete marítimo (Capees/Supramax) e prêmios de seguro de guerra",
-            "Movimentos de spread em high yield e CDS de emergentes"
+            "Relatório da ONU sobre propaganda terrorista",
+            "Agenda de clima e segurança no Conselho de Segurança"
           ],
-          "ativos": ["credito", "ouro", "treasury", "vol"],
           "confianca": "media",
           "sources": [
-            { "url": "https://oilprice.com/", "titulo": "Shipping Fuel Shortage Looms as Refiners Prioritize Diesel", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-            { "url": "https://news.un.org/en/", "titulo": "UN News — Sudan: outside forces fuel the war (relatório)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
-            { "url": "https://www.bbc.com/news/world", "titulo": "Thousands turn out in Serbia for funeral of Ratko Mladić (crise política nos Bálcãs)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-            { "url": "https://www.cfr.org/global-conflict-tracker", "titulo": "CFR Global Conflict Tracker — 27 conflitos monitorados", "data": "2026-09-07", "tipo": "analise", "veiculo": "CFR" }
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168317",
+              "titulo": "The world just had the hottest August ever",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168311",
+              "titulo": "UN climate chief warns political division is undermining fight against ‘economic security emergency’",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168306",
+              "titulo": "‘The water comes up to our knees’: Climate hazards shut millions of children out of school in 2025",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://news.un.org/feed/view/en/story/2026/09/1168313",
+              "titulo": "Terrorist propaganda is outpacing global efforts to stop it, UN report finds",
+              "veiculo": "ONU News",
+              "data": "2026-09-12",
+              "tipo": "primaria"
+            }
           ]
         }
       ]
@@ -351,171 +736,452 @@
   "market_impacts": {
     "petroleo": {
       "direcao": "alta",
-      "comentario": "Prêmio de guerra com Hormuz a 6–8 milhões de bpd: WTI ~US$ 92,70 e Brent ~US$ 97,00. Goldman Sachs sinaliza US$ 120 em escalada; desescalada devolveria o prêmio rapidamente."
+      "comentario": "Petróleo acima de US$ 100 com o oleoduto leste-oeste fechado e risco de interrupção em Bab al-Mandeb. A IEA projeta corte de 5,7 milhões de bpd na oferta."
     },
     "inflacao": {
       "direcao": "alta",
-      "comentario": "Energia cara (gasolina >US$ 4/galão nos EUA no Labor Day, benchmark índio >US$ 100) mais frete e bunker em alta transmitem-se a custos logísticos e núcleos importados com defasagem de um a dois trimestres."
+      "comentario": "Energia e frete mais caros, com superpetroleiros a US$ 800 mil por dia, pressionam a inflação global na semana de decisões de bancos centrais."
     },
     "juros_globais": {
       "direcao": "volatil",
-      "comentario": "BCE 10/09, FOMC 15–16/09 com projeções e COPOM 16/09 no mesmo pacote: expectativa dividida entre manutenção e alta no Fed, com prêmio de energia limitando qualquer narrativa de afrouxamento."
+      "comentario": "Choque de oferta de energia complica o corte de juros. No Reino Unido a curva já admite alta de até quatro vezes em um ano."
     },
     "treasury": {
       "direcao": "alta",
-      "comentario": "10 anos a ~4,78%, perto do topo de 52 semanas (4,81%): prêmio de termo sustentado por inflação de energia, oferta fiscal e menor expectativa de cortes; refúgio de curta duração em episódios de escalada."
+      "comentario": "Treasury 10 anos em 4,975%, com prêmio de energia e inflação persistente sustentando a taxa longa."
     },
     "dolar": {
-      "direcao": "volatil",
-      "comentario": "DXY a ~99,18 no miolo da faixa de 52 semanas (95,55–101,80): refúgio geopolítico sustenta, mas a chance de alta de juros no Fed é a variável dominante da semana."
+      "direcao": "neutro",
+      "comentario": "DXY em 99,095, sem direção clara: o dólar ganha com risco geopolítico e perde com a leitura de inflação mais alta nos Estados Unidos."
     },
     "ouro": {
       "direcao": "alta",
-      "comentario": "Spot em US$ 4.405,10/oz (-0,54% no dia), bem abaixo do topo de 52 semanas (US$ 5.586,20): prêmio de guerra reativado e demanda de refúgio sustentam a tendência enquanto Hormuz seguir instável."
+      "comentario": "Ouro em US$ 4.408,90 a onça, sustentado por risco geopolítico e demanda de proteção."
     },
     "acoes": {
-      "direcao": "neutro",
-      "comentario": "S&P 500 a ~7.718, perto do recorde de 52 semanas (7.816,70), com rali de semicondutores em Tóquio/Seul compensando risco tarifário e de energia; concentração em IA segue a principal fragilidade."
+      "direcao": "volatil",
+      "comentario": "S&P 500 em 7.656,98, com volatilidade elevada por risco de guerra, energia cara e temporada de decisões de juros."
     },
     "credito": {
-      "direcao": "alta",
-      "comentario": "Spreads pressionados por energia, frete e incerteza tarifária; periferia do euro soma prêmio político (AfD); emergentes sensíveis a dólar e a commodity prices."
+      "direcao": "volatil",
+      "comentario": "A abertura de spreads acompanha o prêmio de risco geopolítico, com atenção a emissores ligados a energia e transporte marítimo."
     },
     "commodities": {
       "direcao": "alta",
-      "comentario": "Complexo energético lidera (petróleo, gás, bunker); minerais críticos com prêmio estratégico pelo congelamento chinês; grãos vigilantes à Ucrânia; metais industriais refém do ciclo chinês de infraestrutura."
+      "comentario": "Energia e frete puxam o complexo de commodities, com efeito em alimentos via custo logístico."
     },
     "brasil": {
-      "direcao": "neutro",
-      "comentario": "Pré-sal captura o prêmio do Brent (~US$ 97) e o agronegócio segue fornecendo ambos os blocos; contrapeso: prêmio de risco global, dólar e juros domésticos altos. COPOM em 16/09 com Selic em 14,00%."
+      "direcao": "volatil",
+      "comentario": "Selic em 14,00% e PTAX em R$ 5,11 deixam o Brasil com carry atraente e sensibilidade alta a petróleo e a humor global."
     },
     "curva_di": {
-      "direcao": "volatil",
-      "comentario": "Focus projeta Selic de 13,75% no fim de 2026 (contra 14,00% hoje) e IPCA de 5,01%, acima da meta: a curva DI precifica afrouxamento gradual e fica sensível a surpresa do FOMC e ao câmbio."
+      "direcao": "alta",
+      "comentario": "A curva DI tende a abrir com inflação de energia importada e prêmio fiscal, ainda que o carry siga favorável."
     },
     "brl": {
       "direcao": "volatil",
-      "comentario": "PTAX a ~R$ 5,10 (04/09) e Focus com câmbio de R$ 5,20 para o fim do ano: termos de troca favoráveis (petróleo e commodities) contra o risco-off geopolítico e o diferencial de juros global."
+      "comentario": "O real oscila entre carry alto e aversão a risco global, com o petróleo mais alto ajudando os termos de troca."
     }
   },
   "scenarios": [
     {
+      "titulo": "Interrupção contida com prêmio de energia elevado",
       "tipo": "base",
-      "titulo": "Prêmio persistente sem bloqueio total",
-      "probabilidade": null,
-      "descricao": "Hormuz segue parcialmente operável sob tensão, guerras do Irã e da Ucrânia em atrito sem escalada máxima, comércio pendular até a cúpula Xi–Trump e bancos centrais em vigilância.",
-      "implicacoes": "Petróleo em faixa elevada (~US$ 85–105 WTI), curvas de juros voláteis com prêmio de termo, ouro sustentado, ações neutras com rotação defensiva, spreads de crédito levemente mais largos."
+      "descricao": "O oleoduto leste-oeste volta parcialmente, Bab al-Mandeb segue aberto com prêmio de seguro alto e o petróleo permanece acima de US$ 100. Bancos centrais adiam cortes e a volatilidade fica concentrada em energia e frete.",
+      "implicacoes": "Inflação mais persistente, juro longo alto e crescimento global revisado para baixo sem recessão.",
+      "probabilidade": null
     },
     {
+      "titulo": "Gargalo logístico persistente",
       "tipo": "alternativo",
-      "titulo": "Escalada no Golfo",
-      "probabilidade": null,
-      "descricao": "Fechamento efetivo do corredor de Hormuz ou ataque a terminal crítico de LNG/petróleo, com resposta militar ampliada dos EUA.",
-      "implicacoes": "Petróleo acima de US$ 120 (cenário sinalizado por Goldman Sachs), reascensão inflacionária global, FOMC forcado a endurecer, realocação para refúgio (ouro, Treasury curto, dólar) e alargamento de spreads."
+      "descricao": "A rota do Mar Vermelho fica comprometida por mais tempo, com seguros e fretes proibitivos, mesmo sem fechamento formal do estreito. A IEA confirma o corte de oferta e a recuperação do Golfo escorrega para 2027.",
+      "implicacoes": "Choque inflacionário de oferta, revisão de lucros em transporte e consumo, e prêmio de risco maior em emergentes importadores de energia.",
+      "probabilidade": null
     },
     {
+      "titulo": "Fechamento do estreito e conflito regional aberto",
       "tipo": "cauda",
-      "titulo": "Choque logístico correlacionado",
-      "probabilidade": null,
-      "descricao": "Bloqueio prolongado do estreito combinado com surpresa hawkish do Fed e estresse de frete alavancado no mesmo trimestre.",
-      "implicacoes": "Risco de stress de liquidez em crédito privado e emergentes, com contágio por margens e funding; cenário de recessão energética com ações e crédito pressionados simultaneamente."
-    },
-    {
-      "tipo": "alternativo",
-      "titulo": "Desescalada em duas frentes",
-      "probabilidade": null,
-      "descricao": "Arranjo na guerra do Irã (mediação do Catar) e entendimento parcial na cúpula Xi–Trump, com retomada de fluxos e alívio tarifário.",
-      "implicacoes": "Correção de prêmio no petróleo, alívio de custos logísticos, risk-on moderado com curvas de juros caindo pela inflação de energia; melhor desempenho relativo de emergentes, incluindo o real."
+      "descricao": "Interrupção do fluxo em Bab al-Mandeb combinada a ataques diretos a infraestrutura e a ativos americanos no Golfo, com resposta militar ampliada.",
+      "implicacoes": "Petróleo em patamar extremo, recessão global, corrida para dólar e ouro, e disfunção nos mercados de frete e de seguro.",
+      "probabilidade": null
     }
   ],
   "triggers": [
     {
-      "janela": "10/09/2026",
-      "evento": "Decisão e coletiva do Banco Central Europeu",
-      "relevancia": "Primeira leitura oficial de como o BCE pesa o prêmio de energia contra a desaceleração; referência para o euro e spreads da zona do euro."
+      "evento": "Reabertura ou perda adicional do oleoduto leste-oeste saudita",
+      "janela": "próximos dias",
+      "relevancia": "É a variável que decide o tamanho do prêmio de energia."
     },
     {
-      "janela": "15–16/09/2026",
-      "evento": "FOMC com Summary of Economic Projections",
-      "relevancia": "Mercado dividido entre manutenção e alta de 25 bps; o dot plot define a trajetória de juros americanos para o fim de 2026."
+      "evento": "Reunião de emergência do Conselho de Segurança sobre o Iêmen",
+      "janela": "imediato",
+      "relevancia": "Indica se o avanço houthi se converte em crise diplomática formal."
     },
     {
-      "janela": "16/09/2026",
-      "evento": "Reunião do COPOM",
-      "relevancia": "Selic em 14,00% e Focus projetando 13,75% no fim do ano: a comunicação sobre o início do ciclo de cortes é o gatilho da curva DI."
+      "evento": "Avanço houthi sobre Bab al-Mandeb",
+      "janela": "próximos dias",
+      "relevancia": "Define o risco de interrupção da rota do Mar Vermelho."
     },
     {
-      "janela": "Imediato",
-      "evento": "Resposta dos EUA ao corredor de navegação declarado pelo Irã em Hormuz",
-      "relevancia": "Define se o prêmio de guerra no petróleo se consolida ou se estabiliza."
+      "evento": "Cúpula do BRICS em Nova Délhi e declaração final",
+      "janela": "14 a 20 de setembro",
+      "relevancia": "Mede a coesão do bloco e o espaço para arranjos alternativos de pagamento."
     },
     {
-      "janela": "Imediato",
-      "evento": "Negociações de formação de governo na Saxônia-Anhalt (AfD)",
-      "relevancia": "Teste do 'firewall' alemão; prêmio político no euro se a AfD avançar."
+      "evento": "Visita de Xi Jinping à Casa Branca",
+      "janela": "em preparação",
+      "relevancia": "A disputa sobre IA e Taiwan define o tom da relação até o fim do ano."
     },
     {
-      "janela": "Setembro (data a confirmar)",
-      "evento": "Cúpula Xi–Trump",
-      "relevancia": "Terras raras e tarifas em jogo: define o rumo do comércio mundial no último trimestre."
+      "evento": "G20 em Miami e eventual encontro entre Zelenskyy e Putin",
+      "janela": "próximas semanas",
+      "relevancia": "Primeira janela concreta de negociação na guerra da Ucrânia."
     },
     {
-      "janela": "Próximas semanas",
-      "evento": "Desdobramento das conversas de paz dos enviados dos EUA em Kiev",
-      "relevancia": "Sem cessar-fogo, prêmio de risco europeu e commodities agrícolas seguem sustentados."
+      "evento": "Consequências políticas da vitória da AfD na Saxônia-Anhalt",
+      "janela": "próximas semanas",
+      "relevancia": "Testa a estabilidade do governo alemão e o prêmio de risco europeu."
     },
     {
-      "janela": "Semanal",
-      "evento": "Estoques de petróleo da EIA e prêmios de frete/seguro de guerra",
-      "relevancia": "Confirmam se o mercado físico segue apertado além do prêmio financeiro."
+      "evento": "Eleições na Suécia e votação na Bósnia",
+      "janela": "12 de setembro",
+      "relevancia": "Ampliam a leitura de fragmentação política na Europa."
+    },
+    {
+      "evento": "Agenda de IA e drones no contraterrorismo, 25 anos após o 11 de setembro",
+      "janela": "próximos meses",
+      "relevancia": "Orienta gasto em defesa e regulação de tecnologia."
     }
   ],
   "sources": [
-    { "url": "https://www.aljazeera.com/", "titulo": "Hormuz shipping traffic falls sharply as US insists waterway 'fully open'", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-    { "url": "https://www.aljazeera.com/", "titulo": "Iran's top diplomat calls for Islamic nations' unity against US-Israeli aggression", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-    { "url": "https://www.aljazeera.com/", "titulo": "Iran to phase out petrol import subsidy, vice president says", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-    { "url": "https://www.aljazeera.com/", "titulo": "Iran and Ukraine wars: Why ship fuel is running short, and why it matters", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Al Jazeera" },
-    { "url": "https://apnews.com/", "titulo": "Germany's Merz shocked by far-right state election triumph but doubles down on unpopular reforms", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-    { "url": "https://apnews.com/", "titulo": "AfD party's landslide win in eastern Germany tests country's 'firewall' against the far right", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-    { "url": "https://apnews.com/", "titulo": "Russia shuts German consulate in St. Petersburg in tit-for-tat move after Leipzig drone incident", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-    { "url": "https://apnews.com/", "titulo": "Israeli airstrikes on a village in southern Lebanon kill 12 people, including 2 children", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-    { "url": "https://apnews.com/", "titulo": "Trump threatens to block Canada's Bombardier sales unless planes made in US", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-    { "url": "https://apnews.com/", "titulo": "Global shares are mixed as chipmaker shares rally in Tokyo and Seoul", "data": "2026-09-07", "tipo": "primaria", "veiculo": "AP News" },
-    { "url": "https://www.bbc.com/news/world", "titulo": "Germany's far-right AfD says 'democracy demands' parties work with them after state election win", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-    { "url": "https://www.bbc.com/news/world", "titulo": "Thousands turn out in Serbia for funeral of Ratko Mladić", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-    { "url": "https://www.bbc.com/news/world", "titulo": "Kyiv air raid alerts at record high as Russia launches round-the-clock strikes", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-    { "url": "https://www.bbc.com/news/world", "titulo": "Americans react to record high Labor Day fuel prices", "data": "2026-09-07", "tipo": "primaria", "veiculo": "BBC News" },
-    { "url": "https://www.dw.com/europe", "titulo": "Witkoff and Kushner hold Ukraine talks after meeting Putin", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-    { "url": "https://www.dw.com/europe", "titulo": "Ukraine: Zelenskyy says war looks set to go on into winter", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-    { "url": "https://www.dw.com/europe", "titulo": "Germany plans anti-drone shield over Leipzig attack", "data": "2026-09-06", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-    { "url": "https://www.dw.com/europe", "titulo": "EU's von der Leyen pledges $232 million Greenland investment", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-    { "url": "https://www.dw.com/europe", "titulo": "Russia opens first road bridge with North Korea", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Deutsche Welle" },
-    { "url": "https://news.un.org/en/", "titulo": "Security Council: Addressing the legacy of Syria's chemical weapons", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
-    { "url": "https://news.un.org/en/", "titulo": "West Bank: UN rights report warns of forcible displacement from refugee camps", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
-    { "url": "https://news.un.org/en/", "titulo": "Cold, displaced and in darkness: Ukrainian civilians brace for another winter of war", "data": "2026-09-07", "tipo": "primaria", "veiculo": "ONU News" },
-    { "url": "https://www.scmp.com/news/china", "titulo": "As clock counts down to Trump summit, Xi boosts global clout with diplomatic blitz", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
-    { "url": "https://www.scmp.com/news/china", "titulo": "Taiwan sets up US-backed cyber unit to hunt hidden military threats", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
-    { "url": "https://www.scmp.com/news/china", "titulo": "China vows deeper cooperation with Qatar in energy and Middle East de-escalation", "data": "2026-09-07", "tipo": "primaria", "veiculo": "South China Morning Post" },
-    { "url": "https://oilprice.com/", "titulo": "Iran Says It Will Control New Hormuz Shipping Corridor", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "Iran War Forces a Rewrite of Global Oil Trade Routes (Hormuz: ~20 milhões bpd para 6–8 milhões bpd)", "data": "2026-09-05", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "Goldman Sachs Warns Oil Could Hit $120 as Shipping Risks Rise", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "India's Crude Oil Benchmark Tops $100 as Middle East War Escalates", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "Qatar Moves Six LNG Tankers Toward Gulf as Export Restart Looms", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "Shipping Fuel Shortage Looms as Refiners Prioritize Diesel", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "Saudi Aramco's Jizan Refinery Hit Again as Houthi Attacks Escalate", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "China Rare Earth Firms Freeze U.S. Exports Weeks Before Xi-Trump Summit", "data": "2026-09-04", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://oilprice.com/", "titulo": "Russia Vows to Keep Selling Oil to India Despite U.S. Tariff Threat", "data": "2026-09-07", "tipo": "mercado", "veiculo": "OilPrice" },
-    { "url": "https://www.cfr.org/global-conflict-tracker", "titulo": "Global Conflict Tracker — 27 conflitos monitorados (Irã, Ucrânia, Taiwan, Sudão)", "data": "2026-09-07", "tipo": "analise", "veiculo": "CFR" },
-    { "url": "https://www.csis.org/analysis", "titulo": "From Shahed to Geran: How Russia Continues to Reinvent the One-Way Attack Drone", "data": "2026-09-04", "tipo": "analise", "veiculo": "CSIS" },
-    { "url": "https://www.csis.org/analysis", "titulo": "U.S.-Africa Trade at a Crossroads: A Moment for New Thinking", "data": "2026-09-03", "tipo": "analise", "veiculo": "CSIS" },
-    { "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", "titulo": "ECB — Official interest rates e calendário (coletiva de 10/09/2026)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Banco Central Europeu" },
-    { "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "titulo": "Federal Reserve — FOMC meeting calendars (15–16/09/2026)", "data": "2026-09-07", "tipo": "primaria", "veiculo": "Federal Reserve" },
-    { "url": "https://www.kitco.com/charts/gold", "titulo": "Live Gold Price: US$ 4.405,10/oz em 07/09/2026 (NY); topo de 52 semanas US$ 5.586,20", "data": "2026-09-07", "tipo": "mercado", "veiculo": "Kitco" },
-    { "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX", "titulo": "CBOE 10-Year Treasury Yield: 4,784% (04/09/2026)", "data": "2026-09-04", "tipo": "mercado", "veiculo": "Yahoo Finance" },
-    { "url": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB", "titulo": "ICE US Dollar Index: 99,18 (07/09/2026)", "data": "2026-09-07", "tipo": "mercado", "veiculo": "Yahoo Finance" },
-    { "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC", "titulo": "S&P 500: 7.718,60 (04/09/2026); topo de 52 semanas 7.816,70", "data": "2026-09-04", "tipo": "mercado", "veiculo": "Yahoo Finance" },
-    { "url": "https://coingape.com/", "titulo": "FOMC Meeting Sept. 2026: Date, Schedule, Expectations (sinal secundário de expectativa)", "data": "2026-09-05", "tipo": "secundaria", "veiculo": "CoinGape" },
-    { "url": "https://szuchmacher.com.br/macro_data.json", "titulo": "Selic 14,00%, PTAX R$ 5,10, COPOM 16/09, Focus: Selic YE26 13,75%, IPCA 5,01%, câmbio YE26 5,20 (carimbo 04/09/2026)", "data": "2026-09-04", "tipo": "interna", "veiculo": "BCB/Focus via macro_data.json" }
-  ],
-  "disclaimer": "O Radar Geopolítico é uma síntese informativa semanal elaborada a partir de fontes públicas, com registro de URL, veículo, data e tipo de fonte. Fatos materiais exigem no mínimo duas fontes independentes; teses de alto impacto, três. Sinais secundários (redes, fóruns, agregadores) não sustentam afirmação factual isoladamente. Este material tem caráter meramente informativo e institucional, não constitui recomendação, oferta ou análise individualizada de valores mobiliários nos termos da Resolução CVM nº 19/2021, e não apresenta probabilidades numéricas de cenários. Direções de mercado indicam leitura qualitativa de risco, não expectativa de retorno."
+    {
+      "url": "https://www.bbc.co.uk/news/articles/c62m933465eo?at_medium=RSS&at_campaign=rss",
+      "titulo": "Saudi Arabia shuts key oil pipeline after drone attack launched from Iraq",
+      "veiculo": "BBC News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/clyjqvjzlwno?at_medium=RSS&at_campaign=rss",
+      "titulo": "'Never, ever forget' - America marks 25th anniversary of 9/11 attacks",
+      "veiculo": "BBC News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/cwyz59yyqk4o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Ukraine faces 'toughest winter' since Russia's full-scale invasion, UN official tells BBC",
+      "veiculo": "BBC News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/c23x72yx2rvo?at_medium=RSS&at_campaign=rss",
+      "titulo": "Houthis claim major advance in Yemen and tighten grip on Red Sea shipping lane",
+      "veiculo": "BBC News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/c3v4zgzr1kxo?at_medium=RSS&at_campaign=rss",
+      "titulo": "Lightning Houthi advance in Yemen may bring dangerous new dimension to Iran war",
+      "veiculo": "BBC News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/9/12/fighting-re-erupts-in-yemen-and-civilians-are-paying-the-price?traffic_source=rss",
+      "titulo": "Fighting re-erupts in Yemen and civilians are paying the price",
+      "veiculo": "Al Jazeera",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/9/12/sweden-heads-to-the-polls-whats-at-stake-in-the-knife-edge-election?traffic_source=rss",
+      "titulo": "Sweden heads to the polls: What’s at stake in the knife-edge election?",
+      "veiculo": "Al Jazeera",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/9/12/russia-strikes-cargo-vessels-steel-plants-across-ukraine?traffic_source=rss",
+      "titulo": "Russia strikes cargo vessels, steel plants across Ukraine",
+      "veiculo": "Al Jazeera",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/9/12/brics-summit-opens-in-new-delhi-amid-wars-global-tensions-tariffs?traffic_source=rss",
+      "titulo": "BRICS summit opens in New Delhi amid wars, global tensions, tariffs",
+      "veiculo": "Al Jazeera",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/russia-s-drone-war-comes-to-moldova-and-romania/a-79239591?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Russia&apos;s drone war comes to Moldova and Romania",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/dw-exclusive-zelenskyy-offers-to-meet-putin-at-g20-in-miami/a-79241703?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "DW exclusive: Zelenskyy offers to meet Putin at G20 in Miami",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/turks-in-germany-anxious-after-afd-wins-in-saxony-anhalt/a-79221764?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Turks in Germany anxious after AfD wins in Saxony-Anhalt",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/putin-rejects-mobilization-rumors-many-russians-unconvinced/a-79193386?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Putin rejects mobilization rumors, many Russians unconvinced",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/german-economy-frets-about-saxony-anhalt-election-results/a-79162871?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "German economy frets about Saxony-Anhalt election results",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/ratko-mladic-s-funeral-casts-shadow-over-bosnia-and-herzegovina-vote/a-79189319?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Ratko Mladic’s funeral casts shadow over Bosnia and Herzegovina vote",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/us-envoys-witkoff-and-kushner-hold-ukraine-talks-after-meeting-putin/a-79054779?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "US envoys Witkoff and Kushner hold Ukraine talks after meeting Putin",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168318",
+      "titulo": "Security Council LIVE: Ambassadors mark 9/11 with counter-terrorism push on AI and drones",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168317",
+      "titulo": "The world just had the hottest August ever",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168313",
+      "titulo": "Terrorist propaganda is outpacing global efforts to stop it, UN report finds",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168312",
+      "titulo": "Ukraine: Drone attacks on Chornobyl are ‘gambling with the safety of millions of people’",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168311",
+      "titulo": "UN climate chief warns political division is undermining fight against ‘economic security emergency’",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168309",
+      "titulo": "Security Council LIVE: Fresh attacks prompt emergency meeting on Yemen",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168306",
+      "titulo": "‘The water comes up to our knees’: Climate hazards shut millions of children out of school in 2025",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/09/1168301",
+      "titulo": "Guterres urges leaders to invest in peace as conflicts deepen",
+      "veiculo": "ONU News",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/White-House-Weighs-Defense-Production-Act-as-US-Refineries-Maxed-Out.html",
+      "titulo": "White House Weighs Defense Production Act as U.S. Refineries Maxed Out",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Energy/Energy-General/UK-Interest-Rates-Could-Rise-Four-Times-Over-the-Next-Year.html",
+      "titulo": "UK Interest Rates Could Rise Four Times Over the Next Year",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Energy/Crude-Oil/US-Oil-Rig-Count-Rises-as-Oil-Tops-100.html",
+      "titulo": "U.S. Oil Rig Count Rises as Oil Tops $100",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Drone-Strikes-Hit-Saudi-Arabias-Vital-East-West-Oil-Pipeline.html",
+      "titulo": "Drone Strikes Hit Saudi Arabia’s Vital East-West Oil Pipeline",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Energy/Crude-Oil/Saudi-Arabias-Critical-Oil-Bypass-Comes-Under-Threat.html",
+      "titulo": "Saudi Arabia’s Critical Oil Bypass Comes Under Threat",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Energy/Energy-General/Supertanker-Rates-Hit-800000-a-Day-as-Gulf-Tensions-Escalate.html",
+      "titulo": "Supertanker Rates Hit $800,000 a Day as Gulf Tensions Escalate",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/IEA-Sees-57-Million-Bpd-Oil-Supply-Plunge-as-Gulf-Recovery-Slips-to-2027.html",
+      "titulo": "IEA Sees 5.7 Million Bpd Oil Supply Plunge as Gulf Recovery Slips to 2027",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/UAE-Rethinks-5-Gigawatt-AI-Campus-After-Iran-Targets-US-Assets-in-Gulf.html",
+      "titulo": "UAE Rethinks 5-Gigawatt AI Campus After Iran Targets US Assets in Gulf",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Energy/Energy-General/Jeff-Currie-Sees-5-Gasoline-Before-Midterms.html",
+      "titulo": "Jeff Currie Sees $5 Gasoline Before Midterms",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Energy/Energy-General/Houthis-Advance-on-Bab-al-Mandeb-as-Saudi-Oil-Route-Comes-Under-Threat.html",
+      "titulo": "Houthis Advance on Bab al-Mandeb as Saudi Oil Route Comes Under Threat",
+      "veiculo": "OilPrice",
+      "data": "2026-09-12",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3367303/chinese-leader-xi-urges-brics-play-its-due-role-bringing-peace-middle-east?utm_source=rss_feed",
+      "titulo": "Chinese leader Xi urges Brics to play its ‘due role’ in bringing peace to Middle East",
+      "veiculo": "South China Morning Post",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3367300/china-urges-us-stop-all-spying-or-face-retaliation-slams-gangster-logic?utm_source=rss_feed",
+      "titulo": "China urges US to ‘stop all spying’ or face retaliation, slams ‘gangster logic’",
+      "veiculo": "South China Morning Post",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/politics/article/3367283/us-wants-taiwan-serve-cannon-fodder-against-mainland-china-state-broadcaster-cctv?utm_source=rss_feed",
+      "titulo": "US wants Taiwan to ‘serve as cannon fodder’ against mainland China: state media",
+      "veiculo": "South China Morning Post",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3367252/internal-splits-threaten-slow-brics-progress-bloc-looks-back-20-years-growth?utm_source=rss_feed",
+      "titulo": "Internal splits threaten to slow Brics’ progress as bloc looks back on 20 years of growth",
+      "veiculo": "South China Morning Post",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
+      "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
+      "veiculo": "South China Morning Post",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3367242/ai-fight-shadows-final-preparations-xi-jinpings-white-house-visit?utm_source=rss_feed",
+      "titulo": "AI fight shadows final preparations for Xi Jinping’s White House visit to meet Donald Trump",
+      "veiculo": "South China Morning Post",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "China Continues to Exploit Rare Earth Chokepoints",
+      "veiculo": "CSIS",
+      "data": "2026-09-12",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Is the War Rewriting the World Order? | The High Top",
+      "veiculo": "CSIS",
+      "data": "2026-09-12",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Hormuz Needs a Community, Not a Condominium",
+      "veiculo": "CSIS",
+      "data": "2026-09-12",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Does Vietnam’s Soaring U.S. Trade Deficit Make It a Bad Actor?",
+      "veiculo": "CSIS",
+      "data": "2026-09-12",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Adapting to the New Terrorism Landscape 25 Years After 9/11",
+      "veiculo": "CSIS",
+      "data": "2026-09-12",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.cfr.org/global-conflict-tracker",
+      "titulo": "Middle East and North Africa",
+      "veiculo": "CFR",
+      "data": "2026-09-12",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "titulo": "Board of Governors of the Federal Reserve System",
+      "veiculo": "Federal Reserve",
+      "data": "2026-09-12",
+      "tipo": "primaria"
+    }
+  ]
 }
