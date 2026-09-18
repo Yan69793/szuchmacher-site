@@ -102,15 +102,17 @@ $checks = @(
     @{ Url = "$SZ/assets/regulatorio.php"; Status = 200;
        NaoContem = 'impacto_por_caso';
        Rotulo = 'sz: payload regulatorio sem o campo interno impacto_por_caso' }
-    # O bloco #situacoes voltou ao index.html em 16/09/2026 (commit 2540a3c),
-    # depois de ter saido em e4e105d, quando o radar geopolitico herdou o slot.
-    # O sintoma foi silencioso: o asset regulatorio-panel.js continuava servido e
-    # o endpoint respondia, mas sem o #situacoes na home o painel saia cedo no
-    # `if (!el || !panel) return;` e nada no gate reprovava. A checagem entra com
-    # o comportamento ja em producao (regra do projeto) e a ancora e o id do
-    # bloco, que e o que o painel consulta.
-    @{ Url = "$SZ/"; Status = 200; Contem = 'id="situacoes"';
-       Rotulo = 'sz: home com o bloco do tracker regulatorio (#situacoes)' }
+    # Remocao do bloco #situacoes da home em 18/09/2026, decisao do dono do site
+    # ("quero ela fora do site"). O bloco e o <script> do regulatorio-panel.js
+    # sairam do index.html; o asset, o endpoint e o regulatorio-data.json seguem
+    # no ar e no build porque o destino do pipeline e decisao de outro card. A
+    # checagem vira o contrario da de 16/09: exige a ausencia dos literais do
+    # bloco (id, painel e script, para pegar ate reintroducao parcial) e a
+    # presenca do id do radar, que ficou no slot seguinte. Entra na mesma
+    # janela do deploy que removeu o bloco.
+    @{ Url = "$SZ/"; Status = 200; Contem = 'id="radarGeopolitico"';
+       NaoContem = @('id="situacoes"', 'situacoesPanel', 'regulatorio-panel.js');
+       Rotulo = 'sz: home sem o bloco #situacoes, com o radar geopolitico' }
 
     # Arquivos sensiveis no dominio sz. O gate nunca checou esses quatro, quem
     # fazia isso era o Bloco F da skill de auditoria, a mao. Mesma lacuna que o
