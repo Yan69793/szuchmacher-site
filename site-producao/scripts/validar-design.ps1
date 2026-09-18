@@ -27,7 +27,11 @@ $htmlFiles = Get-ChildItem -Path $root -Filter "*.html" -Recurse | Where-Object 
     $_.FullName -notmatch '\\node_modules\\' -and
     $_.FullName -notmatch '\\deploy_zip\\' -and
     $_.FullName -notmatch '\\snapshots\\' -and
-    $_.FullName -notmatch '\\.claude\\'
+    $_.FullName -notmatch '\\.claude\\' -and
+    # public/ e saida de build (gerada por build-cloudflare-public.ps1 e ignorada
+    # pelo git). Lintar ali duplica cada achado da fonte e faz o gate reprovar
+    # duas vezes o mesmo defeito.
+    $_.FullName -notmatch '\\public\\'
 }
 
 foreach ($f in $htmlFiles) {
@@ -97,9 +101,10 @@ foreach ($f in $htmlFiles) {
 }
 
 # --- CSS files (token/base assets) ---
+# sz-tokens.css e sz-base.css nunca existiram neste repo: a checagem de --radius
+# ficava morta no Test-Path. A fonte real dos tokens e sz-design.css.
 $cssFiles = @(
-    (Join-Path $root "assets\sz-tokens.css"),
-    (Join-Path $root "assets\sz-base.css")
+    (Join-Path $root "assets\sz-design.css")
 )
 
 foreach ($cssPath in $cssFiles) {
