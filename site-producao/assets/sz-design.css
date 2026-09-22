@@ -900,14 +900,15 @@ header.is-scrolled {
 .mp-ticker {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 1px;
+  background: rgba(210, 183, 119, 0.22);
+  border: 1px solid rgba(210, 183, 119, 0.22);
 }
 
 .mp-card {
-  background: linear-gradient(180deg, #f3ede1 0%, #ebe1cf 100%);
-  color: var(--text);
-  border: 1px solid rgba(146, 112, 58, 0.18);
-  border-top: 2px solid var(--gold);
+  background: var(--navy-soft);
+  color: #fff;
+  border: none;
   padding: 24px 22px 22px;
   display: flex;
   flex-direction: column;
@@ -921,7 +922,7 @@ header.is-scrolled {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-weight: 500;
-  color: #6d7280;
+  color: var(--gold-bright);
   font-size: 0.6rem;
   margin-bottom: 14px;
   display: block;
@@ -931,7 +932,7 @@ header.is-scrolled {
   font-family: var(--font-serif);
   font-size: 2.1rem;
   line-height: 1;
-  color: var(--navy);
+  color: #f4efe5;
   letter-spacing: -0.025em;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
@@ -941,7 +942,7 @@ header.is-scrolled {
 
 .mp-card .mp-ref {
   font-size: 0.74rem;
-  color: var(--muted);
+  color: rgba(244, 239, 229, 0.68);
   margin-top: 12px;
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -949,10 +950,10 @@ header.is-scrolled {
 
 .mp-card .mp-nota {
   font-size: 0.72rem;
-  color: #7a5e35;
+  color: rgba(210, 183, 119, 0.82);
   margin-top: 6px;
   line-height: 1.5;
-  border-top: 1px solid rgba(146, 112, 58, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
   padding-top: 8px;
 }
 
@@ -1827,7 +1828,7 @@ a.geo-src-item:hover { text-decoration: underline; }
 
 /* Market sample */
 .market-wrap {
-  background: linear-gradient(180deg, #07111f 0%, var(--navy) 100%);
+  background: var(--navy);
   color: #fff;
 }
 
@@ -1873,15 +1874,17 @@ a.geo-src-item:hover { text-decoration: underline; }
 .market-side {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 1px;
+  background: rgba(210, 183, 119, 0.22);
+  border: 1px solid rgba(210, 183, 119, 0.22);
   align-items: stretch;
 }
 
 .market-card {
-  background: linear-gradient(180deg, #f2ece1 0%, #ece3d5 100%);
-  color: var(--text);
-  border: 1px solid rgba(146, 112, 58, 0.22);
-  box-shadow: inset 0 2px 0 var(--gold);
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  box-shadow: none;
   padding: 24px 22px;
   min-height: 148px;
   display: flex;
@@ -1889,7 +1892,6 @@ a.geo-src-item:hover { text-decoration: underline; }
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .market-card small {
@@ -1898,7 +1900,7 @@ a.geo-src-item:hover { text-decoration: underline; }
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-weight: 500;
-  color: #6d7280;
+  color: var(--gold-bright);
   margin-bottom: 10px;
   font-size: 0.62rem;
 }
@@ -1908,7 +1910,7 @@ a.geo-src-item:hover { text-decoration: underline; }
   display: block;
   font-size: 2.1rem;
   line-height: 1;
-  color: var(--navy);
+  color: #f4efe5;
   margin-bottom: 10px;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
@@ -1916,7 +1918,7 @@ a.geo-src-item:hover { text-decoration: underline; }
 
 .market-card span {
   font-size: 0.9rem;
-  color: var(--muted);
+  color: rgba(244, 239, 229, 0.68);
   line-height: 1.45;
   max-width: 240px;
 }
