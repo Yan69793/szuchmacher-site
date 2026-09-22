@@ -100,16 +100,21 @@ $NAO_DEPLOYAVEL = @(
 )
 # Artefatos de dados que pipelines agendados reescrevem, nao codigo que alguem
 # digitou. agenda-data.json vem desta rotina, macro_data.json vem do
-# Szuchmacher-MacroAgent e relatorio_cache.json vem do fechamento diario. Se
-# entrassem na guarda, uma execucao normal de qualquer um desses agentes faria a
-# rotina de domingo abortar, e portao que reprova por operacao normal acaba
-# ignorado. Contrapartida assumida: um desses arquivos corrompido nao e barrado
-# aqui. Para a agenda existe a assercao de janela logo abaixo; para os outros
-# dois a rede e o validar-producao.ps1, que confere tamanho minimo.
+# Szuchmacher-MacroAgent, relatorio_cache.json vem do fechamento diario e
+# geopolitica-data.json vem do GeopoliticaAgent. Se entrassem na guarda, uma
+# execucao normal de qualquer um desses agentes faria a rotina de domingo
+# abortar, e portao que reprova por operacao normal acaba ignorado. Foi o que
+# aconteceu em 22/09/2026: o GeopoliticaAgent reescreveu o geopolitica-data.json
+# e as 08:25 e as 09:25 a agenda abortou so por causa dele. Contrapartida
+# assumida: um desses arquivos corrompido nao e barrado aqui. Para a agenda
+# existe a assercao de janela logo abaixo; para os demais a rede e o
+# validar-producao.ps1, que confere o tamanho minimo do dado ja publicado e
+# dispara rollback quando ele nao bate.
 $ARTEFATOS_DE_PIPELINE = @(
     'site-producao/agenda-data.json',
     'site-producao/macro_data.json',
     'site-producao/relatorio_cache.json',
+    'site-producao/geopolitica-data.json',
     'site-producao/cloudflare-workers/sz-sites/public/sz/agenda-data.json',
     'site-producao/cloudflare-workers/sz-sites/public/sz/macro_data.json',
     'site-producao/cloudflare-workers/sz-sites/public/sz/relatorio_cache.json',

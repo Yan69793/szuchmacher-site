@@ -97,14 +97,16 @@ $NAO_DEPLOYAVEL = @(
 # macro_data.json e a saida DESTA rotina, entao precisa estar isento: uma
 # execucao anterior que tenha deixado o arquivo modificado faria a proxima
 # abortar, e portao que reprova por operacao normal acaba ignorado. Mesma
-# logica vale para agenda-data.json e relatorio_cache.json, das outras duas
-# rotinas. Contrapartida assumida: arquivo desses corrompido nao e barrado
-# aqui, a rede e o validar-producao.ps1 dentro do publicar-com-rollback.ps1,
-# que confere tamanho minimo.
+# logica vale para agenda-data.json, relatorio_cache.json e geopolitica-data.json,
+# das outras rotinas: o GeopoliticaAgent reescreve o dele toda semana e deixa o
+# arquivo modificado no disco, sem commitar. Contrapartida assumida: arquivo
+# desses corrompido nao e barrado aqui, a rede e o validar-producao.ps1 dentro do
+# publicar-com-rollback.ps1, que confere tamanho minimo.
 $ARTEFATOS_DE_PIPELINE = @(
     'site-producao/agenda-data.json',
     'site-producao/macro_data.json',
     'site-producao/relatorio_cache.json',
+    'site-producao/geopolitica-data.json',
     'site-producao/cloudflare-workers/sz-sites/public/sz/agenda-data.json',
     'site-producao/cloudflare-workers/sz-sites/public/sz/macro_data.json',
     'site-producao/cloudflare-workers/sz-sites/public/sz/relatorio_cache.json',
