@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-18 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-09-22 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -1094,4 +1094,60 @@ Tambem nesta sessao: `headers.js` (CSP com os dois `sha256` de `style-src`) e os
 docs pendentes foram commitados para destravar a guarda de working tree do
 `Szuchmacher-AgendaAgent`, que abortou em 17/09 por causa deles. `nul` na raiz e
 tres `.hermes-tmp.*` em `tests/` removidos.
+
+### Guarda de working tree isentou o geopolitica-data.json (22/09/2026)
+
+A rotina da agenda abortou duas vezes na manhã, às 08:25 e às 09:25, com
+"working tree sujo em arquivo que vai a producao, publicacao abortada:
+site-producao/geopolitica-data.json". A causa não é sessão de código colidindo
+com a janela das 08:00, como em 31/08 e 17/09. É estrutural. O GeopoliticaAgent
+reescreve o `geopolitica-data.json` toda semana e nunca commita, então o arquivo
+fica permanentemente modificado no disco, e a guarda das outras rotinas
+reprovava por operação normal. Faltava na lista de artefatos de pipeline
+justamente ele: `agenda-data.json`, `macro_data.json` e `relatorio_cache.json`
+já estavam isentos, o quarto artefato ficou de fora.
+
+Corrigido no commit `9d9d4aa`, nos dois scripts que carregam a lista,
+`run-agenda-agent.ps1` e `run-macro-agent.ps1`. O segundo não estava no pedido
+original, mas a lista foi portada para ele em 17/08 e tinha a mesma lacuna,
+então o macro de sexta 18:00 abortaria pelo mesmo arquivo.
+
+A contrapartida da isenção já estava coberta, no mesmo nível do `macro_data.json`.
+`validar-producao.ps1:63` confere mínimo de 500 bytes do `geopolitica-data.json`
+publicado e o `publicar-com-rollback.ps1` reverte quando não bate;
+`run-geopolitica-agent.ps1:87` rejeita `schema_version` diferente de 1 antes de
+publicar. A cópia em `cloudflare-workers/sz-sites/public/sz/` está no
+`.gitignore` do worker, então não aparece no `git status` e não precisou entrar
+na lista.
+
+Verificação feita com o script real, não com uma cópia da lógica.
+`run-agenda-agent.ps1 -Simular`, sob o `powershell.exe` que a tarefa usa, passa a
+guarda com o arquivo ainda sujo e sai 0. O controle negativo, a mesma função sem
+a linha da isenção, devolve exatamente `site-producao/geopolitica-data.json` como
+suspeito, então o teste não passa em vazio. A função de guarda do
+`run-macro-agent.ps1`, extraída do próprio arquivo e executada contra a árvore,
+devolve zero suspeitos. O `agenda-data.json` que o `-Simular` regerou foi
+restaurado do backup e conferido por SHA-256. Gate `validar-producao.ps1` 51/51.
+
+Duas coisas ficaram de fora de propósito. O `run-geopolitica-agent.ps1` não tem
+guarda de working tree nenhuma, diferente dos outros dois runners, e publica o
+que estiver no disco; não foi mexido porque é o comportamento que faz a
+publicação semanal dele funcionar. E a causa raiz segue de pé: enquanto o
+GeopoliticaAgent não commitar a própria saída, o diff do arquivo contra o HEAD só
+cresce. A isenção resolve o aborto, não o acúmulo.
+
+A master local estava divergida do `origin/master`, ahead 5 e behind 1, e voltou
+a sincronizar nesta sessão. O commit que faltava era `7feba0a`, "fix(deploy):
+make runtime report cache optional", de hoje às 08:23, que mexe em
+`build-cloudflare-public.ps1` — o script que define o que é copiado para
+`public/`, e a referência que as duas guardas usam para montar o
+`$COPIADO_POR_GLOB`. As rotinas agendadas desta máquina rodavam sem esse fix.
+Merge `c79ca79`, push `7feba0a..c79ca79`.
+
+Fica registrado para a próxima sessão: `site-producao/CLAUDE.md:190` descreve a
+guarda de working tree dizendo que ela "permite os dois `agenda-data.json`", o
+que já estava incompleto antes desta correção — `macro_data.json`,
+`relatorio_cache.json` e agora `geopolitica-data.json` também são isentos. Não
+foi alterado aqui para não misturar documentação com o fix.
+
 
