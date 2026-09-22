@@ -1,4 +1,4 @@
-﻿# build-cloudflare-public.ps1 — monta public/ do Worker sz-sites
+# build-cloudflare-public.ps1 — monta public/ do Worker sz-sites
 # Uso: .\scripts\build-cloudflare-public.ps1
 
 Set-StrictMode -Version Latest
@@ -145,7 +145,7 @@ Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
     'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
-    'relatorio_cache.json', 'regulatorio-data.json',
+    'regulatorio-data.json',
     # Radar Geopolitico: pagina + edicao semanal corrente (o historico fica
     # em geopolitica-historico/ e NAO entra no public).
     'geopolitica.html', 'geopolitica-data.json',
@@ -247,7 +247,7 @@ $obrigatorios = @(
     'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
     'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
     'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
-    'sz\relatorio_cache.json', 'sz\regulatorio-data.json',
+    'sz\regulatorio-data.json',
     'sz\cv.html', 'sz\Yan_Szuchmacher_CV_PT.pdf', 'sz\Yan_Szuchmacher_CV_EN.pdf',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
     'multi\index.html', 'multi\consultoria.html', 'multi\consultoria',
