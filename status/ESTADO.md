@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-22 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-09-23 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -1149,5 +1149,38 @@ guarda de working tree dizendo que ela "permite os dois `agenda-data.json`", o
 que já estava incompleto antes desta correção — `macro_data.json`,
 `relatorio_cache.json` e agora `geopolitica-data.json` também são isentos. Não
 foi alterado aqui para não misturar documentação com o fix.
+
+### Marca CFP retirada do site (23/09/2026)
+
+Pedido do Yan, retirar a marca CFP de sites e sistemas. Eram seis trechos no ar.
+Quatro na home (descrição do JSON-LD, bio de "Quem conduz", a métrica "CFP /
+Certificação desde 2017" e o item "Formação e certificação" de "Base de
+atuação") e dois no `cv.html` (tese de abertura e a coluna "Certificação", que
+só tinha esse item e saiu inteira). A métrica virou "Economista / Formação
+acadêmica" porque o grid `.authority-metrics` é 2x2 com borda calculada para
+quatro itens, e com três a borda quebraria. Nenhum fato novo entrou,
+"Economista" e IBMEC já constavam no site.
+
+Publicado pelo `publicar-com-rollback.ps1`, versão
+`489894ac-9350-4ec6-98b4-f5579c368d6d`, rollback anotado em
+`36a097a7-e8a6-4a4c-b53a-ad12d3caf713`. O wrangler subiu só `sz/cv.html` e
+`sz/index.html`, e o gate fechou 51/51. Conferência no ar por todas as URLs dos
+dois sitemaps, mais `www` e `/cv`, com zero ocorrência de `CFP`,
+`Certified Financial Planner` ou `Planejar`. O selo "CFP® Certified Financial
+Planner" do `multiasset/multiasset.html` legado e das duas cópias `HTML.txt`
+também saiu, e esses arquivos não são publicados.
+
+Ficou de fora por decisão do Yan. Currículo e proposta mantêm a marca, então
+`site-producao/Yan_Szuchmacher_CV_PT.pdf` e `_EN.pdf`, que o build publica em
+`public/sz/`, seguem citando CFP. Ficaram de fora também, por serem registro
+histórico, os PDFs de relatório de 21/03 em `multiasset/` e
+`ferramentas-multiasset/relatorios-pdf/` com "CONSULTORIA · CFP® · CGA · CNPI"
+no cabeçalho. Não são publicados.
+
+Para as próximas sessões, não reintroduzir CFP em página, métrica, JSON-LD ou
+meta tag do site. O clone duplicado `E:\Diretorio\Claude\Site\fonte` está atrás
+desta master e ainda tem a marca no `index.html` e no `cv.html`, junto com
+edição de texto não commitada de outra sessão. Publicar a partir dele traria a
+marca de volta.
 
 
