@@ -8,5 +8,9 @@ logs/*.log
 # run-macro-cron.ps1 (macro_cron_falhas_seq.txt) escapava da regra acima so por
 # ser .txt, e ficava sujando o working tree a cada execucao.
 logs/*.txt
+# Payload que o validador reprovou, gravado para diagnostico pelo
+# geopolitica_agent.py (27/09/2026). E estado de runtime de ~60 KB e nao pode
+# sujar o working tree, que e o que a guarda do publicar-com-rollback.ps1 le.
+logs/geopolitica_reprovado_*.json
 *.pdf
 *.pptx

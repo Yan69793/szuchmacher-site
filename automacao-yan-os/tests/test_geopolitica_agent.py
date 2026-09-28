@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import tempfile
 import unittest
 from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
@@ -121,6 +122,81 @@ class GeopoliticaAgentTests(unittest.TestCase):
         ]}
         self.assertEqual(geo.ajustar_niveis_risco(payload), [])
 
+    def test_ajustar_niveis_risco_remove_tema_que_nao_sustenta_duas_fontes(self):
+        """27/09/2026: um tema com uma fonte so derrubava a edicao inteira no
+        validador. Com folga sobre o piso de quatro temas, ele sai da edicao em
+        vez de reprovar o payload, e nenhuma fonte e inventada ou reescrita."""
+        payload = {"schema_version": 1, "themes": [
+            {"nivel_risco": "moderado", "sources": [self._fonte(1), self._fonte(2)]},
+            {"nivel_risco": "moderado", "sources": [self._fonte(3)]},
+            {"nivel_risco": "moderado", "sources": [self._fonte(4), self._fonte(5)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(6), self._fonte(7)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(8), self._fonte(9)]},
+        ]}
+        ajustes = geo.ajustar_niveis_risco(payload)
+
+        self.assertEqual(len(payload["themes"]), geo.MINIMO_TEMAS)
+        self.assertEqual(len(ajustes), 1)
+        self.assertIn("themes[1]", ajustes[0])
+        self.assertIn("removido", ajustes[0])
+        self.assertTrue(all(len(t["sources"]) >= geo.MINIMO_FONTES_TEMA for t in payload["themes"]))
+        self.assertNotIn("themes[1] sem fontes independentes suficientes", geo.validar_payload(payload))
+
+    def test_ajustar_niveis_risco_nao_remove_abaixo_do_minimo_de_temas(self):
+        """Sem folga, o tema oco fica: a remocao nunca pode ser a causa da
+        reprovacao, entao quem decide e o validador."""
+        payload = {"schema_version": 1, "themes": [
+            {"nivel_risco": "moderado", "sources": [self._fonte(1)]},
+            {"nivel_risco": "moderado", "sources": [self._fonte(2), self._fonte(3)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(4), self._fonte(5)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(6), self._fonte(7)]},
+        ]}
+        ajustes = geo.ajustar_niveis_risco(payload)
+
+        self.assertEqual(len(payload["themes"]), geo.MINIMO_TEMAS)
+        self.assertEqual(ajustes, [])
+        self.assertIn("themes[0] sem fontes independentes suficientes", geo.validar_payload(payload))
+
+    def test_ajustar_niveis_risco_remove_no_maximo_a_folga(self):
+        """Dois temas ocos e folga de um: sai um e o outro fica, sem encostar no
+        piso de temas. O payload continua reprovavel, de proposito."""
+        payload = {"schema_version": 1, "themes": [
+            {"nivel_risco": "moderado", "sources": [self._fonte(1)]},
+            {"nivel_risco": "moderado", "sources": [self._fonte(2)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(3), self._fonte(4)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(5), self._fonte(6)]},
+            {"nivel_risco": "baixo", "sources": [self._fonte(7), self._fonte(8)]},
+        ]}
+        ajustes = geo.ajustar_niveis_risco(payload)
+
+        self.assertEqual(len(payload["themes"]), geo.MINIMO_TEMAS)
+        self.assertEqual(len(ajustes), 1)
+        self.assertIn("sem fontes independentes suficientes", " ".join(geo.validar_payload(payload)))
+
+    def test_payload_reprovado_e_gravado_para_diagnostico(self):
+        """O payload reprovado nao existia em lugar nenhum, e sem ele o
+        diagnostico de 27/09/2026 so tinha a frase do erro."""
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.object(geo, "LOG_DIR", Path(tmp)):
+                caminho = geo._gravar_payload_reprovado({"themes": [], "sources": []},
+                                                        ["themes[1] sem fontes independentes suficientes"])
+            self.assertIsNotNone(caminho)
+            self.assertTrue(caminho.exists())
+            self.assertTrue(caminho.name.startswith("geopolitica_reprovado_"))
+            gravado = json.loads(caminho.read_text(encoding="utf-8"))
+
+        self.assertEqual(gravado["erros"], ["themes[1] sem fontes independentes suficientes"])
+        self.assertEqual(gravado["payload"], {"themes": [], "sources": []})
+
+    def test_payload_reprovado_nao_derruba_o_run_quando_o_disco_recusa(self):
+        """Falha ao gravar diagnostico nao pode virar falha da edicao: caminho
+        impossivel devolve None e o erro original segue sendo o reportado."""
+        with tempfile.TemporaryDirectory() as tmp:
+            arquivo = Path(tmp) / "nao-e-diretorio"
+            arquivo.write_text("x", encoding="utf-8")
+            with patch.object(geo, "LOG_DIR", arquivo / "logs"):
+                self.assertIsNone(geo._gravar_payload_reprovado({"themes": []}, ["erro"]))
+
 
 class CadeiaDeProvedoresTests(unittest.TestCase):
     """P1-001 (16/09/2026): a conta OpenRouter desta maquina esta com credito
@@ -223,6 +299,36 @@ class CadeiaDeProvedoresTests(unittest.TestCase):
 
         self.assertFalse(ok)
         self.assertIn("bateu no teto", motivo)
+
+    def test_config_llm_usa_deepseek_flash_sem_raciocinio(self):
+        """27/09/2026: o default era deepseek-v4-pro, que queimava reasoning e
+        cortava o payload. O default passa a flash e a perna DeepSeek desliga o
+        raciocinio."""
+        ambiente = {"DEEPSEEK_API_KEY": "sk-ds", "GEOPOLITICA_LLM_PROVIDER": "auto", "DEEPSEEK_MODEL": ""}
+        with patch.dict(os.environ, ambiente):
+            deepseek = {p["id"]: p for p in geo._config_llm()}["deepseek"]
+
+        self.assertEqual(deepseek["modelo"], "deepseek-flash")
+        self.assertTrue(deepseek["thinking_off"])
+
+    def test_post_llm_desliga_raciocinio_so_na_perna_deepseek(self):
+        enviados = []
+
+        class FakeRequests:
+            @staticmethod
+            def post(url, headers=None, json=None, timeout=None):
+                enviados.append(json)
+                return FakeResp(200, {"choices": [{"message": {"content": '{"ok":true}'}}]})
+
+        deepseek = {**self._cadeia()[0], "thinking_off": True}
+        openrouter = {**self._cadeia()[1], "thinking_off": False}
+
+        with patch.object(geo, "requests", FakeRequests):
+            self.assertTrue(geo._post_llm(deepseek, "prompt")[0])
+            self.assertTrue(geo._post_llm(openrouter, "prompt")[0])
+
+        self.assertEqual(enviados[0].get("thinking"), {"type": "disabled"})
+        self.assertNotIn("thinking", enviados[1], "OpenRouter nao aceita o parametro")
 
     def test_post_llm_nao_derruba_a_cascata_quando_a_rede_falha(self):
         class FakeRequests:

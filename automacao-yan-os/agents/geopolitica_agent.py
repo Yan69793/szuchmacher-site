@@ -64,6 +64,13 @@ LOG_DIR        = _BASE_DIR / "logs"
 LOG_PATH       = LOG_DIR / f"geopolitica_agent_{datetime.now().strftime('%Y%m%d')}.log"
 
 STALE_GERACAO_DIAS = 2   # edicao fresca = gerada a partir de (start - 2 dias)
+# Piso editorial de lastro, declarado uma vez so porque validar_payload e
+# ajustar_niveis_risco precisam concordar: tema sustenta-se com duas fontes
+# independentes, tese de alto impacto com tres, e a edicao tem 4 a 6 temas.
+MINIMO_FONTES_TEMA = 2
+MINIMO_FONTES_ALTO_IMPACTO = 3
+MINIMO_TEMAS = 4
+MAXIMO_TEMAS = 6
 UA = {"User-Agent": "SzuchmacherGeopoliticaAgent/1.0 (pesquisa editorial)"}
 BRT = timezone(timedelta(hours=-3))
 MESES = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho",
@@ -314,15 +321,20 @@ def semana_alvo() -> tuple[str, str, str, str]:
 # ─── Síntese e contrato de saída ─────────────────────────────────────────────
 
 DEEPSEEK_URL_PADRAO = "https://api.deepseek.com/chat/completions"
-DEEPSEEK_MODELO_PADRAO = "deepseek-v4-pro"
+# deepseek-flash e o mesmo modelo que o Worker usa em macro-api.js. Trocado do
+# deepseek-v4-pro em 27/09/2026: o v4-pro gastava mais raciocinio e cortava o
+# payload de ~60 KB no teto de saida.
+DEEPSEEK_MODELO_PADRAO = "deepseek-flash"
 # Teto de saida por provedor. A OpenRouter aceitava 12000 no modelo da cadeia.
-# O DeepSeek desta conta e modelo de raciocinio: parte do orcamento de
-# max_tokens vai para reasoning_content antes de sair conteudo. Medido em
-# 16/09/2026: com max_tokens=400 a resposta voltou com content vazio e
-# reasoning_tokens=400 (finish_reason=length) e a edicao morreu em "nao devolveu
-# um objeto JSON"; com folga de sobra o JSON sai inteiro. O teto do endpoint
-# aceita 128000, entao o Radar pede 32768 e nao herda o teto da OpenRouter.
-LLM_MAX_TOKENS = {"openrouter": 12000, "deepseek": 32768}
+# Os dois modelos DeepSeek desta conta entram em modo raciocinio por padrao e
+# parte do orcamento de max_tokens vai para reasoning_content antes de sair
+# conteudo. Medido em 27/09/2026, no prompt real do Radar: deepseek-v4-pro
+# queimou 13258 de reasoning num teto de 32768 e ainda cortou o JSON
+# (finish_reason=length), e deepseek-flash queimou os 32768 inteiros e devolveu
+# content vazio. O payload de ~60 KB pede mais que isso, entao o teto da perna
+# DeepSeek sobe para 65536, que cabe raciocinio e conteudo. O teto do endpoint
+# aceita 128000, entao ainda ha folga sobre o valor pedido.
+LLM_MAX_TOKENS = {"openrouter": 12000, "deepseek": 65536}
 # Piso do retry por saldo: abaixo disso o payload do Radar nao caberia.
 LLM_MIN_AFFORDABLE_TOKENS = 1024
 
@@ -363,10 +375,20 @@ def _config_llm() -> list[dict]:
     catalogo = {
         "openrouter": {"id": "openrouter", "label": "OpenRouter", "url": url_or,
                        "chave": chave_or, "modelo": modelo_or,
-                       "max_tokens": LLM_MAX_TOKENS["openrouter"]},
+                       "max_tokens": LLM_MAX_TOKENS["openrouter"],
+                       # Modelo de terceiro: 'thinking' e parametro do contrato
+                       # DeepSeek, entao a perna da OpenRouter nao o envia.
+                       "thinking_off": False},
         "deepseek": {"id": "deepseek", "label": "DeepSeek", "url": url_ds,
                      "chave": chave_ds, "modelo": modelo_ds,
-                     "max_tokens": _max_tokens_env("DEEPSEEK_MAX_TOKENS", LLM_MAX_TOKENS["deepseek"])},
+                     "max_tokens": _max_tokens_env("DEEPSEEK_MAX_TOKENS", LLM_MAX_TOKENS["deepseek"]),
+                     # Medido em 27/09/2026 no prompt real do Radar: os dois modelos
+                     # desta conta entram em modo raciocinio por padrao e gastam o
+                     # orcamento de max_tokens em reasoning_content antes de sair
+                     # conteudo (o flash queimou os 32768 inteiros e devolveu content
+                     # vazio, finish_reason=length). Desligar o raciocinio e o que
+                     # faz o JSON inteiro caber na resposta.
+                     "thinking_off": True},
     }
     pedido = (os.environ.get("GEOPOLITICA_LLM_PROVIDER") or "auto").strip().lower()
     ids = [p.strip() for p in pedido.split(",") if p.strip() in catalogo]
@@ -392,6 +414,25 @@ def _post_llm(provedor: dict, prompt: str) -> tuple[bool, str]:
     max_tokens = provedor["max_tokens"]
     ultimo = f"{provedor['label']} sem tentativa"
     for _ in range(2):
+        corpo_pedido = {
+            "model": provedor["modelo"],
+            "max_tokens": max_tokens,
+            "temperature": 0.1,
+            # Modo JSON do provedor: sem ele o payload de ~60 KB do Radar
+            # voltou com erro de sintaxe no fim do documento (medido em
+            # 16/09/2026: "Expecting ',' delimiter: line 1097"), que a
+            # decodificacao restrita do json_object elimina.
+            "response_format": {"type": "json_object"},
+            "messages": [
+                {"role": "system", "content": "Editor factual. Responda somente JSON válido."},
+                {"role": "user", "content": prompt},
+            ],
+        }
+        if provedor.get("thinking_off"):
+            # Desliga o raciocinio so na perna DeepSeek. O campo nao entra no
+            # catalogo da OpenRouter (ver _config_llm): mandar parametro fora do
+            # contrato dela derruba a chamada.
+            corpo_pedido["thinking"] = {"type": "disabled"}
         try:
             resposta = requests.post(
                 provedor["url"],
@@ -400,20 +441,7 @@ def _post_llm(provedor: dict, prompt: str) -> tuple[bool, str]:
                     "HTTP-Referer": "https://szuchmacher.com.br",
                     "Content-Type": "application/json",
                 },
-                json={
-                    "model": provedor["modelo"],
-                    "max_tokens": max_tokens,
-                    "temperature": 0.1,
-                    # Modo JSON do provedor: sem ele o payload de ~60 KB do Radar
-                    # voltou com erro de sintaxe no fim do documento (medido em
-                    # 16/09/2026: "Expecting ',' delimiter: line 1097"), que a
-                    # decodificacao restrita do json_object elimina.
-                    "response_format": {"type": "json_object"},
-                    "messages": [
-                        {"role": "system", "content": "Editor factual. Responda somente JSON válido."},
-                        {"role": "user", "content": prompt},
-                    ],
-                },
+                json=corpo_pedido,
                 timeout=180,
             )
         except Exception as e:  # rede/DNS/timeout: nao derruba a cascata, so a perna
@@ -489,6 +517,11 @@ def _dossie(grupos: list[dict], mercados: list[dict], semana: tuple[str, str, st
             f"regions precisa ter exatamente estas nove chaves: {', '.join(REGIOES)}.",
             "confidence precisa de overall ('alta', 'media' ou 'baixa') e nota (string).",
             f"market_impacts precisa ter exatamente estas chaves: {', '.join(MERCADOS)}.",
+            # Mesmo defeito de contrato dos dois itens acima, medido em
+            # 27/09/2026: themes[].sources e teses[].sources sao validados como
+            # objeto de fonte completo e o prompt so dizia "e sources".
+            "Todo item de themes[].sources e de teses[].sources precisa ser um objeto de fonte",
+            "completo (url https, titulo, veiculo, data e tipo), igual ao sources do topo.",
         ],
     }, ensure_ascii=False, indent=2)
 
@@ -510,6 +543,10 @@ nivel_risco (baixo|moderado|elevado|critico), confianca (alta|media|baixa) e sou
 confidence tem overall (alta|media|baixa) e nota (string).
 regions contém as nove chaves exatas {regioes_txt}, cada uma com titulo, resumo e teses.
 Cada tese tem fato, interpretacao, cenario_base, risco_alternativo, gatilhos, confianca e sources.
+Cada item de themes[].sources e de teses[].sources repete o mesmo objeto de fonte do
+topo (url https, titulo, veiculo, data e tipo); nunca uma string solta de URL e nunca
+um objeto parcial. Medido em 27/09/2026: sem esta frase a edicao voltou com
+themes[0..4].sources invalidas e o payload foi reprovado.
 market_impacts contém petroleo, inflacao, juros_globais, treasury, dolar, ouro,
 acoes, credito, commodities, brasil, curva_di e brl. Cada item tem direcao
 (alta|baixa|neutro|volatil) e comentario.
@@ -582,7 +619,8 @@ def validar_payload(data: dict, urls_permitidas: set[str] | None = None) -> list
     for k in ("executive_summary", "disclaimer"):
         if not isinstance(data.get(k), str) or not data[k].strip(): erros.append(f"{k} vazio")
     themes = data.get("themes")
-    if not isinstance(themes, list) or not 4 <= len(themes) <= 6: erros.append("themes deve ter 4 a 6 itens")
+    if not isinstance(themes, list) or not MINIMO_TEMAS <= len(themes) <= MAXIMO_TEMAS:
+        erros.append(f"themes deve ter {MINIMO_TEMAS} a {MAXIMO_TEMAS} itens")
     else:
         for i, t in enumerate(themes):
             for k in ("id", "titulo", "fato", "impacto_mercados", "proximo_gatilho"):
@@ -590,7 +628,8 @@ def validar_payload(data: dict, urls_permitidas: set[str] | None = None) -> list
             if t.get("nivel_risco") not in {"baixo", "moderado", "elevado", "critico"}: erros.append(f"themes[{i}].nivel_risco inválido")
             if t.get("confianca") not in {"alta", "media", "baixa"}: erros.append(f"themes[{i}].confianca inválida")
             if not isinstance(t.get("sources"), list) or not all(_fonte_valida(f) for f in t["sources"]): erros.append(f"themes[{i}].sources inválidas")
-            if len(t.get("sources", [])) < (3 if t.get("nivel_risco") in {"elevado", "critico"} else 2): erros.append(f"themes[{i}] sem fontes independentes suficientes")
+            piso = MINIMO_FONTES_ALTO_IMPACTO if t.get("nivel_risco") in {"elevado", "critico"} else MINIMO_FONTES_TEMA
+            if len(_fontes_validas_tema(t)) < piso: erros.append(f"themes[{i}] sem fontes independentes suficientes")
     if data.get("confidence", {}).get("overall") not in {"alta", "media", "baixa"}: erros.append("confidence.overall inválido")
     regions = data.get("regions")
     if not isinstance(regions, dict) or any(not isinstance(regions.get(id), dict) for id in REGIOES):
@@ -623,23 +662,46 @@ def _fontes_validas_tema(t: dict) -> list[dict]:
 
 
 def ajustar_niveis_risco(payload: dict) -> list[str]:
-    """Rebaixa tema elevado/critico que nao sustenta o minimo de tres fontes.
+    """Repara o lastro dos temas sem inventar nada: rebaixa nivel e tira tema oco.
 
-    O contrato editorial exige tres fontes independentes para tese de alto
-    impacto, mas o sintetizador marca 'elevado' com duas fontes de forma
-    intermitente (medido em 18/09/2026 com deepseek-v4-pro: dois de cinco temas).
-    Em vez de reprovar a edicao inteira, o tema volta a 'moderado', que e o
-    nivel coerente com o lastro que ele de fato tem. Nenhuma fonte e criada,
-    removida ou alterada, e nenhum fato e reescrito.
+    Duas regras, na ordem, porque a segunda depende da primeira. Um tema
+    elevado/critico que nao sustenta tres fontes volta a 'moderado', que e o
+    nivel coerente com o lastro que ele de fato tem (medido em 18/09/2026 com
+    deepseek-v4-pro: dois de cinco temas). Depois disso, tema que nao sustenta
+    nem o piso de duas fontes independentes sai da edicao, porque publicar fato
+    material com uma fonte so contraria o contrato editorial e nao ha reparo
+    honesto: nenhuma fonte pode ser criada, removida ou alterada, e nenhum fato
+    pode ser reescrito. A remocao respeita o piso de MINIMO_TEMAS temas, entao
+    ela nunca e o que faz a edicao reprovar; quando nao ha folga para remover, o
+    tema fica e o validador reprova a edicao, que e o desfecho correto.
+
+    Medido em 27/09/2026 com deepseek-flash no prompt real: a regra das duas
+    fontes ja estava escrita no dossie e o modelo a violou em dois de cinco
+    temas, entao reparo em codigo, nao em prompt.
     """
     ajustes: list[str] = []
-    for i, t in enumerate(payload.get("themes", [])):
+    temas = payload.get("themes")
+    if not isinstance(temas, list):
+        return ajustes
+    for i, t in enumerate(temas):
         if not isinstance(t, dict):
             continue
-        if t.get("nivel_risco") in {"elevado", "critico"} and len(_fontes_validas_tema(t)) < 3:
+        if t.get("nivel_risco") in {"elevado", "critico"} and len(_fontes_validas_tema(t)) < MINIMO_FONTES_ALTO_IMPACTO:
             antes = t.get("nivel_risco")
             t["nivel_risco"] = "moderado"
             ajustes.append(f"themes[{i}] {antes} -> moderado (fontes insuficientes para alto impacto)")
+    folga = len(temas) - MINIMO_TEMAS
+    if folga > 0:
+        mantidos = []
+        for i, t in enumerate(temas):
+            oco = isinstance(t, dict) and len(_fontes_validas_tema(t)) < MINIMO_FONTES_TEMA
+            if oco and folga > 0:
+                folga -= 1
+                ajustes.append(f"themes[{i}] removido (nao sustentava {MINIMO_FONTES_TEMA} fontes independentes)")
+                continue
+            mantidos.append(t)
+        if len(mantidos) != len(temas):
+            payload["themes"] = mantidos
     return ajustes
 
 
@@ -656,6 +718,27 @@ def salvar(data: dict, dry_run: bool) -> None:
     temporario.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     temporario.replace(DATA_JSON)
     log(f"Salvo: {DATA_JSON}")
+
+
+def _gravar_payload_reprovado(payload: dict, erros: list[str]) -> Path | None:
+    """Grava o payload que o validador reprovou, para diagnostico.
+
+    Sem isso o payload morre com o processo e quem for investigar so ve a frase
+    do erro, sem os numeros que explicam a causa. Foi o que travou o diagnostico
+    de 27/09/2026: dava para ler "sem fontes independentes suficientes" mas nao
+    quantas fontes cada tema tinha, e o payload nao estava em lugar nenhum. O
+    arquivo e estado de runtime, fica em logs/ e esta fora do git; ele nao
+    substitui nem altera o payload publicado.
+    """
+    try:
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        destino = LOG_DIR / f"geopolitica_reprovado_{brt_now():%Y%m%d_%H%M%S}.json"
+        destino.write_text(json.dumps({"erros": erros, "payload": payload},
+                                      ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return destino
+    except Exception as e:
+        log(f"AVISO: nao foi possivel gravar o payload reprovado: {e}")
+        return None
 
 
 def main() -> int:
@@ -684,11 +767,13 @@ def main() -> int:
     mercados = niveis_mercado()
     payload = sintetizar(grupos, mercados, semana)
     for aviso in ajustar_niveis_risco(payload):
-        log(f"AVISO nivel_risco ajustado: {aviso}")
+        log(f"AVISO reparo do payload: {aviso}")
     urls_permitidas = {i["url"] for g in grupos for i in [g] if i.get("url")}
     erros = validar_payload(payload, urls_permitidas)
     if erros:
-        raise RuntimeError("payload reprovado: " + " | ".join(erros[:12]))
+        caminho = _gravar_payload_reprovado(payload, erros)
+        onde = f" | payload em {caminho}" if caminho else ""
+        raise RuntimeError("payload reprovado: " + " | ".join(erros[:12]) + onde)
     log(f"Payload validado: {len(payload['themes'])} temas, {len(payload['sources'])} fontes, {len(fontes)} fontes vivas")
     salvar(payload, args.dry_run)
     return 0
