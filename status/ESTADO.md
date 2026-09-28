@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-23 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-09-27 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -1182,5 +1182,43 @@ meta tag do site. O clone duplicado `E:\Diretorio\Claude\Site\fonte` está atrá
 desta master e ainda tem a marca no `index.html` e no `cv.html`, junto com
 edição de texto não commitada de outra sessão. Publicar a partir dele traria a
 marca de volta.
+
+### Radar Geopolítico voltou a fechar a edição semanal (27/09/2026)
+
+A edição de domingo 18:00 falhou e o alerta por e-mail saiu às 18:05
+(`run-geopolitica-agent.ps1` exit 1). A síntese morreu em todos os provedores: o
+`deepseek-v4-pro` estourou o teto de 32768 com o JSON cortado e a OpenRouter
+estourou os 12000. Três defeitos, corrigidos e commitados em `8e1d98e`:
+
+1. A perna DeepSeek entra em modo raciocínio e gasta o teto de `max_tokens` em
+   `reasoning_content` antes de sair conteúdo. O default passa a
+   `deepseek-flash`, o teto da perna sobe para 65536 e a perna DeepSeek desliga
+   o raciocínio com `thinking={type:disabled}`, campo que não entra no catálogo
+   da OpenRouter.
+2. O prompt nunca declarou a forma de `themes[].sources` e `teses[].sources`,
+   que o validador exige como objeto de fonte completo; a edição voltou com
+   `themes[0..4].sources inválidas`. O contrato está explícito no prompt e nas
+   regras do dossiê.
+3. Tema que não sustentava o piso de duas fontes derrubava a edição inteira.
+   `ajustar_niveis_risco` passa a remover o tema oco, sem inventar nem reescrever
+   fonte e sem cruzar o piso de quatro temas; sem folga, o tema fica e o
+   validador reprova. O payload reprovado passou a ser gravado em
+   `automacao-yan-os/logs/` (fora do git), porque até então só sobrava a frase do
+   erro e diagnosticar exigia outra chamada paga.
+
+Prova. Suite do agente 33/33 OK (exit 0) e dry-run real pelo mesmo
+`powershell.exe` da tarefa agendada, que havia reprovado, agora exit 0 com
+`Payload validado: 5 temas, 104 fontes, 9 fontes vivas`. Nada foi publicado: o
+dry-run não altera o `geopolitica-data.json`, que segue com a edição de W39 de
+22/09.
+
+Pendência. A edição de W40 (28/09 a 04/10) ainda não está publicada; o próximo
+disparo é o gatilho de recuperação de segunda antes das 14:00, que regera porque
+a semana corrente está ausente. O commit `8e1d98e` é local e não foi empurrado.
+
+Para as próximas sessões: a regra das duas fontes por tema já estava escrita no
+dossiê e o modelo a violou mesmo assim, então o reparo mora em código, não em
+prompt. Quando o validador reprovar, o payload está em
+`automacao-yan-os/logs/geopolitica_reprovado_*.json`.
 
 
