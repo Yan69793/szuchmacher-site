@@ -400,6 +400,117 @@ function applyScenarioRates(asset, r) {
         });
 })();
 
+// ── BTC Radar: leitura integrada para o bloco Bitcoin do Multi Assets ──
+// Somente dados determinísticos do agregador server-side. O Multi Assets resume;
+// o painel especializado continua sendo o BTC Radar.
+(function fetchBtcRadarIntelligence() {
+    var bridge = document.querySelector('.btc-radar-bridge');
+    if (!bridge) return;
+
+    function setText(id, value) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
+
+    function signedPct(value, digits) {
+        var n = Number(value);
+        if (!Number.isFinite(n)) return '—';
+        return (n > 0 ? '+' : '') + n.toFixed(digits == null ? 1 : digits).replace('.', ',') + '%';
+    }
+
+    function confLabel(h) {
+        if (!h || !h.available) return 'indisponível';
+        var map = { high: 'alta', medium: 'média', limited: 'limitada', low: 'baixa' };
+        var conf = map[h.confidence] || h.confidence || 'n/d';
+        var n = Number(h.effective_sample_size);
+        return 'conf. ' + conf + (Number.isFinite(n) ? ' · n efetivo ' + n : '');
+    }
+
+    function ageLabel(iso) {
+        if (!iso) return '—';
+        var ts = Date.parse(iso);
+        if (!Number.isFinite(ts)) return '—';
+        var sec = Math.max(0, Math.round((Date.now() - ts) / 1000));
+        if (sec < 60) return 'agora';
+        if (sec < 3600) return Math.round(sec / 60) + ' min';
+        return Math.round(sec / 3600) + ' h';
+    }
+
+    function qualityLabel(state) {
+        return ({ good: 'boa', degraded: 'atenção', poor: 'ruim' })[state] || state || 'n/d';
+    }
+
+    function regimeLabel(key) {
+        if (!key) return '—';
+        var parts = String(key).split(':');
+        var trend = ({ neutral: 'neutro', bullish: 'alta', bearish: 'baixa' })[parts[0]] || parts[0];
+        var vol = ({ normal: 'normal', high: 'alta vol.', low: 'baixa vol.' })[parts[1]] || parts[1] || '';
+        return vol ? trend + ' / ' + vol : trend;
+    }
+
+    fetch('/api/intelligence/btc', { headers: { Accept: 'application/json' } })
+        .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        })
+        .then(function(d) {
+            if (!d || !d.ok || !d.data) throw new Error('payload inválido');
+
+            var quality = d.quality || {};
+            var scenarios = d.data.scenarios || {};
+            var regime = scenarios.current_regime || {};
+            var consensus = (d.data.signals || {}).consensus || {};
+            var sentiment = d.data.sentiment || {};
+            var horizons = scenarios.horizons || {};
+            var sources = Array.isArray(d.sources) ? d.sources : [];
+            var fresh = sources.filter(function(s) { return s.state === 'fresh'; }).length;
+            var degraded = sources.filter(function(s) { return s.state && s.state !== 'fresh'; }).length;
+
+            bridge.dataset.quality = quality.state || 'unknown';
+            setText('btc-radar-quality', 'Qualidade ' + (quality.score == null ? '—' : quality.score) + ' · ' + qualityLabel(quality.state));
+            setText('btc-radar-updated', 'Atualização ' + ageLabel(d.generated_at));
+
+            setText('btc-radar-regime', regimeLabel(regime.key));
+            setText('btc-radar-vol30', signedPct(regime.realized_vol_30d_pct, 1));
+            setText(
+                'btc-radar-regime-detail',
+                'retorno 30d ' + signedPct(regime.return_30d_pct, 1)
+            );
+
+            setText('btc-radar-consensus', consensus.verdict || '—');
+            setText(
+                'btc-radar-conviction',
+                'convicção ' + (Number.isFinite(Number(consensus.conviction))
+                    ? Number(consensus.conviction).toFixed(1).replace('.', ',')
+                    : '—')
+            );
+
+            setText('btc-radar-sentiment', Number.isFinite(Number(sentiment.value)) ? String(sentiment.value) : '—');
+            setText('btc-radar-sentiment-detail', sentiment.classification || 'Fear & Greed');
+
+            [['30', 'btc-radar-h30', 'btc-radar-h30-confidence'],
+             ['90', 'btc-radar-h90', 'btc-radar-h90-confidence'],
+             ['365', 'btc-radar-h365', 'btc-radar-h365-confidence']].forEach(function(item) {
+                var h = horizons[item[0]] || {};
+                setText(item[1], h.available ? signedPct(h.p50, 1) : '—');
+                setText(item[2], confLabel(h));
+            });
+
+            setText(
+                'btc-radar-source-note',
+                'Fontes BTC Radar: ' + fresh + '/' + sources.length + ' frescas' +
+                (degraded ? ' · ' + degraded + ' requerem atenção' : '') +
+                '. P10/P50/P90 são distribuições históricas de forward return; não representam promessa, preço-alvo ou CAGR recorrente.'
+            );
+        })
+        .catch(function() {
+            bridge.dataset.quality = 'poor';
+            setText('btc-radar-quality', 'BTC Radar indisponível');
+            setText('btc-radar-updated', 'mantendo cotações TradingView');
+            setText('btc-radar-source-note', 'A leitura quantitativa do BTC Radar está temporariamente indisponível. Cotações e gráficos continuam ativos.');
+        });
+})();
+
 // ── CDI: ajuste de cenarios via server-side ──
 (function fetchCdiScenarios() {
     fetch('/api/cdi-scenarios')

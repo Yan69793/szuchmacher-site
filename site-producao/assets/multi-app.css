@@ -1459,6 +1459,101 @@
         .cripto-meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 6px; }
         .cripto-meta-val { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
         .cripto-meta-sub { font-size: 10px; color: var(--muted); }
+
+        .btc-radar-bridge {
+            margin: 0 0 22px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0 14px;
+        }
+        .btc-radar-bridge-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 18px;
+            align-items: end;
+            margin-bottom: 14px;
+        }
+        .btc-radar-bridge-head h3 {
+            margin: 4px 0 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .btc-radar-bridge-status {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+        .btc-radar-bridge-link {
+            color: var(--orange);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(247,147,26,0.38);
+            padding-bottom: 2px;
+        }
+        .btc-radar-bridge-link:hover,
+        .btc-radar-bridge-link:focus-visible {
+            border-color: var(--orange);
+            color: #ffad4a;
+        }
+        .btc-radar-bridge-metrics {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            border-top: 1px solid rgba(255,255,255,0.055);
+            border-bottom: 1px solid rgba(255,255,255,0.055);
+        }
+        .btc-radar-bridge-metric {
+            min-width: 0;
+            padding: 12px 14px 11px 0;
+            border-right: 1px solid rgba(255,255,255,0.055);
+        }
+        .btc-radar-bridge-metric:not(:first-child) { padding-left: 14px; }
+        .btc-radar-bridge-metric:last-child { border-right: 0; }
+        .btc-radar-bridge-metric > span {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.2;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .btc-radar-bridge-metric strong {
+            display: block;
+            overflow: hidden;
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.35;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .btc-radar-bridge-metric small {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.35;
+        }
+        .btc-radar-bridge-note {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.45;
+        }
+        .btc-radar-bridge[data-quality="degraded"] #btc-radar-quality,
+        .btc-radar-bridge[data-quality="stale"] #btc-radar-quality { color: var(--warning, #d6a756); }
+        .btc-radar-bridge[data-quality="poor"] #btc-radar-quality,
+        .btc-radar-bridge[data-quality="expired"] #btc-radar-quality { color: #cf6666; }
+
         .cripto-market-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
         .cripto-main-chart { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
         .cripto-overview { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
@@ -1469,11 +1564,25 @@
         @media (max-width: 1024px) {
             .cripto-hero { grid-template-columns: 1fr; }
             .cripto-btc-stat { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 16px; }
+            .btc-radar-bridge-head { grid-template-columns: minmax(0, 1fr) auto; }
+            .btc-radar-bridge-status { grid-column: 1 / -1; grid-row: 2; }
+            .btc-radar-bridge-link { grid-column: 2; grid-row: 1; }
+            .btc-radar-bridge-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .btc-radar-bridge-metric:nth-child(3n) { border-right: 0; }
+            .btc-radar-bridge-metric:nth-child(n+4) { border-top: 1px solid rgba(255,255,255,0.055); }
             .cripto-market-grid { grid-template-columns: 1fr; }
             .cripto-mini-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
             .cripto-btc-metas { grid-template-columns: repeat(2, 1fr); }
+            .btc-radar-bridge-head { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+            .btc-radar-bridge-status { order: 3; white-space: normal; }
+            .btc-radar-bridge-link { order: 2; }
+            .btc-radar-bridge-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .btc-radar-bridge-metric,
+            .btc-radar-bridge-metric:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.055); }
+            .btc-radar-bridge-metric:nth-child(2n) { border-right: 0; }
+            .btc-radar-bridge-metric:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,0.055); }
             .cripto-ta-grid { grid-template-columns: 1fr; }
             .cripto-mini-grid { grid-template-columns: 1fr 1fr; }
         }

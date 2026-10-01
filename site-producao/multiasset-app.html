@@ -340,7 +340,7 @@
         <h2 class="section-title display">Bitcoin &amp; Cripto</h2>
         <div class="section-line"></div>
         <p class="u-colorvarmuted-fontsize14px-margintop16px-maxwidth640px">
-            Painel integrado de cotações, leitura técnica e triagem de ativos digitais, com dados em tempo real via TradingView.
+            Cotações e leitura técnica via TradingView, complementadas por regime, sinais e cenários do BTC Radar.
         </p>
     </div>
 
@@ -368,12 +368,66 @@
                 <div class="cripto-meta-sub">de 21M limite total</div>
             </div>
             <div class="cripto-meta-card">
-                <div class="cripto-meta-label">Volatilidade Anual</div>
-                <div class="cripto-meta-val mono">~85%</div>
-                <div class="cripto-meta-sub">referência: ~15% a.a. em equities</div>
+                <div class="cripto-meta-label">Volatilidade 30d</div>
+                <div class="cripto-meta-val mono" id="btc-radar-vol30">—</div>
+                <div class="cripto-meta-sub">realizada · BTC Radar</div>
             </div>
         </div>
     </div>
+
+    <!-- BTC Radar intelligence: leitura quantitativa complementar, sem duplicar o painel especializado -->
+    <section class="btc-radar-bridge reveal" aria-labelledby="btc-radar-bridge-title">
+        <div class="btc-radar-bridge-head">
+            <div>
+                <div class="section-eyebrow">BTC Radar</div>
+                <h3 id="btc-radar-bridge-title">Regime, sinais e cenários</h3>
+            </div>
+            <div class="btc-radar-bridge-status">
+                <span id="btc-radar-quality">Quality —</span>
+                <span aria-hidden="true">·</span>
+                <span id="btc-radar-updated">Atualização —</span>
+            </div>
+            <a class="btc-radar-bridge-link" href="https://btc-radar.pages.dev/painel/" target="_blank" rel="noopener">
+                Abrir BTC Radar <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+
+        <div class="btc-radar-bridge-metrics" aria-live="polite">
+            <div class="btc-radar-bridge-metric">
+                <span>Regime</span>
+                <strong id="btc-radar-regime">—</strong>
+                <small id="btc-radar-regime-detail">—</small>
+            </div>
+            <div class="btc-radar-bridge-metric">
+                <span>Consenso</span>
+                <strong id="btc-radar-consensus">—</strong>
+                <small id="btc-radar-conviction">convicção —</small>
+            </div>
+            <div class="btc-radar-bridge-metric">
+                <span>Sentimento</span>
+                <strong id="btc-radar-sentiment">—</strong>
+                <small id="btc-radar-sentiment-detail">Fear &amp; Greed</small>
+            </div>
+            <div class="btc-radar-bridge-metric">
+                <span>30 dias · P50</span>
+                <strong id="btc-radar-h30">—</strong>
+                <small id="btc-radar-h30-confidence">—</small>
+            </div>
+            <div class="btc-radar-bridge-metric">
+                <span>90 dias · P50</span>
+                <strong id="btc-radar-h90">—</strong>
+                <small id="btc-radar-h90-confidence">—</small>
+            </div>
+            <div class="btc-radar-bridge-metric">
+                <span>365 dias · P50</span>
+                <strong id="btc-radar-h365">—</strong>
+                <small id="btc-radar-h365-confidence">—</small>
+            </div>
+        </div>
+        <p class="btc-radar-bridge-note" id="btc-radar-source-note">
+            Distribuições históricas de forward return; não representam promessa, preço-alvo ou CAGR recorrente.
+        </p>
+    </section>
 
     <!-- tabs -->
     <div class="tv-tabs reveal">

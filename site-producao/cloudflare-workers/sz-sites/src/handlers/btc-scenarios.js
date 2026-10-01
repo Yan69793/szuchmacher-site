@@ -3,13 +3,12 @@
 // e retorna apenas os numeros finais. Nenhum dado bruto do BTC Radar
 // vaza para o cliente. Cache em KV por 2h.
 
-import { fetchJson, jsonResponse } from '../utils/http.js';
+import { jsonResponse } from '../utils/http.js';
 import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
+import { fetchBtcEndpoint } from './btc-intelligence.js';
 
 const CACHE_KEY = 'btc-scenarios';
 const CACHE_TTL = 7200; // 2 horas
-const BTC_API = 'https://btc-radar.prospects-intel.workers.dev/api';
-
 // Taxas padrao (hardcoded no HTML). Usadas como fallback.
 const DEFAULTS = { pess: null, base: 0.40, otim: 1.20 };
 
@@ -17,16 +16,42 @@ function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
 }
 
-async function fetchSignals() {
-  const data = await fetchJson(BTC_API + '/signals', { timeout: 12000 });
-  if (!data?.success || !data?.data?.signals) return null;
+async function fetchSignals(env) {
+  const result = await fetchBtcEndpoint(env, '/api/signals', 12000);
+  const data = result.body;
+  if (!result.ok || !data?.success || !data?.data?.signals) return null;
   return data.data.signals;
 }
 
-async function fetchFearGreed() {
-  const data = await fetchJson(BTC_API + '/sentiment/fear-greed', { timeout: 8000 });
-  if (!data?.success || data?.data?.value == null) return null;
+async function fetchFearGreed(env) {
+  const result = await fetchBtcEndpoint(env, '/api/sentiment/fear-greed', 8000);
+  const data = result.body;
+  if (!result.ok || !data?.success || data?.data?.value == null) return null;
   return data.data.value; // 0-100
+}
+
+export async function fetchEmpirical365(env) {
+  const result = await fetchBtcEndpoint(env, '/api/scenarios', 10000);
+  const data = result.body?.data;
+  const annual = data?.horizons?.['365'];
+  const effectiveSampleSize = Number(annual?.effective_sample_size ?? 0);
+  if (!result.ok || !annual?.available || annual.sample_size < 30 || effectiveSampleSize < 6) return null;
+  const values = [annual.p10, annual.p50, annual.p90].map(Number);
+  if (!values.every(Number.isFinite)) return null;
+  return {
+    rates: {
+      pess: values[0] / 100,
+      base: values[1] / 100,
+      otim: values[2] / 100,
+    },
+    method: 'empirical-forward-returns',
+    sample_size: annual.sample_size,
+    effective_sample_size: effectiveSampleSize,
+    confidence: annual.confidence ?? 'limited',
+    conditioning: annual.conditioning,
+    regime: data.current_regime ?? null,
+    horizon_days: 365,
+  };
 }
 
 function computeRates(signals, fgValue) {
@@ -87,18 +112,29 @@ function computeRates(signals, fgValue) {
 }
 
 async function revalidate(env) {
-  // Busca dados do BTC Radar (server-side, invisivel para o cliente)
-  const [signals, fgValue] = await Promise.all([
-    fetchSignals(),
-    fetchFearGreed(),
+  // A banda empirica e coletada quando o horizonte anual tem amostra suficiente.
+  // Ela nao substitui automaticamente o drift recorrente usado nas projecoes longas.
+  const [empirical, signals, fgValue] = await Promise.all([
+    fetchEmpirical365(env),
+    fetchSignals(env),
+    fetchFearGreed(env),
   ]);
 
-  const rates = computeRates(signals, fgValue);
   const ts = Math.floor(Date.now() / 1000);
+  // Importante: P10/P50/P90 de uma janela de 365 dias descrevem a distribuicao
+  // de UM ano. Nao podem virar automaticamente o drift recorrente de uma projecao
+  // de 5-10 anos. Por isso as taxas do simulador permanecem no modelo atual, e a
+  // distribuicao empirica entra como banda diagnostica separada.
+  const metadata = {
+    rates: computeRates(signals, fgValue),
+    method: empirical ? 'heuristic-drift-with-empirical-band' : 'heuristic-fallback',
+    empirical_band: empirical,
+    horizon_days: 365,
+  };
 
-  await writeCache(env.CACHE, CACHE_KEY, { rates, ts }, staleTtl(CACHE_TTL));
+  await writeCache(env.CACHE, CACHE_KEY, { ...metadata, ts }, staleTtl(CACHE_TTL));
 
-  return { ok: true, rates, generated_at: ts };
+  return { ok: true, ...metadata, generated_at: ts };
 }
 
 export async function handleBtcScenarios(env, ctx) {
@@ -112,7 +148,15 @@ export async function handleBtcScenarios(env, ctx) {
 
   if (cached) {
     return jsonResponse(
-      { ok: true, rates: cached.rates, generated_at: cached.ts, source: state },
+      {
+        ok: true,
+        rates: cached.rates,
+        method: cached.method ?? 'heuristic-fallback',
+        empirical_band: cached.empirical_band ?? null,
+        horizon_days: cached.horizon_days ?? 365,
+        generated_at: cached.ts,
+        source: state,
+      },
       { headers: { 'Cache-Control': 'public, max-age=3600' } }
     );
   }

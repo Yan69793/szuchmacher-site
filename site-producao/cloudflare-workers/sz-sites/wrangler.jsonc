@@ -11,6 +11,9 @@
   "kv_namespaces": [
     { "binding": "CACHE", "id": "fd40efe1057c4c54b3d33277d4665434" }
   ],
+  "services": [
+    { "binding": "BTC_RADAR", "service": "btc-radar" }
+  ],
   "vars": {
     "BRIEFING_ORIGIN": "https://szuchmacher-briefing.prospects-intel.workers.dev",
     "FROM_EMAIL": "yan@szuchmacher.com.br"

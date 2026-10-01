@@ -13,6 +13,7 @@ import { handleCdiScenarios } from './handlers/cdi-scenarios.js';
 import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
 import { handleUsdbrlScenarios } from './handlers/usdbrl-scenarios.js';
 import { handleRelatorioPrices } from './handlers/relatorio-prices.js';
+import { handleBtcIntelligence } from './handlers/btc-intelligence.js';
 import { applySecurityHeaders } from './utils/headers.js';
 
 const SITE_MAP = {
@@ -37,6 +38,7 @@ const API_ROUTES = {
   '/api/cdi-scenarios': (req, env, ctx) => handleCdiScenarios(env, ctx),
   '/api/ntnb-scenarios': (req, env, ctx) => handleNtnbScenarios(env, ctx),
   '/api/usdbrl-scenarios': (req, env, ctx) => handleUsdbrlScenarios(env, ctx),
+  '/api/intelligence/btc': (req, env, ctx) => handleBtcIntelligence(env, ctx),
   '/health': (req, env, ctx) => handleHealth(env),
 };
 
