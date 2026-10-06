@@ -37,10 +37,12 @@ test('computeRates: CDI pessimista (juros altos) > base > otimista (cortes)', ()
   assert.ok(r.pess > r.base && r.base > r.otim, `pess ${r.pess} > base ${r.base} > otim ${r.otim}`);
 });
 
-test('computeRates: cap 0.18 mantido no pessimista sem inverter a ordem', () => {
-  const r = computeRates(0.17);
-  assert.equal(r.pess, 0.18, 'cap aplicado no pessimista');
-  assert.ok(r.pess > r.base && r.base > r.otim, `pess ${r.pess} > base ${r.base} > otim ${r.otim}`);
+test('computeRates: juros altos preservam ordem estrita sem teto arbitrario', () => {
+  const r = computeRates(0.19);
+  assert.equal(r.pess, 0.215, 'pess mantém spread de 2,5 pp acima da base');
+  assert.equal(r.base, 0.19);
+  assert.equal(r.otim, 0.165);
+  assert.ok(r.pess > r.base && r.base > r.otim);
 });
 
 test('handler /api/cdi-scenarios: rates servidos seguem pess > base > otim', async () => {

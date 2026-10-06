@@ -33,6 +33,68 @@ function activateSim(panelId, btn) {
 // Aportes mensais convertidos para taxa mensal equivalente
 // FV = PV*(1+r)^n + PMT * [((1+r)^n - 1) / r]
 // onde r = taxa mensal = (1 + taxa_anual)^(1/12) - 1
+// Leitura comum a tela, Monte Carlo, PDF e link compartilhado. Zero e valido.
+function lerNumero(id, fallback) {
+    const el = document.getElementById(id);
+    const value = parseFloat(el && el.value);
+    if (!Number.isFinite(value)) return fallback;
+    const min = el && el.min !== '' ? Number(el.min) : -Infinity;
+    const max = el && el.max !== '' ? Number(el.max) : Infinity;
+    return Math.min(Number.isFinite(max) ? max : Infinity, Math.max(Number.isFinite(min) ? min : -Infinity, value));
+}
+
+// GET idempotente, no maximo uma repeticao, com limite ate o fim do corpo.
+async function fetchMultiJson(url, options = {}) {
+    const timeoutMs = options.timeoutMs || 12000;
+    for (let attempt = 0; attempt < 2; attempt++) {
+        const controller = new AbortController();
+        let timer;
+        let retryAfter = 0;
+        const deadline = new Promise((_, reject) => {
+            timer = setTimeout(() => {
+                controller.abort();
+                reject(new Error('Tempo limite de consulta'));
+            }, timeoutMs);
+        });
+        try {
+            return await Promise.race([deadline, (async () => {
+                const res = await fetch(url, { headers: { Accept: 'application/json', ...options.headers }, signal: controller.signal });
+                if (!res.ok) {
+                    const error = new Error('HTTP ' + res.status);
+                    error.retryable = res.status === 429 || res.status >= 500;
+                    const raw = res.headers.get('Retry-After');
+                    if (raw) retryAfter = /^\d+$/.test(raw) ? Number(raw) * 1000 : Math.max(0, Date.parse(raw) - Date.now());
+                    throw error;
+                }
+                return await res.json();
+            })()]);
+        } catch (error) {
+            if (attempt || error instanceof SyntaxError || error.retryable === false || retryAfter > 2000) throw error;
+        } finally {
+            clearTimeout(timer);
+            controller.abort();
+        }
+        await new Promise(resolve => setTimeout(resolve, Math.max(retryAfter || 0, 250 + Math.random() * 250)));
+    }
+}
+
+function mostrarFonteCenario(asset, payload) {
+    const painel = document.getElementById('sim-' + asset);
+    if (!painel) return;
+    let el = painel.querySelector('.sim-data-status');
+    if (!el) {
+        el = document.createElement('p');
+        el.className = 'sim-data-status';
+        el.setAttribute('role', 'status');
+        painel.appendChild(el);
+    }
+    if (!payload || payload.source === 'defaults' || payload.stale || payload.cache_state === 'stale') {
+        el.textContent = 'Consulta indisponível ou defasada. Simulação com premissas de referência.';
+    } else {
+        el.textContent = asset === 'ntnb' ? 'Preço de referência consultado. Taxa real e inflação são premissas de modelo.' : asset === 'cdi' ? 'Premissas de cenário calculadas a partir da taxa de referência consultada.' : 'Premissas de cenário atualizadas pelo modelo, sem garantia de retorno.';
+    }
+}
+
 function calcSerie(inicial, aporte, taxaAnual, prazo) {
     const anos = parseInt(prazo) || 10;
     const r    = Math.pow(1 + taxaAnual, 1 / 12) - 1; // taxa mensal equivalente
@@ -63,7 +125,7 @@ function calcFinal(inicial, aporte, taxa, prazo) {
 // crescente em T; resolve por bisseção. Com aporte 0 reduz à fórmula de fluxo
 // único. Devolve taxa decimal (0.093 = 9,3% a.a.) ou null em caso degenerado.
 function cagrComAportes(ini, aporteMensal, prazoAnos, final) {
-    if (!isFinite(final) || final <= 0) return null;
+    if (![ini, aporteMensal, prazoAnos, final].every(Number.isFinite) || ini < 0 || aporteMensal < 0 || prazoAnos <= 0 || final <= 0 || (ini === 0 && aporteMensal === 0)) return null;
     let lo = -0.95;
     let hi = 5.0;
     const f = t => calcFinal(ini, aporteMensal, t, prazoAnos) - final;
@@ -96,6 +158,7 @@ function fmtUSD(v) {
 
 function fmtRet(final, inicial, aporte, prazo) {
     const total = inicial + aporte * 12 * prazo;
+    if (total <= 0) return 'n/d';
     const ret = ((final - total) / total) * 100;
     return (ret >= 0 ? '+' : '') + fmt(ret, 1) + '%';
 }
@@ -109,16 +172,40 @@ window.macroLive = {
     ntnbSpread: 0.075,
     selicTerminal: 0.12
 };
+function renderResearchKpis() {
+    var m = window.macroLive || {};
+    var set = function(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; };
+    var pct = function(v, digits) {
+        return isFinite(v) ? (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits }) + '%' : '—';
+    };
+    set('research-kpi-selic', pct(m.selic, 2));
+    set('research-kpi-ipca', pct(m.ipca, 2));
+    set('research-kpi-cdi', pct(m.cdi, 2));
+    set('research-kpi-usd', isFinite(m.usd) ? 'R$ ' + Number(m.usd).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) : '—');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    renderResearchKpis();
+    var links = Array.from(document.querySelectorAll('.sidebar-link[href^="#"]'));
+    var targets = links.map(function(a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    if ('IntersectionObserver' in window && targets.length) {
+        var observer = new IntersectionObserver(function(entries) {
+            var visible = entries.filter(function(e) { return e.isIntersecting; }).sort(function(a,b) { return b.intersectionRatio - a.intersectionRatio; })[0];
+            if (!visible) return;
+            links.forEach(function(a) { a.classList.toggle('active', a.getAttribute('href') === '#' + visible.target.id); });
+        }, { rootMargin: '-18% 0px -66% 0px', threshold: [0.01, 0.15, 0.4] });
+        targets.forEach(function(t) { observer.observe(t); });
+    }
+});
 // ── CENARIOS GEOPOLITICOS (EUA-China 2026-2030) ──────────────────────────
-// Calibrados com: Polymarket (20/07/2026), Good Judgment, Metaculus,
-// Allison Thucydides Trap (Harvard), Correlates of War, GPR Index (Caldara-Iacoviello)
+// Faixas abaixo são pesos internos de stress do modelo, não forecasts probabilísticos.
+// Fatos observados e fontes verificáveis ficam separados no painel de evidências da interface.
 // Parametros de crise: calibrados em 21 crises historicas (1990-2026)
 // Metodologia: Base Rate Bayesiana + Escada de Escalada (Kahn) + Regime-Switching de Vol
 
 window.geoScenarios = [
     {
         id: 'cold-war', nome: 'Guerra fria administrada', probMin: 0.35, probMax: 0.55,
-        desc: 'Desacoplamento tecnologico e comercial sem ruptura militar. Tarifas estruturais de 25-45%, restricoes a semicondutores e IA, blocos comerciais paralelos. Brasil mantem posicao nao-alinhada pragmatica. Cenario modal (35-55%).',
+        desc: 'Desacoplamento tecnologico e comercial sem ruptura militar. Tarifas estruturais de 25-45%, restricoes a semicondutores e IA, blocos comerciais paralelos. Brasil mantem posicao nao-alinhada pragmatica. Hipótese estrutural de continuidade usada para stress test; não representa previsão de ocorrência.',
         retornos: { gold: 0.095, silver: 0.06, platinum: 0.03, copper: 0.12, btc: 0.30, ntnb: 0.13, cdi: 0.12, ouro: 0.095, prata: 0.06, platina: 0.03, cobre: 0.12 },
         macro: { selic: [0.145,0.138,0.130,0.125,0.120], ipca: [0.055,0.050,0.047,0.045,0.045], usdbrl: [5.09,5.25,5.35,5.40,5.50], brent: [78,82,80,78,75] },
         correlShift: { goldBtc: 0.10, goldSilver: 0.05, goldPlatinum: 0.03 },
@@ -166,7 +253,7 @@ window.geoScenarios = [
     },
     {
         id: 'direct-conflict', nome: 'Conflito armado direto', probMin: 0.03, probMax: 0.08,
-        desc: 'Confronto militar aberto no Pacifico com baixas significativas. Bloqueios navais, ciberataques a infraestrutura, interrupcao de cadeias de suprimento globais. Potencial escalada nuclear limitada. Cenario de cauda (3-8%).',
+        desc: 'Confronto militar aberto no Pacifico com baixas significativas. Bloqueios navais, ciberataques a infraestrutura, interrupcao de cadeias de suprimento globais. Potencial escalada nuclear limitada. Hipótese extrema de cauda usada para stress test; não representa previsão de ocorrência.',
         retornos: { gold: 0.35, silver: 0.25, platinum: 0.10, copper: 0.20, btc: 1.50, ntnb: 0.15, cdi: 0.14, ouro: 0.35, prata: 0.25, platina: 0.10, cobre: 0.20 },
         macro: { selic: [0.145,0.155,0.170,0.180,0.180], ipca: [0.055,0.070,0.085,0.090,0.085], usdbrl: [5.09,6.00,6.50,7.00,7.50], brent: [78,110,130,120,110] },
         correlShift: { goldBtc: 0.30, goldSilver: 0.20, goldPlatinum: 0.12 },
@@ -246,21 +333,19 @@ const TAXAS_CENARIO_SEL = { pess: 'pessimista', base: 'base', otim: 'otimista' }
 
 // Reprojeta taxasCenario a partir de simConfigs. Chamar depois de qualquer escrita
 // em simConfigs, senão a carteira continua projetando a premissa antiga.
-// Nota: cdi, ntnb e reserva são reprojetados aqui por consistência, mas as projeções
-// do portfólio não os leem daqui, usam getSelicAno()/getNtnbAno(), que modelam a
-// estrutura a termo (Selic caindo para a terminal) em vez de uma taxa plana.
+// CDI e NTN-B da carteira usam as taxas de simConfigs. Os benchmarks isolados
+// usam getSelicAno()/getNtnbAno(), com trajetoria macro explicita.
 function rebuildTaxasCenario() {
     Object.keys(TAXAS_CENARIO_SEL).forEach(function (sel) {
-        const alvo = window.taxasCenario[TAXAS_CENARIO_SEL[sel]];
+        const alvo = {};
         Object.keys(simConfigs).forEach(function (asset) {
             let taxa = simConfigs[asset][sel];
-            if (taxa == null) {
-                if (asset === 'btc' && sel === 'pess') taxa = BTC_PESS_FALLBACK_ANUAL;
-                else return; // sem premissa definida: não sobrescreve o que já existe
-            }
+            if (taxa == null && asset === 'btc' && sel === 'pess') taxa = BTC_PESS_FALLBACK_ANUAL;
+            if (!Number.isFinite(taxa) || taxa <= -1) return;
             alvo[asset] = taxa;
             if (TAXAS_ALIAS_PTBR[asset]) alvo[TAXAS_ALIAS_PTBR[asset]] = taxa;
         });
+        window.taxasCenario[TAXAS_CENARIO_SEL[sel]] = alvo;
     });
 }
 
@@ -274,7 +359,7 @@ function rebuildTaxasCenario() {
 
 function getSelicAno(y) {
     const base = window.macroLive.selic || 0.145;
-    const terminal = window.macroLive.selicTerminal || 0.12;
+    const terminal = window.macroLive.selicTerminal ?? 0.12;
     if (y <= 0) return base;
     if (y === 1) return base - (base - terminal) * 0.45;
     if (y === 2) return base - (base - terminal) * 0.75;
@@ -291,7 +376,7 @@ function getIpcaAno(y) {
 }
 
 function getNtnbAno(y) {
-    return getIpcaAno(y) + (window.macroLive.ntnbSpread || 0.075);
+    return (1 + getIpcaAno(y)) * (1 + (window.macroLive.ntnbSpread ?? 0.075)) - 1;
 }
 
 function updateBenchAssumptionsUI() {
@@ -302,7 +387,7 @@ function updateBenchAssumptionsUI() {
     const sT = (window.macroLive.selicTerminal * 100).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
     const i0 = (window.macroLive.ipca * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const iT = (getIpcaAno(5) * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-    const spread = ((window.macroLive.ntnbSpread || 0.075) * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const spread = ((window.macroLive.ntnbSpread ?? 0.075) * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     if (selicEl) selicEl.textContent = s0 + '% → ' + sT + '% a.a.';
     if (ntnbEl) ntnbEl.textContent = 'IPCA + ' + spread + '% a.a.';
     if (ipcaEl) ipcaEl.textContent = i0 + '% → ' + iT + '% a.a.';
@@ -326,7 +411,12 @@ function syncAutomationFromMacro(d) {
 }
 
 function getCenarioDescricao(cenario) {
-    return window.cenarioDescricoes[cenario] || '';
+    const descricoes = {
+        pessimista: 'Hipótese de juros elevados por mais tempo e pressão sobre ativos de risco.',
+        base: 'Cenário de referência do perfil escolhido, com as taxas numéricas apresentadas no gráfico.',
+        otimista: 'Hipótese de redução dos juros e recuperação dos ativos de risco.'
+    };
+    return descricoes[cenario] || descricoes.base;
 }
 
 const simConfigs = {
@@ -350,10 +440,12 @@ rebuildTaxasCenario();
 // carteira exibiam retornos diferentes para o mesmo ativo no mesmo cenário.
 function applyScenarioRates(asset, r) {
     const c = simConfigs[asset];
-    if (!c || !r) return;
-    if (r.pess != null) c.pess = r.pess;
-    if (r.base != null) c.base = r.base;
-    if (r.otim != null) c.otim = r.otim;
+    if (!c || !r || !['pess', 'base', 'otim'].every(key => typeof r[key] === 'number' && Number.isFinite(r[key]) && r[key] > -1)) return false;
+    const rf = asset === 'cdi' || asset === 'ntnb';
+    if (rf ? !(r.pess > r.base && r.base > r.otim) : !(r.pess <= r.base && r.base <= r.otim)) return false;
+    c.pess = r.pess;
+    c.base = r.base;
+    c.otim = r.otim;
 
     rebuildTaxasCenario();
 
@@ -367,17 +459,18 @@ function applyScenarioRates(asset, r) {
     // Consumidor de simConfigs: o card do próprio ativo, se estiver visível.
     const painel = document.getElementById('sim-' + asset);
     if (painel && painel.classList.contains('active')) recalcSim(asset);
+    return true;
 }
 
 // ── BTC Radar: ajuste de cenarios (server-side, sem exposicao de dados) ──
 (function fetchBtcScenarios() {
-    fetch('/api/btc-scenarios')
-        .then(function(r) { return r.json(); })
+    fetchMultiJson('/api/btc-scenarios')
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
             // Grava a premissa nos dois consumidores (card do BTC e carteira)
-            applyScenarioRates('btc', r);
+            if (!applyScenarioRates('btc', r)) throw new Error('Premissas de cenário inválidas');
+            mostrarFonteCenario('btc', d);
             // Atualiza labels visiveis nos cards
             var labelPess = document.getElementById('b-rate-cons');
             var labelBase = document.getElementById('b-rate-mod');
@@ -396,7 +489,7 @@ function applyScenarioRates(asset, r) {
             }
         })
         .catch(function() {
-            // fallback silencioso: taxas hardcoded permanecem
+            mostrarFonteCenario('btc', null);
         });
 })();
 
@@ -448,11 +541,7 @@ function applyScenarioRates(asset, r) {
         return vol ? trend + ' / ' + vol : trend;
     }
 
-    fetch('/api/intelligence/btc', { headers: { Accept: 'application/json' } })
-        .then(function(res) {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            return res.json();
-        })
+    fetchMultiJson('/api/intelligence/btc')
         .then(function(d) {
             if (!d || !d.ok || !d.data) throw new Error('payload inválido');
 
@@ -513,12 +602,12 @@ function applyScenarioRates(asset, r) {
 
 // ── CDI: ajuste de cenarios via server-side ──
 (function fetchCdiScenarios() {
-    fetch('/api/cdi-scenarios')
-        .then(function(r) { return r.json(); })
+    fetchMultiJson('/api/cdi-scenarios')
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            applyScenarioRates('cdi', r);
+            if (!applyScenarioRates('cdi', r)) throw new Error('Premissas de cenário inválidas');
+            mostrarFonteCenario('cdi', d);
             var labelPess = document.getElementById('c-rate-cons');
             var labelBase = document.getElementById('c-rate-mod');
             var labelOtim = document.getElementById('c-rate-agr');
@@ -526,17 +615,17 @@ function applyScenarioRates(asset, r) {
             if (labelBase) labelBase.textContent = '+' + (r.base * 100).toFixed(1).replace('.',',') + '% a.a.';
             if (labelOtim) labelOtim.textContent = '+' + Math.round(r.otim * 100) + '% a.a.';
         })
-        .catch(function() { /* fallback silencioso */ });
+        .catch(function() { mostrarFonteCenario('cdi', null); });
 })();
 
 // ── NTN-B: ajuste de cenarios via server-side ──
 (function fetchNtnbScenarios() {
-    fetch('/api/ntnb-scenarios')
-        .then(function(r) { return r.json(); })
+    fetchMultiJson('/api/ntnb-scenarios')
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            applyScenarioRates('ntnb', r);
+            if (!applyScenarioRates('ntnb', r)) throw new Error('Premissas de cenário inválidas');
+            mostrarFonteCenario('ntnb', d);
             var labelPess = document.getElementById('n-rate-cons');
             var labelBase = document.getElementById('n-rate-mod');
             var labelOtim = document.getElementById('n-rate-agr');
@@ -544,17 +633,17 @@ function applyScenarioRates(asset, r) {
             if (labelBase) labelBase.textContent = '+' + (r.base * 100).toFixed(1).replace('.',',') + '% a.a.';
             if (labelOtim) labelOtim.textContent = '+' + Math.round(r.otim * 100) + '% a.a.';
         })
-        .catch(function() { /* fallback silencioso */ });
+        .catch(function() { mostrarFonteCenario('ntnb', null); });
 })();
 
 // ── USD/BRL: cotacao ao vivo e cenarios direcionais ──
 (function fetchUsdbrlScenarios() {
-    fetch('/api/usdbrl-scenarios')
-        .then(function(r) { return r.json(); })
+    fetchMultiJson('/api/usdbrl-scenarios')
         .then(function(d) {
             if (!d.ok || !d.rates) return;
             var r = d.rates;
-            applyScenarioRates('usdbrl', r);
+            if (!applyScenarioRates('usdbrl', r)) throw new Error('Premissas de cenário inválidas');
+            mostrarFonteCenario('usdbrl', d);
             // Atualiza cotacao global para conversao BRL no Monte Carlo.
             // usdbrl_bid e campo de topo do payload, nao fica dentro de rates.
             if (d.usdbrl_bid != null) usdBrlLive = d.usdbrl_bid;
@@ -581,7 +670,7 @@ function applyScenarioRates(asset, r) {
             if (labelBase) labelBase.textContent = (r.base >= 0 ? '+' : '') + Math.round(r.base * 100) + '% a.a.';
             if (labelOtim) labelOtim.textContent = (r.otim >= 0 ? '+' : '') + Math.round(r.otim * 100) + '% a.a.';
         })
-        .catch(function() { /* fallback silencioso */ });
+        .catch(function() { mostrarFonteCenario('usdbrl', null); });
 })();
 
 // Mapa unico cenario -> classe do card. Antes existia duplicado dentro do
@@ -616,9 +705,9 @@ function selectScenario(asset, scenario, el) {
 function recalcSim(asset) {
     const c = simConfigs[asset];
     if (!c) return;
-    const ini  = parseFloat(document.getElementById(c.ini)?.value)   || 10000;
-    const ap   = parseFloat(document.getElementById(c.ap)?.value)    || 500;
-    const prz  = parseFloat(document.getElementById(c.prazo)?.value) || (asset === 'btc' ? 4 : 10);
+    const ini  = lerNumero(c.ini, 10000);
+    const ap   = lerNumero(c.ap, 500);
+    const prz  = lerNumero(c.prazo, (asset === 'btc' ? 4 : 10));
     const totalInv = ini + ap * 12 * prz;
 
     const base = calcFinal(ini, ap, c.base, prz);
@@ -721,8 +810,8 @@ function drawSimChart(asset, ini, ap, prazo, c, pessVal, baseVal, otimVal) {
                 tooltip: { backgroundColor: '#111', borderColor: '#333', borderWidth: 1, titleColor: '#aaa', bodyColor: '#e8e8e8', callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtUSD(ctx.raw) } }
             },
             scales: {
-                x: { ticks: { color: '#555', font: { size: 10, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-                y: { ticks: { color: '#555', font: { size: 10, family: 'DM Mono' }, callback: v => fmtUSD(v) }, grid: { color: 'rgba(255,255,255,0.04)' } }
+                x: { ticks: { color: '#555', font: { size: 10, family: 'IBM Plex Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: '#555', font: { size: 10, family: 'IBM Plex Mono' }, callback: v => fmtUSD(v) }, grid: { color: 'rgba(255,255,255,0.04)' } }
             }
         }
     });
@@ -748,7 +837,7 @@ function setEscalaComparador(escala, btn) {
 }
 
 function recalcComparador() {
-    const prazo = parseInt(document.getElementById('c-prazo')?.value) || 10;
+    const prazo = Math.floor(lerNumero('comp-prazo', 10));
     const ativos = [
         { key: 'gold',     ini: 'c-g-ini', ap: 'c-g-ap', tx: 'c-g-tx', label: 'Ouro',    color: '#c9a84c', dash: [] },
         { key: 'silver',   ini: 'c-s-ini', ap: 'c-s-ap', tx: 'c-s-tx', label: 'Prata',   color: '#d0d0d0', dash: [6,3] },
@@ -760,9 +849,9 @@ function recalcComparador() {
     for (let i = 0; i <= prazo; i++) labels.push('Ano ' + i);
 
     const rawSeries = ativos.map(a => {
-        const ini  = parseFloat(document.getElementById(a.ini)?.value) || 10000;
-        const ap   = parseFloat(document.getElementById(a.ap)?.value)  || 500;
-        const taxa = parseFloat(document.getElementById(a.tx)?.value)  || 8;
+        const ini  = lerNumero(a.ini, 10000);
+        const ap   = lerNumero(a.ap, 500);
+        const taxa = lerNumero(a.tx, 8);
         return { ...a, ini, ap, taxa, serie: calcSerie(ini, ap, taxa / 100, prazo) };
     });
 
@@ -775,7 +864,7 @@ function recalcComparador() {
         } else {
             data = a.serie.map((v, i) => {
                 const totalInv = a.ini + a.ap * 12 * i;
-                return ((v - totalInv) / totalInv) * 100;
+                return totalInv > 0 ? ((v - totalInv) / totalInv) * 100 : 0;
             });
         }
         if (compEscala === 'logarithmic') data = data.map(v => Math.max(v, 0.01));
@@ -810,7 +899,7 @@ function recalcComparador() {
     tbody.innerHTML = rawSeries.map(a => {
         const final = a.serie[a.serie.length - 1];
         const totalInv = a.ini + a.ap * 12 * prazo;
-        const ret  = ((final - totalInv) / totalInv) * 100;
+        const ret  = totalInv > 0 ? ((final - totalInv) / totalInv) * 100 : null;
         const cagrImpl = cagrComAportes(a.ini, a.ap, prazo, final);
         const cagr = cagrImpl == null ? null : cagrImpl * 100;
         const retColor = ret >= 0 ? '#4caf7d' : '#e05c5c';
@@ -820,8 +909,8 @@ function recalcComparador() {
             <td><span class="u-fontweight700" data-color="${a.color}">${a.label}</span>${rankBadge}</td>
             <td class="u-colorvarmuted-fontfamilydmmonomonospace">$ ${fmt(totalInv, 0)}</td>
             <td class="u-fontfamilydmmonomonospace" data-color="${a.color}">${fmtUSD(final)}</td>
-            <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${ret >= 0 ? '+' : ''}${fmt(ret,1)}%</td>
-            <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${cagr == null ? 'n/d' : (cagr >= 0 ? '+' : '') + fmt(cagr,1)}% a.a.</td>
+            <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${ret == null ? 'n/d' : (ret >= 0 ? '+' : '') + fmt(ret,1) + '%'}</td>
+            <td class="u-fontfamilydmmonomonospace" data-color="${retColor}">${cagr == null ? 'n/d' : (cagr >= 0 ? '+' : '') + fmt(cagr,1) + '% a.a.'}</td>
         </tr>`;
     }).join('');
 }
@@ -1175,14 +1264,14 @@ function desenharBenchmark() {
     function portfolioAno(y) {
         const selic = getSelicAno(y);
         const ntnb  = getNtnbAno(y);
-        return ((taxasAtivo.ntnb || ntnb)  * pNtnb)
-             + ((taxasAtivo.cdi || selic) * pCdi)
-             + ((taxasAtivo.ouro || taxasAtivo.gold) * pOuro)
-             + ((taxasAtivo.prata || taxasAtivo.silver) * pPrata)
-             + ((taxasAtivo.platina || taxasAtivo.platinum) * pPlat)
-             + ((taxasAtivo.cobre || taxasAtivo.copper) * pCobre)
+        return ((taxasAtivo.ntnb ?? ntnb)  * pNtnb)
+             + ((taxasAtivo.cdi ?? selic) * pCdi)
+             + ((taxasAtivo.ouro ?? taxasAtivo.gold) * pOuro)
+             + ((taxasAtivo.prata ?? taxasAtivo.silver) * pPrata)
+             + ((taxasAtivo.platina ?? taxasAtivo.platinum) * pPlat)
+             + ((taxasAtivo.cobre ?? taxasAtivo.copper) * pCobre)
              + (taxasAtivo.btc * pBtc)
-             + ((taxasAtivo.cdi || selic) * pRes);
+             + ((taxasAtivo.cdi ?? selic) * pRes);
     }
 
     const seriePort  = [val];
@@ -1204,19 +1293,19 @@ function desenharBenchmark() {
                 {
                     label: 'Portfólio MultiAsset',
                     data: seriePort,
-                    borderColor: '#c9a84c',
+                    borderColor: '#d8b65c',
                     backgroundColor: 'rgba(201,168,76,0.08)',
                     borderWidth: 3,
                     pointRadius: 5,
                     pointHoverRadius: 7,
                     tension: 0.35,
                     fill: true,
-                    pointBackgroundColor: '#c9a84c',
+                    pointBackgroundColor: '#d8b65c',
                 },
                 {
                     label: 'NTN-B curta (IPCA+7,5%)',
                     data: serieNtnb,
-                    borderColor: '#4caf7d',
+                    borderColor: '#48cfa7',
                     backgroundColor: 'rgba(76,175,125,0.05)',
                     borderWidth: 2,
                     pointRadius: 4,
@@ -1224,12 +1313,12 @@ function desenharBenchmark() {
                     tension: 0.3,
                     fill: false,
                     borderDash: [6, 3],
-                    pointBackgroundColor: '#4caf7d',
+                    pointBackgroundColor: '#48cfa7',
                 },
                 {
                     label: 'Selic projetada',
                     data: serieSelic,
-                    borderColor: '#5b9cf6',
+                    borderColor: '#36c9d6',
                     backgroundColor: 'rgba(91,156,246,0.04)',
                     borderWidth: 2,
                     pointRadius: 4,
@@ -1237,7 +1326,7 @@ function desenharBenchmark() {
                     tension: 0.3,
                     fill: false,
                     borderDash: [3, 3],
-                    pointBackgroundColor: '#5b9cf6',
+                    pointBackgroundColor: '#36c9d6',
                 },
             ]
         },
@@ -1389,14 +1478,14 @@ function _runPortfolioMC() {
     // Taxa base por chave de ativo
     function _baseTaxa(key, y) {
         switch(key) {
-            case 'ntnb':     return taxasAtivo.ntnb || getNtnbAno(y);
-            case 'cdi':      return taxasAtivo.cdi || getSelicAno(y);
-            case 'reserva':  return taxasAtivo.cdi || getSelicAno(y);
-            case 'gold':     return taxasAtivo.gold || taxasAtivo.ouro || 0.10;
-            case 'silver':   return taxasAtivo.silver || taxasAtivo.prata || 0.10;
-            case 'platinum': return taxasAtivo.platinum || taxasAtivo.platina || 0.10;
-            case 'copper':   return taxasAtivo.copper || taxasAtivo.cobre || 0.10;
-            case 'btc':      return taxasAtivo.btc || 0.10;
+            case 'ntnb':     return taxasAtivo.ntnb ?? getNtnbAno(y);
+            case 'cdi':      return taxasAtivo.cdi ?? getSelicAno(y);
+            case 'reserva':  return taxasAtivo.cdi ?? getSelicAno(y);
+            case 'gold':     return taxasAtivo.gold ?? taxasAtivo.ouro ?? 0.10;
+            case 'silver':   return taxasAtivo.silver ?? taxasAtivo.prata ?? 0.10;
+            case 'platinum': return taxasAtivo.platinum ?? taxasAtivo.platina ?? 0.10;
+            case 'copper':   return taxasAtivo.copper ?? taxasAtivo.cobre ?? 0.10;
+            case 'btc':      return taxasAtivo.btc ?? 0.10;
             default:         return 0.10;
         }
     }
@@ -1530,11 +1619,11 @@ function _renderPortfolioMCChart(result, serieNtnb, serieSelic, labels) {
                 {
                     label: 'Mediana do portfólio (P50)',
                     data: result.p50,
-                    borderColor: '#c9a84c',
+                    borderColor: '#d8b65c',
                     backgroundColor: 'transparent',
                     borderWidth: 3,
                     pointRadius: 4,
-                    pointBackgroundColor: '#c9a84c',
+                    pointBackgroundColor: '#d8b65c',
                     tension: 0.4,
                     fill: false,
                 },
@@ -1562,24 +1651,24 @@ function _renderPortfolioMCChart(result, serieNtnb, serieSelic, labels) {
                 {
                     label: 'NTN-B (IPCA+7,5%)',
                     data: serieNtnb,
-                    borderColor: '#4caf7d',
+                    borderColor: '#48cfa7',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [7, 4],
                     pointRadius: 3,
-                    pointBackgroundColor: '#4caf7d',
+                    pointBackgroundColor: '#48cfa7',
                     tension: 0.3,
                     fill: false,
                 },
                 {
                     label: 'Selic projetada',
                     data: serieSelic,
-                    borderColor: '#5b9cf6',
+                    borderColor: '#36c9d6',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [3, 3],
                     pointRadius: 3,
-                    pointBackgroundColor: '#5b9cf6',
+                    pointBackgroundColor: '#36c9d6',
                     tension: 0.3,
                     fill: false,
                 },
@@ -1608,7 +1697,7 @@ function _renderPortfolioMCChart(result, serieNtnb, serieSelic, labels) {
                     borderWidth: 1,
                     titleColor: '#777',
                     bodyColor: '#e8e8e8',
-                    bodyFont: { family: 'DM Mono', size: 11 },
+                    bodyFont: { family: 'IBM Plex Mono', size: 11 },
                     padding: 12,
                     callbacks: {
                         label: function(ctx) {
@@ -1670,7 +1759,7 @@ function _renderGeoScenarioCards() {
             '<div class="geo-sc-index">' + (i + 1) + '</div>' +
             '<div class="geo-sc-body">' +
                 '<div class="geo-sc-name">' + s.nome + '</div>' +
-                '<div class="geo-sc-prob">Prob. estimada: ' + probRange + '</div>' +
+                '<div class="geo-sc-prob">Peso no stress: ' + probRange + '</div>' +
             '</div>' +
         '</div>';
     }).join('');
@@ -1694,7 +1783,7 @@ function _renderGeoScenarioDetail() {
     if (!el) return;
     var s = window.geoActiveScenario;
     if (!s) {
-        el.innerHTML = '<div class="u-fontsize12px-colorvarmuted-lineheight16-padding10px0">Selecione um cenario geopolitico acima para ver os retornos condicionais projetados para cada ativo.</div>';
+        el.innerHTML = '<div class="u-fontsize12px-colorvarmuted-lineheight16-padding10px0">Selecione uma hipótese prospectiva para inspecionar trajetórias e retornos condicionais do modelo.</div>';
         return;
     }
     var labels = { gold: 'Ouro', silver: 'Prata', platinum: 'Platina', copper: 'Cobre', btc: 'BTC', ntnb: 'NTN-B', cdi: 'CDI' };
@@ -1709,11 +1798,11 @@ function _renderGeoScenarioDetail() {
     }).join('');
     el.innerHTML =
         '<div class="geo-detail-section">' +
-            '<div class="geo-detail-label">Descricao</div>' +
+            '<div class="geo-detail-label">Hipótese de cenário</div>' +
             '<div class="geo-detail-text">' + s.desc + '</div>' +
         '</div>' +
         '<div class="geo-detail-section">' +
-            '<div class="geo-detail-label">Retornos anuais condicionais (CAGR)</div>' +
+            '<div class="geo-detail-label">Retornos anuais condicionais do modelo (CAGR)</div>' +
             '<div class="geo-return-grid">' + retItems + '</div>' +
         '</div>';
 }
@@ -1731,14 +1820,14 @@ function _renderGeoProbChart() {
         data: {
             labels: labels,
             datasets: [
-                { label: 'Piso', data: probMins, backgroundColor: 'rgba(201,168,76,0.15)', borderColor: 'rgba(201,168,76,0.3)', borderWidth: 1, barPercentage: 0.7 },
-                { label: 'Teto', data: probMaxs.map(function(v, i) { return v - probMins[i]; }), backgroundColor: 'rgba(201,168,76,0.35)', borderColor: 'rgba(201,168,76,0.55)', borderWidth: 1, barPercentage: 0.7 }
+                { label: 'Piso', data: probMins, backgroundColor: 'rgba(54,201,214,0.12)', borderColor: 'rgba(54,201,214,0.30)', borderWidth: 1, barPercentage: 0.7 },
+                { label: 'Teto', data: probMaxs.map(function(v, i) { return v - probMins[i]; }), backgroundColor: 'rgba(54,201,214,0.32)', borderColor: 'rgba(54,201,214,0.60)', borderWidth: 1, barPercentage: 0.7 }
             ]
         },
         options: {
             indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 11 }, callbacks: { label: function(ctx) { var i = ctx.dataIndex; return ' ' + probMins[i].toFixed(0) + '% - ' + probMaxs[i].toFixed(0) + '% (central: ' + probMids[i].toFixed(0) + '%)'; } } } },
-            scales: { x: { stacked: true, ticks: { color: '#555', font: { size: 10, family: 'DM Mono' }, callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' }, max: 60 }, y: { stacked: true, ticks: { color: '#888', font: { size: 10 } }, grid: { display: false } } }
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, bodyColor: '#e8e8e8', bodyFont: { family: 'IBM Plex Mono', size: 11 }, callbacks: { label: function(ctx) { var i = ctx.dataIndex; return ' Peso interno: ' + probMins[i].toFixed(0) + '%–' + probMaxs[i].toFixed(0) + '% · centro ' + probMids[i].toFixed(0) + '%'; } } } },
+            scales: { x: { stacked: true, ticks: { color: '#555', font: { size: 10, family: 'IBM Plex Mono' }, callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' }, max: 60 }, y: { stacked: true, ticks: { color: '#888', font: { size: 10 } }, grid: { display: false } } }
         }
     });
 }
@@ -1749,7 +1838,7 @@ function _renderGeoReturnChart() {
     if (geoReturnChart) geoReturnChart.destroy();
     var assets = ['gold', 'silver', 'platinum', 'copper', 'btc'];
     var assetLabels = ['Ouro', 'Prata', 'Platina', 'Cobre', 'Bitcoin'];
-    var colors = ['rgba(106,150,212,0.7)', 'rgba(224,143,143,0.7)', 'rgba(76,175,125,0.7)', 'rgba(201,168,76,0.7)', 'rgba(180,130,130,0.7)'];
+    var colors = ['rgba(54,201,214,0.72)', 'rgba(72,207,167,0.72)', 'rgba(216,182,92,0.72)', 'rgba(240,111,111,0.72)', 'rgba(145,123,222,0.72)'];
     var datasets = window.geoScenarios.map(function(s, i) {
         return { label: s.nome, data: assets.map(function(a) { return (s.retornos[a] || 0) * 100; }), backgroundColor: colors[i], borderColor: colors[i].replace('0.7', '1'), borderWidth: 0, barPercentage: 0.8, categoryPercentage: 0.9 };
     });
@@ -1759,10 +1848,10 @@ function _renderGeoReturnChart() {
         var key = a === 'btc' ? 'btc' : a;
         return ((taxasAtivo[key] || taxasAtivo[a]) * 100) || 0;
     });
-    datasets.push({ label: 'Cenario base atual', data: baseRates, backgroundColor: 'transparent', borderColor: '#c9a84c', borderWidth: 2, borderDash: [6, 4], type: 'line', pointRadius: 5, pointBackgroundColor: '#c9a84c', fill: false, tension: 0 });
+    datasets.push({ label: 'Cenario base atual', data: baseRates, backgroundColor: 'transparent', borderColor: '#d8b65c', borderWidth: 2, borderDash: [6, 4], type: 'line', pointRadius: 5, pointBackgroundColor: '#d8b65c', fill: false, tension: 0 });
     geoReturnChart = new Chart(canvas, {
         type: 'bar', data: { labels: assetLabels, datasets: datasets },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#888', font: { size: 10 }, boxWidth: 14, padding: 10 } }, tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 11 }, callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(1) + '% a.a.'; } } } }, scales: { x: { ticks: { color: '#888', font: { size: 12 } }, grid: { display: false } }, y: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#888', font: { size: 10 }, boxWidth: 14, padding: 10 } }, tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, bodyColor: '#e8e8e8', bodyFont: { family: 'IBM Plex Mono', size: 11 }, callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(1) + '% a.a.'; } } } }, scales: { x: { ticks: { color: '#888', font: { size: 12 } }, grid: { display: false } }, y: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
     });
 }
 
@@ -1960,7 +2049,7 @@ function _renderGeoPortfolioMCChart(geoResults, labels) {
         type: 'line', data: { labels: labels, datasets: datasets },
         options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
             plugins: { legend: { position: 'top', labels: { color: '#888', font: { size: 11, family: 'DM Mono' }, boxWidth: 22, padding: 12, filter: function(item) { return item.text.indexOf('P50') !== -1 || item.text.indexOf('base') !== -1; } } },
-                tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, titleColor: '#777', bodyColor: '#e8e8e8', bodyFont: { family: 'DM Mono', size: 11 }, padding: 12, callbacks: { label: function(ctx) { if (ctx.dataset.borderWidth === 0) return null; return ' ' + ctx.dataset.label + ': R$ ' + fmt(ctx.raw, 0); } } } },
+                tooltip: { backgroundColor: '#0d0d0d', borderColor: '#2a2a2a', borderWidth: 1, titleColor: '#777', bodyColor: '#e8e8e8', bodyFont: { family: 'IBM Plex Mono', size: 11 }, padding: 12, callbacks: { label: function(ctx) { if (ctx.dataset.borderWidth === 0) return null; return ' ' + ctx.dataset.label + ': R$ ' + fmt(ctx.raw, 0); } } } },
             scales: { x: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#555', font: { size: 11, family: 'DM Mono' }, callback: function(v) { return 'R$ ' + fmt(v, 0); } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
     });
     var disc = document.getElementById('geo-mc-disclaimer');
@@ -2155,10 +2244,11 @@ function runMC(inicial, aporte, taxaAnual, volAnual, prazo, N, seed) {
         const serie = [inicial];
         let pv = inicial;
         for (let y = 1; y <= anos; y++) {
-            const drift = Math.log(1 + taxaAnual) - 0.5 * volAnual * volAnual;
-            const shock  = volAnual * _randNorm();
-            const aportesAno = aporte * 12;
-            pv = Math.max(pv * Math.exp(drift + shock) + aportesAno, 0);
+            const driftMes = (Math.log(1 + taxaAnual) - 0.5 * volAnual * volAnual) / 12;
+            const volMes = volAnual / Math.sqrt(12);
+            for (let mes = 0; mes < 12; mes++) {
+                pv = Math.max(pv * Math.exp(driftMes + volMes * _randNorm()) + aporte, 0);
+            }
             serie.push(pv);
         }
         paths.push(serie);
@@ -2210,11 +2300,11 @@ function toggleMC(asset, btn) {
 function _buildMC(asset, currency) {
     const c = simConfigs[asset];
     if (!c) return;
-    const ini   = parseFloat(document.getElementById(c.ini) && document.getElementById(c.ini).value)   || 10000;
-    const ap    = parseFloat(document.getElementById(c.ap) && document.getElementById(c.ap).value)     || 500;
-    const prazo = parseFloat(document.getElementById(c.prazo) && document.getElementById(c.prazo).value) || (asset === 'btc' ? 4 : 10);
+    const ini   = lerNumero(c.ini, 10000);
+    const ap    = lerNumero(c.ap, 500);
+    const prazo = lerNumero(c.prazo, (asset === 'btc' ? 4 : 10));
     const taxa  = c.base;
-    const vol   = VOL_ANUAL[asset] || 0.20;
+    const vol   = VOL_ANUAL[asset] ?? 0.20;
     const result = runMC(ini, ap, taxa, vol, prazo, 10000);
     mcState[asset] = { currency: currency, result: result, ini: ini, ap: ap, prazo: prazo, taxa: taxa, vol: vol };
     // Clarity: mc_run
@@ -2257,7 +2347,7 @@ function _renderMCMetrics(asset, result, ini, ap, prazo, taxa, vol, currency) {
     const totalInv    = ini + ap * 12 * prazo;
     const sharpe  = calcSharpe(taxa, vol, 0.05);
     const maxDD   = calcMaxDrawdown(vol, prazo);
-    const retMed  = (((finalMedian - totalInv) / totalInv) * 100).toFixed(0);
+    const retMed  = totalInv > 0 ? (((finalMedian - totalInv) / totalInv) * 100).toFixed(0) : 'n/d';
     const cagrImpl = cagrComAportes(ini, ap, prazo, finalMedian);
     const cagr    = cagrImpl == null ? 'n/d' : (cagrImpl * 100).toFixed(1);
     const assetColors = { gold: '#c9a84c', silver: '#c0c0c0', platinum: '#8ecfdd', copper: '#b87333', btc: '#f07a40' };
@@ -2270,7 +2360,7 @@ function _renderMCMetrics(asset, result, ini, ap, prazo, taxa, vol, currency) {
             '<span class="mc-metric-icon">&#x1F4CA;</span>' +
             '<span class="mc-metric-label">Mediana (P50)</span>' +
             '<span class="mc-metric-value" data-color="' + color + '">' + _fmtMC(finalMedian, currency) + '</span>' +
-            '<span class="mc-metric-sub">CAGR ' + cagr + '% &middot; Ret ' + (retMed >= 0 ? '+' : '') + retMed + '%</span>' +
+            '<span class="mc-metric-sub">CAGR ' + cagr + (cagrImpl == null ? '' : '%') + ' &middot; Ret ' + (retMed >= 0 ? '+' : '') + retMed + (totalInv > 0 ? '%' : '') + '</span>' +
         '</div>' +
         '<div class="mc-metric-card">' +
             '<span class="mc-metric-icon">' + sharpeIcon + '</span>' +
@@ -2315,14 +2405,14 @@ function _renderMCChart(asset, result, prazo, currency, ini, ap) {
             plugins: {
                 legend: {
                     labels: {
-                        color: '#666', font: { size: 10, family: 'DM Mono' }, boxWidth: 14,
+                        color: '#666', font: { size: 10, family: 'IBM Plex Mono' }, boxWidth: 14,
                         filter: function(item) { return ['P90 (melhor 10%)', 'Mediana (P50)', 'P10 (pior 10%)'].indexOf(item.text) !== -1; }
                     }
                 },
                 tooltip: {
                     backgroundColor: '#111', borderColor: '#2a2a2a', borderWidth: 1,
                     titleColor: '#888', bodyColor: '#e8e8e8',
-                    bodyFont: { family: 'DM Mono', size: 11 },
+                    bodyFont: { family: 'IBM Plex Mono', size: 11 },
                     callbacks: {
                         label: function(ctx) {
                             if (ctx.dataset.borderWidth === 0) return null;
@@ -2332,10 +2422,10 @@ function _renderMCChart(asset, result, prazo, currency, ini, ap) {
                 }
             },
             scales: {
-                x: { ticks: { color: '#555', font: { size: 10, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#555', font: { size: 10, family: 'IBM Plex Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 y: {
                     ticks: {
-                        color: '#555', font: { size: 10, family: 'DM Mono' },
+                        color: '#555', font: { size: 10, family: 'IBM Plex Mono' },
                         callback: function(v) {
                             if (v >= 1e6) return sym + (v/1e6).toFixed(1) + 'M';
                             if (v >= 1e3) return sym + Math.round(v/1000) + 'K';
@@ -2355,6 +2445,25 @@ function _renderMCChart(asset, result, prazo, currency, ini, ap) {
 // ── PDF EXPORT ENGINE v4 — 100% jsPDF nativo, máx 2 páginas
 // ══════════════════════════════════════════════════════════════════
 
+let pdfExportLibPromise = null;
+function ensurePdfExportLib() {
+    if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
+    if (!pdfExportLibPromise) {
+        pdfExportLibPromise = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            script.async = true;
+            script.onload = function() {
+                if (window.jspdf && window.jspdf.jsPDF) resolve();
+                else reject(new Error('jsPDF carregou sem expor a API esperada.'));
+            };
+            script.onerror = function() { reject(new Error('Falha ao carregar jsPDF.')); };
+            document.head.appendChild(script);
+        });
+    }
+    return pdfExportLibPromise;
+}
+
 async function exportPDF(fabEl) {
     if (fabEl) {
         fabEl.classList.add('fab-loading');
@@ -2362,6 +2471,7 @@ async function exportPDF(fabEl) {
     }
 
     try {
+        await ensurePdfExportLib();
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
         const W = 210, H = 297, mg = 14;
@@ -2413,14 +2523,14 @@ async function exportPDF(fabEl) {
             };
             var cfg = map[id] || { prefix:'g', asset:'gold' };
             var conf = simConfigs[cfg.asset] || {};
-            cfg.ini   = parseFloat((document.getElementById(conf.ini)  || {}).value) || 10000;
-            cfg.ap    = parseFloat((document.getElementById(conf.ap)   || {}).value) || 500;
-            cfg.prazo = parseFloat((document.getElementById(conf.prazo)|| {}).value) || 10;
+            cfg.ini   = lerNumero(conf.ini, 10000);
+            cfg.ap    = lerNumero(conf.ap, 500);
+            cfg.prazo = lerNumero(conf.prazo, 10);
             return cfg;
         }
         function pfmt(n) {
             // format BRL short
-            if (!n || isNaN(n)) return '—';
+            if (!Number.isFinite(n)) return '—';
             if (n >= 1e6) return 'R$ ' + (n/1e6).toFixed(2).replace('.',',') + ' M';
             if (n >= 1e3) return 'R$ ' + Math.round(n/1000) + ' K';
             return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
@@ -2654,7 +2764,7 @@ async function fetchMacroIndicators() {
             const usd = parseFloat(d.USDBRL?.bid || 0);
             if (usd > 0) {
                 usdBrlLive = usd;
-                window.macroLive.usd = usd;
+                window.macroLive.usd = usd; renderResearchKpis();
                 const el = document.getElementById('macro-usd');
                 if (el) el.textContent = usd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
@@ -2698,15 +2808,27 @@ async function fetchMacroIndicators() {
 
     if (selicPct > 0) window.macroLive.selic = selicPct / 100;
     if (ipcaPct > 0) window.macroLive.ipca = ipcaPct / 100;
-    if (cdiPct > 0) window.macroLive.cdi = cdiPct / 100;
+    if (cdiPct > 0) window.macroLive.cdi = cdiPct / 100; renderResearchKpis();
     updateBenchAssumptionsUI();
     if (typeof desenharBenchmark === 'function') desenharBenchmark();
 }
 
+// Data da cotacao e distinta do horario de revalidacao do cache.
+function rotuloCotacao(data, key, formatar) {
+    const quote = data[key] || {};
+    const stale = Array.isArray(data.stale) && data.stale.includes(key);
+    if (stale || !quote.quote_at) return 'referência defasada / sem data de cotação';
+    const ts = new Date(quote.quote_at);
+    if (!Number.isFinite(ts.getTime())) return 'referência sem data válida';
+    const nowDay = new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const quoteDay = ts.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const change = quote.change_pct == null ? 'variação indisponível' : formatar(quote.change_pct);
+    return change + (quoteDay === nowDay ? ' hoje' : ' em ' + quoteDay);
+}
+
 async function loadMarketData() {
     try {
-        const res = await fetch('market-data.php', { signal: AbortSignal.timeout(12000) });
-        const data = await res.json();
+        const data = await fetchMultiJson('/market-data.php');
         if (!data || !data.ok) return;
         const fmtChg = function (n) {
             if (n == null || isNaN(n)) return '—';
@@ -2717,13 +2839,13 @@ async function loadMarketData() {
             const el = document.getElementById('macro-ibov');
             const ch = document.getElementById('macro-ibov-chg');
             if (el) el.textContent = Number(data.ibov.value).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
-            if (ch) ch.textContent = fmtChg(data.ibov.change_pct) + ' hoje';
+            if (ch) ch.textContent = rotuloCotacao(data, 'ibov', fmtChg);
         }
         if (data.wti) {
             const el = document.getElementById('macro-wti');
             const ch = document.getElementById('macro-wti-chg');
             if (el) el.textContent = 'US$ ' + Number(data.wti.value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            if (ch) ch.textContent = fmtChg(data.wti.change_pct) + ' hoje';
+            if (ch) ch.textContent = rotuloCotacao(data, 'wti', fmtChg);
         }
     } catch (e) {
         console.warn('market-data.php indisponível:', e.message);
@@ -3096,12 +3218,20 @@ function submitExitPopup() {
 
     var submitPromise = fetch('/relatorio-signup', {
         method: 'POST',
+        signal: AbortSignal.timeout(12000),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, source: 'multiasset_exit_popup' })
     }).then(function (r) {
-        if (!r.ok) throw new Error('signup status ' + r.status);
+        if (!r.ok) {
+            var error = new Error('signup status ' + r.status);
+            error.status = r.status;
+            throw error;
+        }
         return r;
     }).catch(function (err) {
+        // Timeout ou 5xx podem acontecer depois de o POST ter sido processado.
+        // Fallback automatico so quando a rota informa que nao existe/suporta POST.
+        if (![404, 405, 501].includes(err.status)) throw err;
         console.warn('relatorio-signup indisponivel, usando Formspree:', err.message);
         return _formspreeFallback();
     });
@@ -3257,9 +3387,9 @@ function _shareCopy(text) {
 function shareSim(asset, btnEl) {
     var c = simConfigs[asset];
     if (!c) return;
-    var ini   = parseFloat(document.getElementById(c.ini)?.value)   || (asset === 'btc' ? 10000 : 10000);
-    var ap    = parseFloat(document.getElementById(c.ap)?.value)    || 500;
-    var prazo = parseFloat(document.getElementById(c.prazo)?.value) || (asset === 'btc' ? 4 : 10);
+    var ini   = lerNumero(c.ini, 10000);
+    var ap    = lerNumero(c.ap, 500);
+    var prazo = lerNumero(c.prazo, (asset === 'btc' ? 4 : 10));
     var sel   = c.sel || 'pess';
 
     var qs = new URLSearchParams({
@@ -3550,7 +3680,7 @@ var EVENTS = {
   '80': { t: 'input', f: function(event) { document.getElementById('c-p-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador() } },
   '81': { t: 'input', f: function(event) { document.getElementById('c-cu-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador() } },
   '82': { t: 'input', f: function(event) { document.getElementById('c-b-tx-d').textContent=this.value.replace('.',',')+' %'; recalcComparador() } },
-  '83': { t: 'input', f: function(event) { document.getElementById('c-prazo-d').textContent=this.value+' anos'; recalcComparador() } },
+  '83': { t: 'input', f: function(event) { document.getElementById('comp-prazo-d').textContent=this.value+(this.value==='1'?' ano':' anos'); recalcComparador() } },
   '84': { t: 'click', f: function(event) { setModoComparador('absoluto', this) } },
   '85': { t: 'click', f: function(event) { setModoComparador('indice', this) } },
   '86': { t: 'click', f: function(event) { setModoComparador('percentual', this) } },

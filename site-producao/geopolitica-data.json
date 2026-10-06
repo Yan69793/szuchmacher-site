@@ -1,319 +1,178 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-12T08:08:27-03:00",
+  "generated_at": "2026-10-05T14:45:44-03:00",
   "week": {
-    "iso": "2026-W38",
-    "start": "2026-09-14",
-    "end": "2026-09-20",
-    "label": "14 a 20 de setembro de 2026"
+    "iso": "2026-W42",
+    "start": "2026-10-12",
+    "end": "2026-10-18",
+    "label": "12 a 18 de outubro de 2026"
   },
-  "executive_summary": "A semana de 14 a 20 de setembro de 2026 abre com o Golfo Pérsico no centro do risco. A Arábia Saudita fechou o oleoduto leste-oeste depois de ataque com drones lançados do Iraque, justamente a rota que contorna o Estreito de Hormuz, e os houthis avançaram sobre Bab al-Mandeb, estreitando o controle da navegação no Mar Vermelho. O petróleo passou de US$ 100, o frete de superpetroleiros chegou a US$ 800 mil por dia e a IEA projeta corte de 5,7 milhões de bpd na oferta global, com a recuperação do Golfo empurrada para 2027. Na Europa, a Rússia atingiu navios cargueiros e usinas siderúrgicas na Ucrânia, drones russos chegaram à Moldávia e à Romênia, e a ONU fala do inverno mais duro desde a invasão em larga escala. A cúpula do BRICS abriu em Nova Délhi com Xi Jinping pedindo papel do bloco no Oriente Médio, e a China exigiu que os EUA parem a espionagem. Nos EUA, o 25º aniversário do 11 de setembro recolocou o contraterrorismo na agenda e a Casa Branca avalia a Lei de Produção de Defesa com as refinarias no limite. Nos níveis coletados, o Treasury 10 anos está em 4,975%, o DXY em 99,095, o S&P 500 em 7.656,98, o ouro em US$ 4.408,90 e a Selic em 14,00%.",
-  "disclaimer": "Material informativo e institucional do Radar Geopolítico. Não constitui oferta, solicitação ou recomendação de investimento, nem análise individualizada de valores mobiliários, nos termos da Resolução CVM nº 19/2021. As teses indicam direção e condicionantes, sem probabilidades numéricas. Rentabilidade passada não representa garantia de resultados futuros.",
+  "executive_summary": "A semana de 12 a 18 de outubro de 2026 é marcada por tensões geopolíticas persistentes e eventos políticos relevantes. No Reino Unido, a retirada de bombardeiros americanos da base de RAF Fairford gerou questionamentos sobre segurança, enquanto a França enfrenta protestos estudantis que resultaram em centenas de prisões e um adolescente ferido. A Espanha convocou eleições antecipadas após protestos por moradia, e a Bósnia realizou eleições com vitória de partidos nacionalistas. No Oriente Médio, o governo iemenita afirma ter assegurado o estreito de Bab al-Mandab, e há relatos de ataques a instalações da Aramco. A Rússia continua sua campanha na Ucrânia, com condenação de ataques a navios no Mar Negro. Na Ásia, a China e os EUA mantêm tensões após a cúpula Xi-Trump, com foco em Taiwan e tecnologia. O mercado de energia permanece volátil, com preocupações sobre estoques de petróleo e fluxos no Estreito de Ormuz. No Brasil, a vitória de Flávio Bolsonaro no primeiro turno das eleições presidenciais adiciona incerteza política. Não houve novidades materiais em alguns tópicos, que foram mantidos por relevância contínua.",
+  "disclaimer": "Este material é informativo e não constitui recomendação de investimento ou de qualquer outra natureza. As informações são baseadas em fontes públicas e não refletem necessariamente a opinião do veículo.",
   "confidence": {
     "overall": "media",
-    "nota": "Os fatos centrais vêm de veículos primários com cobertura própria (BBC, Al Jazeera, Deutsche Welle, ONU News, South China Morning Post) e os dados de energia de fontes de mercado e de análise (OilPrice, CSIS, CFR). Fluxo, frete e projeção de oferta são estimativas publicadas, não dado oficial. Níveis de mercado coletados no fechamento de 11/09/2026. Sem probabilidades numéricas em nenhuma tese."
+    "nota": "A confiança é média devido à dependência de fontes primárias e à ausência de confirmação independente em alguns eventos. Alguns tópicos não apresentaram novidades materiais na semana, mas foram mantidos por sua relevância contínua."
   },
   "themes": [
     {
-      "id": "oleoduto-leste-oeste-saudita",
-      "titulo": "Oleoduto leste-oeste saudita fechado após ataque com drones do Iraque",
-      "nivel_risco": "critico",
-      "confianca": "alta",
-      "fato": "A Arábia Saudita fechou o oleoduto leste-oeste após ataque com drones lançados do Iraque. É a rota que contorna o Estreito de Hormuz e escoa o petróleo do Golfo para o Mar Vermelho, e a análise do setor descreve esse desvio como crítico e sob ameaça. A IEA projeta queda de 5,7 milhões de bpd na oferta global, com a recuperação do Golfo empurrada para 2027.",
-      "impacto_mercados": "O petróleo passou de US$ 100 e o frete de superpetroleiros atingiu US$ 800 mil por dia, pressionando custo logístico, inflação de energia e o dilema dos bancos centrais na semana de decisões.",
-      "proximo_gatilho": "Restauração da capacidade do oleoduto e resposta militar à origem do ataque.",
-      "sources": [
-        {
-          "url": "https://www.bbc.co.uk/news/articles/c62m933465eo?at_medium=RSS&at_campaign=rss",
-          "titulo": "Saudi Arabia shuts key oil pipeline after drone attack launched from Iraq",
-          "veiculo": "BBC News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://oilprice.com/Latest-Energy-News/World-News/Drone-Strikes-Hit-Saudi-Arabias-Vital-East-West-Oil-Pipeline.html",
-          "titulo": "Drone Strikes Hit Saudi Arabia’s Vital East-West Oil Pipeline",
-          "veiculo": "OilPrice",
-          "data": "2026-09-12",
-          "tipo": "mercado"
-        },
-        {
-          "url": "https://oilprice.com/Energy/Crude-Oil/Saudi-Arabias-Critical-Oil-Bypass-Comes-Under-Threat.html",
-          "titulo": "Saudi Arabia’s Critical Oil Bypass Comes Under Threat",
-          "veiculo": "OilPrice",
-          "data": "2026-09-12",
-          "tipo": "mercado"
-        },
-        {
-          "url": "https://oilprice.com/Latest-Energy-News/World-News/IEA-Sees-57-Million-Bpd-Oil-Supply-Plunge-as-Gulf-Recovery-Slips-to-2027.html",
-          "titulo": "IEA Sees 5.7 Million Bpd Oil Supply Plunge as Gulf Recovery Slips to 2027",
-          "veiculo": "OilPrice",
-          "data": "2026-09-12",
-          "tipo": "mercado"
-        }
-      ]
-    },
-    {
-      "id": "bab-al-mandeb-houthis",
-      "titulo": "Houthis avançam sobre Bab al-Mandeb e apertam o Mar Vermelho",
-      "nivel_risco": "critico",
-      "confianca": "alta",
-      "fato": "Os houthis reivindicaram avanço relevante no Iêmen e estreitaram o controle da rota de navegação do Mar Vermelho, com combates renovados no sudoeste do país, aumento do deslocamento de civis e reunião de emergência do Conselho de Segurança da ONU sobre o Iêmen. A leitura da BBC é que o avanço rápido pode abrir uma nova dimensão na guerra com o Irã.",
-      "impacto_mercados": "Risco de interrupção em Bab al-Mandeb ameaça o fluxo de petróleo do Golfo, encarece o frete e eleva o prêmio de seguro marítimo, com efeito direto em commodities e inflação.",
-      "proximo_gatilho": "Escalada militar houthi ou resposta naval internacional no estreito.",
-      "sources": [
-        {
-          "url": "https://www.bbc.co.uk/news/articles/c23x72yx2rvo?at_medium=RSS&at_campaign=rss",
-          "titulo": "Houthis claim major advance in Yemen and tighten grip on Red Sea shipping lane",
-          "veiculo": "BBC News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.bbc.co.uk/news/articles/c3v4zgzr1kxo?at_medium=RSS&at_campaign=rss",
-          "titulo": "Lightning Houthi advance in Yemen may bring dangerous new dimension to Iran war",
-          "veiculo": "BBC News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://oilprice.com/Energy/Energy-General/Houthis-Advance-on-Bab-al-Mandeb-as-Saudi-Oil-Route-Comes-Under-Threat.html",
-          "titulo": "Houthis Advance on Bab al-Mandeb as Saudi Oil Route Comes Under Threat",
-          "veiculo": "OilPrice",
-          "data": "2026-09-12",
-          "tipo": "mercado"
-        },
-        {
-          "url": "https://news.un.org/feed/view/en/story/2026/09/1168309",
-          "titulo": "Security Council LIVE: Fresh attacks prompt emergency meeting on Yemen",
-          "veiculo": "ONU News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.aljazeera.com/news/2026/9/12/fighting-re-erupts-in-yemen-and-civilians-are-paying-the-price?traffic_source=rss",
-          "titulo": "Fighting re-erupts in Yemen and civilians are paying the price",
-          "veiculo": "Al Jazeera",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        }
-      ]
-    },
-    {
-      "id": "brics-nova-delhi",
-      "titulo": "Cúpula do BRICS em Nova Délhi e a disputa pela ordem global",
-      "nivel_risco": "elevado",
-      "confianca": "media",
-      "fato": "A cúpula do BRICS abriu em Nova Délhi em meio a guerras, tensões globais e tarifas comerciais. Xi Jinping pediu que o bloco desempenhe seu papel na paz do Oriente Médio, e analistas apontam divisões internas que podem frear o avanço do grupo depois de 20 anos de expansão.",
-      "impacto_mercados": "A articulação de um multilateralismo alternativo tende a fragmentar sistemas de pagamento e fluxos comerciais, com efeito de médio prazo sobre o dólar e sobre prêmios de risco em emergentes.",
-      "proximo_gatilho": "Declaração final da cúpula e acordos bilaterais sobre energia e moedas.",
-      "sources": [
-        {
-          "url": "https://www.aljazeera.com/news/2026/9/12/brics-summit-opens-in-new-delhi-amid-wars-global-tensions-tariffs?traffic_source=rss",
-          "titulo": "BRICS summit opens in New Delhi amid wars, global tensions, tariffs",
-          "veiculo": "Al Jazeera",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.scmp.com/news/china/diplomacy/article/3367303/chinese-leader-xi-urges-brics-play-its-due-role-bringing-peace-middle-east?utm_source=rss_feed",
-          "titulo": "Chinese leader Xi urges Brics to play its ‘due role’ in bringing peace to Middle East",
-          "veiculo": "South China Morning Post",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.scmp.com/news/china/diplomacy/article/3367252/internal-splits-threaten-slow-brics-progress-bloc-looks-back-20-years-growth?utm_source=rss_feed",
-          "titulo": "Internal splits threaten to slow Brics’ progress as bloc looks back on 20 years of growth",
-          "veiculo": "South China Morning Post",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        }
-      ]
-    },
-    {
-      "id": "russia-ucrania-inverno",
-      "titulo": "Rússia amplia ataques e drones chegam à Moldávia e à Romênia",
-      "nivel_risco": "elevado",
-      "confianca": "alta",
-      "fato": "A Rússia atingiu navios cargueiros e usinas siderúrgicas na Ucrânia, e drones russos chegaram à Moldávia e à Romênia. A ONU afirma que os ataques a Chernobyl jogam com a segurança de milhões de pessoas e que a Ucrânia enfrenta o inverno mais duro desde a invasão em larga escala.",
-      "impacto_mercados": "Instabilidade energética na Europa e contágio do conflito para países da OTAN no Leste mantêm o prêmio de risco elevado e sustentam o gasto de defesa.",
-      "proximo_gatilho": "Encontro proposto por Zelenskyy com Putin no G20 em Miami e as conversas dos enviados Witkoff e Kushner.",
-      "sources": [
-        {
-          "url": "https://www.aljazeera.com/news/2026/9/12/russia-strikes-cargo-vessels-steel-plants-across-ukraine?traffic_source=rss",
-          "titulo": "Russia strikes cargo vessels, steel plants across Ukraine",
-          "veiculo": "Al Jazeera",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.bbc.co.uk/news/articles/cwyz59yyqk4o?at_medium=RSS&at_campaign=rss",
-          "titulo": "Ukraine faces 'toughest winter' since Russia's full-scale invasion, UN official tells BBC",
-          "veiculo": "BBC News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://news.un.org/feed/view/en/story/2026/09/1168312",
-          "titulo": "Ukraine: Drone attacks on Chornobyl are ‘gambling with the safety of millions of people’",
-          "veiculo": "ONU News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.dw.com/en/russia-s-drone-war-comes-to-moldova-and-romania/a-79239591?maca=en-rss-en-eu-2092-rdf",
-          "titulo": "Russia&apos;s drone war comes to Moldova and Romania",
-          "veiculo": "Deutsche Welle",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.dw.com/en/dw-exclusive-zelenskyy-offers-to-meet-putin-at-g20-in-miami/a-79241703?maca=en-rss-en-eu-2092-rdf",
-          "titulo": "DW exclusive: Zelenskyy offers to meet Putin at G20 in Miami",
-          "veiculo": "Deutsche Welle",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.dw.com/en/us-envoys-witkoff-and-kushner-hold-ukraine-talks-after-meeting-putin/a-79054779?maca=en-rss-en-eu-2092-rdf",
-          "titulo": "US envoys Witkoff and Kushner hold Ukraine talks after meeting Putin",
-          "veiculo": "Deutsche Welle",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        }
-      ]
-    },
-    {
-      "id": "11-de-setembro-contraterrorismo",
-      "titulo": "25 anos do 11 de setembro e o contraterrorismo na era de IA e drones",
+      "id": "T2",
+      "titulo": "Instabilidade política na Espanha após eleições antecipadas",
+      "fato": "O primeiro-ministro espanhol convocou eleições antecipadas após protestos por moradia e rejeição de projeto de lei no parlamento.",
+      "impacto_mercados": "Incerteza política pode pressionar títulos espanhóis e o euro, com possíveis efeitos sobre o setor imobiliário.",
+      "proximo_gatilho": "Pesquisas eleitorais e definição de alianças políticas.",
       "nivel_risco": "moderado",
       "confianca": "alta",
-      "fato": "Os Estados Unidos marcaram 25 anos dos ataques de 11 de setembro, com debates sobre o que a inteligência sabia antes, o efeito da Guerra ao Terror na política europeia e a adaptação do contraterrorismo à IA e aos drones. O Conselho de Segurança tratou do tema, e um relatório da ONU aponta que a propaganda terrorista avança mais rápido que os esforços globais de contenção.",
-      "impacto_mercados": "Pressão por mais gasto em defesa, vigilância e tecnologia, com risco regulatório crescente para empresas de IA.",
-      "proximo_gatilho": "Novas políticas de contraterrorismo com foco em IA e drones.",
       "sources": [
         {
-          "url": "https://www.bbc.co.uk/news/articles/clyjqvjzlwno?at_medium=RSS&at_campaign=rss",
-          "titulo": "'Never, ever forget' - America marks 25th anniversary of 9/11 attacks",
+          "url": "https://www.bbc.co.uk/news/articles/cmdx39k49xw0o?at_medium=RSS&at_campaign=rss",
+          "titulo": "Spanish PM Sánchez calls early election after housing protests",
           "veiculo": "BBC News",
-          "data": "2026-09-12",
+          "data": "2026-10-05",
           "tipo": "primaria"
         },
         {
-          "url": "https://news.un.org/feed/view/en/story/2026/09/1168318",
-          "titulo": "Security Council LIVE: Ambassadors mark 9/11 with counter-terrorism push on AI and drones",
-          "veiculo": "ONU News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://news.un.org/feed/view/en/story/2026/09/1168313",
-          "titulo": "Terrorist propaganda is outpacing global efforts to stop it, UN report finds",
-          "veiculo": "ONU News",
-          "data": "2026-09-12",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.csis.org/analysis",
-          "titulo": "Adapting to the New Terrorism Landscape 25 Years After 9/11",
-          "veiculo": "CSIS",
-          "data": "2026-09-12",
-          "tipo": "analise"
-        },
-        {
-          "url": "https://www.aljazeera.com/opinions/2026/9/12/9-11-at-25-how-the-war-on-terror-helped-mainstream-europes-far?traffic_source=rss",
-          "titulo": "9/11 at 25: How the ‘War on Terror’ helped mainstream Europe’s far right",
+          "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/spain-calls-snap-election-amid-housing-crisis?traffic_source=rss",
+          "titulo": "Spain calls snap election amid housing crisis",
           "veiculo": "Al Jazeera",
-          "data": "2026-09-12",
+          "data": "2026-10-05",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.dw.com/en/spain-s-parliament-rejects-housing-bill-as-protests-continue/a-79522683?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Spain's parliament rejects housing bill as protests continue",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-10-05",
           "tipo": "primaria"
         }
       ]
     },
     {
-      "id": "eua-china-taiwan-xi",
-      "titulo": "EUA e China: espionagem, Taiwan e a visita de Xi à Casa Branca",
-      "nivel_risco": "elevado",
-      "confianca": "media",
-      "fato": "A China exigiu que os Estados Unidos parem toda a espionagem e ameaçou retaliação. A disputa sobre IA e Taiwan domina a preparação da visita de Xi Jinping à Casa Branca, enquanto a imprensa estatal afirma que Washington quer Taiwan como bucha de canhão e empresas chinesas de IA evitaram uma delegação americana por receio de sanções.",
-      "impacto_mercados": "Risco de novas sanções tecnológicas e tarifárias amplia a volatilidade cambial e reforça a fragmentação de cadeias de semicondutores e terras raras.",
-      "proximo_gatilho": "Desfecho da visita de Xi a Washington e novos movimentos em torno de Taiwan.",
+      "id": "T3",
+      "titulo": "Eleições na Bósnia e Herzegovina reforçam nacionalismo",
+      "fato": "Partidos nacionalistas lideram os resultados das eleições na Bósnia e Herzegovina, com novas medidas contra fraude eleitoral.",
+      "impacto_mercados": "Risco de estagnação política e atraso em reformas pró-UE, afetando investimentos na região dos Bálcãs.",
+      "proximo_gatilho": "Formação de governo e reação da UE.",
+      "nivel_risco": "moderado",
+      "confianca": "alta",
       "sources": [
         {
-          "url": "https://www.scmp.com/news/china/diplomacy/article/3367300/china-urges-us-stop-all-spying-or-face-retaliation-slams-gangster-logic?utm_source=rss_feed",
-          "titulo": "China urges US to ‘stop all spying’ or face retaliation, slams ‘gangster logic’",
-          "veiculo": "South China Morning Post",
-          "data": "2026-09-12",
+          "url": "https://www.aljazeera.com/news/2026/10/5/nationalist-conservative-parties-enjoy-a-boost-in-bosnia-and-herzegovina?traffic_source=rss",
+          "titulo": "Bosnia and Herzegovina elections: Return to a nationalist political order?",
+          "veiculo": "Al Jazeera",
+          "data": "2026-10-05",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.scmp.com/news/china/diplomacy/article/3367242/ai-fight-shadows-final-preparations-xi-jinpings-white-house-visit?utm_source=rss_feed",
-          "titulo": "AI fight shadows final preparations for Xi Jinping’s White House visit to meet Donald Trump",
-          "veiculo": "South China Morning Post",
-          "data": "2026-09-12",
+          "url": "https://www.dw.com/en/bosnia-election-new-steps-to-prevent-electoral-fraud-but-nationalist-parties-remain-on-top/a-79544717?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Bosnia election: New steps to prevent electoral fraud, but nationalist parties remain on top",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-10-05",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.scmp.com/news/china/politics/article/3367283/us-wants-taiwan-serve-cannon-fodder-against-mainland-china-state-broadcaster-cctv?utm_source=rss_feed",
-          "titulo": "US wants Taiwan to ‘serve as cannon fodder’ against mainland China: state media",
-          "veiculo": "South China Morning Post",
-          "data": "2026-09-12",
+          "url": "https://www.dw.com/en/nationalists-top-bosnia-herzegovina-s-divisive-election/a-79535336?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Nationalists top Bosnia-Herzegovina's divisive election",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-10-05",
+          "tipo": "primaria"
+        }
+      ]
+    },
+    {
+      "id": "T4",
+      "titulo": "Tensões no Mar Negro após ataque russo a navio com milho",
+      "fato": "O presidente ucraniano condenou um ataque russo a um navio que transportava milho no Mar Negro.",
+      "impacto_mercados": "Risco para exportações de grãos da Ucrânia, com possível alta nos preços de commodities agrícolas e pressão sobre seguros marítimos.",
+      "proximo_gatilho": "Reação internacional e possível escalada de sanções contra a Rússia.",
+      "nivel_risco": "elevado",
+      "confianca": "alta",
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cr0j0w3p8453o?at_medium=RSS&at_campaign=rss",
+          "titulo": "Zelensky condemns 'horrific' Russian strike on boat carrying corn in Black Sea",
+          "veiculo": "BBC News",
+          "data": "2026-10-05",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
-          "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
-          "veiculo": "South China Morning Post",
-          "data": "2026-09-12",
+          "url": "https://news.un.org/feed/view/en/story/2026/10/1168513",
+          "titulo": "Ukraine war ‘a human rights catastrophe’ that must end, says Türk",
+          "veiculo": "ONU News",
+          "data": "2026-10-05",
           "tipo": "primaria"
         },
         {
           "url": "https://www.csis.org/analysis",
-          "titulo": "China Continues to Exploit Rare Earth Chokepoints",
+          "titulo": "The New Sanctioning Russia Act: Optics for Now, Leverage for Later",
           "veiculo": "CSIS",
-          "data": "2026-09-12",
+          "data": "2026-10-05",
           "tipo": "analise"
+        }
+      ]
+    },
+    {
+      "id": "T5",
+      "titulo": "Ataques a instalações petrolíferas na Arábia Saudita elevam risco no Oriente Médio",
+      "fato": "Houthis reivindicaram ataque a instalação da Aramco em Riad, e houve relato de possível incêndio em refinaria saudita.",
+      "impacto_mercados": "Aumento da volatilidade nos preços do petróleo e gás, com prêmio de risco geopolítico.",
+      "proximo_gatilho": "Confirmação de danos e resposta saudita.",
+      "nivel_risco": "elevado",
+      "confianca": "media",
+      "sources": [
+        {
+          "url": "https://oilprice.com/Latest-Energy-News/World-News/Houthis-Claim-Strike-on-Aramco-Facility-in-Riyadh-as-Yemen-Fighting-Escalates.html",
+          "titulo": "Houthis Claim Strike on Aramco Facility in Riyadh as Yemen Fighting Escalates",
+          "veiculo": "OilPrice",
+          "data": "2026-10-05",
+          "tipo": "mercado"
+        },
+        {
+          "url": "https://oilprice.com/Latest-Energy-News/World-News/Possible-Fire-Reported-at-Saudi-Refinery-as-Attack-Claims-Circulate.html",
+          "titulo": "Possible Fire Reported at Saudi Refinery as Attack Claims Circulate",
+          "veiculo": "OilPrice",
+          "data": "2026-10-05",
+          "tipo": "mercado"
+        },
+        {
+          "url": "https://news.un.org/feed/view/en/story/2026/10/1168509",
+          "titulo": "Escalating fighting in Yemen deepens food security crisis",
+          "veiculo": "ONU News",
+          "data": "2026-10-05",
+          "tipo": "primaria"
         }
       ]
     }
   ],
   "regions": {
     "panorama_global": {
-      "titulo": "Panorama global",
-      "resumo": "A ordem internacional em revisão, com guerra no Golfo, atrito entre EUA e China e disputa por foros multilaterais.",
-      "material": true,
+      "titulo": "Panorama Global",
+      "resumo": "A semana é marcada por tensões geopolíticas em várias frentes: Europa com eleições e protestos, Oriente Médio com conflitos e ataques, Ásia com tensões China-EUA, e Rússia-Ucrânia com ataques no Mar Negro. O mercado de energia permanece volátil.",
       "teses": [
         {
-          "fato": "Analistas descrevem a guerra em curso como fator que reescreve a ordem mundial, enquanto o secretário-geral da ONU pede investimento em paz e o CSIS argumenta que Hormuz precisa de um arranjo coletivo, não de um condomínio de potências.",
-          "interpretacao": "As instituições multilaterais perdem capacidade de arbitrar ao mesmo tempo em que foros alternativos ganham peso, o que alonga o horizonte de incerteza para comércio e energia.",
-          "cenario_base": "Os conflitos regionais seguem contidos em suas áreas, com custo de energia elevado e negociação caso a caso.",
-          "risco_alternativo": "Sobreposição de crises, com o Golfo e a Ásia Oriental pressionados ao mesmo tempo e sem canal de desescalada.",
+          "fato": "Múltiplos focos de instabilidade geopolítica simultâneos.",
+          "interpretacao": "O ambiente global é de fragmentação e competição entre grandes potências, com impactos sobre comércio e energia.",
+          "cenario_base": "Manutenção das tensões atuais sem escalada generalizada.",
+          "risco_alternativo": "Escalada em uma das frentes (Oriente Médio ou Ucrânia) levando a choque de commodities.",
           "gatilhos": [
-            "Declaração final da cúpula do BRICS",
-            "Reunião de emergência do Conselho de Segurança sobre o Iêmen"
+            "Ataques a infraestrutura energética",
+            "Eleições em países-chave",
+            "Sanções econômicas"
           ],
           "confianca": "media",
           "sources": [
             {
               "url": "https://www.csis.org/analysis",
-              "titulo": "Is the War Rewriting the World Order? | The High Top",
+              "titulo": "The State of Global Development: Key Takeaways from UNGA 2026",
               "veiculo": "CSIS",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "analise"
             },
             {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168301",
-              "titulo": "Guterres urges leaders to invest in peace as conflicts deepen",
+              "url": "https://news.un.org/feed/view/en/story/2026/10/1168512",
+              "titulo": "Collective action needed to tackle global information crisis, UN-led dialogue hears",
               "veiculo": "ONU News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
-            },
-            {
-              "url": "https://www.csis.org/analysis",
-              "titulo": "Hormuz Needs a Community, Not a Condominium",
-              "veiculo": "CSIS",
-              "data": "2026-09-12",
-              "tipo": "analise"
             }
           ]
         }
@@ -321,47 +180,59 @@
     },
     "eua": {
       "titulo": "Estados Unidos",
-      "resumo": "Casa Branca na defensiva energética, memória do 11 de setembro e preço do combustível no radar eleitoral.",
-      "material": true,
+      "resumo": "Os EUA retiraram bombardeiros da base RAF Fairford no Reino Unido, gerando questionamentos sobre segurança. Além disso, o presidente Trump escolheu um chefe de espionagem para liderar uma nova força-tarefa de IA, e o Pentágono parou de usar ferramentas de IA da Anthropic após blacklist.",
       "teses": [
         {
-          "fato": "A Casa Branca avalia acionar a Lei de Produção de Defesa com as refinarias operando no limite, segundo o setor de energia. O país marcou os 25 anos do 11 de setembro, e há projeção de gasolina a US$ 5 antes das eleições de meio de mandato.",
-          "interpretacao": "Energia cara entra na conta eleitoral e amplia a chance de medidas intervencionistas, o que adiciona ruído regulatório ao refino e à distribuição.",
-          "cenario_base": "Uso pontual de instrumentos de emergência e retórica dura, sem racionamento.",
-          "risco_alternativo": "Intervenção mais ampla na cadeia de refino e combustível, com efeito inflacionário de segunda ordem.",
+          "fato": "Retirada de bombardeiros dos EUA da base RAF Fairford.",
+          "interpretacao": "Pode indicar reavaliação de prioridades estratégicas ou preocupações de segurança.",
+          "cenario_base": "Realocação temporária sem impacto duradouro.",
+          "risco_alternativo": "Percepção de enfraquecimento do compromisso dos EUA com a segurança europeia.",
           "gatilhos": [
-            "Anúncio sobre a Lei de Produção de Defesa",
-            "Calendário oficial do FOMC"
+            "Declarações oficiais sobre a retirada",
+            "Movimentações militares adicionais"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://oilprice.com/Latest-Energy-News/World-News/White-House-Weighs-Defense-Production-Act-as-US-Refineries-Maxed-Out.html",
-              "titulo": "White House Weighs Defense Production Act as U.S. Refineries Maxed Out",
-              "veiculo": "OilPrice",
-              "data": "2026-09-12",
-              "tipo": "mercado"
-            },
-            {
-              "url": "https://www.bbc.co.uk/news/articles/clyjqvjzlwno?at_medium=RSS&at_campaign=rss",
-              "titulo": "'Never, ever forget' - America marks 25th anniversary of 9/11 attacks",
+              "url": "https://www.bbc.co.uk/news/articles/cmy56yvv1kxxo?at_medium=RSS&at_campaign=rss",
+              "titulo": "No10 insists UK military base RAF Fairford is safe after US withdraws bombers",
               "veiculo": "BBC News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://oilprice.com/Energy/Energy-General/Jeff-Currie-Sees-5-Gasoline-Before-Midterms.html",
-              "titulo": "Jeff Currie Sees $5 Gasoline Before Midterms",
-              "veiculo": "OilPrice",
-              "data": "2026-09-12",
-              "tipo": "mercado"
+              "url": "https://www.reuters.com/world/uk/us-removes-b-1-bombers-uk-base-amid-security-concerns-2026-10-04/",
+              "titulo": "Trump says US bombers moved from UK due to threats",
+              "veiculo": "Reuters",
+              "data": "2026-10-05",
+              "tipo": "secundaria"
+            }
+          ]
+        },
+        {
+          "fato": "Trump escolhe chefe de espionagem para liderar força-tarefa de IA.",
+          "interpretacao": "Indica prioridade crescente da IA na segurança nacional.",
+          "cenario_base": "Desenvolvimento de políticas de IA com foco em defesa.",
+          "risco_alternativo": "Uso de IA para vigilância ou ações ofensivas, gerando tensões.",
+          "gatilhos": [
+            "Anúncios de políticas de IA",
+            "Reações da indústria"
+          ],
+          "confianca": "media",
+          "sources": [
+            {
+              "url": "https://www.bbc.co.uk/news/articles/cqj6jenp26zyo?at_medium=RSS&at_campaign=rss",
+              "titulo": "Trump chooses top spy boss to run new AI taskforce",
+              "veiculo": "BBC News",
+              "data": "2026-10-05",
+              "tipo": "primaria"
             },
             {
-              "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-              "titulo": "Board of Governors of the Federal Reserve System",
-              "veiculo": "Federal Reserve",
-              "data": "2026-09-12",
-              "tipo": "primaria"
+              "url": "https://apnews.com/article/b8689ea07de9102a52bd1cd2049b5901",
+              "titulo": "Trump names national intelligence director Jay Clayton to lead a new federal AI task force",
+              "veiculo": "Associated Press",
+              "data": "2026-10-05",
+              "tipo": "secundaria"
             }
           ]
         }
@@ -369,55 +240,73 @@
     },
     "europa": {
       "titulo": "Europa",
-      "resumo": "Extrema direita em alta na Alemanha, eleição apertada na Suécia e pressão de juros no Reino Unido.",
-      "material": true,
+      "resumo": "A Espanha convocou eleições antecipadas após protestos por moradia. A França enfrenta protestos estudantis com centenas de prisões e um adolescente ferido. A Bósnia realizou eleições com vitória de nacionalistas. A Letônia foi às urnas com preocupações sobre a Rússia. Cinco estados da UE planejam centro de deportação na África.",
       "teses": [
         {
-          "fato": "A vitória da AfD na Saxônia-Anhalt gerou ansiedade na comunidade turca e preocupação na economia alemã. A Suécia foi às urnas em disputa apertada, e a votação na Bósnia ficou marcada pelo funeral de Ratko Mladic com honras militares em Belgrado. No Reino Unido, os juros podem subir até quatro vezes no próximo ano.",
-          "interpretacao": "Fragmentação política e fragilidade fiscal reduzem a capacidade europeia de responder de forma coordenada a um choque de energia.",
-          "cenario_base": "Coalizões difíceis e ajuste fiscal gradual, com prêmio de risco estável.",
-          "risco_alternativo": "Governo instável em Berlim combinado a juro alto em Londres pressiona o euro e amplia o spread da periferia.",
+          "fato": "Espanha convoca eleições antecipadas após protestos por moradia.",
+          "interpretacao": "Crise política pode levar a mudanças de governo e políticas habitacionais.",
+          "cenario_base": "Eleições ocorrem sem incidentes graves, com possível mudança de governo.",
+          "risco_alternativo": "Aumento da instabilidade social e econômica.",
           "gatilhos": [
-            "Desdobramentos políticos da vitória da AfD na Saxônia-Anhalt",
-            "Resultado da eleição sueca",
-            "Definição da votação na Bósnia"
+            "Pesquisas eleitorais",
+            "Debates parlamentares"
           ],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
             {
-              "url": "https://www.dw.com/en/turks-in-germany-anxious-after-afd-wins-in-saxony-anhalt/a-79221764?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "Turks in Germany anxious after AfD wins in Saxony-Anhalt",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-09-12",
+              "url": "https://www.bbc.co.uk/news/articles/cmdx39k49xw0o?at_medium=RSS&at_campaign=rss",
+              "titulo": "Spanish PM Sánchez calls early election after housing protests",
+              "veiculo": "BBC News",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.dw.com/en/german-economy-frets-about-saxony-anhalt-election-results/a-79162871?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "German economy frets about Saxony-Anhalt election results",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.aljazeera.com/news/2026/9/12/sweden-heads-to-the-polls-whats-at-stake-in-the-knife-edge-election?traffic_source=rss",
-              "titulo": "Sweden heads to the polls: What’s at stake in the knife-edge election?",
+              "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/spain-calls-snap-election-amid-housing-crisis?traffic_source=rss",
+              "titulo": "Spain calls snap election amid housing crisis",
               "veiculo": "Al Jazeera",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.dw.com/en/ratko-mladic-s-funeral-casts-shadow-over-bosnia-and-herzegovina-vote/a-79189319?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "Ratko Mladic’s funeral casts shadow over Bosnia and Herzegovina vote",
+              "url": "https://www.dw.com/en/spain-s-parliament-rejects-housing-bill-as-protests-continue/a-79522683?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Spain's parliament rejects housing bill as protests continue",
               "veiculo": "Deutsche Welle",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
+              "tipo": "primaria"
+            }
+          ]
+        },
+        {
+          "fato": "Protestos estudantis na França resultam em centenas de prisões e adolescente ferido.",
+          "interpretacao": "Tensão social pode afetar estabilidade política e econômica.",
+          "cenario_base": "Protestos continuam, mas sem escalada significativa.",
+          "risco_alternativo": "Aumento da violência e paralisação de serviços públicos.",
+          "gatilhos": [
+            "Negociações entre governo e estudantes",
+            "Novas manifestações"
+          ],
+          "confianca": "alta",
+          "sources": [
+            {
+              "url": "https://www.bbc.co.uk/news/articles/c9zrdmxp4vy6o?at_medium=RSS&at_campaign=rss",
+              "titulo": "Teenager's hand blown off during confrontation between France school protesters and police",
+              "veiculo": "BBC News",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://oilprice.com/Energy/Energy-General/UK-Interest-Rates-Could-Rise-Four-Times-Over-the-Next-Year.html",
-              "titulo": "UK Interest Rates Could Rise Four Times Over the Next Year",
-              "veiculo": "OilPrice",
-              "data": "2026-09-12",
-              "tipo": "mercado"
+              "url": "https://www.dw.com/en/hundreds-of-french-schools-shut-teen-loses-hand-in-protests/a-79542656?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Hundreds of French schools shut, teen loses hand in protests",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-10-05",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.dw.com/en/france-hundreds-arrested-as-student-protests-escalate/a-79495633?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "France: Hundreds arrested as student protests escalate",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-10-05",
+              "tipo": "primaria"
             }
           ]
         }
@@ -425,54 +314,59 @@
     },
     "china_asia": {
       "titulo": "China e Ásia",
-      "resumo": "Pequim pressiona Washington, mantém Taiwan no centro e usa terras raras como alavanca.",
-      "material": true,
+      "resumo": "Após a cúpula Xi-Trump, as tensões entre China e EUA continuam, com foco em Taiwan e tecnologia. A França e a Alemanha propõem um mecanismo para cortar a China do mercado da UE. A China desenvolve tecnologia para extrair hidrogênio e urânio do mar. A Coreia do Sul planeja triplicar importações de petróleo canadense.",
       "teses": [
         {
-          "fato": "A China pediu que os Estados Unidos parem toda a espionagem e ameaçou retaliação, com a imprensa estatal afirmando que Washington quer Taiwan como bucha de canhão. A disputa sobre IA domina a preparação da visita de Xi Jinping à Casa Branca, e o CSIS aponta que Pequim segue explorando os gargalos de terras raras.",
-          "interpretacao": "Pequim mantém pressão em várias frentes ao mesmo tempo e usa o encontro presidencial como prazo para extrair concessões.",
-          "cenario_base": "A visita presidencial ocorre com acordos parciais, sem ruptura.",
-          "risco_alternativo": "Cancelamento ou esvaziamento do encontro, com escalada em Taiwan e novas restrições de tecnologia.",
+          "fato": "França e Alemanha propõem novo instrumento para cortar China do mercado da UE.",
+          "interpretacao": "Aumento da fragmentação comercial e tecnológica entre China e Ocidente.",
+          "cenario_base": "Discussões continuam sem implementação imediata.",
+          "risco_alternativo": "Escalada para uma guerra comercial aberta.",
           "gatilhos": [
-            "Visita de Xi Jinping à Casa Branca",
-            "Novas medidas sobre Taiwan"
+            "Decisões da UE",
+            "Retaliação chinesa"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://www.scmp.com/news/china/diplomacy/article/3367300/china-urges-us-stop-all-spying-or-face-retaliation-slams-gangster-logic?utm_source=rss_feed",
-              "titulo": "China urges US to ‘stop all spying’ or face retaliation, slams ‘gangster logic’",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3369828/france-germany-call-new-weapon-allowing-immediate-cut-china-eu-market?utm_source=rss_feed",
+              "titulo": "France, Germany call for new weapon allowing ‘immediate cut off’ of China from EU market",
               "veiculo": "South China Morning Post",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.scmp.com/news/china/diplomacy/article/3367242/ai-fight-shadows-final-preparations-xi-jinpings-white-house-visit?utm_source=rss_feed",
-              "titulo": "AI fight shadows final preparations for Xi Jinping’s White House visit to meet Donald Trump",
+              "url": "https://www.ft.com/content/4416101f-5072-4ee0-aa12-5b1daf25b31b",
+              "titulo": "Germany and France agree on last-resort tool against trade threats",
+              "veiculo": "Financial Times",
+              "data": "2026-10-06",
+              "tipo": "secundaria"
+            }
+          ]
+        },
+        {
+          "fato": "Especialistas de defesa dos EUA trabalharão dentro do quartel-general militar de Taiwan sob pacto reportado.",
+          "interpretacao": "Aumento da cooperação militar EUA-Taiwan, elevando tensões com a China.",
+          "cenario_base": "Cooperação limitada e não oficial.",
+          "risco_alternativo": "Resposta militar chinesa ou aumento da pressão diplomática.",
+          "gatilhos": [
+            "Declarações oficiais da China",
+            "Movimentações militares"
+          ],
+          "confianca": "media",
+          "sources": [
+            {
+              "url": "https://www.scmp.com/news/china/military/article/3369795/us-defence-experts-work-inside-taiwan-military-hq-under-reported-pact?utm_source=rss_feed",
+              "titulo": "US defence experts to work inside Taiwan military HQ under reported pact",
               "veiculo": "South China Morning Post",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.scmp.com/news/china/politics/article/3367283/us-wants-taiwan-serve-cannon-fodder-against-mainland-china-state-broadcaster-cctv?utm_source=rss_feed",
-              "titulo": "US wants Taiwan to ‘serve as cannon fodder’ against mainland China: state media",
-              "veiculo": "South China Morning Post",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
-              "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
-              "veiculo": "South China Morning Post",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.csis.org/analysis",
-              "titulo": "China Continues to Exploit Rare Earth Chokepoints",
-              "veiculo": "CSIS",
-              "data": "2026-09-12",
-              "tipo": "analise"
+              "url": "https://www.taipeitimes.com/News/taiwan/archives/2026/10/06/2003865473",
+              "titulo": "US defense experts to participate in meetings, war games in Taiwan joint assessment program",
+              "veiculo": "Taipei Times",
+              "data": "2026-10-06",
+              "tipo": "secundaria"
             }
           ]
         }
@@ -480,54 +374,39 @@
     },
     "oriente_medio": {
       "titulo": "Oriente Médio",
-      "resumo": "Golfo sob choque de energia, Iêmen em escalada e risco de expansão do conflito.",
-      "material": true,
+      "resumo": "O governo iemenita afirma ter assegurado o estreito de Bab al-Mandab, mas confrontos com Houthis continuam. Houthis reivindicaram ataque a instalação da Aramco em Riad. Netanyahu deu ultimato dramático aos eleitores. A situação em Gaza e Cisjordânia permanece tensa.",
       "teses": [
         {
-          "fato": "O oleoduto leste-oeste saudita foi fechado após ataque com drones lançados do Iraque, e os Emirados reavaliaram um campus de IA de 5 gigawatts depois de o Irã atingir ativos americanos na região. O Conselho de Segurança se reuniu às pressas sobre o Iêmen, e o acompanhamento do CFR segue tratando a região como o principal foco de conflito aberto.",
-          "interpretacao": "Infraestrutura energética e ativos de tecnologia no Golfo viraram alvo recíproco, o que amplia o custo econômico de cada escalada.",
-          "cenario_base": "Troca de ataques limitada, com o oleoduto voltando parcialmente e prêmio de energia ainda elevado.",
-          "risco_alternativo": "Fechamento prolongado da rota do Mar Vermelho combinado a ataques diretos a ativos americanos, levando o petróleo a patamar muito mais alto.",
+          "fato": "Governo iemenita diz ter 'assegurado' o estreito de Bab al-Mandab.",
+          "interpretacao": "Pode melhorar a segurança marítima, mas Houthis ainda representam ameaça.",
+          "cenario_base": "Controle parcial e ataques esporádicos.",
+          "risco_alternativo": "Escalada de ataques a navios, afetando comércio global.",
           "gatilhos": [
-            "Reabertura do oleoduto leste-oeste",
-            "Resposta dos Estados Unidos no Golfo"
+            "Novos ataques a navios",
+            "Reação internacional"
           ],
-          "confianca": "alta",
+          "confianca": "media",
           "sources": [
             {
-              "url": "https://www.bbc.co.uk/news/articles/c62m933465eo?at_medium=RSS&at_campaign=rss",
-              "titulo": "Saudi Arabia shuts key oil pipeline after drone attack launched from Iraq",
+              "url": "https://www.bbc.co.uk/news/articles/cw8rzd6lp0xpo?at_medium=RSS&at_campaign=rss",
+              "titulo": "Yemeni government forces say they have 'secured' Bab al-Mandab Strait",
               "veiculo": "BBC News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://oilprice.com/Latest-Energy-News/World-News/Drone-Strikes-Hit-Saudi-Arabias-Vital-East-West-Oil-Pipeline.html",
-              "titulo": "Drone Strikes Hit Saudi Arabia’s Vital East-West Oil Pipeline",
-              "veiculo": "OilPrice",
-              "data": "2026-09-12",
-              "tipo": "mercado"
+              "url": "https://www.aljazeera.com/news/2026/10/5/yemeni-govt-forces-aim-for-sanaa-but-houthi-defeat-will-be-a-challenge?traffic_source=rss",
+              "titulo": "Yemeni gov’t forces aim for Sanaa, but Houthi defeat will be a challenge",
+              "veiculo": "Al Jazeera",
+              "data": "2026-10-05",
+              "tipo": "primaria"
             },
             {
-              "url": "https://oilprice.com/Latest-Energy-News/World-News/UAE-Rethinks-5-Gigawatt-AI-Campus-After-Iran-Targets-US-Assets-in-Gulf.html",
-              "titulo": "UAE Rethinks 5-Gigawatt AI Campus After Iran Targets US Assets in Gulf",
-              "veiculo": "OilPrice",
-              "data": "2026-09-12",
-              "tipo": "mercado"
-            },
-            {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168309",
-              "titulo": "Security Council LIVE: Fresh attacks prompt emergency meeting on Yemen",
+              "url": "https://news.un.org/feed/view/en/story/2026/10/1168509",
+              "titulo": "Escalating fighting in Yemen deepens food security crisis",
               "veiculo": "ONU News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
-            },
-            {
-              "url": "https://www.cfr.org/global-conflict-tracker",
-              "titulo": "Middle East and North Africa",
-              "veiculo": "CFR",
-              "data": "2026-09-12",
-              "tipo": "analise"
             }
           ]
         }
@@ -535,101 +414,78 @@
     },
     "russia_ucrania": {
       "titulo": "Rússia e Ucrânia",
-      "resumo": "Ataques a infraestrutura civil e portuária, drones em países vizinhos e um inverno crítico.",
-      "material": true,
+      "resumo": "A Ucrânia condenou ataque russo a navio com milho no Mar Negro. A ONU classificou a guerra como catástrofe de direitos humanos. A Ucrânia e a Coreia do Sul divergem sobre transferência de prisioneiros norte-coreanos. Sanções contra a Rússia continuam em discussão.",
       "teses": [
         {
-          "fato": "A Rússia atingiu navios cargueiros e usinas siderúrgicas na Ucrânia, drones russos chegaram à Moldávia e à Romênia, e a ONU alerta que ataques a Chernobyl comprometem a segurança de milhões de pessoas. Putin negou rumores de nova mobilização, e os enviados Witkoff e Kushner retomaram conversas após encontro com Putin.",
-          "interpretacao": "O conflito se desloca para infraestrutura econômica e para o espaço aéreo de países vizinhos, o que aumenta a chance de incidente envolvendo a OTAN.",
-          "cenario_base": "Guerra de desgaste com ataques a infraestrutura e negociação intermitente.",
-          "risco_alternativo": "Incidente envolvendo país da OTAN que force resposta coletiva e reforce o pacote de sanções.",
+          "fato": "Ataque russo a navio com milho no Mar Negro.",
+          "interpretacao": "Risco para exportações de grãos e segurança marítima.",
+          "cenario_base": "Ataques continuam, mas sem interrupção total das exportações.",
+          "risco_alternativo": "Bloqueio de portos e aumento dos preços de alimentos.",
           "gatilhos": [
-            "Encontro proposto por Zelenskyy com Putin no G20 em Miami",
-            "Conversas Witkoff-Kushner"
+            "Novos ataques",
+            "Negociações internacionais"
           ],
           "confianca": "alta",
           "sources": [
             {
-              "url": "https://www.aljazeera.com/news/2026/9/12/russia-strikes-cargo-vessels-steel-plants-across-ukraine?traffic_source=rss",
-              "titulo": "Russia strikes cargo vessels, steel plants across Ukraine",
-              "veiculo": "Al Jazeera",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.bbc.co.uk/news/articles/cwyz59yyqk4o?at_medium=RSS&at_campaign=rss",
-              "titulo": "Ukraine faces 'toughest winter' since Russia's full-scale invasion, UN official tells BBC",
+              "url": "https://www.bbc.co.uk/news/articles/cr0j0w3p8453o?at_medium=RSS&at_campaign=rss",
+              "titulo": "Zelensky condemns 'horrific' Russian strike on boat carrying corn in Black Sea",
               "veiculo": "BBC News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168312",
-              "titulo": "Ukraine: Drone attacks on Chornobyl are ‘gambling with the safety of millions of people’",
+              "url": "https://news.un.org/feed/view/en/story/2026/10/1168513",
+              "titulo": "Ukraine war ‘a human rights catastrophe’ that must end, says Türk",
               "veiculo": "ONU News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.dw.com/en/putin-rejects-mobilization-rumors-many-russians-unconvinced/a-79193386?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "Putin rejects mobilization rumors, many Russians unconvinced",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.dw.com/en/us-envoys-witkoff-and-kushner-hold-ukraine-talks-after-meeting-putin/a-79054779?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "US envoys Witkoff and Kushner hold Ukraine talks after meeting Putin",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-09-12",
-              "tipo": "primaria"
+              "url": "https://www.csis.org/analysis",
+              "titulo": "The New Sanctioning Russia Act: Optics for Now, Leverage for Later",
+              "veiculo": "CSIS",
+              "data": "2026-10-05",
+              "tipo": "analise"
             }
           ]
         }
       ]
     },
     "energia_commodities": {
-      "titulo": "Energia e commodities",
-      "resumo": "Petróleo acima de US$ 100, frete recorde e corte de oferta projetado pela IEA.",
-      "material": true,
+      "titulo": "Energia e Commodities",
+      "resumo": "Preços do petróleo voláteis devido a ataques no Oriente Médio e preocupações com estoques. Aramco alerta para estoques 'assustadoramente baixos'. Fluxos de LNG no Estreito de Ormuz ainda caem mais de 75%. G7 anunciou liberação de 100 milhões de barris. Japão descarta mais liberações. Vendas de veículos elétricos na UE atingem recorde.",
       "teses": [
         {
-          "fato": "O petróleo ultrapassou US$ 100 com o ataque ao oleoduto saudita, o frete de superpetroleiros chegou a US$ 800 mil por dia e a IEA projeta queda de 5,7 milhões de bpd na oferta mundial, com recuperação do Golfo apenas em 2027. A contagem de plataformas nos Estados Unidos subiu no mesmo movimento.",
-          "interpretacao": "O choque é de oferta e de logística ao mesmo tempo, combinação que costuma produzir inflação mais persistente do que um choque de demanda.",
-          "cenario_base": "Prêmio de energia elevado com interrupção parcial e volatilidade alta.",
-          "risco_alternativo": "Interrupção prolongada em Bab al-Mandeb que retira lastro do frete e leva o petróleo a patamares extremos.",
+          "fato": "Ataques a instalações da Aramco e possível incêndio em refinaria saudita.",
+          "interpretacao": "Aumento do prêmio de risco geopolítico no petróleo.",
+          "cenario_base": "Volatilidade contínua, sem interrupção significativa da oferta.",
+          "risco_alternativo": "Ataques bem-sucedidos a infraestrutura crítica elevam preços abruptamente.",
           "gatilhos": [
-            "Reabertura do oleoduto leste-oeste",
-            "Avanço houthi sobre Bab al-Mandeb"
+            "Confirmação de danos",
+            "Resposta militar"
           ],
-          "confianca": "alta",
+          "confianca": "media",
           "sources": [
             {
-              "url": "https://oilprice.com/Energy/Crude-Oil/US-Oil-Rig-Count-Rises-as-Oil-Tops-100.html",
-              "titulo": "U.S. Oil Rig Count Rises as Oil Tops $100",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Houthis-Claim-Strike-on-Aramco-Facility-in-Riyadh-as-Yemen-Fighting-Escalates.html",
+              "titulo": "Houthis Claim Strike on Aramco Facility in Riyadh as Yemen Fighting Escalates",
               "veiculo": "OilPrice",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "mercado"
             },
             {
-              "url": "https://oilprice.com/Energy/Energy-General/Supertanker-Rates-Hit-800000-a-Day-as-Gulf-Tensions-Escalate.html",
-              "titulo": "Supertanker Rates Hit $800,000 a Day as Gulf Tensions Escalate",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Possible-Fire-Reported-at-Saudi-Refinery-as-Attack-Claims-Circulate.html",
+              "titulo": "Possible Fire Reported at Saudi Refinery as Attack Claims Circulate",
               "veiculo": "OilPrice",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "mercado"
             },
             {
-              "url": "https://oilprice.com/Latest-Energy-News/World-News/IEA-Sees-57-Million-Bpd-Oil-Supply-Plunge-as-Gulf-Recovery-Slips-to-2027.html",
-              "titulo": "IEA Sees 5.7 Million Bpd Oil Supply Plunge as Gulf Recovery Slips to 2027",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Aramco-CEO-Warns-Oil-Inventories-Are-Scarily-Thin.html",
+              "titulo": "Aramco CEO Warns Oil Inventories Are ‘Scarily Thin’",
               "veiculo": "OilPrice",
-              "data": "2026-09-12",
-              "tipo": "mercado"
-            },
-            {
-              "url": "https://oilprice.com/Energy/Energy-General/Houthis-Advance-on-Bab-al-Mandeb-as-Saudi-Oil-Route-Comes-Under-Threat.html",
-              "titulo": "Houthis Advance on Bab al-Mandeb as Saudi Oil Route Comes Under Threat",
-              "veiculo": "OilPrice",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "mercado"
             }
           ]
@@ -637,95 +493,66 @@
       ]
     },
     "comercio_sancoes": {
-      "titulo": "Comércio e sanções",
-      "resumo": "Tarifas e sanções tecnológicas como instrumento central da disputa.",
-      "material": true,
+      "titulo": "Comércio e Sanções",
+      "resumo": "França e Alemanha propõem mecanismo para cortar China do mercado da UE. EUA usam Graham Act para pressionar Rússia e Irã. Sanções contra Rússia em discussão. Reino Unido prende iranianos por suposto plano terrorista. Coreia do Sul planeja diversificar importações de petróleo.",
       "teses": [
         {
-          "fato": "A cúpula do BRICS abriu em Nova Délhi com tarifas no centro da agenda, a China afirmou que empresas de IA evitaram uma delegação americana por medo de sanções, e o CSIS aponta que Pequim segue explorando gargalos de terras raras, além de questionar o déficit comercial americano com o Vietnã.",
-          "interpretacao": "Sanções e tarifas passam a ser usadas como alavanca permanente, o que encarece a reorganização das cadeias produtivas.",
-          "cenario_base": "Escalada medida, com exceções setoriais e custo repassado ao consumidor.",
-          "risco_alternativo": "Restrição coordenada de terras raras e semicondutores que trave setores industriais inteiros.",
+          "fato": "França e Alemanha propõem novo instrumento para cortar China do mercado da UE.",
+          "interpretacao": "Aumento do protecionismo e fragmentação comercial.",
+          "cenario_base": "Discussões sem implementação imediata.",
+          "risco_alternativo": "Guerra comercial aberta entre UE e China.",
           "gatilhos": [
-            "Declaração final da cúpula do BRICS",
-            "Novas medidas americanas sobre tecnologia chinesa"
+            "Decisões da UE",
+            "Retaliação chinesa"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://www.aljazeera.com/news/2026/9/12/brics-summit-opens-in-new-delhi-amid-wars-global-tensions-tariffs?traffic_source=rss",
-              "titulo": "BRICS summit opens in New Delhi amid wars, global tensions, tariffs",
-              "veiculo": "Al Jazeera",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
-              "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3369828/france-germany-call-new-weapon-allowing-immediate-cut-china-eu-market?utm_source=rss_feed",
+              "titulo": "France, Germany call for new weapon allowing ‘immediate cut off’ of China from EU market",
               "veiculo": "South China Morning Post",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.csis.org/analysis",
-              "titulo": "China Continues to Exploit Rare Earth Chokepoints",
-              "veiculo": "CSIS",
-              "data": "2026-09-12",
-              "tipo": "analise"
-            },
-            {
-              "url": "https://www.csis.org/analysis",
-              "titulo": "Does Vietnam’s Soaring U.S. Trade Deficit Make It a Bad Actor?",
-              "veiculo": "CSIS",
-              "data": "2026-09-12",
-              "tipo": "analise"
+              "url": "https://www.ft.com/content/4416101f-5072-4ee0-aa12-5b1daf25b31b",
+              "titulo": "Germany and France agree on last-resort tool against trade threats",
+              "veiculo": "Financial Times",
+              "data": "2026-10-06",
+              "tipo": "secundaria"
             }
           ]
         }
       ]
     },
     "riscos_sistemicos": {
-      "titulo": "Riscos sistêmicos",
-      "resumo": "Clima extremo, divisão política e terrorismo em ambiente de fragmentação.",
-      "material": true,
+      "titulo": "Riscos Sistêmicos",
+      "resumo": "Riscos incluem escalada militar no Oriente Médio e Ucrânia, fragmentação comercial, volatilidade energética, instabilidade política na Europa e tensões China-EUA. Ataques cibernéticos e pandemias também são preocupações.",
       "teses": [
         {
-          "fato": "O mundo teve o agosto mais quente já registrado, e a chefe de clima da ONU afirma que a divisão política está minando o combate a uma emergência de segurança econômica. Eventos climáticos extremos tiraram milhões de crianças da escola em 2025, e um relatório da ONU aponta que a propaganda terrorista avança acima da capacidade global de resposta.",
-          "interpretacao": "Riscos climáticos e de segurança deixam de ser eventos separados quando a capacidade de coordenação política está baixa.",
-          "cenario_base": "Eventos extremos recorrentes com resposta fragmentada e custo fiscal crescente.",
-          "risco_alternativo": "Crise climática e atentado de grande porte no mesmo período, sobrecarregando capacidade estatal e o mercado de seguros.",
+          "fato": "Múltiplos riscos geopolíticos simultâneos.",
+          "interpretacao": "A combinação de tensões pode levar a choques sistêmicos.",
+          "cenario_base": "Riscos permanecem contidos, sem crise global.",
+          "risco_alternativo": "Escalada em uma frente crítica desencadeia crise global.",
           "gatilhos": [
-            "Relatório da ONU sobre propaganda terrorista",
-            "Agenda de clima e segurança no Conselho de Segurança"
+            "Ataques a infraestrutura",
+            "Sanções severas",
+            "Conflitos militares"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168317",
-              "titulo": "The world just had the hottest August ever",
-              "veiculo": "ONU News",
-              "data": "2026-09-12",
-              "tipo": "primaria"
+              "url": "https://www.csis.org/analysis",
+              "titulo": "What Should the U.S. Government Do in Response to the FBI Hack?",
+              "veiculo": "CSIS",
+              "data": "2026-10-05",
+              "tipo": "analise"
             },
             {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168311",
-              "titulo": "UN climate chief warns political division is undermining fight against ‘economic security emergency’",
+              "url": "https://news.un.org/feed/view/en/story/2026/10/1168511",
+              "titulo": "World News in Brief: Cycle of violence continues in Haiti, seafarer deaths off Somalia, food insecurity in the Middle East",
               "veiculo": "ONU News",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168306",
-              "titulo": "‘The water comes up to our knees’: Climate hazards shut millions of children out of school in 2025",
-              "veiculo": "ONU News",
-              "data": "2026-09-12",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://news.un.org/feed/view/en/story/2026/09/1168313",
-              "titulo": "Terrorist propaganda is outpacing global efforts to stop it, UN report finds",
-              "veiculo": "ONU News",
-              "data": "2026-09-12",
+              "data": "2026-10-05",
               "tipo": "primaria"
             }
           ]
@@ -735,452 +562,835 @@
   },
   "market_impacts": {
     "petroleo": {
-      "direcao": "alta",
-      "comentario": "Petróleo acima de US$ 100 com o oleoduto leste-oeste fechado e risco de interrupção em Bab al-Mandeb. A IEA projeta corte de 5,7 milhões de bpd na oferta."
+      "direcao": "volatil",
+      "comentario": "Ataques a instalações da Aramco e preocupações com estoques elevam a volatilidade, com viés de alta."
     },
     "inflacao": {
       "direcao": "alta",
-      "comentario": "Energia e frete mais caros, com superpetroleiros a US$ 800 mil por dia, pressionam a inflação global na semana de decisões de bancos centrais."
+      "comentario": "Pressões de custos energéticos e alimentos podem elevar a inflação global."
     },
     "juros_globais": {
-      "direcao": "volatil",
-      "comentario": "Choque de oferta de energia complica o corte de juros. No Reino Unido a curva já admite alta de até quatro vezes em um ano."
+      "direcao": "alta",
+      "comentario": "Bancos centrais podem manter postura hawkish diante de riscos inflacionários."
     },
     "treasury": {
-      "direcao": "alta",
-      "comentario": "Treasury 10 anos em 4,975%, com prêmio de energia e inflação persistente sustentando a taxa longa."
+      "direcao": "volatil",
+      "comentario": "Treasury 10y em 5,349% reflete incerteza sobre juros e riscos geopolíticos."
     },
     "dolar": {
-      "direcao": "neutro",
-      "comentario": "DXY em 99,095, sem direção clara: o dólar ganha com risco geopolítico e perde com a leitura de inflação mais alta nos Estados Unidos."
+      "direcao": "alta",
+      "comentario": "DXY em 102,254, com demanda por ativos de segurança."
     },
     "ouro": {
       "direcao": "alta",
-      "comentario": "Ouro em US$ 4.408,90 a onça, sustentado por risco geopolítico e demanda de proteção."
+      "comentario": "Ouro em 4155,6, beneficiado por busca de proteção."
     },
     "acoes": {
       "direcao": "volatil",
-      "comentario": "S&P 500 em 7.656,98, com volatilidade elevada por risco de guerra, energia cara e temporada de decisões de juros."
+      "comentario": "S&P 500 em 7775,15, sensível a riscos geopolíticos e resultados corporativos."
     },
     "credito": {
-      "direcao": "volatil",
-      "comentario": "A abertura de spreads acompanha o prêmio de risco geopolítico, com atenção a emissores ligados a energia e transporte marítimo."
+      "direcao": "neutro",
+      "comentario": "Spreads de crédito estáveis, mas com viés de alta em caso de escalada."
     },
     "commodities": {
       "direcao": "alta",
-      "comentario": "Energia e frete puxam o complexo de commodities, com efeito em alimentos via custo logístico."
+      "comentario": "Grãos e energia pressionados por interrupções de oferta."
     },
     "brasil": {
       "direcao": "volatil",
-      "comentario": "Selic em 14,00% e PTAX em R$ 5,11 deixam o Brasil com carry atraente e sensibilidade alta a petróleo e a humor global."
+      "comentario": "Eleições e incerteza política afetam ativos brasileiros."
     },
     "curva_di": {
-      "direcao": "alta",
-      "comentario": "A curva DI tende a abrir com inflação de energia importada e prêmio fiscal, ainda que o carry siga favorável."
+      "direcao": "volatil",
+      "comentario": "Curva de juros futuros reflete expectativas sobre Copom e cenário externo."
     },
     "brl": {
       "direcao": "volatil",
-      "comentario": "O real oscila entre carry alto e aversão a risco global, com o petróleo mais alto ajudando os termos de troca."
+      "comentario": "USD/BRL em R$ 5,1795, pressionado por incerteza eleitoral e fluxo global."
     }
   },
   "scenarios": [
     {
-      "titulo": "Interrupção contida com prêmio de energia elevado",
-      "tipo": "base",
-      "descricao": "O oleoduto leste-oeste volta parcialmente, Bab al-Mandeb segue aberto com prêmio de seguro alto e o petróleo permanece acima de US$ 100. Bancos centrais adiam cortes e a volatilidade fica concentrada em energia e frete.",
-      "implicacoes": "Inflação mais persistente, juro longo alto e crescimento global revisado para baixo sem recessão.",
-      "probabilidade": null
-    },
-    {
-      "titulo": "Gargalo logístico persistente",
+      "titulo": "Escalada no Oriente Médio",
       "tipo": "alternativo",
-      "descricao": "A rota do Mar Vermelho fica comprometida por mais tempo, com seguros e fretes proibitivos, mesmo sem fechamento formal do estreito. A IEA confirma o corte de oferta e a recuperação do Golfo escorrega para 2027.",
-      "implicacoes": "Choque inflacionário de oferta, revisão de lucros em transporte e consumo, e prêmio de risco maior em emergentes importadores de energia.",
+      "descricao": "Ataques a infraestrutura petrolífera se intensificam, levando a interrupções de oferta.",
+      "implicacoes": "Petróleo dispara, inflação sobe, bancos centrais apertam, bolsas caem.",
       "probabilidade": null
     },
     {
-      "titulo": "Fechamento do estreito e conflito regional aberto",
+      "titulo": "Estabilização política na Europa",
+      "tipo": "base",
+      "descricao": "Eleições na Espanha e Bósnia ocorrem sem maiores transtornos, com formação de governos moderados.",
+      "implicacoes": "Redução da incerteza, melhora nos ativos europeus.",
+      "probabilidade": null
+    },
+    {
+      "titulo": "Crise sistêmica por conflito China-EUA",
       "tipo": "cauda",
-      "descricao": "Interrupção do fluxo em Bab al-Mandeb combinada a ataques diretos a infraestrutura e a ativos americanos no Golfo, com resposta militar ampliada.",
-      "implicacoes": "Petróleo em patamar extremo, recessão global, corrida para dólar e ouro, e disfunção nos mercados de frete e de seguro.",
+      "descricao": "Tensões comerciais e militares entre China e EUA escalam para um confronto aberto.",
+      "implicacoes": "Desaceleração global, fuga para ativos seguros, volatilidade extrema.",
       "probabilidade": null
     }
   ],
   "triggers": [
     {
-      "evento": "Reabertura ou perda adicional do oleoduto leste-oeste saudita",
-      "janela": "próximos dias",
-      "relevancia": "É a variável que decide o tamanho do prêmio de energia."
+      "evento": "Reunião do Copom em 4 de novembro",
+      "janela": "2026-11-04",
+      "relevancia": "Define o timing do início do afrouxamento monetário no Brasil."
     },
     {
-      "evento": "Reunião de emergência do Conselho de Segurança sobre o Iêmen",
-      "janela": "imediato",
-      "relevancia": "Indica se o avanço houthi se converte em crise diplomática formal."
+      "evento": "Eleições na Espanha",
+      "janela": "Data a definir",
+      "relevancia": "Pode alterar o cenário político e econômico da zona do euro."
     },
     {
-      "evento": "Avanço houthi sobre Bab al-Mandeb",
-      "janela": "próximos dias",
-      "relevancia": "Define o risco de interrupção da rota do Mar Vermelho."
-    },
-    {
-      "evento": "Cúpula do BRICS em Nova Délhi e declaração final",
-      "janela": "14 a 20 de setembro",
-      "relevancia": "Mede a coesão do bloco e o espaço para arranjos alternativos de pagamento."
-    },
-    {
-      "evento": "Visita de Xi Jinping à Casa Branca",
-      "janela": "em preparação",
-      "relevancia": "A disputa sobre IA e Taiwan define o tom da relação até o fim do ano."
-    },
-    {
-      "evento": "G20 em Miami e eventual encontro entre Zelenskyy e Putin",
-      "janela": "próximas semanas",
-      "relevancia": "Primeira janela concreta de negociação na guerra da Ucrânia."
-    },
-    {
-      "evento": "Consequências políticas da vitória da AfD na Saxônia-Anhalt",
-      "janela": "próximas semanas",
-      "relevancia": "Testa a estabilidade do governo alemão e o prêmio de risco europeu."
-    },
-    {
-      "evento": "Eleições na Suécia e votação na Bósnia",
-      "janela": "12 de setembro",
-      "relevancia": "Ampliam a leitura de fragmentação política na Europa."
-    },
-    {
-      "evento": "Agenda de IA e drones no contraterrorismo, 25 anos após o 11 de setembro",
-      "janela": "próximos meses",
-      "relevancia": "Orienta gasto em defesa e regulação de tecnologia."
+      "evento": "Reunião da OPEP+",
+      "janela": "Data a definir",
+      "relevancia": "Decisões sobre produção afetam preços do petróleo."
     }
   ],
   "sources": [
     {
-      "url": "https://www.bbc.co.uk/news/articles/c62m933465eo?at_medium=RSS&at_campaign=rss",
-      "titulo": "Saudi Arabia shuts key oil pipeline after drone attack launched from Iraq",
+      "url": "https://www.bbc.co.uk/news/articles/cmy56yvv1kxxo?at_medium=RSS&at_campaign=rss",
+      "titulo": "No10 insists UK military base RAF Fairford is safe after US withdraws bombers",
       "veiculo": "BBC News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/clyjqvjzlwno?at_medium=RSS&at_campaign=rss",
-      "titulo": "'Never, ever forget' - America marks 25th anniversary of 9/11 attacks",
+      "url": "https://www.bbc.co.uk/news/articles/cm3691y79xp5o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Flydubai co-pilot planned to crash plane into Tel Aviv airport or building, reports say",
       "veiculo": "BBC News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/cwyz59yyqk4o?at_medium=RSS&at_campaign=rss",
-      "titulo": "Ukraine faces 'toughest winter' since Russia's full-scale invasion, UN official tells BBC",
+      "url": "https://www.bbc.co.uk/news/articles/c9zrdmxp4vy6o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Teenager's hand blown off during confrontation between France school protesters and police",
       "veiculo": "BBC News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/c23x72yx2rvo?at_medium=RSS&at_campaign=rss",
-      "titulo": "Houthis claim major advance in Yemen and tighten grip on Red Sea shipping lane",
+      "url": "https://www.bbc.co.uk/news/articles/cr0j0w3p8453o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Zelensky condemns 'horrific' Russian strike on boat carrying corn in Black Sea",
       "veiculo": "BBC News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/c3v4zgzr1kxo?at_medium=RSS&at_campaign=rss",
-      "titulo": "Lightning Houthi advance in Yemen may bring dangerous new dimension to Iran war",
+      "url": "https://www.bbc.co.uk/news/articles/cmdx39k49xw0o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Spanish PM Sánchez calls early election after housing protests",
       "veiculo": "BBC News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.aljazeera.com/news/2026/9/12/fighting-re-erupts-in-yemen-and-civilians-are-paying-the-price?traffic_source=rss",
-      "titulo": "Fighting re-erupts in Yemen and civilians are paying the price",
+      "url": "https://www.bbc.co.uk/news/articles/c5ev3ypmzly8o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Nobel Prize awarded for revealing inner workings of the brain",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/c5j9x9pr0240o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Pentagon stops using Anthropic AI tools after blacklisting company, BBC told",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/cwgkv70gg1j3o?at_medium=RSS&at_campaign=rss",
+      "titulo": "'Not again': Arrest of US marine for murder reignites protests in Japan's Okinawa",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/ck1l34ed592no?at_medium=RSS&at_campaign=rss",
+      "titulo": "Right-wing Flávio Bolsonaro wins first round of Brazil election",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/c6e9lj5r3ej7o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Georgia officials hunt for suspect in shooting that killed two and injured 35",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/c6gqw8jg7k3go?at_medium=RSS&at_campaign=rss",
+      "titulo": "Bombs preventing rescue of kidnapped youths, Nigerian police say",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/cw8rzd6lp0xpo?at_medium=RSS&at_campaign=rss",
+      "titulo": "Yemeni government forces say they have 'secured' Bab al-Mandab Strait",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/cmze4g8r6nr9o?at_medium=RSS&at_campaign=rss",
+      "titulo": "All six passengers presumed dead after plane went missing off US coast",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/articles/cqj6jenp26zyo?at_medium=RSS&at_campaign=rss",
+      "titulo": "Trump chooses top spy boss to run new AI taskforce",
+      "veiculo": "BBC News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/spain-calls-snap-election-amid-housing-crisis?traffic_source=rss",
+      "titulo": "Spain calls snap election amid housing crisis",
       "veiculo": "Al Jazeera",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.aljazeera.com/news/2026/9/12/sweden-heads-to-the-polls-whats-at-stake-in-the-knife-edge-election?traffic_source=rss",
-      "titulo": "Sweden heads to the polls: What’s at stake in the knife-edge election?",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/jerusalem-daily-netanyahu-gives-voters-dramatic-ultimatum?traffic_source=rss",
+      "titulo": "Jerusalem Daily: Netanyahu gives voters dramatic ultimatum",
       "veiculo": "Al Jazeera",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.aljazeera.com/news/2026/9/12/russia-strikes-cargo-vessels-steel-plants-across-ukraine?traffic_source=rss",
-      "titulo": "Russia strikes cargo vessels, steel plants across Ukraine",
+      "url": "https://www.aljazeera.com/news/2026/10/5/dr-congo-boat-collision-kills-at-least-30-dozens-missing?traffic_source=rss",
+      "titulo": "DR Congo boat collision kills at least 30, dozens missing",
       "veiculo": "Al Jazeera",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.aljazeera.com/news/2026/9/12/brics-summit-opens-in-new-delhi-amid-wars-global-tensions-tariffs?traffic_source=rss",
-      "titulo": "BRICS summit opens in New Delhi amid wars, global tensions, tariffs",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/rohingya-activist-says-its-unfair-to-send-refugees-back-to-myanmar?traffic_source=rss",
+      "titulo": "Rohingya activist says it’s unfair to send refugees back to Myanmar",
       "veiculo": "Al Jazeera",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/russia-s-drone-war-comes-to-moldova-and-romania/a-79239591?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "Russia&apos;s drone war comes to Moldova and Romania",
+      "url": "https://www.aljazeera.com/sports/2026/10/5/medvedev-disqualified-from-china-open-for-hitting-fan-with-a-ball?traffic_source=rss",
+      "titulo": "Medvedev disqualified from China Open for hitting fan with a ball",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/two-dead-after-ship-sinks-off-romania-following-fire?traffic_source=rss",
+      "titulo": "Two dead after ship sinks off Romania following fire",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/10/5/nationalist-conservative-parties-enjoy-a-boost-in-bosnia-and-herzegovina?traffic_source=rss",
+      "titulo": "Bosnia and Herzegovina elections: Return to a nationalist political order?",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/sports/liveblog/2026/10/5/live-france-vs-belgium-uefa-nations-league?traffic_source=rss",
+      "titulo": "LIVE: France vs Belgium – UEFA Nations League",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/10/5/nigeria-launches-rescue-after-military-plane-crashes-with-32-aboard?traffic_source=rss",
+      "titulo": "Nigeria launches rescue after military plane crashes with 32 aboard",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/10/5/yemeni-govt-forces-aim-for-sanaa-but-houthi-defeat-will-be-a-challenge?traffic_source=rss",
+      "titulo": "Yemeni gov’t forces aim for Sanaa, but Houthi defeat will be a challenge",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/sports/2026/10/5/what-happened-between-ireland-and-israel-in-their-nations-league-match?traffic_source=rss",
+      "titulo": "What happened between Ireland and Israel in their Nations League match?",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/5/a-drive-through-the-west-bank?traffic_source=rss",
+      "titulo": "A drive through the West Bank",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/10/5/latest-us-military-strike-on-alleged-drug-boat-kills-four-in-caribbean?traffic_source=rss",
+      "titulo": "Latest US military strike on alleged drug boat kills four in Caribbean",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.aljazeera.com/news/2026/10/5/murder-in-okinawa-the-us-militarys-history-of-alleged-crime-in-japan?traffic_source=rss",
+      "titulo": "Murder in Okinawa: The US military’s history of alleged crime in Japan",
+      "veiculo": "Al Jazeera",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/suspected-pneumonic-plague-in-siberia-what-we-know-about-the-disease/a-79547919?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Suspected pneumonic plague in Siberia: What we know about the disease",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/dw-exclusive-zelenskyy-offers-to-meet-putin-at-g20-in-miami/a-79241703?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "DW exclusive: Zelenskyy offers to meet Putin at G20 in Miami",
+      "url": "https://www.dw.com/en/bosnia-election-new-steps-to-prevent-electoral-fraud-but-nationalist-parties-remain-on-top/a-79544717?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Bosnia election: New steps to prevent electoral fraud, but nationalist parties remain on top",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/turks-in-germany-anxious-after-afd-wins-in-saxony-anhalt/a-79221764?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "Turks in Germany anxious after AfD wins in Saxony-Anhalt",
+      "url": "https://www.dw.com/en/hundreds-of-french-schools-shut-teen-loses-hand-in-protests/a-79542656?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Hundreds of French schools shut, teen loses hand in protests",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/putin-rejects-mobilization-rumors-many-russians-unconvinced/a-79193386?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "Putin rejects mobilization rumors, many Russians unconvinced",
+      "url": "https://www.dw.com/en/nationalists-top-bosnia-herzegovina-s-divisive-election/a-79535336?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Nationalists top Bosnia-Herzegovina's divisive election",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/german-economy-frets-about-saxony-anhalt-election-results/a-79162871?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "German economy frets about Saxony-Anhalt election results",
+      "url": "https://www.dw.com/en/uk-remands-2-iranians-over-alleged-antisemitic-terror-plot/a-79532184?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "UK remands 2 Iranians over alleged antisemitic terror plot",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/ratko-mladic-s-funeral-casts-shadow-over-bosnia-and-herzegovina-vote/a-79189319?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "Ratko Mladic’s funeral casts shadow over Bosnia and Herzegovina vote",
+      "url": "https://www.dw.com/en/bosnia-and-herzegovina-is-still-shaped-by-war-separatism-eu-ambitions/a-79523557?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Bosnia and Herzegovina is still shaped by war, separatism, EU ambitions",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/us-envoys-witkoff-and-kushner-hold-ukraine-talks-after-meeting-putin/a-79054779?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "US envoys Witkoff and Kushner hold Ukraine talks after meeting Putin",
+      "url": "https://www.dw.com/en/spain-s-parliament-rejects-housing-bill-as-protests-continue/a-79522683?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Spain's parliament rejects housing bill as protests continue",
       "veiculo": "Deutsche Welle",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168318",
-      "titulo": "Security Council LIVE: Ambassadors mark 9/11 with counter-terrorism push on AI and drones",
+      "url": "https://www.dw.com/en/ukraine-south-korea-clash-over-transfer-of-2-north-korean-prisoners/a-79508601?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Ukraine, South Korea clash over transfer of 2 North Korean prisoners",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/turkey-stock-market-scandal-hits-half-a-million-investors/a-79494710?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Turkey: Stock market scandal hits half a million investors",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/eu-ministers-mull-new-ways-to-curb-irregular-migration/a-79509375?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "EU ministers mull new ways to curb irregular migration",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/latvians-head-to-the-polls-with-russia-on-their-minds/a-79477614?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Latvians head to the polls with Russia on their minds",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/france-hundreds-arrested-as-student-protests-escalate/a-79495633?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "France: Hundreds arrested as student protests escalate",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/five-eu-states-plan-first-deportation-center-in-africa-for-2027/a-79490162?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Five EU states plan first deportation center in Africa for 2027",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.dw.com/en/bosnia-elections-polls-overshadowed-by-exhaustion-exodus-and-geopolitics-as-ethnic-politics-eclipse-real-problems/a-79487802?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Bosnia elections: Polls overshadowed by exhaustion, exodus and geopolitics as ethnic politics eclipse real problems",
+      "veiculo": "Deutsche Welle",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168521",
+      "titulo": "ICC unseals four arrest warrants over Taliban persecution of women and girls",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168317",
-      "titulo": "The world just had the hottest August ever",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168520",
+      "titulo": "UN upholds housing as a human right on World Habitat Day",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168313",
-      "titulo": "Terrorist propaganda is outpacing global efforts to stop it, UN report finds",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168519",
+      "titulo": "Sudan: Driver killed in aerial attack on aid trucks in South Kordofan",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168312",
-      "titulo": "Ukraine: Drone attacks on Chornobyl are ‘gambling with the safety of millions of people’",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168518",
+      "titulo": "One day behind bars: Students and incarcerated women break prison stigma in Thailand",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168311",
-      "titulo": "UN climate chief warns political division is undermining fight against ‘economic security emergency’",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168517",
+      "titulo": "Beyond the Moon: Space Week around the world",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168309",
-      "titulo": "Security Council LIVE: Fresh attacks prompt emergency meeting on Yemen",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168492",
+      "titulo": "‘He felt heard’: How a film brought a UN report to life in Xochimilco",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168306",
-      "titulo": "‘The water comes up to our knees’: Climate hazards shut millions of children out of school in 2025",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168507",
+      "titulo": "Rotting food waste emits 5 times more greenhouse gases than planes",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://news.un.org/feed/view/en/story/2026/09/1168301",
-      "titulo": "Guterres urges leaders to invest in peace as conflicts deepen",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168469",
+      "titulo": "Uganda’s UN-supported wildlife forensics lab turns ivory seizures into convictions",
       "veiculo": "ONU News",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://oilprice.com/Latest-Energy-News/World-News/White-House-Weighs-Defense-Production-Act-as-US-Refineries-Maxed-Out.html",
-      "titulo": "White House Weighs Defense Production Act as U.S. Refineries Maxed Out",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168516",
+      "titulo": "‘Money alone won’t get us there’: UN steps up aid for 12 forgotten crises",
+      "veiculo": "ONU News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168515",
+      "titulo": "Global life expectancy bounces back to near pre-pandemic levels, WHO says",
+      "veiculo": "ONU News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168513",
+      "titulo": "Ukraine war ‘a human rights catastrophe’ that must end, says Türk",
+      "veiculo": "ONU News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168512",
+      "titulo": "Collective action needed to tackle global information crisis, UN-led dialogue hears",
+      "veiculo": "ONU News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168511",
+      "titulo": "World News in Brief: Cycle of violence continues in Haiti, seafarer deaths off Somalia, food insecurity in the Middle East",
+      "veiculo": "ONU News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168509",
+      "titulo": "Escalating fighting in Yemen deepens food security crisis",
+      "veiculo": "ONU News",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Irans-Oil-Minister-Resigns-as-US-Blockade-Chokes-Crude-Exports.html",
+      "titulo": "Iran’s Oil Minister Resigns as U.S. Blockade Chokes Crude Exports",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Energy-General/UK-Interest-Rates-Could-Rise-Four-Times-Over-the-Next-Year.html",
-      "titulo": "UK Interest Rates Could Rise Four Times Over the Next Year",
+      "url": "https://oilprice.com/Energy/Crude-Oil/Heres-How-Trumps-Using-The-Graham-Act-To-Trap-Russia-And-Crush-Iran.html",
+      "titulo": "Here’s How Trump’s Using The Graham Act To Trap Russia And Crush Iran",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Crude-Oil/US-Oil-Rig-Count-Rises-as-Oil-Tops-100.html",
-      "titulo": "U.S. Oil Rig Count Rises as Oil Tops $100",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Indian-State-Firm-BPCL-Readies-3-Billion-Bond-to-Fund-Brazil-oil-Project.html",
+      "titulo": "Indian State Firm BPCL Readies $3-Billion Bond to Fund Brazil oil Project",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Latest-Energy-News/World-News/Drone-Strikes-Hit-Saudi-Arabias-Vital-East-West-Oil-Pipeline.html",
-      "titulo": "Drone Strikes Hit Saudi Arabia’s Vital East-West Oil Pipeline",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Possible-Fire-Reported-at-Saudi-Refinery-as-Attack-Claims-Circulate.html",
+      "titulo": "Possible Fire Reported at Saudi Refinery as Attack Claims Circulate",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Crude-Oil/Saudi-Arabias-Critical-Oil-Bypass-Comes-Under-Threat.html",
-      "titulo": "Saudi Arabia’s Critical Oil Bypass Comes Under Threat",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/EU-Electric-Vehicle-Sales-Hit-Record-as-Fuel-Prices-Surge.html",
+      "titulo": "EU Electric Vehicle Sales Hit Record as Fuel Prices Surge",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Energy-General/Supertanker-Rates-Hit-800000-a-Day-as-Gulf-Tensions-Escalate.html",
-      "titulo": "Supertanker Rates Hit $800,000 a Day as Gulf Tensions Escalate",
+      "url": "https://oilprice.com/Energy/Energy-General/Supreme-Court-Takes-Up-Boulder-Climate-Suit-Against-Exxon-and-Suncor.html",
+      "titulo": "Supreme Court Takes Up Boulder Climate Suit Against Exxon and Suncor",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Latest-Energy-News/World-News/IEA-Sees-57-Million-Bpd-Oil-Supply-Plunge-as-Gulf-Recovery-Slips-to-2027.html",
-      "titulo": "IEA Sees 5.7 Million Bpd Oil Supply Plunge as Gulf Recovery Slips to 2027",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Aramco-CEO-Warns-Oil-Inventories-Are-Scarily-Thin.html",
+      "titulo": "Aramco CEO Warns Oil Inventories Are ‘Scarily Thin’",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Latest-Energy-News/World-News/UAE-Rethinks-5-Gigawatt-AI-Campus-After-Iran-Targets-US-Assets-in-Gulf.html",
-      "titulo": "UAE Rethinks 5-Gigawatt AI Campus After Iran Targets US Assets in Gulf",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Rubio-Opens-4-Day-NATO-Tour-in-Iceland-to-Discuss-Arctic-Security.html",
+      "titulo": "Rubio Opens 4-Day NATO Tour in Iceland to Discuss Arctic Security",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Energy-General/Jeff-Currie-Sees-5-Gasoline-Before-Midterms.html",
-      "titulo": "Jeff Currie Sees $5 Gasoline Before Midterms",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Houthis-Claim-Strike-on-Aramco-Facility-in-Riyadh-as-Yemen-Fighting-Escalates.html",
+      "titulo": "Houthis Claim Strike on Aramco Facility in Riyadh as Yemen Fighting Escalates",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Energy-General/Houthis-Advance-on-Bab-al-Mandeb-as-Saudi-Oil-Route-Comes-Under-Threat.html",
-      "titulo": "Houthis Advance on Bab al-Mandeb as Saudi Oil Route Comes Under Threat",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/South-Korea-Plans-to-Triple-Canadian-Crude-Imports-as-Saudi-Share-Slips.html",
+      "titulo": "South Korea Plans to Triple Canadian Crude Imports as Saudi Share Slips",
       "veiculo": "OilPrice",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "mercado"
     },
     {
-      "url": "https://www.scmp.com/news/china/diplomacy/article/3367303/chinese-leader-xi-urges-brics-play-its-due-role-bringing-peace-middle-east?utm_source=rss_feed",
-      "titulo": "Chinese leader Xi urges Brics to play its ‘due role’ in bringing peace to Middle East",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Japan-Rules-Out-More-Reserve-Releases-After-G7-Pledges-100-Million-Barrels.html",
+      "titulo": "Japan Rules Out More Reserve Releases After G7 Pledges 100 Million Barrels",
+      "veiculo": "OilPrice",
+      "data": "2026-10-05",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Hormuz-LNG-Flows-Still-Down-More-Than-75-Despite-Rebound.html",
+      "titulo": "Hormuz LNG Flows Still Down More Than 75% Despite Rebound",
+      "veiculo": "OilPrice",
+      "data": "2026-10-05",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Diesel-Margins-Slide-as-G7-Announces-100-Million-Barrel-Stocks-Release.html",
+      "titulo": "Diesel Margins Slide as G7 Announces 100 Million Barrel Stocks Release",
+      "veiculo": "OilPrice",
+      "data": "2026-10-05",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Aramco-Cuts-Asia-Oil-Prices-to-Six-Year-Low-Raises-Prices-for-Europe.html",
+      "titulo": "Aramco Cuts Asia Oil Prices to Six-Year Low, Raises Prices for Europe",
+      "veiculo": "OilPrice",
+      "data": "2026-10-05",
+      "tipo": "mercado"
+    },
+    {
+      "url": "https://www.scmp.com/news/us/article/3369832/us-search-missing-airmen-china-gains-new-attention-after-xi-trump-summit?utm_source=rss_feed",
+      "titulo": "US search for missing airmen in China gains new attention after Xi-Trump summit",
       "veiculo": "South China Morning Post",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/diplomacy/article/3367300/china-urges-us-stop-all-spying-or-face-retaliation-slams-gangster-logic?utm_source=rss_feed",
-      "titulo": "China urges US to ‘stop all spying’ or face retaliation, slams ‘gangster logic’",
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3369828/france-germany-call-new-weapon-allowing-immediate-cut-china-eu-market?utm_source=rss_feed",
+      "titulo": "France, Germany call for new weapon allowing ‘immediate cut off’ of China from EU market",
       "veiculo": "South China Morning Post",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/politics/article/3367283/us-wants-taiwan-serve-cannon-fodder-against-mainland-china-state-broadcaster-cctv?utm_source=rss_feed",
-      "titulo": "US wants Taiwan to ‘serve as cannon fodder’ against mainland China: state media",
+      "url": "https://www.scmp.com/news/china/military/article/3369775/why-plas-z-10-attack-helicopter-taking-bigger-role-sea?utm_source=rss_feed",
+      "titulo": "Why the PLA’s Z-10 attack helicopter is taking a bigger role at sea",
       "veiculo": "South China Morning Post",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/diplomacy/article/3367252/internal-splits-threaten-slow-brics-progress-bloc-looks-back-20-years-growth?utm_source=rss_feed",
-      "titulo": "Internal splits threaten to slow Brics’ progress as bloc looks back on 20 years of growth",
+      "url": "https://www.scmp.com/plus/news/china/diplomacy/article/3369805/brazil-china-ties-focus-bolsonaro-gets-election-edge-over-lula?utm_source=rss_feed",
+      "titulo": "Brazil-China ties in focus as Bolsonaro gets election edge over Lula",
       "veiculo": "South China Morning Post",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/us/article/3367269/chinese-ai-firms-shunned-us-delegation-over-sanctions-fears-commission-says?utm_source=rss_feed",
-      "titulo": "Chinese AI firms shunned US delegation over sanctions fears, commission says",
+      "url": "https://www.scmp.com/plus/economy/china-economy/article/3369803/chinas-finance-minister-fiscal-policy?utm_source=rss_feed",
+      "titulo": "China’s finance minister on fiscal policy",
       "veiculo": "South China Morning Post",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/diplomacy/article/3367242/ai-fight-shadows-final-preparations-xi-jinpings-white-house-visit?utm_source=rss_feed",
-      "titulo": "AI fight shadows final preparations for Xi Jinping’s White House visit to meet Donald Trump",
+      "url": "https://www.scmp.com/news/china/military/article/3369795/us-defence-experts-work-inside-taiwan-military-hq-under-reported-pact?utm_source=rss_feed",
+      "titulo": "US defence experts to work inside Taiwan military HQ under reported pact",
       "veiculo": "South China Morning Post",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/opinion/china-opinion/article/3369213/why-protecting-home-values-beijings-new-priority?utm_source=rss_feed",
+      "titulo": "Why protecting home values is Beijing’s new priority",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/science/article/3369780/chinese-doctors-remove-lung-tumour-baby-still-mothers-womb-using-needle?utm_source=rss_feed",
+      "titulo": "Chinese doctors shrink lung tumour for baby still in mother’s womb, using needle",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3369770/days-after-xi-trump-summit-top-taiwan-diplomat-opens-de-facto-consulate-us?utm_source=rss_feed",
+      "titulo": "Days after Xi-Trump summit, top Taiwan diplomat opens de facto consulate in the US",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/science/article/3369704/china-develops-plant-extract-hydrogen-fresh-water-and-uranium-sea?utm_source=rss_feed",
+      "titulo": "China develops plant to extract hydrogen, fresh water and uranium from the sea",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3369686/zheng-yongnian-china-us-realism-and-battling-upper-hand-next-summit?utm_source=rss_feed",
+      "titulo": "Zheng Yongnian on China-US realism and battling for the upper hand before the next summit",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3369678/china-urged-build-system-protect-expanding-overseas-interests?utm_source=rss_feed",
+      "titulo": "China urged to build ‘system’ to protect expanding overseas interests",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/article/3369719/china-eastern-reports-passenger-police-over-cabin-crew-kneeling-row?utm_source=rss_feed",
+      "titulo": "China Eastern reports passenger to police over cabin crew kneeling row",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/opinion/asia-opinion/article/3369358/how-g2-effect-trump-xi-summit-reverberating-through-asia?utm_source=rss_feed",
+      "titulo": "How the ‘G2’ effect of Trump-Xi summit is reverberating through Asia",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-05",
       "tipo": "primaria"
     },
     {
       "url": "https://www.csis.org/analysis",
-      "titulo": "China Continues to Exploit Rare Earth Chokepoints",
+      "titulo": "From Partners to Producers: U.S.-Australia Defense Cooperation",
       "veiculo": "CSIS",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "analise"
     },
     {
       "url": "https://www.csis.org/analysis",
-      "titulo": "Is the War Rewriting the World Order? | The High Top",
+      "titulo": "Taking Command: The U.S.-Korea OPCON Debate | The Capital Cable #143",
       "veiculo": "CSIS",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "analise"
     },
     {
       "url": "https://www.csis.org/analysis",
-      "titulo": "Hormuz Needs a Community, Not a Condominium",
+      "titulo": "AI for Development: A Conversation with Gaurav Nayyar, Director of the World Development Report 2026",
       "veiculo": "CSIS",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "analise"
     },
     {
       "url": "https://www.csis.org/analysis",
-      "titulo": "Does Vietnam’s Soaring U.S. Trade Deficit Make It a Bad Actor?",
+      "titulo": "Russian Roulette Live Podcast | Hanna Notte on Putin's Global Campaign to Defeat the West",
       "veiculo": "CSIS",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "analise"
     },
     {
       "url": "https://www.csis.org/analysis",
-      "titulo": "Adapting to the New Terrorism Landscape 25 Years After 9/11",
+      "titulo": "Article Type open filter submenu",
       "veiculo": "CSIS",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Region open filter submenu",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Date Published open filter submenu",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "The Self-Reliance Dividend: The Imperative of Syrian Refugees’ Economic Inclusion",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "The New Sanctioning Russia Act: Optics for Now, Leverage for Later",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "CSIS Launches Initiative on European Energy Security",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "The State of Global Development: Key Takeaways from UNGA 2026",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Trump’s Greenland Deal: Modest Gains, Lasting Costs",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "What Should the U.S. Government Do in Response to the FBI Hack?",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Restoring the Economics of Copper Processing",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "What Should Korea’s Take on “The Asian NATO” Be?",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Time to Confront Escalating Russia-Iran Intelligence Cooperation",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Bridging the Gulf? Thailand and Cambodia Turn to UNCLOS",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
+      "tipo": "analise"
+    },
+    {
+      "url": "https://www.csis.org/analysis",
+      "titulo": "Footer secondary navigation",
+      "veiculo": "CSIS",
+      "data": "2026-10-05",
       "tipo": "analise"
     },
     {
       "url": "https://www.cfr.org/global-conflict-tracker",
       "titulo": "Middle East and North Africa",
       "veiculo": "CFR",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
       "tipo": "analise"
     },
     {
       "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
       "titulo": "Board of Governors of the Federal Reserve System",
       "veiculo": "Federal Reserve",
-      "data": "2026-09-12",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "titulo": "Federal Open Market Committee",
+      "veiculo": "Federal Reserve",
+      "data": "2026-10-05",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "titulo": "Meeting calendars, statements, and minutes (2021-2027)",
+      "veiculo": "Federal Reserve",
+      "data": "2026-10-05",
       "tipo": "primaria"
     }
   ]

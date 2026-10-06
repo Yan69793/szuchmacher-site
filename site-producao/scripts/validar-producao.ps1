@@ -1,4 +1,4 @@
-﻿# validar-producao.ps1 — porta de qualidade de szuchmacher.com.br + multi-assets.com
+# validar-producao.ps1 — porta de qualidade de szuchmacher.com.br + multi-assets.com
 #
 # Uso:
 #   .\scripts\validar-producao.ps1
@@ -129,8 +129,8 @@ $checks = @(
     @{ Url = "$SZ/multiasset.html"; Status = 301; Rotulo = 'multiasset.html -> multi-assets.com' }
 
     # --- plataforma ---
-    @{ Url = "$MULTI/";            Status = 200; Contem = 'szuchmacher.com.br';
-       Rotulo = 'multi home, com link institucional' }
+    @{ Url = "$MULTI/";            Status = 200; Contem = 'assets/video/og-multi-20261003.jpg';
+       Rotulo = 'multi home, com imagem OG atual' }
     @{ Url = "$MULTI/consultoria"; Status = 200; Contem = 'szuchmacher.com.br';
        Rotulo = 'consultoria, com link institucional' }
     # multi-assets.com coleta e-mail no popup do simulador. Ate 26/07/2026 o
@@ -178,7 +178,8 @@ $checks = @(
 
     @{ Url = "$MULTI/sitemap.xml";                      Status = 200; Contem = 'multi-assets.com';
        Rotulo = 'multi: sitemap (criado 2026-08-09, antes 404)' }
-    @{ Url = "$MULTI/og-cover.jpg";                     Status = 200; MinBytes = 10000 }
+    @{ Url = "$MULTI/assets/video/og-multi-20261003.jpg"; Status = 200; MinBytes = 10000;
+       Rotulo = 'multi: imagem OG atual' }
     @{ Url = "$MULTI/prices.php";                       Status = 200; Contem = '"ok"' }
     @{ Url = "$MULTI/assets/video/demo-multiasset.mp4"; Status = 200; MinBytes = 100000 }
     @{ Url = "$MULTI/assets/sz-config.js";              Status = 200 }

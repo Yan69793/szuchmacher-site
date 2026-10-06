@@ -1,5 +1,37 @@
-import { fetchJsonStrict, jsonResponse, brtNow } from '../utils/http.js';
+import { jsonResponse, brtNow } from '../utils/http.js';
+import { tradingDayGap } from './ntnb-scenarios.js';
 import { readCache, writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
+
+// Limite inclui leitura do corpo. Uma repeticao apenas para GET transitorio.
+async function fetchScenarioJson(url, options = {}) {
+  const timeout = options.timeout ?? 10000;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const controller = new AbortController();
+    let timer, status = 0, retryAfter = 0;
+    try {
+      const deadline = new Promise((_, reject) => {
+        timer = setTimeout(() => { controller.abort(); reject(new Error('timeout')); }, timeout);
+      });
+      const result = await Promise.race([deadline, (async () => {
+        const res = await fetch(url, { headers: options.headers, signal: controller.signal });
+        status = res.status;
+        if (!res.ok) {
+          const raw = res.headers.get('Retry-After');
+          if (raw) retryAfter = /^\d+$/.test(raw) ? Number(raw) * 1000 : Math.max(0, Date.parse(raw) - Date.now());
+          return { ok: false, status, data: null, error: 'HTTP ' + status };
+        }
+        return { ok: true, status, data: await res.json(), error: null };
+      })()]);
+      if (result.ok || attempt || !(status === 429 || status >= 500) || retryAfter > 2000) return result;
+    } catch (error) {
+      if (attempt || error instanceof SyntaxError) return { ok: false, status, data: null, error: error.message };
+    } finally {
+      clearTimeout(timer);
+      controller.abort();
+    }
+    await new Promise(resolve => setTimeout(resolve, Math.max(retryAfter || 0, 250 + Math.random() * 250)));
+  }
+}
 
 const CACHE_KEY = 'market-data';
 const HEALTH_KEY = 'market-data-sources-health';
@@ -18,7 +50,7 @@ const SEED = {
 // fallback, mas so a primeira merece o rotulo de fonte indisponivel.
 async function fetchYahoo(encodedSymbol) {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodedSymbol}?interval=1d&range=1d`;
-  const r = await fetchJsonStrict(url, {
+  const r = await fetchScenarioJson(url, {
     timeout: 10000,
     headers: {
       Accept: 'application/json',
@@ -31,9 +63,13 @@ async function fetchYahoo(encodedSymbol) {
   if (!meta) return { data: null, status: r.status };
   const price = meta.regularMarketPrice != null ? Number(meta.regularMarketPrice) : null;
   const prev = meta.chartPreviousClose != null ? Number(meta.chartPreviousClose) : null;
-  if (price == null) return { data: null, status: r.status };
-  const change_pct = prev && prev > 0 ? Math.round(((price - prev) / prev) * 10000) / 100 : 0;
-  return { data: { value: Math.round(price * 100) / 100, change_pct }, status: r.status };
+  if (!Number.isFinite(price) || price <= 0) return { data: null, status: r.status };
+  const quoteTs = Number(meta.regularMarketTime);
+  if (quoteTs > Math.floor(Date.now() / 1000) + 300) return { data: null, status: r.status };
+  if (quoteTs > 0 && tradingDayGap(quoteTs, Math.floor(Date.now() / 1000)) > 2) return { data: null, status: r.status };
+  const change_pct = Number.isFinite(prev) && prev > 0 ? Math.round(((price - prev) / prev) * 10000) / 100 : null;
+  const quote_at = Number.isFinite(quoteTs) && quoteTs > 0 ? new Date(quoteTs * 1000).toISOString() : null;
+  return { data: { value: Math.round(price * 100) / 100, change_pct, quote_at }, status: r.status };
 }
 
 function fallbackVal(live, key, prevData) {
@@ -129,9 +165,9 @@ export async function handleMarketData(env, ctx) {
 
   if (cached) {
     const rotulo = state === 'stale' ? 'cache (revalidando)' : 'cache';
-    const source = cached.stale?.length
-      ? `Yahoo Finance · ${rotulo} (parcial)`
-      : `Yahoo Finance · ${rotulo}`;
+    const source = cached.stale?.length === Object.keys(SEED).length
+      ? 'fontes indisponíveis (cache/seed)'
+      : cached.stale?.length ? `Yahoo Finance · ${rotulo} (parcial)` : `Yahoo Finance · ${rotulo}`;
     return jsonResponse({ ...cached, source }, {
       headers: { 'Cache-Control': 'public, max-age=300' },
     });

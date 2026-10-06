@@ -18,11 +18,11 @@
     <meta property="og:url" content="https://multi-assets.com/" />
     <meta property="og:site_name" content="MultiAsset" />
     <meta property="og:locale" content="pt_BR" />
-    <meta property="og:image" content="https://multi-assets.com/og-cover.jpg" />
+    <meta property="og:image" content="https://multi-assets.com/assets/video/og-multi-20261003.jpg?v=20261003-1" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="MultiAsset | Plataforma de análise macro e portfólio" />
     <meta name="twitter:description" content="Análise fundamentalista multi-ativo com leitura macro integrada e simulação de portfólio." />
-    <meta name="twitter:image" content="https://multi-assets.com/og-cover.jpg" />
+    <meta name="twitter:image" content="https://multi-assets.com/assets/video/og-multi-20261003.jpg?v=20261003-1" />
 
     <script type="application/ld+json">
     {
@@ -58,20 +58,50 @@
 
     <script src="/assets/sz-config.js?v=20260719"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
     <!-- multi craft v2 -->
     
-    <link rel="stylesheet" href="/assets/multi-app.css">
-    <link rel="stylesheet" href="/assets/multi-utilities.css">
+    <link rel="stylesheet" href="/assets/multi-app.css?v=20261002-0505">
+    <link rel="stylesheet" href="/assets/multi-utilities.css?v=20261002-0505">
 
 </head>
-<body data-page="multiasset-app" data-design="sophistication-20260718v2">
+<body data-page="multiasset-app" data-design="multiasset-research-os-v3">
     <!-- craft-revision: sophistication-20260718v2 | flat geometry, no pills -->
 
+<aside class="app-sidebar" aria-label="Navegação principal da plataforma">
+    <a href="#" class="sidebar-brand">
+        <span class="sidebar-mark"><i class="fas fa-wave-square"></i></span>
+        <span><strong>MultiAsset</strong><small>Research OS</small></span>
+    </a>
+    <div class="sidebar-group">
+        <div class="sidebar-label">Visão geral</div>
+        <a href="#alocacao" class="sidebar-link active"><i class="fas fa-table-cells-large"></i><span>Dashboard</span></a>
+        <a href="#alocacao" class="sidebar-link"><i class="fas fa-chart-pie"></i><span>Portfólio</span></a>
+        <a href="#simuladores" class="sidebar-link"><i class="fas fa-wave-square"></i><span>Simuladores</span></a>
+    </div>
+    <div class="sidebar-group">
+        <div class="sidebar-label">Cenários</div>
+        <a href="#panorama" class="sidebar-link"><i class="fas fa-globe"></i><span>Panorama Macro</span></a>
+        <a href="#panorama" class="sidebar-link"><i class="fas fa-industry"></i><span>Impacto Setorial</span></a>
+        <a href="#geopolitica" class="sidebar-link"><i class="fas fa-diagram-project"></i><span>Geopolítica</span></a>
+    </div>
+    <div class="sidebar-group">
+        <div class="sidebar-label">Mercados</div>
+        <a href="#mercado" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Mercado</span></a>
+        <a href="#cripto" class="sidebar-link"><i class="fab fa-bitcoin"></i><span>Cripto</span></a>
+    </div>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-status">
+        <span class="sidebar-status-dot"></span>
+        <span><strong>Dados ativos</strong><small>Pesquisa e simulação</small></span>
+    </div>
+    <a href="/metodologia" class="sidebar-foot-link"><i class="fas fa-book-open"></i><span>Metodologia</span></a>
+    <a href="/consultoria" class="sidebar-foot-link"><i class="fas fa-user-tie"></i><span>Consultoria</span></a>
+</aside>
 <!-- NAVIGATION -->
 <nav>
     <a href="/" class="nav-logo">
@@ -91,6 +121,13 @@
     </ul>
     <div class="nav-time mono" id="nav-clock">--:--:--</div>
 </nav>
+<div class="mobile-section-nav" role="navigation" aria-label="Navegação por seções">
+    <a href="#mercado">Mercado</a>
+    <a href="#cripto">Cripto</a>
+    <a href="#simuladores">Simuladores</a>
+    <a href="#alocacao">Alocação</a>
+    <a href="/consultoria">Consultoria</a>
+</div>
 
 <!-- HERO COM WIDGETS TRADINGVIEW -->
 <section class="hero">
@@ -250,7 +287,7 @@
 <!-- Hero video gate: ativa o mp4 ambiente em desktop. Mobile fica no <picture>
      estatico (zero bytes de video). Se o autoplay mudo for bloqueado, recupera no
      primeiro gesto/scroll do usuario. -->
-<script src="/assets/multi-app-1.js"></script>
+<script src="/assets/multi-app-1.js?v=20261002-0505"></script>
 
 <!-- MACRO STRIP — sem DXY -->
 <div class="macro-strip">
@@ -387,7 +424,7 @@
                 <span aria-hidden="true">·</span>
                 <span id="btc-radar-updated">Atualização —</span>
             </div>
-            <a class="btc-radar-bridge-link" href="https://btc-radar.pages.dev/painel/" target="_blank" rel="noopener">
+            <a class="btc-radar-bridge-link" href="https://aureusbtc.multi-assets.com/" target="_blank" rel="noopener">
                 Abrir BTC Radar <span aria-hidden="true">↗</span>
             </a>
         </div>
@@ -982,7 +1019,7 @@
                     <div class="sc-card base-sc" data-ev="e49">
                         <div class="sc-badge">Moderado</div>
                         <div class="sc-rate u-colorvarorange" id="b-rate-mod">+40% a.a.</div>
-                        <div class="sc-desc" id="b-desc-mod">Ciclo pós-halving de abril 2028 sustenta valorização estrutural. ETFs spot já aprovados nos EUA e Europa ampliam a demanda institucional contínua. Tesourarias corporativas e soberanas diversificam para BTC como hedge inflacionário — especialmente relevante com IPCA acima de 4,5% e Selic em 14,50%. Média histórica dos ciclos pós-halving: +350%.</div>
+                        <div class="sc-desc" id="b-desc-mod">Exposição de longo prazo ao Bitcoin, com elevada volatilidade e sensibilidade à liquidez global. Os cenários usam premissas de modelo e não representam preço-alvo ou retorno garantido.</div>
                         <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="b-base">$ —</div><div class="sc-result-ret" id="b-base-r">—</div></div>
                         <div class="sc-proj-price" id="b-base-price"></div>
                     </div>
@@ -1064,21 +1101,21 @@
                     <div class="sc-card pessimist active-sc" data-ev="e56">
                         <div class="sc-badge">Conservador</div>
                         <div class="sc-rate u-colorvarred" id="c-rate-cons">+16,5% a.a.</div>
-                        <div class="sc-desc" id="c-desc-cons">Choque inflacionário força BCB a elevar a Selic para até 17%. Cenário de dominância fiscal com câmbio depreciado e expectativas desancoradas. CDI em patamar elevado por período prolongado. Risco de recessão no horizonte de 2-3 anos.</div>
+                        <div class="sc-desc" id="c-desc-cons">Cenário de juros elevados por mais tempo. A taxa pessimista fica acima da referência consultada, como hipótese de choque inflacionário e maior restrição monetária.</div>
                         <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="c-pess">R$ —</div><div class="sc-result-ret" id="c-pess-r">—</div></div>
                         <div class="sc-breakdown" id="c-pess-break"></div>
                     </div>
                     <div class="sc-card base-sc" data-ev="e57">
                         <div class="sc-badge">Moderado</div>
                         <div class="sc-rate u-color5b9cf6" id="c-rate-mod">+14,3% a.a.</div>
-                        <div class="sc-desc" id="c-desc-mod">Selic em 14,00% a.a. após o corte de 0,25 p.p. do COPOM de 05/ago/2026, com redução gradual até 13,75% no fim de 2026 (Boletim Focus). CDI acompanha a Selic com spread próximo de zero. IPCA projetado em 5,02% em 2026, em convergência lenta para a meta de 3%.</div>
+                        <div class="sc-desc" id="c-desc-mod">Taxa CDI de referência consultada, usada como premissa constante nesta simulação. A projeção não representa uma curva futura de juros nem uma taxa contratada.</div>
                         <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="c-base">R$ —</div><div class="sc-result-ret" id="c-base-r">—</div></div>
                         <div class="sc-breakdown" id="c-base-break"></div>
                     </div>
                     <div class="sc-card optimist" data-ev="e58">
                         <div class="sc-badge">Agressivo</div>
                         <div class="sc-rate u-colorvargreen" id="c-rate-agr">+12% a.a.</div>
-                        <div class="sc-desc" id="c-desc-agr">Ciclo de cortes da Selic acelerado. BCB reduz a taxa básica para ~11,5% em 12 meses. Inflação ancorada, atividade fraca e câmbio estável permitem afrouxamento monetário mais rápido que o esperado. CDI acompanha a trajetória de queda.</div>
+                        <div class="sc-desc" id="c-desc-agr">Cenário de redução dos juros. A taxa otimista fica abaixo da referência consultada, como hipótese de desinflação e afrouxamento monetário.</div>
                         <div class="sc-result-label">Valor final da carteira</div><div class="sc-result-wrap"><div class="sc-result-val" id="c-otim">R$ —</div><div class="sc-result-ret" id="c-otim-r">—</div></div>
                         <div class="sc-breakdown" id="c-otim-break"></div>
                     </div>
@@ -1322,7 +1359,7 @@
                 <div class="comp-input-title u-colorvargold">Au Ouro</div>
                 <div class="form-group u-marginbottom10px"><label class="form-label" for="c-g-ini">Inicial (USD)</label><input type="number" id="c-g-ini" value="10000" class="form-input" min="0" data-ev="e77"></div>
                 <div class="form-group u-marginbottom10px"><label class="form-label" for="c-g-ap">Mensal (USD)</label><input type="number" id="c-g-ap" value="500" class="form-input" min="0" data-ev="e77"></div>
-                <div class="slider-wrap u-marginbottom0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-g-tx-d">9,3%</span></div><input type="range" id="c-g-tx" aria-label="Taxa de retorno anual — Ouro" min="2" max="25" step="0.5" value="9.3" data-ev="e78"></div>
+                <div class="slider-wrap u-marginbottom0"><div class="slider-header"><span class="slider-label">Taxa</span><span class="slider-val" id="c-g-tx-d">9,3%</span></div><input type="range" id="c-g-tx" aria-label="Taxa de retorno anual — Ouro" min="2" max="25" step="0.1" value="9.3" data-ev="e78"></div>
             </div>
             <div class="comp-input-card u-bordercolorrgba192192192025">
                 <div class="comp-input-title u-colorc0c0c0">Ag Prata</div>
@@ -1351,8 +1388,8 @@
         </div>
         <div class="comp-prazo-row">
             <span class="slider-label">Prazo de comparação</span>
-            <input type="range" id="c-prazo" aria-label="Prazo de comparação" min="1" max="20" step="1" value="10" data-ev="e83" class="u-flex1">
-            <span class="slider-val mono u-minwidth70px-textalignright" id="c-prazo-d">10 anos</span>
+            <input type="range" id="comp-prazo" aria-label="Prazo de comparação" min="1" max="20" step="1" value="10" data-ev="e83" class="u-flex1">
+            <span class="slider-val mono u-minwidth70px-textalignright" id="comp-prazo-d">10 anos</span>
         </div>
         <div class="comp-chart-controls">
             <div class="comp-ctrl-group">
@@ -1484,7 +1521,7 @@
                         </button>
                     </div>
                     <div class="alloc-cenario-desc" id="alloc-cenario-desc">
-                        Ciclo de cortes do BCB em andamento (−0,25pp em mar e abr/2026); Selic em 14,50%, incerteza geopolítica moderada e desinflação gradual.
+                        Cenário de referência do perfil escolhido. Consulte as premissas numéricas do gráfico para as taxas usadas na projeção.
                     </div>
                 </div>
 
@@ -1674,8 +1711,8 @@
         <div class="bench-header">
             <div>
                 <div class="section-eyebrow u-marginbottom8px">Análise Comparativa</div>
-                <h3 class="bench-title display">Projeção do Portfólio vs Benchmarks</h3>
-                <p class="bench-sub">Combine o <strong>perfil de investidor</strong> (alocação) com o <strong>cenário macro</strong> (retornos dos ativos) para ver o impacto real no seu portfólio.</p>
+                <h3 class="bench-title display">Projeção do Portfólio <em>vs.</em> Benchmarks</h3>
+                <p class="bench-sub">Compare a trajetória simulada da carteira com referências de juros reais e liquidez, mantendo premissas, horizonte e cenário visíveis no mesmo campo de leitura.</p><div class="analysis-meta-row" aria-label="Metadados da projeção"><span><b>Modelo</b> condicional</span><span><b>Horizonte</b> selecionável</span><span><b>Unidade</b> BRL nominal</span><span><b>Atualização</b> dinâmica</span></div>
             </div>
             <div class="bench-controls">
                 <div class="bench-prazo-group">
@@ -1699,11 +1736,11 @@
 
         <div class="bench-assumptions">
             <div class="bench-assume-item">
-                <span class="bench-assume-label">DI1F27 (Selic implícita B3)</span>
-                <span class="bench-assume-val u-colorvarblue" id="bench-assume-selic">14,50% → 12% a.a.</span>
+                <span class="bench-assume-label">Selic projetada (modelo)</span>
+                <span class="bench-assume-val u-colorvarblue" id="bench-assume-selic">—</span>
             </div>
             <div class="bench-assume-item">
-                <span class="bench-assume-label">IB5M11 (IMA-B 5+)</span>
+                <span class="bench-assume-label">NTN-B curta (premissa)</span>
                 <span class="bench-assume-val u-colorvargreen" id="bench-assume-ntnb">IPCA + 7,5% a.a. (premissa de modelo)</span>
             </div>
             <div class="bench-assume-item">
@@ -1717,7 +1754,7 @@
         </div>
 
         <div class="bench-chart-wrap">
-            <canvas id="chart-benchmark"></canvas>
+            <canvas id="chart-benchmark" role="img" aria-label="Projeção do portfólio MultiAsset comparada a NTN-B curta e Selic projetada ao longo do horizonte selecionado"></canvas>
         </div>
 
         <div class="bench-table-wrap">
@@ -1770,7 +1807,7 @@
         </div>
 
         <div class="bench-note">
-            <strong>Premissas:</strong> Selic em 14,00% a.a. após corte de 0,25 p.p. no COPOM de 05/ago/2026 (quarto corte seguido do ciclo iniciado em mar/2026, a partir de 15,00%). Boletim Focus de 17/08 projeta Selic em 13,75% no fim de 2026 e IPCA em 5,02% para 2026, 4,24% para 2027. FOMC de 29/jul/2026 manteve os Fed Funds em 3,50%-3,75% pela quinta reunião seguida, com três votos dissidentes por alta e nenhum corte esperado em 2026, o que restringe o espaço do BCB para afrouxamento acelerado. NTN-B projetada com spread IPCA+7,5% (nível de mercado ago/2026). Os retornos dos ativos (ouro, prata, platina, BTC) variam conforme o <strong>cenário macro</strong> selecionado; a alocação percentual varia conforme o <strong>perfil de risco</strong>. Cenário pessimista: geopolítica deteriorada, juros elevados por mais tempo, pressão em criptoativos. Base: normalização gradual. Otimista: dólar mais fraco, fluxo para ativos reais, valorização sustentada em criptoativos. Valores simulados não constituem garantia de retorno. Fontes: <a href="https://www.cnnbrasil.com.br/economia/money/macroeconomia/galipolo-defende-juro-contracionista-para-frear-demanda-domestica/" target="_blank" rel="noopener" class="u-colorvargold-textdecorationunderline">Copom 05/08</a>, <a href="https://www.infomoney.com.br/economia/boletim-focus-projecoes-17082026/" target="_blank" rel="noopener" class="u-colorvargold-textdecorationunderline">Focus 17/08</a>, <a href="https://am.jpmorgan.com/ca/en/asset-management/institutional/insights/portfolio-insights/fixed-income/fixed-income-perspectives/fomc-statement-july-2026/" target="_blank" rel="noopener" class="u-colorvargold-textdecorationunderline">FOMC 29/07</a>.
+            <strong>Premissas:</strong> os valores usados no cálculo estão apresentados acima. A carteira aplica taxas anuais constantes por cenário, com rebalanceamento anual. O benchmark Selic usa uma trajetória de modelo até a taxa terminal. A NTN-B curta compõe inflação projetada e taxa real, com reinvestimento, antes de impostos e custos. Essa referência não replica a marcação a mercado do ETF IMA-B 5+ exibido na alocação. Metais e BTC variam com o cenário e a alocação com o perfil. Resultados são condicionais, não retornos contratados. <a href="https://www.tesourodireto.com.br/produtos/nossos-produtos" target="_blank" rel="noopener" class="u-colorvargold-textdecorationunderline">Metodologia dos títulos do Tesouro</a>.
         </div>
     </div>
 </section>
@@ -1792,12 +1829,19 @@
         </div>
     </div>
 
+    <div class="macro-kpi-rail reveal" aria-label="Indicadores macro principais">
+        <div class="macro-kpi"><span class="macro-kpi-label">Selic</span><strong id="research-kpi-selic">—</strong><small>Brasil · a.a.</small></div>
+        <div class="macro-kpi"><span class="macro-kpi-label">IPCA</span><strong id="research-kpi-ipca">—</strong><small>12m / premissa</small></div>
+        <div class="macro-kpi"><span class="macro-kpi-label">USD/BRL</span><strong id="research-kpi-usd">—</strong><small>spot / referência</small></div>
+        <div class="macro-kpi"><span class="macro-kpi-label">CDI</span><strong id="research-kpi-cdi">—</strong><small>Brasil · a.a.</small></div>
+        <div class="macro-kpi macro-kpi-system"><span class="macro-kpi-label">Regime</span><strong>Restritivo</strong><small>juros reais elevados</small></div>
+    </div>
     <!-- Geopolitical Alert Banner -->
     <div class="macro-alert-banner reveal">
         <div class="macro-alert-icon"><i class="fas fa-circle-exclamation"></i></div>
         <div class="macro-alert-body">
-            <div class="macro-alert-title" id="macro-alert-title">Selic em 14.00% a.a., câmbio em R$ 5.19 e COPOM 16/set em foco: inflação persistente pressiona política monetária</div>
-            <div class="macro-alert-text" id="macro-alert-text">O Banco Central reduziu a taxa Selic para 14.00% a.a. no COPOM de 05/08, refletindo a persistência inflacionária acima da meta (IPCA projetado em 5.02% para 2026). O mercado precifica redução modesta para 13.75% até dezembro, sinalizando cautela. O câmbio opera em R$ 5.19, com expectativa de depreciação para R$ 5.20 até fim de ano, pressionado por diferenciais de juros e fluxos externos. O crescimento econômico segue fraco (PIB em 1.98%), criando dilema para o BC entre controle inflacionário e estímulo à atividade. Ativos defensivos ganham relevância em ambiente de juros elevados e incerteza fiscal.</div>
+            <div class="macro-alert-title" id="macro-alert-title">Snapshot de 05/08/2026: Selic em 14,00% a.a.; trajetória posterior deve ser lida pelo painel macro</div>
+            <div class="macro-alert-text" id="macro-alert-text">No snapshot de 05/08/2026, o Banco Central reduziu a taxa Selic para 14,00% a.a. no COPOM de 05/08, refletindo a persistência inflacionária acima da meta (IPCA projetado em 5.02% para 2026). O mercado precifica redução modesta para 13.75% até dezembro, sinalizando cautela. O câmbio opera em R$ 5.19, com expectativa de depreciação para R$ 5.20 até fim de ano, pressionado por diferenciais de juros e fluxos externos. O crescimento econômico segue fraco (PIB em 1.98%), criando dilema para o BC entre controle inflacionário e estímulo à atividade. Ativos defensivos ganham relevância em ambiente de juros elevados e incerteza fiscal.</div>
         </div>
         <div class="macro-alert-badge" id="macro-alert-badge">SELIC ESTÁVEL · FOCUS REVISADO</div>
     </div>
@@ -1856,7 +1900,7 @@
                     <tr>
                         <td><strong>Ouro</strong></td>
                         <td><span class="macro-dir up">↑</span></td>
-                        <td>Ouro se beneficia de juros reais negativos em economias desenvolvidas e de juros reais elevados no Brasil (Selic 14.00% vs. IPCA 5.02% = 8.98% real, com expectativa de compressão gradual). Incerteza geopolítica e possível flight-to-safety elevam demanda por ativo refúgio. Depreciação do real torna ouro mais atrativo para investidores brasileiros em hedge cambial.</td>
+                        <td>No snapshot de 05/08/2026, o ouro se beneficiava de juros reais elevados no Brasil (Selic 14,00% vs. IPCA 5,02% = 8,98% real, com expectativa de compressão gradual). Incerteza geopolítica e possível flight-to-safety elevam demanda por ativo refúgio. Depreciação do real torna ouro mais atrativo para investidores brasileiros em hedge cambial.</td>
                     </tr>
                     <tr>
                         <td><strong>Bitcoin</strong></td>
@@ -1879,7 +1923,7 @@
             <div id="macro-brasil-content">
             <div class="macro-brazil-item">
                 <div class="macro-brazil-label">SELIC e COPOM</div>
-                <div class="macro-brazil-text">Banco Central reduz a Selic para 14.00% a.a. no COPOM de 05/08/2026, quarto corte de 0.25 p.p. do ciclo iniciado em março. Mercado precifica redução gradual para 13.75% até dezembro, condicionada à ancoragem de expectativas inflacionárias. IPCA projetado em 5.02% permanece acima da meta de 3% (com tolerância até 4.5%), justificando cautela. A próxima reunião do COPOM (16/set) será decisiva para a trajetória de juros. Risco de manutenção prolongada em patamares elevados caso inflação não ceda.</div>
+                <div class="macro-brazil-text">No COPOM de 05/08/2026, o Banco Central reduziu a Selic para 14,00% a.a., quarto corte de 0.25 p.p. do ciclo iniciado em março. Mercado precifica redução gradual para 13.75% até dezembro, condicionada à ancoragem de expectativas inflacionárias. IPCA projetado em 5.02% permanece acima da meta de 3% (com tolerância até 4.5%), justificando cautela. A próxima reunião do COPOM (16/set) será decisiva para a trajetória de juros. Risco de manutenção prolongada em patamares elevados caso inflação não ceda.</div>
             </div>
             <div class="macro-brazil-item">
                 <div class="macro-brazil-label">Câmbio e Contas Externas</div>
@@ -1947,28 +1991,67 @@
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <!-- CENARIOS GEOPOLITICOS — US-China 2026-2030 -->
 <!-- ═══════════════════════════════════════════════════════════════════ -->
-<section id="geopolitica" class="section">
-    <div class="section-header reveal">
+<section id="geopolitica" class="section geo-research-zone">
+    <div class="section-header reveal geo-section-header">
         <div>
-            <div class="section-eyebrow">Cenarios Prospectivos · 2026-2030</div>
-            <h2 class="section-title display">Cenarios <em class="u-colorvargold-fontstyleitalic">Geopoliticos</em></h2>
+            <div class="section-eyebrow">Risco, transmissão e hipóteses · consulta 02/10/2026</div>
+            <h2 class="section-title display">Cenários Geopolíticos <em>e Prospectivos</em></h2>
             <div class="section-line"></div>
-            <div class="u-fontsize13px-colorvarmuted-maxwidth52ch-margintop14px-linehe">
-                Projecoes condicionais para o eixo EUA-China, calibradas com dados de prediction markets (Polymarket, Metaculus, Good Judgment), series historicas de conflito (Correlates of War, UCDP) e indices de risco geopolitico (GPR Index, Caldara-Iacoviello).
-            </div>
+            <p class="geo-intro-copy">Leitura em três camadas. <strong>Fatos observados</strong> usam fontes primárias e datas verificáveis. <strong>Projeções condicionais</strong> traduzem esses fatos em trajetórias de mercado. <strong>Hipóteses</strong> são stress tests do modelo e não previsões de ocorrência.</p>
+        </div>
+        <div class="geo-trust-key" aria-label="Legenda de evidência">
+            <span data-kind="observed">Observado</span>
+            <span data-kind="projection">Projeção</span>
+            <span data-kind="hypothesis">Hipótese</span>
         </div>
     </div>
 
-    <!-- 2-col: probability chart + scenario detail -->
+    <div class="geo-network-map reveal" aria-label="Mapa de transmissão geopolítica">
+        <div class="geo-network-head">
+            <div><span class="geo-network-kicker">Mapa de transmissão</span><strong>Fluxos de risco entre regiões e ativos</strong></div>
+            <span class="geo-network-mode">topologia qualitativa</span>
+        </div>
+        <div class="geo-network-canvas" aria-hidden="true">
+            <svg viewBox="0 0 1000 360" preserveAspectRatio="none">
+                <path d="M160 145 C285 80 365 82 470 145" />
+                <path d="M470 145 C590 88 705 88 820 148" />
+                <path d="M160 145 C330 240 500 255 675 220" />
+                <path d="M675 220 C750 205 790 175 820 148" />
+                <path d="M470 145 C520 180 590 205 675 220" />
+            </svg>
+            <div class="geo-node usa"><span>01</span><strong>EUA</strong><small>Juros · tecnologia</small></div>
+            <div class="geo-node europe"><span>02</span><strong>Europa</strong><small>Energia · Ucrânia</small></div>
+            <div class="geo-node china"><span>03</span><strong>China</strong><small>Comércio · manufatura</small></div>
+            <div class="geo-node me"><span>04</span><strong>Oriente Médio</strong><small>Petróleo · frete</small></div>
+            <div class="geo-node brazil"><span>05</span><strong>Brasil</strong><small>Câmbio · commodities</small></div>
+        </div>
+    </div>
+    <div class="geo-evidence-ledger reveal" aria-label="Fatos geopolíticos e macro observados">
+        <a class="geo-evidence-item" href="https://www.bcb.gov.br/publicacoes/atascopom/16092026" target="_blank" rel="noopener">
+            <span class="geo-evidence-kicker">Brasil · observado</span><strong>Selic em 13,75% a.a.</strong><small>Copom 15–16 set · ata publicada 22/09/2026</small>
+        </a>
+        <a class="geo-evidence-item" href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm" target="_blank" rel="noopener">
+            <span class="geo-evidence-kicker">EUA · observado</span><strong>Fed Funds em 3,75%–4,00%</strong><small>FOMC · 16/09/2026</small>
+        </a>
+        <a class="geo-evidence-item" href="https://www.whitehouse.gov/fact-sheets/2026/09/fact-sheet-president-donald-j-trump-advances-a-fair-and-reciprocal-relationship-with-china-while-hosting-historic-state-visit/" target="_blank" rel="noopener">
+            <span class="geo-evidence-kicker">EUA–China · observado</span><strong>Novos mecanismos bilaterais de comércio e investimento</strong><small>Casa Branca · 25/09/2026</small>
+        </a>
+        <a class="geo-evidence-item" href="https://www.iea.org/reports/oil-market-report-september-2026" target="_blank" rel="noopener">
+            <span class="geo-evidence-kicker">Energia · observado</span><strong>Fluxos de petróleo seguem restringidos</strong><small>IEA OMR · 11/09/2026</small>
+        </a>
+        <a class="geo-evidence-item" href="https://www.nato.int/en/news-and-events/articles/news/2026/09/08/nato-secretary-general-welcomes-new-support-for-ukraine-urges-nations-to-continue-to-step-up" target="_blank" rel="noopener">
+            <span class="geo-evidence-kicker">Europa · observado</span><strong>Apoio aliado à Ucrânia permanece material</strong><small>NATO · 08/09/2026</small>
+        </a>
+    </div>    <!-- 2-col: probability chart + scenario detail -->
     <div class="geo-main-grid reveal">
         <div class="geo-card">
-            <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv">Probabilidades estimadas</div>
-            <div class="geo-prob-chart-wrap"><canvas id="chart-geo-prob"></canvas></div>
-            <div class="geo-prob-note">Faixas refletem incerteza Knightiana (eventos unicos, sem serie historica). Probabilidades calibradas com: base rate Correlates of War (~1.2%/ano great-power war), Allison Thucydides Trap (12/16 casos), prediction markets (Polymarket, Metaculus, Good Judgment).</div>
+            <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv">Faixas de peso do modelo</div>
+            <div class="geo-prob-chart-wrap"><canvas id="chart-geo-prob" role="img" aria-label="Faixas internas de peso dos cenários geopolíticos no modelo de stress"></canvas></div>
+            <div class="geo-prob-note">Pesos internos usados apenas para stress test e análise de sensibilidade. Não representam probabilidades observadas nem forecast de ocorrência.</div>
         </div>
 
         <div class="geo-card">
-            <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv-2">Cenario selecionado</div>
+            <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv-2">Hipótese prospectiva selecionada</div>
             <div class="geo-scenario-selector" id="geo-scenario-selector"><!-- JS-populated --></div>
             <div class="geo-scenario-detail" id="geo-scenario-detail"><!-- JS-populated --></div>
         </div>
@@ -1976,14 +2059,14 @@
 
     <!-- Conditional Return Fan Chart -->
     <div class="geo-card reveal u-margintop24px">
-        <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv-2">Retornos condicionais por cenario · horizonte 5 anos (CAGR)</div>
-        <div class="geo-return-chart-wrap"><canvas id="chart-geo-return"></canvas></div>
-        <div class="geo-prob-note">Retorno anualizado composto de cada ativo sob cada cenario geopolitico. Linha tracejada: cenario base atual (sem overlay geopolitico).</div>
+        <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv-2">Retornos condicionais por hipótese · horizonte 5 anos (CAGR)</div>
+        <div class="geo-return-chart-wrap"><canvas id="chart-geo-return" role="img" aria-label="Retornos condicionais por hipótese geopolítica e classe de ativo"></canvas></div>
+        <div class="geo-prob-note">Retornos de modelo sob cada hipótese selecionada. Linha tracejada: cenário base sem overlay geopolítico. Valores condicionais não são metas nem previsões.</div>
     </div>
 
     <!-- Macro Variable Paths per Scenario -->
     <div class="geo-card reveal u-margintop24px">
-        <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv-2">Trajetoria de variaveis macro por cenario · 2026-2030</div>
+        <div class="geo-card-title mono u-fontsize12px-letterspacing01em-texttransformuppercase-colorv-2">Trajetórias condicionais de variáveis macro · 2026–2030</div>
         <div class="geo-macro-grid" id="geo-macro-grid"><!-- JS-populated --></div>
     </div>
 
@@ -1993,10 +2076,10 @@
             <div class="bench-mc-toggle-left">
                 <span class="bmt-spinner"></span>
                 <span class="bmt-icon"><i class="fas fa-globe"></i></span>
-                <span>Simulacao Monte Carlo com cenario geopolitico</span>
-                <span class="u-fontsize9px-letterspacing012em-texttransformuppercase-colorv-2">5 cenarios x 2.000 trajetorias</span>
+                <span>Stress test Monte Carlo com hipótese geopolítica</span>
+                <span class="u-fontsize9px-letterspacing012em-texttransformuppercase-colorv-2">5 hipóteses × 2.000 trajetórias</span>
             </div>
-            <span class="bench-mc-toggle-right" id="geo-mc-toggle-hint">Expandir simulacao geopolitica condicional</span>
+            <span class="bench-mc-toggle-right" id="geo-mc-toggle-hint">Expandir stress test geopolítico</span>
         </button>
         <div class="bench-mc-content u-displaynone" id="geo-mc-content">
             <div class="bench-mc-prob-grid" id="geo-mc-prob-grid"></div>
@@ -2097,7 +2180,7 @@
     <span class="fab-text">Exportar Relatório</span>
 </button>
 
-<script src="/assets/multi-app-2.js"></script>
+<script src="/assets/multi-app-2.js?v=20261002-0505"></script>
 
 <!-- ── EXIT-INTENT POPUP ── -->
 <div id="exit-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-headline">
@@ -2150,7 +2233,7 @@
     </div>
 </div>
 
-<script src="/assets/multi-app-3.js"></script>
+<script src="/assets/multi-app-3.js?v=20261002-0505"></script>
 
 </body>
 </html>

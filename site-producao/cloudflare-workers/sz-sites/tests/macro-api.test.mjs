@@ -1,7 +1,7 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { handleMacroApi, normalizarAtivos, coerceLlmContent, buildLlmChain, parseAffordableTokens } from '../src/handlers/macro-api.js';
-import { runScheduledMacro } from '../src/index.js';
+import { runScheduledMacro } from '../src/handlers/macro-scheduled.js';
 
 const realFetch = globalThis.fetch;
 let openRouterCalls = 0;

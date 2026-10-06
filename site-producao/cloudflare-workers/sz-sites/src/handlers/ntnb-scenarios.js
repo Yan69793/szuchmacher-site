@@ -15,8 +15,39 @@
 // TTL de frescor 2h; a entrada em si sobrevive 12h no KV (staleTtl) pra dar
 // margem de revalidacao em background antes de expirar de vez.
 
-import { fetchJsonStrict, jsonResponse } from '../utils/http.js';
+import { jsonResponse } from '../utils/http.js';
 import { writeCache, readCacheOrRevalidate, staleTtl } from '../utils/cache.js';
+
+// Limite inclui leitura do corpo. Uma repeticao apenas para GET transitorio.
+async function fetchScenarioJson(url, options = {}) {
+  const timeout = options.timeout ?? 10000;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const controller = new AbortController();
+    let timer, status = 0, retryAfter = 0;
+    try {
+      const deadline = new Promise((_, reject) => {
+        timer = setTimeout(() => { controller.abort(); reject(new Error('timeout')); }, timeout);
+      });
+      const result = await Promise.race([deadline, (async () => {
+        const res = await fetch(url, { headers: options.headers, signal: controller.signal });
+        status = res.status;
+        if (!res.ok) {
+          const raw = res.headers.get('Retry-After');
+          if (raw) retryAfter = /^\d+$/.test(raw) ? Number(raw) * 1000 : Math.max(0, Date.parse(raw) - Date.now());
+          return { ok: false, status, data: null, error: 'HTTP ' + status };
+        }
+        return { ok: true, status, data: await res.json(), error: null };
+      })()]);
+      if (result.ok || attempt || !(status === 429 || status >= 500) || retryAfter > 2000) return result;
+    } catch (error) {
+      if (attempt || error instanceof SyntaxError) return { ok: false, status, data: null, error: error.message };
+    } finally {
+      clearTimeout(timer);
+      controller.abort();
+    }
+    await new Promise(resolve => setTimeout(resolve, Math.max(retryAfter || 0, 250 + Math.random() * 250)));
+  }
+}
 
 const CACHE_KEY = 'ntnb-scenarios';
 const CACHE_TTL = 7200; // 2 horas
@@ -44,7 +75,7 @@ const WARNING_DEFAULTS =
 async function fetchYahooImaB() {
   // Yahoo Finance v8 chart API — mesmo padrao de market-data.js
   const url = 'https://query1.finance.yahoo.com/v8/finance/chart/IB5M11.SA?interval=1d&range=5d';
-  const r = await fetchJsonStrict(url, {
+  const r = await fetchScenarioJson(url, {
     timeout: 12000,
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MultiAssetBot/1.0)' },
   });
@@ -56,7 +87,7 @@ async function fetchYahooImaB() {
 
   const meta = result.meta;
   const price = meta?.regularMarketPrice;
-  if (!price || price <= 0) return null;
+  if (!Number.isFinite(price) || price <= 0) return null;
 
   // Verifica se os dados estao frescos. Corte por dias uteis, nao por horas
   // corridas: 48h fixas descartavam o candle de sexta no fim de semana e na
@@ -99,6 +130,7 @@ export function tradingDayGap(fromSec, toSec) {
 // motor (ntnb pess 0.16/base 0.13/otim 0.10) e com os textos estaticos do
 // multiasset-app.html.
 export function computeRates(ipcaSpread, ipcaProj) {
+  if (![ipcaSpread, ipcaProj].every(Number.isFinite) || ipcaSpread <= -1 || ipcaProj <= -1) throw new RangeError('Premissa NTN-B invalida');
   // Taxa nominal = (1 + IPCA) * (1 + spread) - 1
   const nominalBase = (1 + ipcaProj) * (1 + ipcaSpread) - 1;
 
@@ -106,13 +138,15 @@ export function computeRates(ipcaSpread, ipcaProj) {
   // Pessimista: premio expande → spread sobe 2 pp (aversao a risco fiscal)
   // Base: spread de mercado
   // Otimista: premio comprime → spread cai 2 pp (arcabouco credivel)
-  const spreadPess = Math.min(0.16, ipcaSpread + 0.02);
-  const spreadOtim = Math.max(0.03, ipcaSpread - 0.02);
+  const width = Math.min(0.02, (1 + ipcaSpread) / 2);
+  const spreadPess = ipcaSpread + width;
+  const spreadOtim = ipcaSpread - width;
 
   const pess = Math.round(((1 + ipcaProj) * (1 + spreadPess) - 1) * 10000) / 10000;
   const base = Math.round(nominalBase * 10000) / 10000;
   const otim = Math.round(((1 + ipcaProj) * (1 + spreadOtim) - 1) * 10000) / 10000;
 
+  if (!(pess > base && base > otim)) throw new RangeError('Cenarios NTN-B indistinguiveis');
   return { pess, base, otim };
 }
 

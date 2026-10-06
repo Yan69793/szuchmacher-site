@@ -19,7 +19,7 @@ function clamp(v, min, max) {
 async function fetchSignals(env) {
   const result = await fetchBtcEndpoint(env, '/api/signals', 12000);
   const data = result.body;
-  if (!result.ok || !data?.success || !data?.data?.signals) return null;
+  if (!result.ok || !data?.success || !Array.isArray(data?.data?.signals)) return null;
   return data.data.signals;
 }
 
@@ -27,7 +27,8 @@ async function fetchFearGreed(env) {
   const result = await fetchBtcEndpoint(env, '/api/sentiment/fear-greed', 8000);
   const data = result.body;
   if (!result.ok || !data?.success || data?.data?.value == null) return null;
-  return data.data.value; // 0-100
+  const value = Number(data.data.value);
+  return Number.isFinite(value) && value >= 0 && value <= 100 ? value : null;
 }
 
 export async function fetchEmpirical365(env) {
@@ -35,9 +36,10 @@ export async function fetchEmpirical365(env) {
   const data = result.body?.data;
   const annual = data?.horizons?.['365'];
   const effectiveSampleSize = Number(annual?.effective_sample_size ?? 0);
-  if (!result.ok || !annual?.available || annual.sample_size < 30 || effectiveSampleSize < 6) return null;
+  if (!result.ok || !annual?.available || !Number.isFinite(Number(annual.sample_size)) || annual.sample_size < 30 || !Number.isFinite(effectiveSampleSize) || effectiveSampleSize < 6) return null;
+  if (![annual.p10, annual.p50, annual.p90].every(v => v != null && v !== '')) return null;
   const values = [annual.p10, annual.p50, annual.p90].map(Number);
-  if (!values.every(Number.isFinite)) return null;
+  if (!values.every(v => Number.isFinite(v) && v > -100) || !(values[0] <= values[1] && values[1] <= values[2])) return null;
   return {
     rates: {
       pess: values[0] / 100,
@@ -81,12 +83,12 @@ function computeRates(signals, fgValue) {
   if (signals) {
     const medium = signals.filter(function(s) { return s.timeframe === 'medium'; });
     const atrVals = medium
-      .map(function(s) { return s.payload?.atr_value; })
-      .filter(function(v) { return v != null; });
+      .map(function(s) { return Number(s.payload?.atr_value); })
+      .filter(function(v) { return Number.isFinite(v) && v > 0; });
     if (atrVals.length > 0) {
       const avgAtr = atrVals.reduce(function(a, b) { return a + b; }, 0) / atrVals.length;
-      const price = medium[0]?.entry_price || 64800;
-      atrRatio = avgAtr / price; // ex: 332 / 64800 = 0.005 (0.5%)
+      const price = Number(medium[0]?.entry_price);
+      if (Number.isFinite(price) && price > 0) atrRatio = avgAtr / price;
     }
   }
 

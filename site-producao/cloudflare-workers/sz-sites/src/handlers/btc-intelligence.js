@@ -63,46 +63,42 @@ export function summarizeSignals(body) {
 
 async function fetchWithTimeout(fetcher, request, timeoutMs) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let timer;
+  const deadline = new Promise((_, reject) => {
+    timer = setTimeout(() => { controller.abort(); reject(new Error('timeout')); }, timeoutMs);
+  });
   try {
-    const req = new Request(request, { signal: controller.signal });
-    return await fetcher(req);
+    return await Promise.race([deadline, (async () => {
+      const res = await fetcher(new Request(request, { signal: controller.signal }));
+      return { status: res.status, ok: res.ok, retryAfter: res.headers.get('Retry-After'), body: res.ok ? await res.json() : null };
+    })()]);
   } finally {
     clearTimeout(timer);
+    controller.abort();
   }
 }
 
 export async function fetchBtcEndpoint(env, path, timeoutMs = 8000) {
   const viaBinding = env?.BTC_RADAR && typeof env.BTC_RADAR.fetch === 'function';
   const url = viaBinding ? `https://btc-radar.internal${path}` : `${BTC_ORIGIN}${path}`;
-  const fetcher = viaBinding
-    ? (req) => env.BTC_RADAR.fetch(req)
-    : (req) => fetch(req);
-
-  try {
-    const res = await fetchWithTimeout(fetcher, new Request(url, {
-      headers: { Accept: 'application/json' },
-    }), timeoutMs);
-    if (!res.ok) {
-      return { ok: false, status: res.status, via: viaBinding ? 'service-binding' : 'public-fetch', body: null, error: `HTTP ${res.status}` };
+  const fetcher = viaBinding ? req => env.BTC_RADAR.fetch(req) : req => fetch(req);
+  const via = viaBinding ? 'service-binding' : 'public-fetch';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let retryAfter = 0;
+    try {
+      const res = await fetchWithTimeout(fetcher, new Request(url, { headers: { Accept: 'application/json' } }), timeoutMs);
+      if (!res.ok) {
+        if (res.retryAfter) retryAfter = /^\d+$/.test(res.retryAfter) ? Number(res.retryAfter) * 1000 : Math.max(0, Date.parse(res.retryAfter) - Date.now());
+        if (attempt || !(res.status === 429 || res.status >= 500) || retryAfter > 2000) return { ok: false, status: res.status, via, body: null, error: `HTTP ${res.status}` };
+      } else {
+        const body = res.body;
+        const apiOk = body != null && typeof body === 'object' && !Array.isArray(body) && body.ok !== false && body.success !== false;
+        return { ok: apiOk, status: res.status, via, body, error: apiOk ? null : body?.error ?? 'upstream_reported_failure' };
+      }
+    } catch (err) {
+      if (attempt || err instanceof SyntaxError) return { ok: false, status: 0, via, body: null, error: err?.message ?? String(err) };
     }
-    const body = await res.json();
-    const apiOk = body?.ok !== false && body?.success !== false;
-    return {
-      ok: apiOk,
-      status: res.status,
-      via: viaBinding ? 'service-binding' : 'public-fetch',
-      body,
-      error: apiOk ? null : body?.error ?? 'upstream_reported_failure',
-    };
-  } catch (err) {
-    return {
-      ok: false,
-      status: 0,
-      via: viaBinding ? 'service-binding' : 'public-fetch',
-      body: null,
-      error: err?.message ?? String(err),
-    };
+    await new Promise(resolve => setTimeout(resolve, Math.max(retryAfter || 0, 250 + Math.random() * 250)));
   }
 }
 

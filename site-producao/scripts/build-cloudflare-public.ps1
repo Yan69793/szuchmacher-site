@@ -105,6 +105,14 @@ function Test-MultiDataEv([string]$HtmlPath, [string]$JsPath) {
         $jsKeys[$m.Groups[1].Value] = $true
     }
     $problemas = @()
+    $ids = @{}
+    foreach ($m in [regex]::Matches($html, '\bid="([^"]+)"')) {
+        $id = $m.Groups[1].Value
+        if ($ids.ContainsKey($id)) { $problemas += "ID duplicado '$id' no HTML multi" }
+        $ids[$id] = $true
+    }
+    if ([regex]::IsMatch($html, '(?i)\sstyle\s*=')) { $problemas += 'style inline no HTML multi' }
+    if ([regex]::IsMatch($html, '(?i)\son[a-z]+\s*=')) { $problemas += 'handler inline no HTML multi' }
     foreach ($hk in $htmlKeys.Keys) {
         $n = $hk.Substring(1)
         if (-not $jsKeys.ContainsKey($n)) { $problemas += "HTML data-ev '$hk' sem handler '$n' no EVENTS" }
@@ -144,7 +152,7 @@ New-Item -ItemType Directory -Path (Join-Path $MULTI 'assets') -Force | Out-Null
 Write-Host "`n-- szuchmacher.com.br --" -ForegroundColor Green
 $szFiles = @(
     'index.html', 'relatorios.html', 'honorarios.html', 'assinatura.html',
-    'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json',
+    'privacidade.html', 'sitemap.xml', 'agenda-data.json', 'macro_data.json', 'relatorio_cache.json',
     'regulatorio-data.json',
     # Radar Geopolitico: pagina + edicao semanal corrente (o historico fica
     # em geopolitica-historico/ e NAO entra no public).
@@ -246,7 +254,7 @@ Add-VersionStamps $MULTI (Join-Path $MULTI 'assets')
 $obrigatorios = @(
     'sz\index.html', 'sz\relatorios.html', 'sz\honorarios.html', 'sz\assinatura.html',
     'sz\privacidade.html', 'sz\sitemap.xml', 'sz\og-cover.jpg',
-    'sz\logo.png', 'sz\macro_data.json', 'sz\agenda-data.json',
+    'sz\logo.png', 'sz\macro_data.json', 'sz\relatorio_cache.json', 'sz\agenda-data.json',
     'sz\regulatorio-data.json',
     'sz\cv.html', 'sz\Yan_Szuchmacher_CV_PT.pdf', 'sz\Yan_Szuchmacher_CV_EN.pdf',
     'sz\assets\sz-config.js', 'sz\assets\sz-design.css',
@@ -254,7 +262,7 @@ $obrigatorios = @(
     'multi\privacidade.html', 'multi\privacidade',
     'multi\metodologia.html', 'multi\metodologia',
     'multi\sitemap.xml',
-    'multi\og-cover.jpg', 'multi\assets\sz-config.js',
+    'multi\assets\video\og-multi-20261003.jpg', 'multi\assets\sz-config.js',
     'multi\assets\multi-app.css', 'multi\assets\multi-utilities.css',
     'multi\assets\multi-app-1.js', 'multi\assets\multi-app-2.js', 'multi\assets\multi-app-3.js'
 )

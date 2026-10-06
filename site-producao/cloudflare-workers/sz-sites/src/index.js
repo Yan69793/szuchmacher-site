@@ -1,3 +1,4 @@
+import { WorkerEntrypoint } from 'cloudflare:workers';
 import { handlePrices } from './handlers/prices.js';
 import { handleMarketData } from './handlers/market-data.js';
 import { handleMacroApi } from './handlers/macro-api.js';
@@ -14,7 +15,10 @@ import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
 import { handleUsdbrlScenarios } from './handlers/usdbrl-scenarios.js';
 import { handleRelatorioPrices } from './handlers/relatorio-prices.js';
 import { handleBtcIntelligence } from './handlers/btc-intelligence.js';
+import { callDeepseekMarket } from './handlers/internal-deepseek-market.js';
 import { applySecurityHeaders } from './utils/headers.js';
+import { fetchAsset } from './utils/assets.js';
+import { runScheduledMacro } from './handlers/macro-scheduled.js';
 
 const SITE_MAP = {
   'szuchmacher.com.br': 'sz',
@@ -136,21 +140,6 @@ function redirect(url, status = 301) {
   return Response.redirect(url, status);
 }
 
-export async function fetchAsset(request, env, assetUrl, hops = 0) {
-  if (hops > 3) return new Response('Asset loop', { status: 500 });
-  // new Request(assetUrl, request) repassava o request inteiro, e o construtor
-  // rejeita body em GET/HEAD. Cliente que manda GET com Content-Length: 0
-  // (ex.: .NET) 500ava aqui. Reconstroi so com method e headers, sem body.
-  const res = await env.ASSETS.fetch(
-    new Request(assetUrl, { method: request.method, headers: request.headers }),
-  );
-  if (![301, 302, 307, 308].includes(res.status)) return res;
-  const loc = res.headers.get('Location');
-  if (!loc) return res;
-  const next = new URL(loc, assetUrl);
-  return fetchAsset(request, env, next, hops + 1);
-}
-
 async function serveStatic(request, env, siteKey) {
   const publicUrl = new URL(request.url);
   let path = publicUrl.pathname;
@@ -252,6 +241,20 @@ async function routeRequest(request, env, ctx) {
   return applySecurityHeaders(staticRes, host);
 }
 
+export class InternalAI extends WorkerEntrypoint {
+  async ping() {
+    return { ok: true, deepseek_configured: Boolean(this.env.DEEPSEEK_KEY || this.env.DEEPSEEK_API_KEY) };
+  }
+
+  async deepseekMarket(input) {
+    try {
+      return { ok: true, data: await callDeepseekMarket(input, this.env) };
+    } catch (err) {
+      return { ok: false, error: String(err?.message ?? err).slice(0, 700) };
+    }
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     try {
@@ -274,46 +277,4 @@ export default {
   },
 };
 
-export async function runScheduledMacro(env, event = {}) {
-  const started = Date.now();
-  const rec = {
-    ts: Math.floor(Date.now() / 1000),
-    cron: event.cron ?? '0 3 * * MON',
-    ok: false,
-    status: 0,
-    error: null,
-    generated_at: null,
-    ms: 0,
-  };
-  try {
-    const res = await handleMacroApi(
-      new Request('https://cron.local/macro_api.php?cron=1'),
-      env,
-      { forceRefresh: true },
-    );
-    const body = await res.clone().json().catch(() => ({}));
-    rec.status = res.status;
-    rec.ok = !!body.ok;
-    rec.error = body.error ?? null;
-    rec.generated_at = body.generated_at ?? null;
-    rec.ms = Date.now() - started;
-    console.log('[scheduled] macro refresh', rec);
-    try {
-      await env.CACHE.put('macro-cron-last', JSON.stringify(rec), { expirationTtl: 30 * 24 * 3600 });
-    } catch (e) {
-      console.warn('[scheduled] nao gravou macro-cron-last:', e?.message ?? e);
-    }
-    if (!rec.ok) {
-      throw new Error(`macro cron falhou status=${rec.status} error=${rec.error ?? 'sem detalhe'}`);
-    }
-    return rec;
-  } catch (err) {
-    rec.ms = Date.now() - started;
-    if (!rec.error) rec.error = err?.message ?? String(err);
-    console.error('[scheduled] macro refresh threw', rec.error);
-    try {
-      await env.CACHE.put('macro-cron-last', JSON.stringify(rec), { expirationTtl: 30 * 24 * 3600 });
-    } catch { /* ignore */ }
-    throw err;
-  }
-}
+export { fetchAsset, runScheduledMacro };

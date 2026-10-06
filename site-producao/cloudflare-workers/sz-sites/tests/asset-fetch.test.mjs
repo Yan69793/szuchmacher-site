@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { fetchAsset } from '../src/index.js';
+import { fetchAsset } from '../src/utils/assets.js';
 
 // P3-1 de 30/08: GET/HEAD com Content-Length: 0 em rota HTML devolvia 500.
 // new Request(assetUrl, request) repassava o request inteiro e o construtor
