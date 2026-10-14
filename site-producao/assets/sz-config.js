@@ -108,13 +108,82 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
   }
 
   /* ── Microsoft Clarity init ─────────────────────────────── */
-  if (window.SZ.clarityReady) {
+  /* LGPD: o Clarity grava cookies de terceiro (_clck/_clsk) e so pode carregar
+     depois de consentimento expresso. Escolha em localStorage 'sz-consent':
+     'analytics' (aceitou) ou 'essential' (recusou). Sem escolha, nada carrega e
+     o banner aparece. window.clarity so existe depois do aceite, entao todos os
+     window.clarity(...) do resto do arquivo viram no-op sem consentimento. */
+  var CONSENT_KEY = 'sz-consent';
+  window.SZ.getConsent = function () {
+    try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; }
+  };
+  window.SZ.loadClarity = function () {
+    if (!window.SZ.clarityReady || window.SZ._clarityLoaded) return;
+    window.SZ._clarityLoaded = true;
     (function (c, l, a, r, i, t, y) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
       t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', window.SZ_CLARITY_ID);
-  }
+  };
+  window.SZ.setConsent = function (value) {
+    try { localStorage.setItem(CONSENT_KEY, value); } catch (e) {}
+    var b = document.getElementById('sz-consent-banner');
+    if (b) b.parentNode.removeChild(b);
+    if (value === 'analytics') window.SZ.loadClarity();
+  };
+  window.SZ.showConsentBanner = function () {
+    if (!window.SZ.clarityReady || document.getElementById('sz-consent-banner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'sz-consent-banner';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Prefer\u00eancias de privacidade');
+    /* estilos via CSSOM: a CSP (style-src sem unsafe-inline) bloqueia o atributo
+       style, mas nao propriedades atribuidas por script. */
+    var s = bar.style;
+    s.position = 'fixed'; s.left = '16px'; s.right = '16px'; s.bottom = '16px'; s.zIndex = '9999';
+    s.maxWidth = '720px'; s.margin = '0 auto'; s.padding = '16px 18px'; s.borderRadius = '10px';
+    s.background = '#0a1428'; s.color = '#f3f0e8'; s.border = '1px solid #92703a';
+    s.boxShadow = '0 8px 30px rgba(0,0,0,.35)'; s.fontSize = '14px'; s.lineHeight = '1.5';
+    s.display = 'flex'; s.flexWrap = 'wrap'; s.gap = '12px'; s.alignItems = 'center';
+    var p = document.createElement('p');
+    p.style.margin = '0'; p.style.flex = '1 1 320px';
+    p.appendChild(document.createTextNode('Usamos o Microsoft Clarity para entender como o site \u00e9 usado, apenas com o seu consentimento. '));
+    var a = document.createElement('a');
+    a.href = '/privacidade.html'; a.textContent = 'Pol\u00edtica de Privacidade';
+    a.style.color = '#e2c48a'; a.style.textDecoration = 'underline';
+    p.appendChild(a);
+    function btn(label, value) {
+      var x = document.createElement('button');
+      x.type = 'button'; x.textContent = label;
+      x.setAttribute('data-consent', value);
+      var t = x.style;
+      t.minHeight = '44px'; t.minWidth = '120px'; t.padding = '10px 16px'; t.borderRadius = '6px';
+      t.border = '1px solid #e2c48a'; t.background = 'transparent'; t.color = '#f3f0e8';
+      t.fontSize = '14px'; t.cursor = 'pointer';
+      x.addEventListener('click', function () { window.SZ.setConsent(value); });
+      return x;
+    }
+    bar.appendChild(p);
+    bar.appendChild(btn('Recusar', 'essential'));
+    bar.appendChild(btn('Aceitar', 'analytics'));
+    (document.body || document.documentElement).appendChild(bar);
+  };
+  (function initConsent() {
+    var c = window.SZ.getConsent();
+    if (c === 'analytics') { window.SZ.loadClarity(); return; }
+    if (c === 'essential') return;
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.SZ.showConsentBanner);
+    else window.SZ.showConsentBanner();
+  })();
+  /* Link "Preferencias de cookies" em qualquer pagina: <a href="#" data-consent-reset>. */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-consent-reset]') : null;
+    if (!t) return;
+    ev.preventDefault();
+    try { localStorage.removeItem(CONSENT_KEY); } catch (e) {}
+    window.SZ.showConsentBanner();
+  });
 
   /* ── UTM capture (first-touch + last-touch) ───────────────── */
   var UTM_STORAGE_KEY = 'sz_attribution';
