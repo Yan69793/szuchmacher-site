@@ -2321,3 +2321,8 @@ body[data-design="multiasset-research-os-v3"] .export-fab .fab-text { font-size:
     .geo-node.me { right:0; bottom:8%; }
 }
 .sim-data-status { color: var(--muted); font-size: .8rem; line-height: 1.5; margin: 12px 0; }
+
+/* Consentimento expresso no popup (LGPD, item 3.1) */
+.popup-consent-check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; margin-top: 12px; }
+.popup-consent-check input { width: 20px; height: 20px; min-width: 20px; margin-top: 2px; accent-color: var(--gold, #c9a45c); }
+.popup-consent-required { outline: 2px solid var(--red, #c0392b); outline-offset: 4px; border-radius: 4px; }

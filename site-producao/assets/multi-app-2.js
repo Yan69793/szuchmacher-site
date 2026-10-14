@@ -3196,6 +3196,15 @@ function submitExitPopup() {
         return;
     }
 
+    // LGPD: consentimento expresso obrigatorio (o servidor tambem recusa sem ele).
+    var consentInput = document.getElementById('popup-consent-input');
+    if (consentInput && !consentInput.checked) {
+        consentInput.focus();
+        var lbl = consentInput.closest ? consentInput.closest('label') : null;
+        if (lbl) { lbl.classList.add('popup-consent-required'); setTimeout(function () { lbl.classList.remove('popup-consent-required'); }, 2500); }
+        return;
+    }
+
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
@@ -3220,7 +3229,7 @@ function submitExitPopup() {
         method: 'POST',
         signal: AbortSignal.timeout(12000),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup' })
+        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup', consent: true, policy_version: '2026-07-26' })
     }).then(function (r) {
         if (!r.ok) {
             var error = new Error('signup status ' + r.status);

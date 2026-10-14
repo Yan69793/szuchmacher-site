@@ -8,7 +8,7 @@ import { handleRegulatorio } from './handlers/regulatorio.js';
 import { handleGeopolitica } from './handlers/geopolitica.js';
 import { handleFechamento } from './handlers/fechamento.js';
 import { handleStripeWebhook } from './handlers/stripe-webhook.js';
-import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
+import { handleRelatorioSignup, handleRelatorioConfirm, handleUnsubscribe } from './handlers/relatorio-signup.js';
 import { handleBtcScenarios } from './handlers/btc-scenarios.js';
 import { handleCdiScenarios } from './handlers/cdi-scenarios.js';
 import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
@@ -39,6 +39,8 @@ const API_ROUTES = {
   '/assets/geopolitica.php': (req, env, ctx) => handleGeopolitica(env, req),
   '/stripe-webhook': (req, env, ctx) => handleStripeWebhook(req, env, ctx),
   '/relatorio-signup': (req, env, ctx) => handleRelatorioSignup(req, env),
+  '/relatorio-confirm': (req, env, ctx) => handleRelatorioConfirm(req, env),
+  '/unsubscribe': (req, env, ctx) => handleUnsubscribe(req, env),
   '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env, ctx),
   '/api/cdi-scenarios': (req, env, ctx) => handleCdiScenarios(env, ctx),
   '/api/ntnb-scenarios': (req, env, ctx) => handleNtnbScenarios(env, ctx),
