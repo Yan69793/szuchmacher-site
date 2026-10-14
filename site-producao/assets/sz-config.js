@@ -242,8 +242,31 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
   };
 
   /* data-ga / scroll / cliques → Clarity (sem GA4) */
+  /* Item 5.4: funil no Plausible (sem cookies), atras da flag SZ_PLAUSIBLE_DOMAIN.
+     Com a flag vazia (padrao) nada muda. So eventos do funil sao repassados e
+     as props sao filtradas: apenas valores primitivos curtos e nenhuma chave
+     que possa carregar dado pessoal (email, nome, telefone). */
+  var FUNNEL_EVENTS = {
+    lead_capture: 1, signup_submit: 1, signup_confirmed: 1, simulation_shared: 1,
+    portfolio_shared: 1, checkout_start: 1, cta_assinar_carta: 1, cta_assinar_pro: 1
+  };
+  window.SZ.funnelProps = function (p) {
+    var out = {};
+    Object.keys(p || {}).forEach(function (k) {
+      if (/mail|nome|name|phone|telefone|whats/i.test(k)) return;
+      var v = p[k];
+      if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') out[k] = String(v).slice(0, 60);
+    });
+    return out;
+  };
   window.ga = function (name, params) {
     try { if (window.clarity && window.SZ.clarityReady) window.clarity('event', name); } catch (e) {}
+    try {
+      if (window.SZ.plausibleReady && FUNNEL_EVENTS[name]) {
+        window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
+        window.plausible(name, { props: window.SZ.funnelProps(params) });
+      }
+    } catch (e) {}
     var p = params || {};
     try {
       if (window.clarity && window.SZ.clarityReady) {
@@ -372,6 +395,16 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     var carta = document.querySelector('[data-stripe-carta]');
     var pro = document.querySelector('[data-stripe-pro]');
     var mail = 'yan@szuchmacher.com.br';
+    function trackCheckout(el, product) {
+      if (!el || el.getAttribute('data-checkout-tracked')) return;
+      el.setAttribute('data-checkout-tracked', '1');
+      el.addEventListener('click', function () {
+        var ready = product === 'carta' ? window.SZ.stripeCartaReady : window.SZ.stripeProReady;
+        if (ready) window.ga('checkout_start', { product: product, location: el.getAttribute('data-ga-location') || '' });
+      });
+    }
+    trackCheckout(carta, 'carta');
+    trackCheckout(pro, 'pro');
     if (carta) {
       carta.href = window.SZ.stripeCartaReady ? window.SZ_STRIPE_CARTA_URL : ('mailto:' + mail + '?subject=Assinatura%20Carta%20Szuchmacher');
       if (window.SZ.stripeCartaReady) {

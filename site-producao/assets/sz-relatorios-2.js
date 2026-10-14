@@ -41,6 +41,7 @@
           .then(function (d) {
             if (d.ok) {
               showMsg(d.message || 'Enviamos um link de confirmacao para o seu e-mail.', false);
+              try { window.ga && window.ga('signup_submit', { source: 'relatorios' }); } catch (e2) {}
               form.reset();
             } else {
               showMsg(d.error || 'Erro ao processar. Tente novamente.', true);
