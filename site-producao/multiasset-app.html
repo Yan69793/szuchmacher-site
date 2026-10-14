@@ -59,8 +59,9 @@
     <script src="/assets/sz-config.js?v=20260719"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <!-- Font Awesome e Chart.js sairam do <head> (bloqueavam a primeira pintura, LCP mobile 7,3 s).
+         FA vai para antes do multi-app-2.js com SRI; Chart.js 4.4.0 e servido do proprio dominio
+         (copia byte a byte do cdnjs, sha256 e9b0f875...2bd3). -->
 
 
     <!-- multi craft v2 -->
@@ -2180,6 +2181,8 @@
     <span class="fab-text">Exportar Relatório</span>
 </button>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="/assets/chart.umd.min.js"></script>
 <script src="/assets/multi-app-2.js?v=20261002-0505"></script>
 
 <!-- ── EXIT-INTENT POPUP ── -->

@@ -214,6 +214,10 @@ Copy-IfExists (Join-Path $ROOT 'assets\multi-utilities.css') (Join-Path $MULTI '
 Copy-IfExists (Join-Path $ROOT 'assets\multi-app-1.js') (Join-Path $MULTI 'assets\multi-app-1.js') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\multi-app-2.js') (Join-Path $MULTI 'assets\multi-app-2.js') | Out-Null
 Copy-IfExists (Join-Path $ROOT 'assets\multi-app-3.js') (Join-Path $MULTI 'assets\multi-app-3.js') | Out-Null
+# Bibliotecas servidas do proprio dominio (item 3.6/5.1): saem do cdnjs para
+# tirar o cdnjs do script-src da CSP. Copias byte a byte das versoes que ja rodavam.
+Copy-IfExists (Join-Path $ROOT 'assets\chart.umd.min.js') (Join-Path $MULTI 'assets\chart.umd.min.js') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'assets\jspdf.umd.min.js') (Join-Path $MULTI 'assets\jspdf.umd.min.js') | Out-Null
 # Politica de privacidade. multi-assets.com coleta e-mail no popup do simulador e
 # ate 26/07/2026 respondia 404 em /privacidade.html e /privacidade: coleta sem
 # aviso ao titular. Copiada nas duas formas, com e sem extensao, igual consultoria.

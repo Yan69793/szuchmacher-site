@@ -2451,7 +2451,8 @@ function ensurePdfExportLib() {
     if (!pdfExportLibPromise) {
         pdfExportLibPromise = new Promise(function(resolve, reject) {
             var script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            // jsPDF 2.5.1 servido do proprio dominio (sha256 98ccf17a...3875, identico ao cdnjs e ao npm).
+            script.src = '/assets/jspdf.umd.min.js';
             script.async = true;
             script.onload = function() {
                 if (window.jspdf && window.jspdf.jsPDF) resolve();
