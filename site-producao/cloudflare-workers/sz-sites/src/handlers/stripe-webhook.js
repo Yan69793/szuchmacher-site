@@ -278,28 +278,69 @@ export async function handleStripeWebhook(request, env, ctx) {
 	const eventType = event.type;
 	console.log(`[stripe-webhook] evento recebido: ${eventType}`);
 
-	// Stripe espera resposta rapida (<= 20s). O envio de email roda em
-	// background via ctx.waitUntil, que mantem o Worker vivo ate concluir.
+	// Idempotencia por event.id. A Stripe reentrega o mesmo evento (timeout,
+	// 5xx, reenvio manual). Sem esta guarda cada reentrega disparava outro
+	// e-mail pos-pagamento. Estados no KV: 'processing' (TTL curto, cobre duas
+	// entregas quase simultaneas) e 'done' (30 dias, acima da janela de retry
+	// da Stripe, que e de 3 dias). Limite conhecido: o KV e eventualmente
+	// consistente, entao duas entregas paralelas em PoPs diferentes ainda podem
+	// passar; a Stripe raramente entrega em paralelo.
+	if (!event.id) {
+		return new Response('Missing event id', { status: 400 });
+	}
+	const evtKey = `stripe-evt:${event.id}`;
+	let seen = null;
+	try {
+		seen = await env.CACHE.get(evtKey);
+	} catch (err) {
+		console.warn(`[stripe-webhook] KV get ${evtKey} falhou: ${err?.message ?? err}`);
+	}
+	if (seen === 'done' || seen === 'processing') {
+		console.log(`[stripe-webhook] evento duplicado ignorado: ${event.id} (${seen})`);
+		return jsonOk({ received: true, duplicate: true });
+	}
+	try {
+		await env.CACHE.put(evtKey, 'processing', { expirationTtl: EVT_TTL_PROCESSING });
+	} catch (err) {
+		console.warn(`[stripe-webhook] KV put ${evtKey} falhou: ${err?.message ?? err}`);
+	}
+
+	// Processamento sincrono (antes era ctx.waitUntil): so assim uma falha do
+	// Resend vira 5xx e a Stripe reentrega. O envio leva ~1 s, bem abaixo do
+	// limite de 20 s da Stripe.
+	let ok = true;
 	if (eventType === 'checkout.session.completed') {
 		const session = event.data?.object;
 		const customerEmail = session?.customer_details?.email || session?.customer_email;
-
-		if (customerEmail && ctx) {
-			ctx.waitUntil((async () => {
-				const reportUrl = await getLatestReportFromCache(env);
-				await sendWelcomeEmail(env, customerEmail, reportUrl, null);
-			})());
-		} else if (customerEmail) {
-			// Sem ctx (caminho de teste): envia sincrono com timeout
-			console.warn('[stripe-webhook] ctx indisponivel, envio sincrono');
+		if (customerEmail) {
 			const reportUrl = await getLatestReportFromCache(env);
-			await sendWelcomeEmail(env, customerEmail, reportUrl, null);
+			ok = await sendWelcomeEmail(env, customerEmail, reportUrl, null);
 		} else {
 			console.warn('[stripe-webhook] checkout.session.completed sem email detectavel');
 		}
 	}
 
-	return new Response(JSON.stringify({ received: true }), {
+	try {
+		if (ok) await env.CACHE.put(evtKey, 'done', { expirationTtl: EVT_TTL_DONE });
+		else await env.CACHE.delete(evtKey);
+	} catch (err) {
+		console.warn(`[stripe-webhook] KV finalizacao ${evtKey} falhou: ${err?.message ?? err}`);
+	}
+
+	if (!ok) {
+		return new Response(JSON.stringify({ received: true, processed: false }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json; charset=utf-8' },
+		});
+	}
+	return jsonOk({ received: true });
+}
+
+const EVT_TTL_PROCESSING = 120;
+const EVT_TTL_DONE = 60 * 60 * 24 * 30;
+
+function jsonOk(obj) {
+	return new Response(JSON.stringify(obj), {
 		status: 200,
 		headers: { 'Content-Type': 'application/json; charset=utf-8' },
 	});
