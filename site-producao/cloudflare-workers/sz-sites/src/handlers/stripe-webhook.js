@@ -1,3 +1,5 @@
+import { maskEmail, safeErrorBody } from '../utils/pii.js';
+
 /**
  * Stripe Webhook Handler — sz-sites Worker
  *
@@ -234,12 +236,12 @@ async function sendWelcomeEmail(env, toEmail, reportUrl, dateLabel) {
 		});
 
 		if (res.ok) {
-			console.log(`[stripe-webhook] welcome email enviado para ${toEmail}`);
+			console.log(`[stripe-webhook] welcome email enviado para ${maskEmail(toEmail)}`);
 			return true;
 		}
 
 		const errBody = await res.text();
-		console.error(`[stripe-webhook] Resend API status ${res.status}: ${errBody}`);
+		console.error(`[stripe-webhook] Resend API status ${res.status}: ${safeErrorBody(errBody)}`);
 		return false;
 	} catch (err) {
 		console.error(`[stripe-webhook] excecao ao enviar email: ${err?.message ?? err}`);

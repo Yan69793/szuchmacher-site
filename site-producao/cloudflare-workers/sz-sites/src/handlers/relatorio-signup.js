@@ -1,3 +1,5 @@
+import { maskEmail, safeErrorBody } from '../utils/pii.js';
+
 /**
  * Relatorio Signup Handler — sz-sites Worker
  *
@@ -120,7 +122,7 @@ async function sendWelcomeEmail(env, toEmail, reportInfo) {
 
 		if (res.ok) return { ok: true };
 		const errBody = await res.text();
-		const detail = `Resend API erro ${res.status}: ${errBody}`;
+		const detail = `Resend API erro ${res.status}: ${safeErrorBody(errBody)}`;
 		console.error(`[relatorio-signup] ${detail}`);
 		return { ok: false, error: detail };
 	} catch (err) {
@@ -294,7 +296,7 @@ export async function handleRelatorioSignup(request, env) {
 	}
 	if (!sendResult || !sendResult.ok) {
 		const detail = (sendResult && sendResult.error) ? sendResult.error : 'Falha ao enviar email';
-		console.error(`[relatorio-signup] inscrito gravado mas envio falhou: ${email} — ${detail}`);
+		console.error(`[relatorio-signup] inscrito gravado mas envio falhou: ${maskEmail(email)} — ${detail}`);
 		// 202: o contato esta salvo, so a entrega do e-mail falhou. Devolver 500
 		// faria o cliente cair no fallback e gravar o mesmo lead duas vezes.
 		return jsonResponse({
@@ -304,7 +306,7 @@ export async function handleRelatorioSignup(request, env) {
 		}, 202, origin);
 	}
 
-	console.log(`[relatorio-signup] novo inscrito: ${email} (${body.source || 'relatorio-signup'})`);
+	console.log(`[relatorio-signup] novo inscrito: ${maskEmail(email)} (${body.source || 'relatorio-signup'})`);
 
 	return jsonResponse({
 		ok: true,
