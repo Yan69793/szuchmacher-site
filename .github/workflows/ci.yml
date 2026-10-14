@@ -1,0 +1,30 @@
+# CI do Worker sz-sites. Roda os testes de unidade (node --test) em todo push e
+# pull request. Nao faz deploy: o deploy continua manual via
+# site-producao/scripts/deploy-cloudflare.ps1, que exige a arvore limpa.
+# O `wrangler deploy --dry-run` nao entra aqui porque precisa do public/ montado
+# por build-cloudflare-public.ps1, que usa caminhos Windows.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  worker-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: site-producao/cloudflare-workers/sz-sites
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site-producao/cloudflare-workers/sz-sites/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm test

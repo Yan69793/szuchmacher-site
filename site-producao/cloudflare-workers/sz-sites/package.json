@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "build": "pwsh -File ../../scripts/build-cloudflare-public.ps1",
     "deploy": "npm run build && wrangler deploy",
     "dev": "npm run build && wrangler dev"
