@@ -39,7 +39,25 @@ function validateEmail(email) {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(email.trim());
 }
 
+// Rate limit do signup (item 3.4).
+// 1) Se o binding nativo SIGNUP_RL existir (wrangler.jsonc "ratelimits",
+//    depende do plano Cloudflare), ele decide: contagem atomica por PoP.
+// 2) Senao, contador no KV com FAIL-CLOSED: se o KV falhar, recusa. Antes
+//    permitia, o que deixava o endpoint (e a cota do Resend) aberto a flood
+//    justamente quando o KV estava instavel.
+// A chave e sempre o cf-connecting-ip, que a Cloudflare preenche e o cliente
+// nao forja. x-forwarded-for deixou de ser aceito.
 async function checkRateLimit(env, ip) {
+	if (!ip) return false;
+	if (env.SIGNUP_RL && typeof env.SIGNUP_RL.limit === 'function') {
+		try {
+			const { success } = await env.SIGNUP_RL.limit({ key: `signup:${ip}` });
+			return Boolean(success);
+		} catch (err) {
+			console.warn(`[relatorio-signup] SIGNUP_RL falhou: ${err?.message ?? err}`);
+			return false;
+		}
+	}
 	const key = `rate:signup:${ip}`;
 	try {
 		const current = await env.CACHE.get(key);
@@ -47,8 +65,9 @@ async function checkRateLimit(env, ip) {
 		if (count >= RATE_LIMIT_MAX) return false;
 		await env.CACHE.put(key, String(count + 1), { expirationTtl: RATE_LIMIT_WINDOW });
 		return true;
-	} catch {
-		return true; // se KV falhar, permite (evita bloquear usuario legitimo)
+	} catch (err) {
+		console.warn(`[relatorio-signup] rate limit KV indisponivel, recusando: ${err?.message ?? err}`);
+		return false;
 	}
 }
 
@@ -282,7 +301,7 @@ export async function handleRelatorioSignup(request, env) {
 		return jsonResponse({ ok: false, error: 'Method not allowed' }, 405, origin);
 	}
 
-	const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
+	const ip = request.headers.get('cf-connecting-ip') || '';
 	const allowed = await checkRateLimit(env, ip);
 	if (!allowed) {
 		return jsonResponse({ ok: false, error: 'Muitas tentativas. Tente novamente em 15 minutos.' }, 429, origin);
