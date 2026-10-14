@@ -2866,7 +2866,7 @@ async function gerarAnaliseMacro(forcar = false) {
             if (cached) {
                 const obj = JSON.parse(cached);
                 if (Date.now() - obj.timestamp < CACHE_TTL) {
-                    renderMacro(obj.data);
+                    renderMacro(obj.data, obj.generated_at);
                     return;
                 }
             }
@@ -2889,7 +2889,7 @@ async function gerarAnaliseMacro(forcar = false) {
             data:         json.data,
         }));
 
-        renderMacro(json.data);
+        renderMacro(json.data, json.generated_at);
 
     } catch(e) {
         console.warn('macro_api.php indisponível, tentando macro_data.json:', e.message);
@@ -2906,8 +2906,9 @@ async function gerarAnaliseMacro(forcar = false) {
                 generated_at: json2.generated_at || '',
                 data:         json2.data,
             }));
-            renderMacro(json2.data);
+            renderMacro(json2.data, json2.generated_at);
         } catch(e2) {
+            _macroStampUnavailable();
             console.warn('macro_data.json indisponível, usando conteúdo estático:', e2.message);
         }
     }
@@ -2922,7 +2923,36 @@ function _showMacroStamp(generatedAt) {
     }
 }
 
-function renderMacro(d) {
+// Item 5.2: o carimbo mostrava a hora do NAVEGADOR ('Atualizado em <agora>'),
+// mesmo quando a analise tinha semanas. Agora mostra a data de geracao que o
+// servidor devolve (generated_at, formato 'dd/mm/aaaa ... BRT' ou ISO) e marca
+// como desatualizada acima de MACRO_STALE_DAYS.
+var MACRO_STALE_DAYS = 8;
+function _parseMacroGeneratedAt(s) {
+    if (!s || typeof s !== 'string') return null;
+    var m = s.match(/(\d{2})\/(\d{2})\/(\d{4})(?:\D+(\d{2}):(\d{2}))?/);
+    if (m) return new Date(Date.UTC(+m[3], +m[2] - 1, +m[1], (+m[4] || 0) + 3, +m[5] || 0));
+    var t = Date.parse(s);
+    return isNaN(t) ? null : new Date(t);
+}
+function _macroStampText(generatedAt, now) {
+    var dt = _parseMacroGeneratedAt(generatedAt);
+    if (!dt) return 'Data de gera\u00e7\u00e3o indispon\u00edvel';
+    var label = 'Gerado em ' + dt.toLocaleDateString('pt-BR', {timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric'}) + ' \u00e0s ' + dt.toLocaleTimeString('pt-BR', {timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}) + ' BRT';
+    var ageDays = ((now || Date.now()) - dt.getTime()) / 86400000;
+    if (ageDays > MACRO_STALE_DAYS) label += ' \u00b7 an\u00e1lise desatualizada (' + Math.floor(ageDays) + ' dias)';
+    return label;
+}
+function _macroStampUnavailable() {
+    var se = document.getElementById('macro-stamp-inline');
+    var st = document.getElementById('macro-stamp-text');
+    if (se && st) {
+        st.textContent = 'Dados ao vivo indispon\u00edveis \u00b7 exibindo conte\u00fado de refer\u00eancia';
+        se.style.display = 'inline-flex';
+    }
+}
+
+function renderMacro(d, generatedAt) {
     // Sanitizar citações [N] que LLMs às vezes inserem
     const stripCites = s => typeof s === 'string' ? s.replace(/(\[\d+\])+/g, '') : s;
     // Escape HTML obrigatório: os campos vêm de LLM (macro_api.php) e entram via
@@ -2992,8 +3022,7 @@ function renderMacro(d) {
     const _se2 = document.getElementById('macro-stamp-inline');
     const _st2 = document.getElementById('macro-stamp-text');
     if (_se2 && _st2) {
-        const _now = new Date();
-        _st2.textContent = 'Atualizado em ' + _now.toLocaleDateString('pt-BR', {timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric'}) + ' às ' + _now.toLocaleTimeString('pt-BR', {timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}) + ' BRT';
+        _st2.textContent = _macroStampText(generatedAt);
         _se2.style.display = 'inline-flex';
     }
 
