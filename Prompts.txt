@@ -1,5 +1,7 @@
 PROMPTS, SITE SZUCHMACHER + PLATAFORMA MULTIASSET v1.0
-Atualizado em 26/07/2026 contra o Worker sz-sites, validar-producao.ps1 (27 verificacoes)
+Atualizado em 26/07/2026 contra o Worker sz-sites, validar-producao.ps1 (contagem de
+verificacoes conforme a saida real do script, nao fixar numero aqui, ver AGENTS.md na raiz do
+Site)
 e o diagnostico diagnosticos/DIAGNOSTICO-2026-07-26.md
 
 Substitui a versao anterior, que descrevia o Radar de Credito Privado (vixradar.com).
@@ -35,13 +37,19 @@ Deploy primario: .\scripts\publicar-com-rollback.ps1 (le versao viva, build, dep
 reverte se reprovar). deploy-cloudflare.ps1 sozinho nao valida nada e nao tem alvo de reversao.
 Build: scripts\build-cloudflare-public.ps1, monta public/sz e public/multi e reprova saida
 incompleta contra 17 arquivos obrigatorios.
-Gate: .\scripts\validar-producao.ps1, 27 verificacoes de conteudo nos dois dominios.
+Gate: .\scripts\validar-producao.ps1, verificacoes de conteudo nos dois dominios, na contagem
+que a saida real do script mostrar (a contagem muda quando checagem nova entra).
 FTP HostGator: legado desde 17/06/2026, so rollback.
 
-Tarefas agendadas do Windows: Szuchmacher-AgendaAgent (dom+seg+qui 08:00),
-Szuchmacher-MacroCron (seg 09:00), Szuchmacher-FechamentoDiario (seg-sex 19:00),
-Szuchmacher-FechamentoWatchdog (seg-sex 19:20), Szuchmacher-LeadNurture (diario 10:00),
-Szuchmacher-MacroAgent (sex 18:00), Szuchmacher-AgendaMacro-Claude (desabilitada em 26/07/2026).
+Tarefas agendadas deste projeto, fonte site-producao/CLAUDE.md, secao "Tarefas agendadas no
+Windows (visao completa)": Szuchmacher-AgendaAgent (dom+seg+qui 08:00, gera e publica
+agenda-data.json), Szuchmacher-GeopoliticaAgent (domingo 18:00, fallback segunda 08:30, edicao
+semanal do Radar Geopolitico), Szuchmacher-MacroCronWatchdog (segunda 09:00 BRT, reserva que le
+macro_cron_last.ts em /health), mais o cron do Worker sz-sites (segunda 00:00 BRT, "0 3 * * MON"
+UTC, regenera o macro, disparo primario). Szuchmacher-MacroCron esta desabilitada desde
+15/08/2026, nao reativar. As demais tasks com prefixo Szuchmacher- (FechamentoDiario,
+FechamentoWatchdog, MacroAgent, LeadNurture, AgendaMacro-Claude) pertencem ao projeto
+relatorio-diario-szuchmacher, nao a este.
 
 Enquadramento regulatorio: registro de consultor de valores mobiliarios (Res. CVM 19/2021).
 Conteudo que ranqueia ativos, publica carteira-modelo ou entrega tese por ativo igual para
@@ -56,7 +64,8 @@ Faca a auditoria semanal do site institucional e da plataforma MultiAsset. Siga 
 sem pular etapas.
 
 Etapa 1, portao de qualidade: rode `cd site-producao; .\scripts\validar-producao.ps1` e cole a
-saida real. Sao 27 verificacoes de conteudo, nao de status. Qualquer falha e bloqueante e
+saida real. Sao verificacoes de conteudo, nao de status, na contagem que a propria saida
+mostrar. Qualquer falha e bloqueante e
 define o resto da auditoria.
 
 Etapa 2, drift entre git e producao: `git status --porcelain` e `git log --oneline -5`.
@@ -217,8 +226,8 @@ Execute a varredura final desta sessao.
    que esta commitado? Divergencia significa producao sem correspondencia no git.
 3. Existe diagnosticos/publicacao_*.md com carimbo desta sessao? Se houve deploy sem relatorio,
    o deploy saiu por fora do portao. Registre isso.
-4. `cd site-producao; .\scripts\validar-producao.ps1`. Cole a saida real. 27 verificacoes,
-   0 falha, ou a sessao nao esta encerrada.
+4. `cd site-producao; .\scripts\validar-producao.ps1`. Cole a saida real. A contagem e a que a
+   propria saida mostrar, 0 falha, ou a sessao nao esta encerrada.
 5. Compare o entregue com o que esta no ar: arquivos alterados, handlers tocados, rotas
    adicionadas, redirects criados.
 6. Se a sessao tocou macro-panel.js, macro-api.js ou qualquer gravacao em KV, confirme que nenhum
@@ -330,7 +339,7 @@ Escreva o post-mortem dessa falha hipotetica. Seja especifico para o stack atual
 com 9 rotas de API e binding ASSETS montado pelo build, KV CACHE com TTLs de 600 a 900 s e 7 dias
 no macro_api, CSP em src/utils/headers.js, redirects de multiasset, ebook e radar-roic,
 /fechamento/:slug com token, Stripe live com webhook assinado, sete tarefas no Task Scheduler,
-validar-producao.ps1 com 27 verificacoes.
+validar-producao.ps1 com a contagem de verificacoes que a saida real mostrar.
 
 Quais foram as 7 causas mais provaveis? Qual delas eu teria menor chance de antecipar? Qual voce
 teria alucinado em silencio?

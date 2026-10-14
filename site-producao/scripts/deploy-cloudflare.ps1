@@ -4,7 +4,8 @@
 
 param(
     [switch]$DryRun,
-    [switch]$Purge
+    [switch]$Purge,
+    [switch]$SkipMacroRefresh
 )
 
 Set-StrictMode -Version Latest
@@ -102,7 +103,12 @@ try {
 
     Write-Host "`n=== INVALIDAR CACHE KV ===" -ForegroundColor Cyan
     try {
-        & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1') -RefreshMacro
+        if ($SkipMacroRefresh) {
+            Write-Host "  Macro refresh pulado pelo chamador." -ForegroundColor DarkGray
+            & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1')
+        } else {
+            & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1') -RefreshMacro
+        }
     } catch {
         # O deploy ja concluiu. Falha aqui nao pode reportar exit 1 e induzir
         # rollback (ou falso alarme) de uma publicacao que foi bem.

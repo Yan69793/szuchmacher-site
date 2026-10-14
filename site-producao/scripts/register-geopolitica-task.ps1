@@ -25,13 +25,14 @@ if ($Remove) {
     return
 }
 
-$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
-$settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew
+$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U -RunLevel Limited
+$settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -RestartCount 2 -RestartInterval (New-TimeSpan -Minutes 15) -ExecutionTimeLimit (New-TimeSpan -Hours 1)
 # StartWhenAvailable tem de ser True: com False o Windows descarta a janela
 # perdida (maquina desligada ou em suspensao as 18:00 de domingo) e o Radar
 # fica sem edicao ate a segunda. Medido em 16/09/2026: a tarefa viva estava com
 # StartWhenAvailable=False, por isso a atribuicao explicita e a verificacao no fim.
 $settings.StartWhenAvailable = $true
+$settings.WakeToRun = $true
 
 if (-not $Remove) {
     $pastaBackup = Join-Path $PSScriptRoot 'scheduled-task-backup'
@@ -52,5 +53,9 @@ Write-Host "Registrada: $nome, domingo 18:00 e segunda 08:30"
 Write-Host ("Estado: {0} | StartWhenAvailable: {1} | Proxima execucao: {2} | Ultimo resultado: {3}" -f `
     $verif.State, $verif.Settings.StartWhenAvailable, $info.NextRunTime, $info.LastTaskResult)
 if (-not $verif.Settings.StartWhenAvailable) { throw 'StartWhenAvailable nao ficou True no registro' }
+if (-not $verif.Settings.WakeToRun) { throw 'WakeToRun nao ficou True no registro' }
+if ($verif.Principal.LogonType -ne 'S4U') { throw 'LogonType nao ficou S4U no registro' }
+if ($verif.Settings.RestartCount -lt 2) { throw 'RestartCount insuficiente no registro' }
 if ($verif.State -eq 'Disabled') { throw 'tarefa registrada desabilitada' }
 if ($verif.Triggers.Count -ne 2) { throw "esperados 2 gatilhos, registrados $($verif.Triggers.Count)" }
+

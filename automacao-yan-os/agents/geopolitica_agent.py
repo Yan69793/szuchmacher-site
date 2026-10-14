@@ -303,8 +303,8 @@ def janela_segunda(data_execucao: date) -> tuple[str, str, str, str]:
 
 def semana_alvo() -> tuple[str, str, str, str]:
     """
-    Rotina (brief): domingo apos o fechamento gera a semana seguinte; segunda
-    de manha recupera a semana corrente; outros dias (manual) geram a proxima.
+    Rotina (brief): domingo apos o fechamento gera a semana seguinte; de segunda
+    a sabado usa sempre a semana corrente.
 
     Retorna (iso, start, end, label).
     """
@@ -313,8 +313,8 @@ def semana_alvo() -> tuple[str, str, str, str]:
         return janela_domingo(hoje.date())
     elif hoje.weekday() == 0 and hoje.hour < 14:  # segunda cedo: recuperacao
         return janela_segunda(hoje.date())
-    else:                              # manual: proxima segunda estritamente futura
-        inicio = hoje.date() - timedelta(days=hoje.weekday()) + timedelta(days=7)
+    else:                              # terca a sabado: semana corrente
+        inicio = hoje.date() - timedelta(days=hoje.weekday())
         return _semana_a_partir_de(inicio)
 
 

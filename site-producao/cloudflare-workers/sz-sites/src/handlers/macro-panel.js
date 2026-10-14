@@ -65,6 +65,21 @@ function parseFocusRow(row, indicador, anoRef) {
 }
 
 async function bcbSgs(serie) {
+  // A serie 432 (Meta Selic) pode conter pontos futuros ja cadastrados pelo BCB.
+  // Para "meta hoje", limitar explicitamente a consulta ate a data corrente evita
+  // que /dados/ultimos/1 devolva uma vigencia futura (ex.: proxima reuniao Copom).
+  if (Number(serie) === 432) {
+    const hoje = new Date();
+    const fim = `${String(hoje.getUTCDate()).padStart(2, '0')}/${String(hoje.getUTCMonth() + 1).padStart(2, '0')}/${hoje.getUTCFullYear()}`;
+    const inicioDate = new Date(hoje.getTime() - 14 * 24 * 3600 * 1000);
+    const inicio = `${String(inicioDate.getUTCDate()).padStart(2, '0')}/${String(inicioDate.getUTCMonth() + 1).padStart(2, '0')}/${inicioDate.getUTCFullYear()}`;
+    const j = await fetchJson(
+      `https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=${encodeURIComponent(inicio)}&dataFinal=${encodeURIComponent(fim)}`,
+      { timeout: 10000 },
+    );
+    return Array.isArray(j) && j.length ? j[j.length - 1] : null;
+  }
+
   const j = await fetchJson(
     `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${serie}/dados/ultimos/1?formato=json`,
     { timeout: 10000 },

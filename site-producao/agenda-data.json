@@ -1,7 +1,11 @@
 {
   "meta": {
-    "version": "2026-09-14",
+    "version": "2026-10-09-13oct-extension",
     "curator": "Szuchmacher Consultoria",
+    "idiomas": [
+      "pt-BR",
+      "en"
+    ],
     "fontes_primarias": [
       "IBGE — Calendário de divulgações (API v3/calendario)",
       "BCB — Calendário de divulgações + Boletim Focus/COPOM",
@@ -15,97 +19,127 @@
       "Eurostat — CPI Flash calendar (ec.europa.eu/eurostat)"
     ],
     "disciplina": "Eventos programados em fontes oficiais. Sem antecipação de resultado.",
-    "disciplina_en": "Scheduled releases from official sources. No result anticipation.",
-    "idiomas": [
-      "pt-BR",
-      "en"
-    ]
+    "disciplina_en": "Scheduled releases from official sources. No result anticipation."
   },
-  "gerado": "2026-09-14T18:14:03-03:00",
+  "gerado": "2026-10-09T19:43:06.4307895-03:00",
   "janela": {
-    "inicio": "2026-09-14",
-    "fim": "2026-09-18"
+    "inicio": "2026-10-02",
+    "fim": "2026-10-16"
   },
   "eventos": [
     {
-      "data": "2026-09-14",
-      "hora_brt": "08:25",
-      "regiao": "BR",
-      "evento": "Boletim Focus",
-      "evento_en": "Focus Market Report",
-      "descricao": "Medianas semanais do mercado para Selic, IPCA, câmbio e PIB — principais referências de expectativas para a curva de juros e decisão do COPOM.",
-      "descricao_en": "Weekly market medians for Selic, CPI, FX and GDP — key forward-guidance inputs for the rate curve and COPOM decisions.",
-      "fonte": "BCB",
+      "data": "2026-10-02",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Relatório de Emprego (Nonfarm Payrolls) de setembro",
+      "evento_en": "Employment Situation (Nonfarm Payrolls) for September",
+      "descricao": "Divulgação do relatório mensal de emprego do BLS com a criação de vagas (payrolls) e a taxa de desemprego dos EUA referente a setembro.",
+      "descricao_en": "BLS monthly employment report with September nonfarm payrolls and the unemployment rate.",
+      "fonte": "BLS",
+      "fonte_url": "https://www.bls.gov/schedule/2026/10_sched_list.htm",
+      "fonte_conferida": false,
       "relevancia": "alta"
     },
     {
-      "data": "2026-09-15",
-      "hora_brt": "03:00",
-      "regiao": "UK",
-      "evento": "Reino Unido — Taxa de desemprego (ILO)",
-      "evento_en": "UK — ILO Unemployment Rate",
-      "descricao": "Taxa de desemprego e variação de rendimentos médios no Reino Unido. Indicador-chave para o MPC do BoE calibrar o mercado de trabalho.",
-      "descricao_en": "UK unemployment rate and average earnings. Key labour market gauge for MPC decisions.",
-      "fonte": "ONS",
+      "data": "2026-10-02",
+      "hora_brt": "10:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Industrial Mensal - Produção Física (PIM-PF) Brasil",
+      "evento_en": "Monthly Industrial Survey - Physical Production (PIM-PF) Brazil",
+      "descricao": "Divulgação do IBGE sobre a variação da produção física da indústria brasileira, indicador antecedente da atividade econômica.",
+      "descricao_en": "IBGE release on the physical production of Brazilian industry, a leading activity indicator.",
+      "fonte": "IBGE",
+      "fonte_url": "https://www.ibge.gov.br/estatisticas-",
+      "fonte_conferida": false,
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-10-05",
+      "hora_brt": "08:25",
+      "regiao": "BR",
+      "evento": "Boletim Focus - Relatório de Mercado",
+      "evento_en": "Focus Bulletin - Market Report",
+      "descricao": "Publicação semanal do Banco Central com as medianas das projeções de mercado para inflação, PIB, câmbio e juros. Divulgado às segundas-feiras.",
+      "descricao_en": "BCB weekly publication with market median forecasts for inflation, GDP, FX and interest rates. Released on Mondays.",
+      "fonte": "BCB",
+      "fonte_url": "https://www.bcb.gov.br/publicacoes/focus",
+      "fonte_conferida": false,
+      "relevancia": "alta"
+    },
+    {
+      "data": "2026-10-08",
+      "hora_brt": "10:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Industrial Mensal - Produção Física Regional",
+      "evento_en": "Monthly Industrial Survey - Regional Physical Production",
+      "descricao": "Divulgação do IBGE com o desempenho da produção industrial nas unidades da federação.",
+      "descricao_en": "IBGE release on industrial production performance across Brazilian states.",
+      "fonte": "IBGE",
+      "fonte_url": "https://www.ibge.gov.br/IPCA",
+      "fonte_conferida": false,
       "relevancia": "media"
     },
     {
-      "data": "2026-09-15",
-      "hora_brt": "06:00",
-      "regiao": "EU",
-      "evento": "Alemanha/Zona do Euro — ZEW de Sentimento Econômico",
-      "evento_en": "Germany/Eurozone — ZEW Economic Sentiment",
-      "descricao": "Índice ZEW de sentimento econômico na Alemanha e Zona do Euro, baseado em survey com analistas e investidores institucionais. Indicador antecedente de atividade e confiança na maior economia europeia.",
-      "descricao_en": "ZEW survey of economic sentiment among analysts and institutional investors. Leading indicator for German/Eurozone activity.",
-      "fonte": "ZEW",
+      "data": "2026-10-09",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "IPCA - Índice Nacional de Preços ao Consumidor Amplo de setembro",
+      "evento_en": "IPCA - Broad National Consumer Price Index for September",
+      "descricao": "Principal índice de inflação oficial do Brasil, referente a setembro. Divulgação do IBGE.",
+      "descricao_en": "Brazil's headline official inflation index for September, released by IBGE.",
+      "fonte": "IBGE",
+      "fonte_url": "https://www.ibge.gov.br/IPCA",
+      "fonte_conferida": false,
       "relevancia": "alta"
     },
     {
-      "data": "2026-09-15",
+      "data": "2026-10-09",
       "hora_brt": "09:00",
       "regiao": "BR",
-      "evento": "Pesquisa Mensal de Comércio",
-      "evento_en": "Pesquisa Mensal de Comércio",
-      "descricao": "Divulgação programada do IBGE: Pesquisa Mensal de Comércio.",
-      "descricao_en": "Scheduled IBGE release: Pesquisa Mensal de Comércio.",
+      "evento": "INPC - Índice Nacional de Preços ao Consumidor de setembro",
+      "evento_en": "INPC - National Consumer Price Index for September",
+      "descricao": "Índice de inflação com foco nas famílias de baixa renda, referente a setembro. Divulgação junto ao IPCA.",
+      "descricao_en": "Inflation index focused on low-income households for September, released alongside the IPCA.",
+      "fonte": "IBGE",
+      "fonte_url": "https://www.ibge.gov.br/IPCA",
+      "fonte_conferida": false,
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-10-13",
+      "hora_brt": "22:30",
+      "regiao": "CN",
+      "evento": "China — IPC ao consumidor (CPI)",
+      "evento_en": "China — Consumer Price Index (CPI)",
+      "descricao": "Inflação ao consumidor na China. Leituras baixas sinalizam risco deflacionário e fraqueza de demanda doméstica, com impacto em commodities e moedas de países exportadores de matérias-primas (BRL, AUD, NZD, CLP).",
+      "descricao_en": "China consumer inflation. Low readings signal deflation risk and weak domestic demand, impacting commodities and commodity-exporting currencies (BRL, AUD, NZD, CLP).",
+      "fonte": "NBS China",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-10-14",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Mensal de Serviços",
+      "evento_en": "Pesquisa Mensal de Serviços",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Mensal de Serviços.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Mensal de Serviços.",
       "fonte": "IBGE",
       "relevancia": "media"
     },
     {
-      "data": "2026-09-16",
-      "hora_brt": "03:00",
-      "regiao": "UK",
-      "evento": "Reino Unido — IPC ao consumidor (CPI)",
-      "evento_en": "UK — Consumer Price Index (CPI)",
-      "descricao": "Inflação ao consumidor no Reino Unido, cheia e núcleo. Principal referência de inflação para o Bank of England. Impacto em GBP, gilts e FTSE 100.",
-      "descricao_en": "UK headline and core CPI. Key inflation benchmark for Bank of England. Impacts GBP, gilts and FTSE 100.",
-      "fonte": "ONS",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-09-16",
+      "data": "2026-10-14",
       "hora_brt": "09:30",
       "regiao": "US",
-      "evento": "Vendas no Varejo (Advance) — agosto/2026",
-      "evento_en": "Advance Retail Sales — August 2026",
-      "descricao": "Vendas do varejo nos EUA. Principal leitura de curto prazo sobre a força do consumo americano, que responde por cerca de dois terços do PIB.",
-      "descricao_en": "US retail sales. The key near-term read on the strength of American consumer spending, which drives roughly two-thirds of GDP.",
-      "fonte": "Census Bureau",
+      "evento": "Índice de Preços ao Consumidor (CPI) — setembro/2026",
+      "evento_en": "Consumer Price Index (CPI) — September 2026",
+      "descricao": "Inflação ao consumidor nos EUA, cheia e núcleo. Principal referência de curto prazo para a trajetória de juros do Fed e para o apetite a risco global.",
+      "descricao_en": "US consumer inflation, headline and core. The key near-term input for the Fed's rate path and global risk appetite.",
+      "fonte": "BLS",
       "relevancia": "alta"
     },
     {
-      "data": "2026-09-16",
-      "hora_brt": "09:30",
-      "regiao": "CA",
-      "evento": "Canadá — IPC ao consumidor (CPI)",
-      "evento_en": "Canada — Consumer Price Index (CPI)",
-      "descricao": "Inflação ao consumidor no Canadá, referência para o Bank of Canada. Impacto em CAD, bonds canadenses e expectativas de política monetária.",
-      "descricao_en": "Canada headline CPI. Key benchmark for Bank of Canada. Impacts CAD and rate expectations.",
-      "fonte": "Statistics Canada",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-09-16",
+      "data": "2026-10-14",
       "hora_brt": "11:30",
       "regiao": "US",
       "evento": "EUA — Estoques de petróleo bruto (EIA)",
@@ -116,18 +150,40 @@
       "relevancia": "media"
     },
     {
-      "data": "2026-09-17",
-      "hora_brt": "08:00",
-      "regiao": "UK",
-      "evento": "BoE — Decisão de juros no Reino Unido (MPC)",
-      "evento_en": "BoE — UK Rate Decision (MPC)",
-      "descricao": "O Monetary Policy Committee do Bank of England divulga a decisão sobre a Bank Rate e a ata da reunião simultaneamente. Impacto direto na GBP e nos gilts. Quatro das oito reuniões incluem o Monetary Policy Report com projeções macro.",
-      "descricao_en": "The MPC announces the Bank Rate decision and minutes simultaneously. Four meetings per year include the Monetary Policy Report with macro projections. Direct impact on GBP and gilt yields.",
-      "fonte": "Bank of England",
+      "data": "2026-10-15",
+      "hora_brt": "09:00",
+      "regiao": "BR",
+      "evento": "Pesquisa Mensal de Comércio",
+      "evento_en": "Pesquisa Mensal de Comércio",
+      "descricao": "Divulgação programada do IBGE: Pesquisa Mensal de Comércio.",
+      "descricao_en": "Scheduled IBGE release: Pesquisa Mensal de Comércio.",
+      "fonte": "IBGE",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-10-15",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Índice de Preços ao Produtor (PPI) — setembro/2026",
+      "evento_en": "Producer Price Index (PPI) — September 2026",
+      "descricao": "Inflação no atacado nos EUA. Antecede pressões de custo que se transmitem ao consumidor e complementa a leitura do CPI para o Fed.",
+      "descricao_en": "US wholesale inflation. Signals cost pressures that feed through to consumers and complements the CPI read for the Fed.",
+      "fonte": "BLS",
+      "relevancia": "media"
+    },
+    {
+      "data": "2026-10-15",
+      "hora_brt": "09:30",
+      "regiao": "US",
+      "evento": "Vendas no Varejo (Advance) — setembro/2026",
+      "evento_en": "Advance Retail Sales — September 2026",
+      "descricao": "Vendas do varejo nos EUA. Principal leitura de curto prazo sobre a força do consumo americano, que responde por cerca de dois terços do PIB.",
+      "descricao_en": "US retail sales. The key near-term read on the strength of American consumer spending, which drives roughly two-thirds of GDP.",
+      "fonte": "Census Bureau",
       "relevancia": "alta"
     },
     {
-      "data": "2026-09-17",
+      "data": "2026-10-15",
       "hora_brt": "09:30",
       "regiao": "US",
       "evento": "EUA — Novos pedidos de seguro-desemprego",
@@ -136,61 +192,6 @@
       "descricao_en": "Weekly initial jobless claims. Leading indicator of US labor market health. Impacts Treasuries, DXY and FOMC expectations.",
       "fonte": "Department of Labor",
       "relevancia": "media"
-    },
-    {
-      "data": "2026-09-17",
-      "hora_brt": "15:00",
-      "regiao": "US",
-      "evento": "FOMC — Decisão de juros + Dot Plot (09/2026)",
-      "evento_en": "FOMC — Rate Decision + Dot Plot (09/2026)",
-      "descricao": "Decisão do Federal Reserve sobre os Fed Funds. Inclui o Summary of Economic Projections (Dot Plot) com projeção de trajetória de juros dos diretores. Impacto direto no diferencial Brasil–EUA e no real.",
-      "descricao_en": "Federal Reserve decision on the Fed Funds rate. Includes the Summary of Economic Projections (Dot Plot) with directors' rate-path forecast. Direct impact on the Brazil–US rate differential and BRL.",
-      "fonte": "Fed",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-09-17",
-      "hora_brt": "18:30",
-      "regiao": "BR",
-      "evento": "COPOM — Decisão de juros (09/2026)",
-      "evento_en": "COPOM — Rate Decision (09/2026)",
-      "descricao": "O BCB divulga a decisão sobre a Selic ao final do segundo dia de reunião. O comunicado e a ata subsequente moldam a curva de juros doméstica e o câmbio.",
-      "descricao_en": "BCB releases the Selic decision at the end of day two. The statement and subsequent minutes shape the domestic rate curve and BRL.",
-      "fonte": "BCB",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-09-18",
-      "hora_brt": "03:00",
-      "regiao": "UK",
-      "evento": "Reino Unido — Vendas no varejo",
-      "evento_en": "UK — Retail Sales",
-      "descricao": "Vendas no varejo do Reino Unido (variação mensal e anual). Termômetro do consumo das famílias e da atividade econômica britânica.",
-      "descricao_en": "UK monthly and annual retail sales. Household consumption gauge for the British economy.",
-      "fonte": "ONS",
-      "relevancia": "media"
-    },
-    {
-      "data": "2026-09-18",
-      "hora_brt": "20:30",
-      "regiao": "JP",
-      "evento": "Japão — IPC nacional (CPI)",
-      "evento_en": "Japan — National Consumer Price Index",
-      "descricao": "Inflação ao consumidor no Japão (cheia e núcleo, excluindo alimentos frescos). Dado essencial para a trajetória da taxa do BoJ. Impacto em USD/JPY, Nikkei 225 e JGBs.",
-      "descricao_en": "Japan headline and core CPI. Key data point for BoJ rate trajectory. Impacts USD/JPY, Nikkei 225 and JGBs.",
-      "fonte": "Statistics Bureau of Japan",
-      "relevancia": "alta"
-    },
-    {
-      "data": "2026-09-18",
-      "hora_brt": "23:30",
-      "regiao": "JP",
-      "evento": "BoJ — Decisão de juros no Japão",
-      "evento_en": "BoJ — Japan Rate Decision",
-      "descricao": "O Bank of Japan divulga a decisão sobre a policy rate e publica o Outlook Report trimestral (jan, abr, jul, out). Impacto no USD/JPY, Nikkei 225 e JGBs. Divulgação ocorre de madrugada no horário brasileiro (11:30 JST = 23:30 BRT do dia anterior).",
-      "descricao_en": "The BoJ announces its policy rate decision and publishes the quarterly Outlook Report (Jan, Apr, Jul, Oct). Impact on USD/JPY, Nikkei 225 and JGBs.",
-      "fonte": "Bank of Japan",
-      "relevancia": "alta"
     }
   ]
 }

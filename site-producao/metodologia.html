@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metodologia — MultiAsset</title>
-    <meta name="description" content="Metodologia completa da plataforma MultiAsset: fontes de dados, calibracao de volatilidades, modelo de Monte Carlo e construcao de cenarios." />
+    <meta name="description" content="Metodologia completa da plataforma MultiAsset: fontes de dados, calibração de volatilidades, modelo de Monte Carlo e construção de cenários." />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://multi-assets.com/metodologia" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,97 +16,97 @@
     <a href="/" class="back-link">&larr; Voltar para MultiAsset</a>
 
     <h1>Metodologia <em>MultiAsset</em></h1>
-    <p class="subtitle">Fontes de dados, calibracao de volatilidades, modelo de Monte Carlo e construcao de cenarios. Ultima atualizacao: julho de 2026.</p>
+    <p class="subtitle">Fontes de dados, calibração de volatilidades, modelo de Monte Carlo e construção de cenários. Última atualização: outubro de 2026.</p>
 
     <h2>1. Fontes de dados</h2>
-    <p>Cada ativo da plataforma utiliza fontes publicas, verificaveis e atualizadas automaticamente. Nenhum dado e inserido manualmente.</p>
+    <p>Cada ativo da plataforma utiliza fontes públicas, verificáveis e atualizadas automaticamente. Nenhum dado é inserido manualmente.</p>
 
     <table>
         <thead>
-            <tr><th>Ativo</th><th>Fonte primaria</th><th>Atualizacao</th></tr>
+            <tr><th>Ativo</th><th>Fonte primária</th><th>Atualização</th></tr>
         </thead>
         <tbody>
             <tr><td>Ouro (XAU/USD)</td><td>Gold API (gold-api.com)</td><td>15 min</td></tr>
             <tr><td>Prata (XAG/USD)</td><td>Gold API (gold-api.com)</td><td>15 min</td></tr>
             <tr><td>Platina (XPT/USD)</td><td>Gold API (gold-api.com)</td><td>15 min</td></tr>
             <tr><td>Bitcoin (BTC/USD)</td><td>CoinGecko API + BTC Radar (server-side)</td><td>2 min / 2 h</td></tr>
-            <tr><td>CDI</td><td>BrasilAPI (brasilapi.com.br) + BCB SGS serie 12</td><td>4 h</td></tr>
+            <tr><td>CDI</td><td>BrasilAPI (brasilapi.com.br) + BCB SGS série 12</td><td>4 h</td></tr>
             <tr><td>NTN-B (IPCA+)</td><td>Yahoo Finance (IB5M11.SA, ETF IMA-B 5+)</td><td>2 h</td></tr>
             <tr><td>USD/BRL</td><td>AwesomeAPI (economia.awesomeapi.com.br)</td><td>30 min</td></tr>
             <tr><td>Ibovespa</td><td>Yahoo Finance (^BVSP)</td><td>10 min</td></tr>
             <tr><td>S&amp;P 500</td><td>Yahoo Finance (^GSPC)</td><td>10 min</td></tr>
             <tr><td>WTI</td><td>Yahoo Finance (CL=F)</td><td>10 min</td></tr>
-            <tr><td>Selic Meta</td><td>BCB SGS serie 432</td><td>15 min</td></tr>
-            <tr><td>IPCA</td><td>BCB SGS serie 13522 + Focus (expectativas)</td><td>15 min</td></tr>
-            <tr><td>Cenario macro (LLM)</td><td>BCB SGS + Focus + OpenRouter (Claude Haiku 4.5)</td><td>7 dias</td></tr>
+            <tr><td>Selic Meta</td><td>BCB SGS série 432</td><td>15 min</td></tr>
+            <tr><td>IPCA</td><td>BCB SGS série 13522 + Focus (expectativas)</td><td>15 min</td></tr>
+            <tr><td>Cenário macro (LLM)</td><td>BCB SGS + Focus + OpenRouter (Claude Haiku 4.5)</td><td>7 dias</td></tr>
         </tbody>
     </table>
 
-    <p class="muted">Fallback: quando a fonte primaria falha, o sistema utiliza a secundaria automaticamente. Se ambas falharem, o ultimo valor em cache e mantido. O frontend tambem possui valores hardcoded calibrados como ultima rede de seguranca.</p>
+    <p class="muted">Fallback: quando a fonte primária falha, o sistema utiliza a secundária automaticamente. Se ambas falharem, o último valor em cache e mantido. O frontend também possui valores hardcoded calibrados como ultima rede de segurança.</p>
 
     <h2>2. Modelo de Monte Carlo</h2>
 
     <h3>2.1 Motor</h3>
-    <p>O motor de simulacao utiliza o modelo de Movimento Browniano Geometrico (GBM) com drift determinístico e choque estocastico normal:</p>
+    <p>O motor de simulação utiliza o modelo de Movimento Browniano Geométrico (GBM) com drift determinístico e choque estocástico normal:</p>
     <p class="u-fontfamilydmmonomo-fontsize13px-backgroundvarsurfa-padding">
         S<sub>t+1</sub> = S<sub>t</sub> &times; exp(&mu; &minus; &frac12;&sigma;<sup>2</sup> + &sigma; &times; Z)
     </p>
-    <p>Onde <strong>&mu;</strong> e a taxa de retorno anual esperada (cenario base do ativo), <strong>&sigma;</strong> e a volatilidade anual, e <strong>Z ~ N(0,1)</strong> e um choque aleatorio normal. A cada ano da simulacao, um novo choque e sorteado independentemente.</p>
-    <p>O gerador de numeros aleatorios utiliza o algoritmo Mulberry32, um PRNG deterministico de 32 bits. A semente padrao e 42, garantindo que a mesma configuracao de parametros produza sempre os mesmos resultados — a simulacao e <strong>reprodutivel</strong>.</p>
+    <p>Onde <strong>&mu;</strong> é a taxa de retorno anual esperada (cenário base do ativo), <strong>&sigma;</strong> é a volatilidade anual, e <strong>Z ~ N(0,1)</strong> é um choque aleatorio normal. A cada ano da simulação, um novo choque e sorteado independentemente.</p>
+    <p>O gerador de números aleatórios utiliza o algoritmo Mulberry32, um PRNG determinístico de 32 bits. A semente padrão e 42, garantindo que a mesma configuração de parâmetros produza sempre os mesmos resultados — a simulação e <strong>reprodutível</strong>.</p>
 
-    <h3>2.2 Parametros</h3>
-    <p>Cada simulacao individual gera <strong>10.000 trajetorias independentes</strong> para o horizonte de tempo escolhido (1 a 30 anos). Os aportes mensais sao incorporados ao final de cada ano. O valor final de cada trajetoria e registrado, e os percentis P10, P25, P50 (mediana), P75 e P90 sao calculados sobre a distribuicao empirica dos resultados.</p>
+    <h3>2.2 Parâmetros</h3>
+    <p>Cada simulação individual gera <strong>10.000 trajetórias independentes</strong> para o horizonte de tempo escolhido (1 a 30 anos). Os aportes mensais são incorporados ao final de cada ano. O valor final de cada trajetoria e registrado, e os percentis P10, P25, P50 (mediana), P75 e P90 são calculados sobre a distribuição empirica dos resultados.</p>
 
-    <h3>2.3 Limitacoes</h3>
+    <h3>2.3 Limitações</h3>
     <ul class="u-marginleft20px-fontsize14px-colorvartext-marginbottom16px">
-        <li class="u-marginbottom6px"><strong>Normalidade dos retornos</strong>: o modelo assume choques normais, o que subestima eventos extremos (caudas grossas). Drawdowns historicos de 30-80% em commodities e criptoativos nao sao totalmente capturados.</li>
-        <li class="u-marginbottom6px"><strong>Correlacoes estaticas</strong>: o modelo trata cada ativo como independente. Nao ha matriz de correlacao entre ativos — cada simulacao e univariada. A correlacao so e relevante no Monte Carlo de portfolio.</li>
+        <li class="u-marginbottom6px"><strong>Normalidade dos retornos</strong>: o modelo assume choques normais, o que subestima eventos extremos (caudas grossas). Drawdowns históricos de 30-80% em commodities e criptoativos nao são totalmente capturados.</li>
+        <li class="u-marginbottom6px"><strong>Correlações estáticas</strong>: o modelo trata cada ativo como independente. Não há matriz de correlação entre ativos — cada simulação e univariada. A correlação so e relevante no Monte Carlo de portfólio.</li>
         <li class="u-marginbottom6px"><strong>Volatilidade constante</strong>: a volatilidade e fixa ao longo de todo o horizonte. Regime de volatilidade (calmaria vs. crise) nao e modelado.</li>
-        <li class="u-marginbottom6px"><strong>Sem custos de transacao</strong>: spread, corretagem e slippage nao sao descontados.</li>
-        <li><strong>Sem risco de credito</strong>: para CDI e NTN-B, assume-se que o emissor (Tesouro Nacional) honra integralmente os pagamentos.</li>
+        <li class="u-marginbottom6px"><strong>Sem custos de transação</strong>: spread, corretagem e slippage nao são descontados.</li>
+        <li><strong>Sem risco de crédito</strong>: para CDI e NTN-B, assume-se que o emissor (Tesouro Nacional) honra integralmente os pagamentos.</li>
     </ul>
 
-    <h2>3. Calibracao de volatilidades</h2>
-    <p>As volatilidades anuais foram calibradas com series historicas de 5 anos (2021-2026), arredondadas para o meio ponto percentual mais proximo. Fontes: Yahoo Finance, CoinGecko, BCB.</p>
+    <h2>3. Calibração de volatilidades</h2>
+    <p>As volatilidades anuais foram calibradas com séries históricas de 5 anos (2021-2026), arredondadas para o meio ponto percentual mais próximo. Fontes: Yahoo Finance, CoinGecko, BCB.</p>
 
     <table>
         <thead>
             <tr><th>Ativo</th><th>Volatilidade anual</th><th>Fonte da estimativa</th></tr>
         </thead>
         <tbody>
-            <tr><td>Ouro</td><td>15%</td><td>Desvio-padrao dos retornos diarios do XAU/USD (5 anos)</td></tr>
-            <tr><td>Prata</td><td>34%</td><td>Desvio-padrao dos retornos diarios do XAG/USD (5 anos)</td></tr>
-            <tr><td>Platina</td><td>32%</td><td>Desvio-padrao dos retornos diarios do XPT/USD (5 anos)</td></tr>
-            <tr><td>Bitcoin</td><td>85%</td><td>Desvio-padrao dos retornos diarios do BTC/USD (5 anos)</td></tr>
+            <tr><td>Ouro</td><td>15%</td><td>Desvio-padrao dos retornos diários do XAU/USD (5 anos)</td></tr>
+            <tr><td>Prata</td><td>34%</td><td>Desvio-padrao dos retornos diários do XAG/USD (5 anos)</td></tr>
+            <tr><td>Platina</td><td>32%</td><td>Desvio-padrao dos retornos diários do XPT/USD (5 anos)</td></tr>
+            <tr><td>Bitcoin</td><td>85%</td><td>Desvio-padrao dos retornos diários do BTC/USD (5 anos)</td></tr>
             <tr><td>NTN-B</td><td>8%</td><td>Duration risk: duration de ~6 anos x volatilidade de taxa de juros real de ~1,3% a.a.</td></tr>
-            <tr><td>CDI</td><td>0,5%</td><td>Essencialmente zero — risco de mercado desprezivel para taxa DI over</td></tr>
-            <tr><td>USD/BRL</td><td>12%</td><td>Desvio-padrao dos retornos diarios do USD/BRL (5 anos)</td></tr>
+            <tr><td>CDI</td><td>0,5%</td><td>Essencialmente zero — risco de mercado desprezível para taxa DI over</td></tr>
+            <tr><td>USD/BRL</td><td>12%</td><td>Desvio-padrao dos retornos diários do USD/BRL (5 anos)</td></tr>
         </tbody>
     </table>
 
-    <h2>4. Construcao de cenarios</h2>
+    <h2>4. Construção de cenários</h2>
 
-    <h3>4.1 Cenarios-base por ativo</h3>
-    <p>Os cenarios conservador, moderado e agressivo de cada ativo sao construidos a partir de:</p>
+    <h3>4.1 Cenários-base por ativo</h3>
+    <p>Os cenários conservador, moderado e agressivo de cada ativo são construidos a partir de:</p>
     <ul class="u-marginleft20px-fontsize14px-colorvartext-marginbottom16px">
-        <li class="u-marginbottom6px"><strong>Cenario base</strong>: taxa de retorno esperada fundamentada em dados de mercado atuais (yield de titulos, premio de risco, taxa de juros real).</li>
+        <li class="u-marginbottom6px"><strong>Cenario base</strong>: taxa de retorno esperada fundamentada em dados de mercado atuais (yield de títulos, prêmio de risco, taxa de juros real).</li>
         <li class="u-marginbottom6px"><strong>Cenario conservador</strong>: base menos um spread proporcional a volatilidade do ativo (~1-1,5 desvios-padrao).</li>
         <li><strong>Cenario agressivo</strong>: base mais um spread proporcional a volatilidade do ativo (~1-1,5 desvios-padrao).</li>
     </ul>
-    <p>Para o CDI, os cenarios refletem trajetorias alternativas da taxa Selic (cortes acelerados, manutencao, ou elevacao). Para a NTN-B, os cenarios variam o spread sobre o IPCA (compressao, manutencao, ou ampliacao do premio de risco fiscal). Para o USD/BRL, os cenarios modelam a direcao do cambio (apreciacao, estabilidade, ou depreciacao do BRL).</p>
+    <p>Para o CDI, os cenários refletem trajetórias alternativas da taxa Selic (cortes acelerados, manutenção, ou elevação). Para a NTN-B, os cenários variam o spread sobre o IPCA (compressao, manutenção, ou ampliacao do prêmio de risco fiscal). Para o USD/BRL, os cenários modelam a direção do câmbio (apreciação, estabilidade, ou depreciação do BRL).</p>
 
-    <h3>4.2 Cenarios geopoliticos (portfolio)</h3>
-    <p>Os 5 cenarios geopoliticos da secao "Cenarios Prospectivos 2026-2030" utilizam calibracao bayesiana com base em:</p>
+    <h3>4.2 Cenários geopolíticos (portfólio)</h3>
+    <p>Os 5 cenários geopolíticos da seção "Cenários Prospectivos 2026-2030" utilizam calibração bayesiana com base em:</p>
     <ul class="u-marginleft20px-fontsize14px-colorvartext-marginbottom16px">
-        <li class="u-marginbottom6px">Probabilidades base (base rates) historicas de conflito entre grandes potencias (Correlates of War, 1945-presente)</li>
-        <li class="u-marginbottom6px">Precificacao de mercados de apostas (Polymarket, jul/2026)</li>
-        <li class="u-marginbottom6px">Julzo estruturado de especialistas (Good Judgment Project, Metaculus)</li>
-        <li>Modelos academicos de escalada de conflito (Thucydides Trap, Allison/Harvard; escada de escalada de Kahn)</li>
+        <li class="u-marginbottom6px">Probabilidades base (base rates) históricas de conflito entre grandes potências (Correlates of War, 1945-presente)</li>
+        <li class="u-marginbottom6px">Precificação de mercados de apostas (Polymarket, jul/2026)</li>
+        <li class="u-marginbottom6px">Juízo estruturado de especialistas (Good Judgment Project, Metaculus)</li>
+        <li>Modelos acadêmicos de escalada de conflito (Thucydides Trap, Allison/Harvard; escada de escalada de Kahn)</li>
     </ul>
-    <p>Cada cenario define retornos esperados, trajetorias de variaveis macro (Selic, IPCA, USD/BRL, Brent) e deslocamentos de correlacao entre pares de ativos. O modelo de portfolio aplica esses retornos como overrides sobre as taxas-base dos ativos individuais.</p>
+    <p>Cada cenario define retornos esperados, trajetórias de variáveis macro (Selic, IPCA, USD/BRL, Brent) e deslocamentos de correlação entre pares de ativos. O modelo de portfólio aplica esses retornos como overrides sobre as taxas-base dos ativos individuais.</p>
 
-    <h3>4.3 Cenarios macro (LLM)</h3>
-    <p>O panorama macroeconomico da home e gerado por um modelo de linguagem (Claude Haiku 4.5 via OpenRouter) que processa dados estruturados do BCB (Selic, IPCA, PTAX, expectativas Focus) e produz uma narrativa em portugues. O LLM nao "inventa" dados — ele sintetiza os numeros oficiais em texto. A geracao e semanal (segundas-feiras) com cache de 7 dias.</p>
+    <h3>4.3 Cenários macro (LLM)</h3>
+    <p>O panorama macroeconômico da home e gerado por um modelo de linguagem (Claude Haiku 4.5 via OpenRouter) que processa dados estruturados do BCB (Selic, IPCA, PTAX, expectativas Focus) e produz uma narrativa em português. O LLM nao "inventa" dados — ele sintetiza os números oficiais em texto. A geração e semanal (segundas-feiras) com cache de 7 dias.</p>
 
     <h2>5. Referencias</h2>
     <table>
@@ -117,15 +117,15 @@
             <tr><td>BCB SGS</td><td>api.bcb.gov.br</td><td>Selic, CDI, IPCA</td></tr>
             <tr><td>BCB Focus</td><td>olinda.bcb.gov.br</td><td>Expectativas de mercado</td></tr>
             <tr><td>BrasilAPI</td><td>brasilapi.com.br</td><td>Taxas (CDI, Selic)</td></tr>
-            <tr><td>AwesomeAPI</td><td>economia.awesomeapi.com.br</td><td>Cambio (USD/BRL)</td></tr>
-            <tr><td>Yahoo Finance</td><td>query1.finance.yahoo.com</td><td>Indices, commodities, ETFs (IB5M11, IMA-B 5+)</td></tr>
+            <tr><td>AwesomeAPI</td><td>economia.awesomeapi.com.br</td><td>Câmbio (USD/BRL)</td></tr>
+            <tr><td>Yahoo Finance</td><td>query1.finance.yahoo.com</td><td>Índices, commodities, ETFs (IB5M11, IMA-B 5+)</td></tr>
             <tr><td>CoinGecko</td><td>api.coingecko.com</td><td>Criptoativos</td></tr>
             <tr><td>Gold API</td><td>api.gold-api.com</td><td>Metais preciosos</td></tr>
         </tbody>
     </table>
 
     <div class="disclaimer-box">
-        <strong>Aviso importante:</strong> Esta pagina descreve a metodologia de calculo da plataforma MultiAsset. As simulacoes apresentadas tem carater exclusivamente informativo e educacional. Nenhum conteudo desta pagina ou da plataforma constitui recomendacao de investimento, oferta de produto financeiro ou aconselhamento personalizado. Resultados passados e simulacoes baseadas em dados historicos nao garantem retornos futuros. Consulte um profissional credenciado antes de tomar decisoes de investimento. Para duvidas sobre a metodologia, entre em contato: <a href="mailto:contato@multi-assets.com">contato@multi-assets.com</a>.
+        <strong>Aviso importante:</strong> Esta página descreve a metodologia de cálculo da plataforma MultiAsset. As simulações apresentadas têm caráter exclusivamente informativo e educacional. Nenhum conteúdo desta página ou da plataforma constitui recomendação de investimento, oferta de produto financeiro ou aconselhamento personalizado. Resultados passados e simulações baseadas em dados históricos nao garantem retornos futuros. Consulte um profissional credenciado antes de tomar decisões de investimento. Para dúvidas sobre a metodologia, entre em contato: <a href="mailto:contato@multi-assets.com">contato@multi-assets.com</a>.
     </div>
 
     <div class="footer">
