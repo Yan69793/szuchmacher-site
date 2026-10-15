@@ -3259,7 +3259,7 @@ function submitExitPopup() {
         method: 'POST',
         signal: AbortSignal.timeout(12000),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup', consent: true, policy_version: '2026-07-26' })
+        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup', consent: true, policy_version: '2026-10-15', attribution: (window.SZ && window.SZ.getAttribution) ? window.SZ.getAttribution() : null })
     }).then(function (r) {
         if (!r.ok) {
             var error = new Error('signup status ' + r.status);

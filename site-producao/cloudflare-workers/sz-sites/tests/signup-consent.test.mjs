@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleRelatorioSignup, handleRelatorioConfirm, handleUnsubscribe } from '../src/handlers/relatorio-signup.js';
+import { handleRelatorioSignup, handleRelatorioConfirm, handleUnsubscribe, pickAttr } from '../src/handlers/relatorio-signup.js';
 import { signEmail, sha256Hex } from '../src/utils/subscriber.js';
 
 const SECRET = 'hmac-test-secret';
@@ -100,10 +100,12 @@ async function unsubReq(email, action, sig) {
 
 test('descadastro com HMAC valido marca unsubscribed', async () => {
   const env = makeEnv();
-  env.m.set('subscriber:d@example.com', JSON.stringify({ email: 'd@example.com', status: 'confirmed' }));
+  env.m.set('subscriber:d@example.com', JSON.stringify({ email: 'd@example.com', status: 'confirmed', attribution: { first: { ts: 1, landing: '/', utms: { utm_source: 'x' } }, last: null } }));
   const res = await handleUnsubscribe(await unsubReq('d@example.com', 'unsubscribe'), env);
   assert.equal(res.status, 200);
-  assert.equal(JSON.parse(env.m.get('subscriber:d@example.com')).status, 'unsubscribed');
+  const rec = JSON.parse(env.m.get('subscriber:d@example.com'));
+  assert.equal(rec.status, 'unsubscribed');
+  assert.equal('attribution' in rec, false, 'descadastro descarta a origem de campanha');
 });
 
 test('exclusao remove o inscrito e guarda so o hash', async () => {
@@ -140,4 +142,46 @@ test('sem SUBSCRIBER_HMAC_SECRET o descadastro responde 503 com contato', async 
   delete env.SUBSCRIBER_HMAC_SECRET;
   const res = await handleUnsubscribe(new Request('https://szuchmacher.com.br/unsubscribe?e=x%40y.com&s=1'), env);
   assert.equal(res.status, 503);
+});
+
+test('pickAttr guarda so as 5 UTMs, sem click id, referrer nem e-mail', () => {
+  const a = pickAttr({
+    first_touch: {
+      ts: 1789000000000,
+      landing: '/relatorios.html?email=x%40y.com',
+      referrer: 'https://www.google.com/search?q=fulano',
+      utms: { utm_source: 'google', utm_medium: 'cpc', utm_campaign: 'c'.repeat(300), utm_content: 'fulano@example.com', gclid: 'abc', fbclid: 'def', li_fat_id: 'ghi' },
+    },
+    last_touch: { ts: null, landing: '/', utms: { utm_source: 'newsletter' } },
+  });
+  assert.deepEqual(Object.keys(a.first.utms).sort(), ['utm_campaign', 'utm_medium', 'utm_source']);
+  assert.equal(a.first.utms.utm_campaign.length, 100);
+  assert.equal(a.first.landing, '/relatorios.html');
+  assert.equal(a.first.ts, 1789000000000);
+  assert.equal(a.last.ts, null, 'ts null nao pode virar 0');
+  const s = JSON.stringify(a);
+  for (const proibido of ['gclid', 'abc', 'fbclid', 'li_fat_id', 'referrer', 'google.com/search', '@']) {
+    assert.ok(!s.includes(proibido), `nao pode conter ${proibido}`);
+  }
+});
+
+test('pickAttr devolve null para entrada invalida ou sem toque valido', () => {
+  assert.equal(pickAttr(null), null);
+  assert.equal(pickAttr('x'), null);
+  assert.equal(pickAttr({ first_touch: null, last_touch: null }), null);
+  assert.equal(pickAttr({ first_touch: { utms: 'x' } }), null);
+  assert.equal(pickAttr({ first_touch: { ts: 1, landing: '/', utms: { gclid: 'abc', utm_content: 'a@b.com' } } }), null, 'sem UTM valida nao grava landing/ts soltos');
+});
+
+test('signup grava atribuicao filtrada e a confirmacao preserva', async () => {
+  const env = makeEnv();
+  const attribution = { first_touch: { ts: 1, landing: '/', utms: { utm_source: 'li', gclid: 'zzz' } }, last_touch: null };
+  await handleRelatorioSignup(post({ email: 'h@example.com', consent: true, attribution }, '198.51.100.9'), env);
+  const rec = JSON.parse(env.m.get('subscriber:h@example.com'));
+  assert.deepEqual(rec.attribution, { first: { ts: 1, landing: '/', utms: { utm_source: 'li' } }, last: null });
+  const t = sent[0].text.match(/relatorio-confirm\?t=([0-9a-f]{64})/)[1];
+  await handleRelatorioConfirm(new Request(`https://szuchmacher.com.br/relatorio-confirm?t=${t}`), env);
+  const conf = JSON.parse(env.m.get('subscriber:h@example.com'));
+  assert.equal(conf.status, 'confirmed');
+  assert.deepEqual(conf.attribution, rec.attribution);
 });

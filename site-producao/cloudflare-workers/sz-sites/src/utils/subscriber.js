@@ -4,7 +4,7 @@
 //   exclusao sem login. Exige o secret SUBSCRIBER_HMAC_SECRET.
 // - ipHash: prova de origem do consentimento sem guardar o IP em claro.
 
-export const POLICY_VERSION = '2026-07-26';
+export const POLICY_VERSION = '2026-10-15';
 export const OPTIN_TTL = 48 * 3600;
 export const SUBSCRIBER_TTL = 86400 * 365;
 export const DELETED_TTL = 86400 * 365 * 5;

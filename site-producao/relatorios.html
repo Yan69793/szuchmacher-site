@@ -226,7 +226,7 @@
           <div class="u-marginbottom20px signup-form">
             <h3>Receba o relatório gratuitamente</h3>
             <p>O Fechamento de Mercado diário no seu e-mail, em dias úteis, por volta das 19h BRT.</p>
-            <form id="reportSignupForm" class="u-margintop16px">
+            <form id="reportSignupForm" class="u-margintop16px" method="post" action="/relatorio-signup">
               <div class="u-displayflex-gap10px">
                 <input type="email" name="email" placeholder="Seu melhor e-mail" required class="u-flex1-marginbottom0">
                 <button type="submit" class="u-whitespacenowrap-minwidth140px btn">Inscrever</button>
@@ -331,6 +331,7 @@
             <input type="hidden" name="_origem" value="relatorios.html#contato" />
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="u-displaynone">
             <button type="submit" class="u-width100 btn" data-ga="cta_contato" data-ga-location="form_contato_relatorios">Solicitar contato</button>
+            <div class="form-success" id="contactFormSuccess" role="status" aria-live="polite">Solicita&ccedil;&atilde;o recebida. Retorno em at&eacute; 24 horas &uacute;teis por e-mail ou WhatsApp.</div>
             <div class="form-note">Retorno em até 24 horas úteis.</div>
           </form>
         </div>

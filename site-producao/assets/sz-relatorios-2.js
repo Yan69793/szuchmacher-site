@@ -10,6 +10,10 @@
       var msg = document.getElementById('reportSignupMsg');
       var btn = form.querySelector('button[type="submit"]');
       var origText = btn ? btn.textContent : '';
+      function getAttr() {
+        try { return (window.SZ && window.SZ.getAttribution) ? window.SZ.getAttribution() : null; }
+        catch (e3) { return null; }
+      }
 
       function showMsg(text, isError) {
         if (!msg) return;
@@ -35,7 +39,7 @@
         fetch('/relatorio-signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim(), consent: true, policy_version: '2026-07-26' }),
+          body: JSON.stringify({ email: email.trim(), consent: true, policy_version: '2026-10-15', source: 'relatorio-signup', attribution: getAttr() }),
         })
           .then(function (r) { return r.json(); })
           .then(function (d) {

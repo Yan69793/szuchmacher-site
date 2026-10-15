@@ -221,6 +221,9 @@ try {
     # Sem captura de proposito: o deploy escreve direto no console e o progresso
     # do wrangler fica visivel. A versao nova vem do wrangler depois, nao daqui.
     & $DEPLOY
+    if ($LASTEXITCODE -eq 3) {
+        Registrar "Guarda de working tree barrou o deploy: arquivo deployavel nao commitado (lista no console acima)." 'Red'
+    }
     if ($LASTEXITCODE -ne 0) { $deployOk = $false }
 } catch {
     $deployOk = $false

@@ -6,6 +6,9 @@
  * ============================================================= */
 
 window.SZ_CLARITY_ID = 'x89me5cgm8';
+/* Versao da Politica de Privacidade aceita nos formularios. Igual a
+   POLICY_VERSION do Worker (src/utils/subscriber.js); teste do Worker reprova divergencia. */
+window.SZ_POLICY_VERSION = '2026-10-15';
 window.SZ_FORMSPREE_ID    = 'mojrayrl';
 /* Payment Links reais, modo live, conferidos direto no dashboard Stripe em
    19/07/2026: pk_live_...oeMA, sem banner de ativacao pendente. Ja existiam
@@ -187,7 +190,22 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
 
   /* ── UTM capture (first-touch + last-touch) ───────────────── */
   var UTM_STORAGE_KEY = 'sz_attribution';
-  var UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'li_fat_id'];
+  /* So as 5 UTMs. gclid/fbclid/li_fat_id saíram em 15/10/2026: nenhum consumidor
+     usava e guardar sem uso fere a minimizacao (LGPD art. 6, III). */
+  var UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+
+  /* Valor de campanha com '@' e descartado (ferramenta de e-mail costuma por o
+     endereco do destinatario na UTM) e o resto vai truncado. Mesma regra do
+     pickAttr do Worker. */
+  function cleanAttr(v) {
+    v = typeof v === 'string' ? v : '';
+    return v.indexOf('@') >= 0 ? '' : v.slice(0, 100);
+  }
+  /* Referrer so com a origem: na mesma origem o navegador manda a URL inteira,
+     com query, e ela pode carregar dado pessoal. */
+  function refOrigin(r) {
+    try { return r ? new URL(r).origin : ''; } catch (e) { return ''; }
+  }
 
   window.SZ.captureUTMs = function () {
     try {
@@ -196,13 +214,14 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
       var has = false;
       UTM_FIELDS.forEach(function (k) {
         var v = params.get(k);
+        v = cleanAttr(v);
         if (v) { captured[k] = v; has = true; }
       });
       if (has) {
         var payload = {
           ts: Date.now(),
           landing: window.location.pathname,
-          referrer: document.referrer || '',
+          referrer: refOrigin(document.referrer),
           utms: captured
         };
         if (!localStorage.getItem(UTM_STORAGE_KEY)) {
@@ -224,6 +243,31 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     } catch (e) { return { first_touch: null, last_touch: null }; }
   };
 
+  /* Payload gravado antes de 15/10/2026 pode ter click ids, UTM com e-mail e
+     referrer completo. Regrava limpo uma vez; o first touch nao e sobrescrito
+     por captureUTMs, entao sem isto o residuo ficaria no navegador. */
+  function sanitizeStored() {
+    try {
+      var raw = localStorage.getItem(UTM_STORAGE_KEY);
+      if (!raw) return;
+      var p = JSON.parse(raw), utms = {}, has = false;
+      UTM_FIELDS.forEach(function (k) {
+        var v = cleanAttr(p && p.utms && p.utms[k]);
+        if (v) { utms[k] = v; has = true; }
+      });
+      if (!has) { localStorage.removeItem(UTM_STORAGE_KEY); return; }
+      var clean = {
+        ts: typeof p.ts === 'number' && isFinite(p.ts) ? p.ts : null,
+        landing: String(p.landing || '').split(/[?#]/)[0],
+        referrer: refOrigin(p.referrer),
+        utms: utms
+      };
+      var s = JSON.stringify(clean);
+      if (s !== raw) localStorage.setItem(UTM_STORAGE_KEY, s);
+    } catch (e) {}
+  }
+
+  sanitizeStored();
   window.SZ.captureUTMs();
 
   window.SZ.appendUTM = function (url, params) {
@@ -342,19 +386,20 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
   function appendAttribution(data) {
     try {
       var attr = window.SZ.getAttribution();
-      if (attr.first_touch) {
-        data.append('_attrib_first_source', attr.first_touch.utms.utm_source || '');
-        data.append('_attrib_first_medium', attr.first_touch.utms.utm_medium || '');
-        data.append('_attrib_first_campaign', attr.first_touch.utms.utm_campaign || '');
-        data.append('_attrib_first_landing', attr.first_touch.landing || '');
-        data.append('_attrib_first_ts', new Date(attr.first_touch.ts).toISOString());
+      var f = attr.first_touch, l = attr.last_touch;
+      if (f && f.utms) {
+        data.append('_attrib_first_source', cleanAttr(f.utms.utm_source));
+        data.append('_attrib_first_medium', cleanAttr(f.utms.utm_medium));
+        data.append('_attrib_first_campaign', cleanAttr(f.utms.utm_campaign));
+        data.append('_attrib_first_landing', cleanAttr(String(f.landing || '').split(/[?#]/)[0]));
+        if (typeof f.ts === 'number' && isFinite(f.ts)) data.append('_attrib_first_ts', new Date(f.ts).toISOString());
       }
-      if (attr.last_touch) {
-        data.append('_attrib_last_source', attr.last_touch.utms.utm_source || '');
-        data.append('_attrib_last_medium', attr.last_touch.utms.utm_medium || '');
-        data.append('_attrib_last_campaign', attr.last_touch.utms.utm_campaign || '');
+      if (l && l.utms) {
+        data.append('_attrib_last_source', cleanAttr(l.utms.utm_source));
+        data.append('_attrib_last_medium', cleanAttr(l.utms.utm_medium));
+        data.append('_attrib_last_campaign', cleanAttr(l.utms.utm_campaign));
       }
-      data.append('_attrib_referrer', document.referrer || '');
+      data.append('_attrib_referrer', refOrigin(document.referrer));
     } catch (e) {}
   }
 
@@ -368,6 +413,7 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     if (opts.nome) data.append('nome', opts.nome);
     data.append('_origem', opts.origem || opts.form || 'lead');
     data.append('form', opts.form || 'generic');
+    data.append('_policy_version', window.SZ_POLICY_VERSION);
     if (opts.extra) {
       Object.keys(opts.extra).forEach(function (k) {
         data.append(k, opts.extra[k]);
@@ -496,6 +542,7 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
 
       var data = new FormData(formEl);
+      data.append('_policy_version', window.SZ_POLICY_VERSION);
       appendAttribution(data);
 
       fetch(formEl.action || window.SZ.formspreeUrl(), {

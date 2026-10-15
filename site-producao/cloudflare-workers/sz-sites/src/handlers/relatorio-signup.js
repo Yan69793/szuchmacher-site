@@ -97,6 +97,32 @@ async function getLatestReportUrl(env) {
 // senao os dois funis viram um balde so no KV e nao da para medir conversao.
 const VALID_SOURCES = new Set(['relatorio-signup', 'multiasset_exit_popup']);
 
+// Atribuicao de marketing enviada pelo navegador (first/last touch). So UTMs, com tamanho
+// limitado: nenhum identificador de clique (gclid, fbclid) e nenhum dado pessoal.
+// Valor com '@' e descartado: ferramenta de e-mail marketing costuma por o endereco
+// do destinatario em utm_content, e isso nao pode parar no registro.
+export function pickAttr(a) {
+	if (!a || typeof a !== 'object') return null;
+	const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+	const touch = (x) => {
+		if (!x || typeof x !== 'object' || !x.utms || typeof x.utms !== 'object') return null;
+		const utms = {};
+		for (const k of keys) {
+			const v = x.utms[k];
+			if (typeof v === 'string' && v && !v.includes('@')) utms[k] = v.slice(0, 100);
+		}
+		if (Object.keys(utms).length === 0) return null;
+		return {
+			ts: typeof x.ts === 'number' && Number.isFinite(x.ts) ? x.ts : null,
+			landing: typeof x.landing === 'string' && !x.landing.includes('@') ? x.landing.split(/[?#]/)[0].slice(0, 100) : '',
+			utms,
+		};
+	};
+	const first = touch(a.first_touch);
+	const last = touch(a.last_touch);
+	return first || last ? { first, last } : null;
+}
+
 async function sendWelcomeEmail(env, toEmail, reportInfo, unsubUrl = null) {
 	const apiKey = env.RESEND_API_KEY;
 	const fromEmail = env.FROM_EMAIL || 'yan@szuchmacher.com.br';
@@ -336,6 +362,7 @@ export async function handleRelatorioSignup(request, env) {
 		status: 'pending',
 		signed_up_at: existing?.signed_up_at || new Date().toISOString(),
 		source,
+		attribution: pickAttr(body.attribution) || existing?.attribution || null,
 		consent: {
 			at: new Date().toISOString(),
 			policy_version: typeof body.policy_version === 'string' ? body.policy_version.slice(0, 20) : POLICY_VERSION,
@@ -434,6 +461,8 @@ export async function handleUnsubscribe(request, env) {
 	if (rec) {
 		rec.status = 'unsubscribed';
 		rec.unsubscribed_at = new Date().toISOString();
+		// Origem de campanha so serve enquanto a pessoa e inscrita (minimizacao).
+		delete rec.attribution;
 		await env.CACHE.put(key, JSON.stringify(rec), { expirationTtl: SUBSCRIBER_TTL });
 	}
 	console.log(`[unsubscribe] descadastrado: ${maskEmail(email)}`);
