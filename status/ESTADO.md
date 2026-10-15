@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-27 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-10-15 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -66,6 +66,21 @@ muda quando checagem nova entra, use a da saída real do script.
   `scripts/run_claude_routine.ps1` é o runner da `Szuchmacher-AgendaMacro-Claude`.
 
 ## Itens abertos
+
+- **Atribuição de leads e política 2026-10-15, publicado em 15/10.** Commits
+  `21f80b7` e `ea242c7`, versão `789ff049-c0da-4f09-a913-09d522d25952`
+  (rollback `12b25662-d95d-4a11-9e0f-6db82a4b9d3f`), gate 51/51, relatório
+  `site-producao/diagnosticos/publicacao_2026-10-15_0243.md`. O deploy subiu só
+  os 16 assets esperados. Daqui em diante, `deploy-cloudflare.ps1` aborta com
+  exit 3 se houver arquivo deployável não commitado (`scripts/guarda-arvore.ps1`).
+  Isso vale também para o sync das 19h. O e-mail do fechamento sai antes e não é
+  afetado, só o widget fica parado e chega alerta. Abertos: (a) decidir se a
+  política nova conta como mudança material para a seção 9 (aviso de 15 dias).
+  A leitura técnica foi que não conta, porque inscrito confirmado não ganha
+  atribuição e o envio ao Formspree ficou mais restrito do que antes. (b)
+  `tests/usdbrl-scenarios.test.mjs` segue fora do git, com 197 testes na árvore
+  e 192 só com arquivos versionados. (c) A prova viva do filtro de UTM no KV
+  depende de uma inscrição real, que ainda não foi autorizada.
 
 - **P1-001, crédito OpenRouter esgotado, aberto em 12/09.** A conta da chave de
   `config.php` (rótulo `sk-or-v1-ca7...ca6`) está acima do teto comprado:
