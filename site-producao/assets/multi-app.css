@@ -2332,3 +2332,14 @@ body[data-design="multiasset-research-os-v3"] .export-fab .fab-text { font-size:
     .comp-table-wrap { overflow-x: auto; }
     .comp-table { min-width: 600px; white-space: nowrap; }
 }
+
+/* Botao flutuante de PDF cobria texto no celular: vira so icone (rotulo segue
+   acessivel por clip) e o conteudo ganha folga inferior para rolar por baixo. */
+@media (max-width: 768px) {
+    body { padding-bottom: 76px; }
+    body[data-design="multiasset-research-os-v3"] .export-fab .fab-text {
+        position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+    }
+    body[data-design="multiasset-research-os-v3"] .export-fab { min-width: 48px; min-height: 48px; padding: 12px; }
+}
