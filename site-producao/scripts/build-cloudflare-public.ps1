@@ -250,6 +250,10 @@ Copy-IfExists (Join-Path $ROOT 'assets\multi-app-3.js') (Join-Path $MULTI 'asset
 # Bibliotecas servidas do proprio dominio (item 3.6/5.1): saem do cdnjs para
 # tirar o cdnjs do script-src da CSP. Copias byte a byte das versoes que ja rodavam.
 Copy-IfExists (Join-Path $ROOT 'assets\chart.umd.min.js') (Join-Path $MULTI 'assets\chart.umd.min.js') | Out-Null
+# Subconjunto do Font Awesome (substitui o all.min.css do cdnjs, 253 KB).
+foreach ($faFile in 'fa-subset.css', 'fa-subset-solid.woff2', 'fa-subset-brands.woff2') {
+    Copy-IfExists (Join-Path $ROOT "assets\$faFile") (Join-Path $MULTI "assets\$faFile") | Out-Null
+}
 Copy-IfExists (Join-Path $ROOT 'assets\jspdf.umd.min.js') (Join-Path $MULTI 'assets\jspdf.umd.min.js') | Out-Null
 # Politica de privacidade. multi-assets.com coleta e-mail no popup do simulador e
 # ate 26/07/2026 respondia 404 em /privacidade.html e /privacidade: coleta sem
@@ -318,7 +322,7 @@ $obrigatorios = @(
     'multi\metodologia.html', 'multi\metodologia',
     'multi\sitemap.xml',
     'multi\assets\video\og-multi-20261003.jpg', 'multi\assets\sz-config.js',
-    'multi\assets\multi-app.css', 'multi\assets\multi-utilities.css',
+    'multi\assets\multi-app.css', 'multi\assets\multi-utilities.css', 'multi\assets\fa-subset.css', 'multi\assets\fa-subset-solid.woff2', 'multi\assets\fa-subset-brands.woff2',
     'multi\assets\multi-app-1.js', 'multi\assets\multi-app-2.js', 'multi\assets\multi-app-3.js'
 )
 $ausentes = @($obrigatorios | Where-Object { -not (Test-Path (Join-Path $OUT $_)) })

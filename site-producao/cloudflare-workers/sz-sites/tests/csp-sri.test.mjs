@@ -19,8 +19,10 @@ test('multi nao carrega script do cdnjs (Chart.js e jsPDF servidos do proprio do
 });
 
 test('todo stylesheet de terceiro no multi tem integrity (SRI)', () => {
+  // Font Awesome passou a ser um subconjunto proprio (/assets/fa-subset.css).
+  // Se algum stylesheet do cdnjs voltar, precisa de SRI.
+  assert.ok(HTML.includes('/assets/fa-subset.css'));
   const links = HTML.match(/<link[^>]+cdnjs\.cloudflare\.com[^>]*>/g) || [];
-  assert.ok(links.length >= 1);
   for (const l of links) {
     assert.match(l, /integrity="sha384-[A-Za-z0-9+/=]+"/);
     assert.match(l, /crossorigin="anonymous"/);
