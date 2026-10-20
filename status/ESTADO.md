@@ -105,8 +105,14 @@ muda quando checagem nova entra, use a da saída real do script.
   começa logo depois do boot de 18/10 11:58 e termina depois do boot de 19/10
   18:43. Causa não identificada, os logs Application e Windows PowerShell não
   registram nada no disparo. Impacto no Site é nulo, porque a agenda de domingo
-  18/10 08:00 publicou antes da janela. Fora do Site, conferir se o Fechamento e
-  o Briefing de 19/10 chegaram aos destinatários.
+  18/10 08:00 publicou antes da janela. Conferido em 20/10 nos logs dos
+  projetos externos. O Fechamento de 19/10 saiu atrasado, por recuperação manual
+  (`REVISAO_MANUAL_20261019.flag`, 19:18), às 20:13 para 30 destinatários, slug
+  `20261019-b4388470`, página no ar com 200 e título de 19.10.2026. O watchdog
+  das 19:20 alertou corretamente. O Briefing Matinal de 19/10 (segunda) **não
+  saiu**: `Morning Call\briefing-interno` não tem log, HTML nem flag `sent_`
+  daquele dia, e o último envio registrado é de 16/10. O Briefing das 06:55 de
+  20/10 é a primeira prova de que o wrapper voltou, conferir.
 - **Atribuição de leads e política 2026-10-15, publicado em 15/10.** Commits
   `21f80b7` e `ea242c7`, versão `789ff049-c0da-4f09-a913-09d522d25952`
   (rollback `12b25662-d95d-4a11-9e0f-6db82a4b9d3f`), gate 51/51, relatório
