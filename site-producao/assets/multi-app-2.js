@@ -151,6 +151,15 @@ function fmt(n, decimals = 2) {
     return n.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
+// Numeros em pt-BR via Intl.NumberFormat (cache por configuracao). Substitui o
+// toLocaleString('en-US') que mostrava $ 4,144.80 ao lado de R$ 5,09.
+var _nfCache = {};
+function fmtNumBR(v, minDigits, maxDigits) {
+    var k = minDigits + ':' + maxDigits;
+    if (!_nfCache[k]) _nfCache[k] = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits });
+    return _nfCache[k].format(Number(v));
+}
+
 function fmtUSD(v) {
     if (v >= 1e6) return '$ ' + (v/1e6).toFixed(2).replace('.', ',') + ' M';
     return '$ '  + fmt(v, 0);
@@ -240,7 +249,7 @@ window.geoScenarios = [
         }
     },
     {
-        id: 'exogenous-shock', nome: 'Cooperacao por choque exogeno', probMin: 0.05, probMax: 0.15,
+        id: 'exogenous-shock', nome: 'Cooperação por choque exógeno', probMin: 0.05, probMax: 0.15,
         desc: 'Crise global compartilhada (pandemia, catastrofe climatica ou crise financeira sistemica) forca cooperacao pragmatica EUA-China. Acordos de estabilizacao financeira e climatica. Juros globais caem para combater recessao.',
         retornos: { gold: 0.15, silver: 0.08, platinum: 0.02, copper: -0.10, btc: 0.80, ntnb: 0.08, cdi: 0.07, ouro: 0.15, prata: 0.08, platina: 0.02, cobre: -0.10 },
         macro: { selic: [0.145,0.120,0.100,0.090,0.085], ipca: [0.055,0.045,0.040,0.038,0.035], usdbrl: [5.09,5.10,5.00,4.90,4.85], brent: [78,60,55,58,62] },
@@ -753,7 +762,7 @@ function recalcSim(asset) {
     const _lp = window._livePrices || {};
     const _priceKey = { gold: 'gold', silver: 'silver', platinum: 'platinum', copper: 'copper', btc: 'bitcoin' }[asset];
     const _currentPrice = _lp[_priceKey];
-    const _priceLabel = _currentPrice ? `$ ${Number(_currentPrice).toLocaleString('en-US')}` : '';
+    const _priceLabel = _currentPrice ? `$ ${fmtNumBR(_currentPrice, 2, 2)}` : '';
     const elPP = document.getElementById(p + '-pess-price');
     const elBP = document.getElementById(p + '-base-price');
     const elOP = document.getElementById(p + '-otim-price');
@@ -2589,10 +2598,10 @@ async function exportPDF(fabEl) {
         pdf.text('Total investido', mg+122, cy+7);
 
         pdf.setFont('helvetica','bold'); pdf.setTextColor(...TEXT); pdf.setFontSize(9);
-        pdf.text('$ '+cfg.ini.toLocaleString('en'), mg+4, cy+14);
-        pdf.text('$ '+cfg.ap.toLocaleString('en'), mg+45, cy+14);
+        pdf.text('$ '+cfg.ini.toLocaleString('pt-BR'), mg+4, cy+14);
+        pdf.text('$ '+cfg.ap.toLocaleString('pt-BR'), mg+45, cy+14);
         pdf.text(cfg.prazo+' anos', mg+86, cy+14);
-        pdf.text('$ '+(Math.round(totalInv)).toLocaleString('en'), mg+122, cy+14);
+        pdf.text('$ '+(Math.round(totalInv)).toLocaleString('pt-BR'), mg+122, cy+14);
 
         divLine(cy+18, 0.06);
 
@@ -2851,7 +2860,7 @@ async function loadMarketData() {
         if (data.wti) {
             const el = document.getElementById('macro-wti');
             const ch = document.getElementById('macro-wti-chg');
-            if (el) el.textContent = 'US$ ' + Number(data.wti.value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (el) el.textContent = 'US$ ' + fmtNumBR(data.wti.value, 2, 2);
             if (ch) ch.textContent = rotuloCotacao(data, 'wti', fmtChg);
         }
     } catch (e) {
@@ -3359,7 +3368,7 @@ async function loadLivePrices() {
         Object.entries(map).forEach(([id, val]) => {
             const el = document.getElementById(id);
             if (el) {
-                el.textContent = val ? `$ ${Number(val).toLocaleString('en-US')}` : '$ —';
+                el.textContent = val ? `$ ${fmtNumBR(val, 2, 2)}` : '$ —';
                 // Sinal honesto de cotação defasada: tooltip no próprio preço,
                 // sem mudar o layout.
                 el.title = defasado ? 'Cotação defasada: fonte ao vivo indisponível no momento' : '';

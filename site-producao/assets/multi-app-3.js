@@ -9,7 +9,7 @@
             var price = d.bitcoin && d.bitcoin.usd;
             var change = d.bitcoin && d.bitcoin.usd_24h_change;
             if (!Number.isFinite(price) || price <= 0 || !Number.isFinite(change)) throw new Error('Cotação BTC inválida');
-            priceEl.textContent = '$ ' + price.toLocaleString('en-US', {maximumFractionDigits:0});
+            priceEl.textContent = '$ ' + price.toLocaleString('pt-BR', {maximumFractionDigits:0});
             if (changeEl) {
                 var sign = change >= 0 ? '+' : '';
                 changeEl.textContent = sign + change.toFixed(2) + '% (24h)';
