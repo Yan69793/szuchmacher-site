@@ -2773,19 +2773,30 @@ async function fetchBCBSerie(serie) {
 async function fetchMacroIndicators() {
     let selicPct = null, ipcaPct = null, cdiPct = null;
 
+    // AwesomeAPI responde 429 sem CORS quando passa do limite. Qualquer falha
+    // (rede, 429, corpo invalido) cai no proxy do servidor, que serve o ultimo
+    // valor com procedencia declarada (PTAX de referencia diaria, nao tick).
+    let usdAwesome = 0;
     try {
         const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL', { signal: AbortSignal.timeout(8000) });
         if (res.ok) {
             const d = await res.json();
-            const usd = parseFloat(d.USDBRL?.bid || 0);
-            if (usd > 0) {
-                usdBrlLive = usd;
-                window.macroLive.usd = usd; renderResearchKpis();
-                const el = document.getElementById('macro-usd');
-                if (el) el.textContent = usd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
+            usdAwesome = parseFloat(d.USDBRL?.bid || 0);
         }
     } catch(e) {}
+    if (!(usdAwesome > 0)) {
+        try {
+            const p = await fetchMultiJson('/api/usdbrl-scenarios', { timeoutMs: 8000 });
+            const v = Number(p && p.usdbrl_bid);
+            if (v > 0) usdAwesome = v;
+        } catch(e) {}
+    }
+    if (usdAwesome > 0) {
+        usdBrlLive = usdAwesome;
+        window.macroLive.usd = usdAwesome; renderResearchKpis();
+        const el = document.getElementById('macro-usd');
+        if (el) el.textContent = usdAwesome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
     try {
         const v = await fetchBCBSerie(13522);
