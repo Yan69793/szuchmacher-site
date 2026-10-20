@@ -26,3 +26,9 @@ test('campo do snapshot ausente nao reprova nem inventa referencia', () => {
 });
 
 test('janela de frescor e 24h', () => assert.equal(FRESH_SECONDS, 86400));
+
+test('variacao percentual perto de PTAX nao e tratada como cotacao', () => {
+  const s = buildSnapshot({ ptax_valor: '5.0564', selic_valor: '13', selic_data: 'x', ptax_data: 'y' });
+  assert.deepEqual(validarNumerosContraSnapshot({ alert_text: 'A PTAX recuou 0,8% na semana e acumula alta de 12,5%.' }, s), []);
+  assert.equal(validarNumerosContraSnapshot({ alert_text: 'PTAX de R$ 4,9892' }, s).length, 1);
+});
