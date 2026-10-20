@@ -198,7 +198,7 @@
         }
         .hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
         .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.72; max-width: 38ch; margin-bottom: 36px; font-weight: 400; }
-        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; min-height: 48px; }
         .btn-primary {
             padding: 14px 22px; min-height: 48px;
             background: var(--gold); color: #0a0c10;
@@ -242,7 +242,7 @@
         .ticker-icon.copper { background: rgba(184,115,51,0.14); color:#b87333; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.btc { background: rgba(240,122,64,0.15); color: var(--orange); }
         .ticker-icon.usd { background: rgba(76,175,125,0.15); color: var(--green); }
-        .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; min-height: 1.4em; }
         .ticker-sub { font-size: 11px; color: var(--muted); }
 
         /* Widget TradingView nos cards */
