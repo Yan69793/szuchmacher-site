@@ -267,6 +267,10 @@ Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologi
 
 # Sitemap multi-assets.com. Criado em 2026-08-09, antes o dominio respondia 404.
 Copy-IfExists (Join-Path $ROOT 'sitemap-multi.xml') (Join-Path $MULTI 'sitemap.xml') | Out-Null
+# robots.txt de origem so com a linha Sitemap. O bloco de content signals e gerenciado
+# pela Cloudflare no edge e e anexado a este arquivo, nao substituido.
+Copy-IfExists (Join-Path $ROOT 'robots-multi.txt') (Join-Path $MULTI 'robots.txt') | Out-Null
+Copy-IfExists (Join-Path $ROOT 'robots-sz.txt') (Join-Path $SZ 'robots.txt') | Out-Null
 
 $lastmodSz = @{}
 $dRel = Get-JsonDate (Join-Path $ROOT 'relatorio_cache.json')
