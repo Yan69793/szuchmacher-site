@@ -663,75 +663,6 @@ def _fontes_validas_tema(t: dict) -> list[dict]:
     return [f for f in s if _fonte_valida(f)]
 
 
-# Tokens de titulo que aparecem em quase toda fonte e nao provam relacao com o texto.
-_GENERICOS_TITULO = {"china", "chinese", "united", "states", "russia", "russian", "news",
-                     "world", "global", "says", "will", "week", "after", "amid", "over"}
-
-
-def _tokens_proprios_titulo(titulo: str) -> set[str]:
-    """Nomes proprios do titulo (palavra capitalizada fora da primeira posicao).
-    Nomes costumam ser iguais em ingles e portugues, o que permite cruzar titulo
-    de fonte em ingles com texto em PT-BR sem traducao."""
-    palavras = re.findall(r"[A-Za-z][A-Za-z\-']+", titulo or "")
-    out = set()
-    for w in palavras[1:]:
-        if w[0].isupper():
-            base = _tokens(w.replace("'s", "").replace("’s", ""))
-            out |= {b for b in base if len(b) >= 4 and b not in _GENERICOS_TITULO}
-    return out
-
-
-def podar_fontes_sem_uso(payload: dict) -> list[str]:
-    """Remove de themes[].sources e regions.*.teses[].sources a fonte cujo nome
-    proprio do titulo nao aparece em nenhum campo de texto do item (27/09 e
-    20/10/2026: a edicao citava um artigo do SCMP sobre Taiwan que o texto da
-    tese nao usava). Titulo sem nome proprio nao e julgado e a fonte fica.
-    Depois reconstroi o sources global so com o que sobrou, desde que continue
-    acima do piso do validador. Devolve a lista de remocoes para o log."""
-    removidas: list[str] = []
-
-    def texto_item(item: dict) -> set[str]:
-        partes = [str(v) for k, v in item.items() if k != "sources" and isinstance(v, (str, list))]
-        return _tokens(" ".join(partes))
-
-    def podar_lista(item: dict, rotulo: str):
-        srcs = item.get("sources")
-        if not isinstance(srcs, list):
-            return
-        base = texto_item(item)
-        mantidas = []
-        for f in srcs:
-            nomes = _tokens_proprios_titulo(f.get("titulo", "")) if isinstance(f, dict) else set()
-            if nomes and not (nomes & base):
-                removidas.append(f"{rotulo}: {f.get('titulo', '')[:80]}")
-            else:
-                mantidas.append(f)
-        item["sources"] = mantidas
-
-    for i, th in enumerate(payload.get("themes") or []):
-        if isinstance(th, dict):
-            podar_lista(th, f"themes[{i}]")
-    for reg, r in (payload.get("regions") or {}).items():
-        for j, te in enumerate((r or {}).get("teses") or []):
-            if isinstance(te, dict):
-                podar_lista(te, f"regions.{reg}.teses[{j}]")
-
-    usadas: set[str] = set()
-    for th in payload.get("themes") or []:
-        usadas |= {f.get("url") for f in (th.get("sources") or []) if isinstance(f, dict)}
-    for r in (payload.get("regions") or {}).values():
-        for te in (r or {}).get("teses") or []:
-            usadas |= {f.get("url") for f in (te.get("sources") or []) if isinstance(f, dict)}
-    globais = payload.get("sources")
-    if removidas and isinstance(globais, list):
-        enxutas = [f for f in globais if f.get("url") in usadas]
-        if len(enxutas) >= 8:
-            payload["sources"] = enxutas
-        else:
-            removidas.append(f"sources global mantido ({len(enxutas)} usadas, piso 8)")
-    return removidas
-
-
 def ajustar_niveis_risco(payload: dict) -> list[str]:
     """Repara o lastro dos temas sem inventar nada: rebaixa nivel e tira tema oco.
 
@@ -837,8 +768,6 @@ def main() -> int:
         raise RuntimeError(f"itens deduplicados abaixo do mínimo: {len(grupos)} < {args.itens_min}")
     mercados = niveis_mercado()
     payload = sintetizar(grupos, mercados, semana)
-    for aviso in podar_fontes_sem_uso(payload):
-        log(f"AVISO fonte sem uso removida: {aviso}")
     for aviso in ajustar_niveis_risco(payload):
         log(f"AVISO reparo do payload: {aviso}")
     urls_permitidas = {i["url"] for g in grupos for i in [g] if i.get("url")}
