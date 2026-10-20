@@ -239,7 +239,7 @@
         .ticker-icon.gold { background: rgba(201,168,76,0.15); color:#c9a84c; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.silver { background: rgba(192,192,192,0.1); color:#c0c0c0; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.platinum { background: rgba(142,207,221,0.1); color:#8ecfdd; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
-        .ticker-icon.copper { background: rgba(184,115,51,0.14); color:#b87333; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+        .ticker-icon.copper { background: rgba(184,115,51,0.14); color:#c17936; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.btc { background: rgba(240,122,64,0.15); color: var(--orange); }
         .ticker-icon.usd { background: rgba(76,175,125,0.15); color: var(--green); }
         .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; min-height: 1.4em; }
