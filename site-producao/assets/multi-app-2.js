@@ -2941,12 +2941,14 @@ function _parseMacroGeneratedAt(s) {
     var t = Date.parse(s);
     return isNaN(t) ? null : new Date(t);
 }
-function _macroStampText(generatedAt, now) {
+function _macroStampText(generatedAt, now, snapshot) {
     var dt = _parseMacroGeneratedAt(generatedAt);
     if (!dt) return 'Data de gera\u00e7\u00e3o indispon\u00edvel';
     var label = 'Gerado em ' + dt.toLocaleDateString('pt-BR', {timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric'}) + ' \u00e0s ' + dt.toLocaleTimeString('pt-BR', {timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}) + ' BRT';
     var ageDays = ((now || Date.now()) - dt.getTime()) / 86400000;
+    if (snapshot && snapshot.ptax_data) label += ' · dados BCB de ' + snapshot.ptax_data;
     if (ageDays > MACRO_STALE_DAYS) label += ' \u00b7 an\u00e1lise desatualizada (' + Math.floor(ageDays) + ' dias)';
+    else if (ageDays > 1) label += ' · números do texto podem divergir dos cards ao vivo';
     return label;
 }
 function _macroStampUnavailable() {
@@ -3028,7 +3030,7 @@ function renderMacro(d, generatedAt) {
     const _se2 = document.getElementById('macro-stamp-inline');
     const _st2 = document.getElementById('macro-stamp-text');
     if (_se2 && _st2) {
-        _st2.textContent = _macroStampText(generatedAt);
+        _st2.textContent = _macroStampText(generatedAt, undefined, d && d.snapshot);
         _se2.style.display = 'inline-flex';
     }
 

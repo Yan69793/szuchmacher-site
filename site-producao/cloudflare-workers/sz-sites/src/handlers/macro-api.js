@@ -3,6 +3,10 @@ import { readCache, writeCache, singleFlight } from '../utils/cache.js';
 
 const CACHE_KEY = 'macro-api';
 const CACHE_TTL = 7 * 24 * 3600;
+// Janela em que o texto gerado ainda e considerado coerente com os cards ao
+// vivo. Acima disso o cache e tratado como vencido (regeneracao sob demanda,
+// sujeita ao rate limit) e o payload servido leva stale:true.
+export const FRESH_SECONDS = 24 * 3600;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OPENROUTER_MODEL = 'anthropic/claude-haiku-4-5';
 
@@ -75,6 +79,56 @@ function brtDate() {
     month: '2-digit',
     year: 'numeric',
   }).format(new Date());
+}
+
+// Numero em texto pt-BR ou en: '4,9892', '4.9892', '5,219'. Devolve Number.
+function parseNumeroTexto(raw) {
+  const n = Number(String(raw).replace(',', '.'));
+  return Number.isFinite(n) ? n : null;
+}
+
+// Snapshot dos numeros que o prompt recebeu. Viaja dentro do payload (cache e
+// resposta), para o frontend exibir a data dos dados junto da data de geracao.
+export function buildSnapshot(d) {
+  return {
+    coletado_em: d.coletado_em,
+    selic_valor: d.selic_valor,
+    selic_data: d.selic_data,
+    ptax_valor: d.ptax_valor,
+    ptax_data: d.ptax_data,
+    focus_selic: d.focus_selic ?? null,
+    focus_ipca: d.focus_ipca ?? null,
+    focus_cambio: d.focus_cambio ?? null,
+    focus_pib: d.focus_pib ?? null,
+    ano_focus: d.ano_focus,
+  };
+}
+
+// Rejeita texto cujo numero citado ao lado de PTAX, Focus IPCA ou Focus Selic
+// diverge do snapshot que alimentou o prompt. Instrucao no prompt nao e
+// barreira: o modelo ja citou PTAX 4,9892 com SGS em 5,0564. Devolve a lista de
+// divergencias, vazia quando o texto bate.
+export function validarNumerosContraSnapshot(data, snap) {
+  const campos = [data?.alert_title, data?.alert_text];
+  for (const b of data?.brasil ?? []) campos.push(b?.text);
+  for (const c of data?.canais ?? []) campos.push(c?.mecanismo);
+  const texto = campos.filter((x) => typeof x === 'string').join('\n');
+  const checks = [
+    { nome: 'PTAX', re: /PTAX[^0-9\n]{0,24}(\d+[.,]\d+)/gi, ref: parseNumeroTexto(snap.ptax_valor), tol: 0.02 },
+    { nome: 'Focus IPCA', re: /Focus[^0-9\n]{0,20}IPCA[^0-9\n]{0,24}(\d+[.,]\d+)/gi, ref: snap.focus_ipca, tol: 0.05 },
+    { nome: 'Focus Selic', re: /Focus[^0-9\n]{0,20}Selic[^0-9\n]{0,24}(\d+[.,]\d+)/gi, ref: snap.focus_selic, tol: 0.05 },
+  ];
+  const divergencias = [];
+  for (const c of checks) {
+    if (c.ref == null || !Number.isFinite(Number(c.ref))) continue;
+    for (const m of texto.matchAll(c.re)) {
+      const citado = parseNumeroTexto(m[1]);
+      if (citado != null && Math.abs(citado - Number(c.ref)) > c.tol) {
+        divergencias.push({ campo: c.nome, citado, esperado: Number(c.ref) });
+      }
+    }
+  }
+  return divergencias;
 }
 
 function buildPrompt(data) {
@@ -506,7 +560,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
 
   if (!forceRefresh) {
     const cached = await readCache(env.CACHE, CACHE_KEY);
-    if (cached?.data && cached.ts && Date.now() / 1000 - cached.ts < CACHE_TTL) {
+    if (cached?.data && cached.ts && Date.now() / 1000 - cached.ts < FRESH_SECONDS) {
       // O cache tem TTL de 7 dias, entao o payload gravado antes desta mudanca
       // ainda circula com `taxa`. Normaliza na leitura tambem, senao a saida do
       // endpoint fica inconsistente ate o cache velho expirar.
@@ -528,13 +582,18 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     // + OpenRouter pago) em foreground, ~30s de resposta para cada um.
     // Quem chega durante a janela recebe o fallback estatico, que e instantaneo.
     const rate = await checkRefreshRate(env, request);
+    // Cache de ate 7 dias, mas fora da janela de 24h: ainda e melhor que o
+    // estatico (mais recente e com snapshot), so que sai marcado stale.
+    const staleCached = cached?.data && cached.ts ? cached : null;
+    if (staleCached) normalizarAtivos(staleCached.data);
     if (!rate.allowed) {
-      const fallback = await loadStaticMacro(env, request);
+      const fallback = staleCached ?? await loadStaticMacro(env, request);
       if (fallback?.data) {
         return jsonResponse({
           ok: true,
           generated_at: fallback.generated_at ?? '',
           cache: true,
+          stale: true,
           data: fallback.data,
           note: 'refresh_janela_ativa',
         }, { headers: cors });
@@ -552,7 +611,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     // e o KV nunca era gravado, enquanto o carimbo de rate ja tinha bloqueado a
     // proxima hora. Era o que mantinha o cache vazio depois de todo deploy.
     if (ctx?.waitUntil) {
-      const fallback = await loadStaticMacro(env, request);
+      const fallback = staleCached ?? await loadStaticMacro(env, request);
       if (fallback?.data) {
         ctx.waitUntil(
           singleFlight('macro-api-refresh', () => gerarMacro(env, request, { cors, forceRefresh }))
@@ -564,6 +623,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
           ok: true,
           generated_at: fallback.generated_at ?? '',
           cache: true,
+          stale: true,
           data: fallback.data,
           note: 'regenerando_em_background',
         }, { headers: cors });
@@ -639,6 +699,19 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   // do ar nao apagar as outras tres que estavam vivas.
   const focusFmt = (v, fmt) => (v != null ? fmt(v) : 'indisponível');
 
+  const snapshot = buildSnapshot({
+    coletado_em: new Date().toISOString(),
+    selic_valor: selicSgs.valor,
+    selic_data: selicSgs.data,
+    ptax_valor: ptaxSgs.valor,
+    ptax_data: ptaxSgs.data,
+    focus_selic: focusSelic,
+    focus_ipca: focusIpca,
+    focus_cambio: focusCambio,
+    focus_pib: focusPib,
+    ano_focus: anoAtual,
+  });
+
   const prompt = buildPrompt({
     dataHoje: brtDate(),
     selic_valor: selicSgs.valor,
@@ -660,8 +733,19 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   for (const provider of chain) {
     const out = await callLlmProvider(provider, prompt);
     if (out.ok) {
-      llm = { provider, content: out.content, finish: out.finish };
-      break;
+      // Texto que cita PTAX/Focus diferente do snapshot e descartado e a
+      // cascata segue para a proxima perna.
+      let divergencias = [];
+      try {
+        divergencias = validarNumerosContraSnapshot(extractJson(out.content), snapshot);
+      } catch { /* JSON invalido segue para o tratamento normal abaixo */ }
+      if (divergencias.length === 0) {
+        llm = { provider, content: out.content, finish: out.finish };
+        break;
+      }
+      falhas.push({ provedor: provider.label, status: 'numeros_divergentes' });
+      console.error('[macro-api] LLM rejeitado, numero diverge do snapshot:', provider.label, JSON.stringify(divergencias));
+      continue;
     }
     falhas.push({ provedor: provider.label, status: out.status ?? null });
     console.error('[macro-api] LLM falhou:', provider.label, out.status ?? '', out.error ?? '');
@@ -720,6 +804,7 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
   // Antes do writeCache: o cache tem que guardar o payload ja normalizado, para
   // a proxima leitura nao precisar corrigir de novo.
   normalizarAtivos(data);
+  data.snapshot = snapshot;
 
   const generated_at = new Intl.DateTimeFormat('pt-BR', {
     timeZone: 'America/Sao_Paulo',

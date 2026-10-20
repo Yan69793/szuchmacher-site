@@ -12,8 +12,8 @@ vm.runInContext(SRC.slice(start, end), ctx);
 const NOW = Date.parse('2026-10-14T08:00:00Z');
 
 test('carimbo usa a data de geracao do servidor, nao a hora do navegador', () => {
-  const s = ctx._macroStampText('12/10/2026, 00:02 BRT', NOW);
-  assert.equal(s, 'Gerado em 12/10/2026 \u00e0s 00:02 BRT');
+  const s = ctx._macroStampText('14/10/2026, 00:02 BRT', NOW);
+  assert.equal(s, 'Gerado em 14/10/2026 \u00e0s 00:02 BRT');
 });
 
 test('formato com "as" do macro_data.json', () => {
@@ -30,4 +30,12 @@ test('sem data: aviso explicito', () => {
 
 test('renderMacro nao usa mais new Date() como carimbo', () => {
   assert.ok(!/_st2\.textContent = 'Atualizado em ' \+ _now/.test(SRC));
+});
+test('carimbo mostra a data dos dados BCB junto da geracao', () => {
+  const s = ctx._macroStampText('14/10/2026, 00:02 BRT', NOW, { ptax_data: '13/10/2026' });
+  assert.match(s, /^Gerado em 14\/10\/2026 \u00e0s 00:02 BRT \u00b7 dados BCB de 13\/10\/2026$/);
+});
+
+test('entre 1 e 8 dias: avisa que numeros do texto podem divergir dos cards', () => {
+  assert.match(ctx._macroStampText('10/10/2026, 00:02 BRT', NOW), /podem divergir dos cards ao vivo/);
 });
