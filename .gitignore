@@ -58,3 +58,15 @@ automacao-yan-os/venv-task/
 !.env.example
 !.env.sample
 !.env.template
+
+# Estado local de ferramenta (Codex, JetBrains, Reasonix), mesmo motivo do
+# reasonix.toml acima.
+/.codex/
+/.idea/
+/.reasonix/
+
+# Gerados por rotina e mantidos so em disco. O historico do Radar e copia local
+# de cada edicao publicada (fica fora do public, ver build-cloudflare-public.ps1)
+# e o backup de XML das tasks e estado de maquina.
+site-producao/geopolitica-historico/
+site-producao/scripts/scheduled-task-backup/
