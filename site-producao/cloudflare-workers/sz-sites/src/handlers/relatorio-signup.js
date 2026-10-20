@@ -382,8 +382,11 @@ export async function handleRelatorioSignup(request, env) {
 	const confirmUrl = `https://szuchmacher.com.br/relatorio-confirm?t=${token}`;
 	const sent = await sendConfirmEmail(env, email, confirmUrl);
 	if (!sent.ok) {
+		// Nao ha fila nem retry: sem o link o inscrito fica 'pending' para sempre.
+		// Falha explicita, para a pagina pedir nova tentativa em vez de mostrar
+		// sucesso. O novo POST regrava o registro e gera outro token.
 		console.error(`[relatorio-signup] confirmacao nao enviada: ${maskEmail(email)} - ${sent.error}`);
-		return jsonResponse({ ok: true, pending: true, queued: true, message: 'Inscricao registrada. O e-mail de confirmacao pode demorar alguns minutos.' }, 202, origin);
+		return jsonResponse({ ok: false, error: 'Nao conseguimos enviar o e-mail de confirmacao agora. Tente novamente em alguns minutos.' }, 503, origin);
 	}
 	console.log(`[relatorio-signup] pendente de confirmacao: ${maskEmail(email)} (${source})`);
 	return jsonResponse({ ok: true, pending: true, message: 'Enviamos um link de confirmacao para o seu e-mail.' }, 200, origin);

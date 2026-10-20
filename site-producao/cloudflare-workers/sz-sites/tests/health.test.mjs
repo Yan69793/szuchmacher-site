@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleHealth } from '../src/handlers/health.js';
+import { handleHealth, macroGeneratedMs } from '../src/handlers/health.js';
 
 const NOW = Date.parse('2026-10-14T08:00:00Z');
 
@@ -32,6 +32,22 @@ test('macro fresco: 200 ok', async () => {
 test('macro com mais de 8 dias: 200 degraded (watchdog continua lendo)', async () => {
   const res = await handleHealth({ CACHE: kv({ 'macro-api': { generated_at: '2026-10-01T00:00:00Z' } }) }, NOW);
   assert.equal(res.status, 200);
+  assert.equal((await res.json()).status, 'degraded');
+});
+
+test('formato real do macro-api (pt-BR + ts): fresco', async () => {
+  const res = await handleHealth({ CACHE: kv({ 'macro-api': { generated_at: '14/10/2026, 05:00 BRT', ts: Math.floor(NOW / 1000) - 3600 } }) }, NOW);
+  const j = await res.json();
+  assert.equal(j.checks.macro_fresh, true);
+  assert.equal(j.status, 'ok');
+});
+
+test('pt-BR sem ts: interpreta BRT como UTC-3', () => {
+  assert.equal(macroGeneratedMs({ generated_at: '14/10/2026, 05:00 BRT' }), Date.parse('2026-10-14T08:00:00Z'));
+});
+
+test('pt-BR velho sem ts: degraded', async () => {
+  const res = await handleHealth({ CACHE: kv({ 'macro-api': { generated_at: '01/10/2026, 00:00 BRT' } }) }, NOW);
   assert.equal((await res.json()).status, 'degraded');
 });
 

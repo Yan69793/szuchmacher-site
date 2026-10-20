@@ -78,6 +78,16 @@ test('confirmacao: token valido confirma, envia boas-vindas com descadastro e e 
   assert.equal(r2.status, 410);
 });
 
+test('Resend falhando: 503 ok:false, sem sucesso enganoso', async () => {
+  const env = makeEnv();
+  globalThis.fetch = async () => new Response('{"error":"quota"}', { status: 429 });
+  const res = await handleRelatorioSignup(post({ email: 'r@example.com', consent: true }, '198.51.100.20'), env);
+  assert.equal(res.status, 503);
+  const j = await res.json();
+  assert.equal(j.ok, false);
+  assert.ok(j.error);
+});
+
 test('token invalido: 400', async () => {
   const res = await handleRelatorioConfirm(new Request('https://szuchmacher.com.br/relatorio-confirm?t=xyz'), makeEnv());
   assert.equal(res.status, 400);
