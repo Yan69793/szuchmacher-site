@@ -23,6 +23,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
+        html, body { overflow-x: clip; }
         body {
             font-family: 'DM Sans', system-ui, sans-serif;
             background: var(--bg);
@@ -826,7 +827,7 @@
         @media (max-width: 1024px) {
             /* rede de seguranca contra scroll horizontal em telas estreitas;
                seguro aqui pois .alloc-donut-wrap ja e position:static neste breakpoint */
-            html { overflow-x: hidden; }
+            html { overflow-x: clip; }
             /* Nav â€” tablet/iPad: reduz padding e gap para caber as 6 abas */
             nav { padding: 0 24px; }
             .nav-links { gap: 16px; }
@@ -2326,3 +2327,8 @@ body[data-design="multiasset-research-os-v3"] .export-fab .fab-text { font-size:
 .popup-consent-check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; margin-top: 12px; }
 .popup-consent-check input { width: 20px; height: 20px; min-width: 20px; margin-top: 2px; accent-color: var(--gold, #c9a45c); }
 .popup-consent-required { outline: 2px solid var(--red, #c0392b); outline-offset: 4px; border-radius: 4px; }
+
+@media (max-width: 760px) {
+    .comp-table-wrap { overflow-x: auto; }
+    .comp-table { min-width: 600px; white-space: nowrap; }
+}
