@@ -174,9 +174,9 @@ function fmtRet(final, inicial, aporte, prazo) {
 
 // ── AUTOMAÇÃO CENTRAL (preços, macro, simuladores, benchmark) ───────────────
 window.macroLive = {
-    selic: 0.145,
+    selic: 0.1375,
     ipca: 0.055,
-    cdi: 0.144,
+    cdi: 0.1365,
     usd: 5.09,
     ntnbSpread: 0.075,
     selicTerminal: 0.12
@@ -367,7 +367,7 @@ function rebuildTaxasCenario() {
 // server-side gravam lá via applyScenarioRates(). window.taxasCenario deriva delas.
 
 function getSelicAno(y) {
-    const base = window.macroLive.selic || 0.145;
+    const base = window.macroLive.selic || 0.1375;
     const terminal = window.macroLive.selicTerminal ?? 0.12;
     if (y <= 0) return base;
     if (y === 1) return base - (base - terminal) * 0.45;
