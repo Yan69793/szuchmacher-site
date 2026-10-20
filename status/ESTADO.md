@@ -78,8 +78,8 @@ muda quando checagem nova entra, use a da saída real do script.
   Awesome em subconjunto próprio, contraste (`--gold #806333`), tradução EN da
   agenda. Abertos: (a) ~~a checkout está na branch `-all`~~. Em 20/10 a checkout
   está em `reconcile/2026-10-14`, que contém `-all` inteira (`git log
-  HEAD..fix/auditoria-20261020-all` vazio). Falta levar `reconcile` para
-  `master`, que está mais de 60 commits atrás. (b) Multi mobile ficou em 64 a 66 no Lighthouse local, meta 80,
+  HEAD..fix/auditoria-20261020-all` vazio). Integrada em `master` no mesmo dia
+  pelo PR #7, merge `51b27ca`, CI verde. (b) Multi mobile ficou em 64 a 66 no Lighthouse local, meta 80,
   e o CLS desktop do multi oscila (0,001 a 0,24) sem causa achada. (c) B9a
   contraste cobre só `--gold` e o cobre do ticker, `.mp-*` e `.offer-tag` não
   foram medidos. (d) B12, cookie `sp` do TradingView gravado antes do
@@ -97,6 +97,16 @@ muda quando checagem nova entra, use a da saída real do script.
   geopolítica 20/10) batiam por SHA-256 com produção e foram registrados no
   commit `512e5dc`.
 
+- **Tasks por wrapper `wscript` falharam em bloco de 18/10 12:26 a 19/10 ~19:15.**
+  Todas as tasks que passam por `C:\ProgramData\SilentScheduledTasks\wrappers\*.vbs`
+  terminaram com `2147942401` (exit 1) no mesmo segundo do disparo, sem gravar
+  log do script. Aconteceu com AgendaAgent, BriefingMatinal, FechamentoPrecos,
+  FechamentoDiario, GeopoliticaAgent e as do VIXRadar, entre outras. A janela
+  começa logo depois do boot de 18/10 11:58 e termina depois do boot de 19/10
+  18:43. Causa não identificada, os logs Application e Windows PowerShell não
+  registram nada no disparo. Impacto no Site é nulo, porque a agenda de domingo
+  18/10 08:00 publicou antes da janela. Fora do Site, conferir se o Fechamento e
+  o Briefing de 19/10 chegaram aos destinatários.
 - **Atribuição de leads e política 2026-10-15, publicado em 15/10.** Commits
   `21f80b7` e `ea242c7`, versão `789ff049-c0da-4f09-a913-09d522d25952`
   (rollback `12b25662-d95d-4a11-9e0f-6db82a4b9d3f`), gate 51/51, relatório
