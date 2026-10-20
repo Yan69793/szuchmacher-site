@@ -114,7 +114,7 @@ export function validarNumerosContraSnapshot(data, snap) {
   for (const c of data?.canais ?? []) campos.push(c?.mecanismo);
   const texto = campos.filter((x) => typeof x === 'string').join('\n');
   const checks = [
-    { nome: 'PTAX', re: /PTAX[^0-9\n]{0,24}(\d+[.,]\d+)/gi, ref: parseNumeroTexto(snap.ptax_valor), tol: 0.02 },
+    { nome: 'PTAX', re: /PTAX[^0-9\n]{0,24}(\d+[.,]\d+)(?![\d,.]*\s*%)/gi, ref: parseNumeroTexto(snap.ptax_valor), tol: 0.02 },
     { nome: 'Focus IPCA', re: /Focus[^0-9\n]{0,20}IPCA[^0-9\n]{0,24}(\d+[.,]\d+)/gi, ref: snap.focus_ipca, tol: 0.05 },
     { nome: 'Focus Selic', re: /Focus[^0-9\n]{0,20}Selic[^0-9\n]{0,24}(\d+[.,]\d+)/gi, ref: snap.focus_selic, tol: 0.05 },
   ];
@@ -582,6 +582,10 @@ export async function handleMacroApi(request, env, { forceRefresh: forceRefreshO
     // + OpenRouter pago) em foreground, ~30s de resposta para cada um.
     // Quem chega durante a janela recebe o fallback estatico, que e instantaneo.
     const rate = await checkRefreshRate(env, request);
+    // Com cache velho na mao nao ha pressa de retentar: a tentativa em curso
+    // carimba a janela cheia (1h) em vez de 60 s, senao uma cascata que falha
+    // (LLM fora, 402, validador rejeitando) viraria laco pago a cada minuto.
+    if (rate.allowed && cached?.data) await putRateStamp(env, RATE_TTL);
     // Cache de ate 7 dias, mas fora da janela de 24h: ainda e melhor que o
     // estatico (mais recente e com snapshot), so que sai marcado stale.
     const staleCached = cached?.data && cached.ts ? cached : null;

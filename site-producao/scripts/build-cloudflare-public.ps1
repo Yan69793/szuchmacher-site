@@ -85,8 +85,17 @@ function Get-JsonDate([string]$JsonPath) {
 }
 
 function Get-GitDate([string]$RelPath) {
-    $d = (& git -C $ROOT log -1 --format=%cs -- $RelPath 2>$null)
-    if ($LASTEXITCODE -eq 0 -and $d -match '^\d{4}-\d{2}-\d{2}$') { return $d }
+    # Sem git no PATH ou fora de repositorio o lastmod simplesmente nao entra;
+    # o build nao pode abortar por causa disso (task agendada em PS 5.1).
+    try {
+        if (-not (Get-Command git -ErrorAction SilentlyContinue)) { return $null }
+        $prev = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        $d = (& git -C $ROOT log -1 --format=%cs -- $RelPath 2>$null)
+        $code = $LASTEXITCODE
+        $ErrorActionPreference = $prev
+        if ($code -eq 0 -and $d -match '^\d{4}-\d{2}-\d{2}$') { return $d }
+    } catch { }
     return $null
 }
 
