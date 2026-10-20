@@ -276,9 +276,10 @@ Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologi
 
 # Sitemap multi-assets.com. Criado em 2026-08-09, antes o dominio respondia 404.
 Copy-IfExists (Join-Path $ROOT 'sitemap-multi.xml') (Join-Path $MULTI 'sitemap.xml') | Out-Null
-# robots.txt de origem so com a linha Sitemap. O bloco de content signals e gerenciado
-# pela Cloudflare no edge e e anexado a este arquivo, nao substituido.
-Copy-IfExists (Join-Path $ROOT 'robots-multi.txt') (Join-Path $MULTI 'robots.txt') | Out-Null
+# robots.txt de origem so com a linha Sitemap, so para szuchmacher.com.br, onde a
+# Cloudflare anexa o bloco gerenciado ao arquivo (medido em producao 20/10/2026).
+# Em multi-assets.com o arquivo de origem SUBSTITUIU o bloco gerenciado, entao la
+# nao se publica robots.txt de origem.
 Copy-IfExists (Join-Path $ROOT 'robots-sz.txt') (Join-Path $SZ 'robots.txt') | Out-Null
 
 $lastmodSz = @{}
