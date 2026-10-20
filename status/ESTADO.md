@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-10-15 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-10-20 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -66,6 +66,31 @@ muda quando checagem nova entra, use a da saída real do script.
   `scripts/run_claude_routine.ps1` é o runner da `Szuchmacher-AgendaMacro-Claude`.
 
 ## Itens abertos
+
+- **Auditoria externa de 20/10, publicada em 20/10.** Branch `fix/auditoria-20261020-all`
+  (merge de `-sz` e `-multi`), versão `cd8c503f-3dce-4177-93b8-cee79cd8c1e7`
+  (anterior `976bb520-a8ff-4b33-9319-2cd29dd30e69`, rollback automático do
+  `publicar-com-rollback.ps1`), gate 51/51. O zip do pacote não existia em
+  Downloads, a Fase A foi reaplicada pela descrição. Entregou: consent e layout
+  mobile, Clarity só com consentimento na metodologia, Panorama Macro com
+  validação contra o snapshot BCB, janela de 24h e carimbo com a data dos dados,
+  pt-BR no multi, `lastmod` automático, fallback de USD e BTC pelo proxy, Font
+  Awesome em subconjunto próprio, contraste (`--gold #806333`), tradução EN da
+  agenda. Abertos: (a) a checkout está na branch `-all`, não em `reconcile` nem
+  `master`; publicação automática que rode de outra branch reverte tudo, então
+  integrar antes. (b) Multi mobile ficou em 64 a 66 no Lighthouse local, meta 80,
+  e o CLS desktop do multi oscila (0,001 a 0,24) sem causa achada. (c) B9a
+  contraste cobre só `--gold` e o cobre do ticker, `.mp-*` e `.offer-tag` não
+  foram medidos. (d) B12, cookie `sp` do TradingView gravado antes do
+  consentimento, só levantado: widgets carregam por scroll sem checar
+  `getConsent()`. (e) `robots.txt`: origem com Sitemap só no sz; no multi o
+  arquivo de origem substituiu o bloco gerenciado da Cloudflare e foi retirado
+  (versão `3a4676f9` ficou 4 min assim). Sitemap do multi segue sem linha no
+  robots. (f) Cron do macro de segunda 19/10 falhou com 503 do BCB SGS e
+  `/health` marca `degraded`. (g) Radar: fonte citada sem uso no texto não tem
+  correção determinística, só instrução no prompt. A poda heurística foi
+  descartada, reprovava 4 de 7 edições reais. (h) Conferir que a próxima rotina
+  automática não sobrescreve as correções.
 
 - **Atribuição de leads e política 2026-10-15, publicado em 15/10.** Commits
   `21f80b7` e `ea242c7`, versão `789ff049-c0da-4f09-a913-09d522d25952`
