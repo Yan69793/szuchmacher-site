@@ -1,0 +1,3 @@
+
+# Bibliotecas vendorizadas: bytes identicos ao upstream (hash conferido), sem conversao de fim de linha.
+site-producao/assets/*.min.js -text

@@ -59,8 +59,9 @@
     <script src="/assets/sz-config.js?v=20260719"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <!-- Font Awesome e Chart.js sairam do <head> (bloqueavam a primeira pintura, LCP mobile 7,3 s).
+         FA vai para antes do multi-app-2.js com SRI; Chart.js 4.4.0 e servido do proprio dominio
+         (copia byte a byte do cdnjs, sha256 e9b0f875...2bd3). -->
 
 
     <!-- multi craft v2 -->
@@ -392,7 +393,7 @@
             <div class="cripto-meta-card">
                 <div class="cripto-meta-label">Próximo Halving</div>
                 <div class="cripto-meta-val">Abril 2028</div>
-                <div class="cripto-meta-sub">horizonte aproximado de 24 meses</div>
+                <div class="cripto-meta-sub">estimativa pela altura de bloco</div>
             </div>
             <div class="cripto-meta-card">
                 <div class="cripto-meta-label">Recompensa por Bloco</div>
@@ -424,7 +425,7 @@
                 <span aria-hidden="true">·</span>
                 <span id="btc-radar-updated">Atualização —</span>
             </div>
-            <a class="btc-radar-bridge-link" href="https://aureusbtc.multi-assets.com/" target="_blank" rel="noopener">
+            <a class="btc-radar-bridge-link" href="https://aureusbtc.multi-assets.com/?utm_source=multiasset&utm_medium=nav&utm_campaign=btc_radar" target="_blank" rel="noopener">
                 Abrir BTC Radar <span aria-hidden="true">↗</span>
             </a>
         </div>
@@ -436,7 +437,7 @@
                 <small id="btc-radar-regime-detail">—</small>
             </div>
             <div class="btc-radar-bridge-metric">
-                <span>Consenso</span>
+                <span>Viés dos sinais</span>
                 <strong id="btc-radar-consensus">—</strong>
                 <small id="btc-radar-conviction">convicção —</small>
             </div>
@@ -2149,8 +2150,7 @@
         <div class="footer-col">
             <div class="footer-col-title">Fontes de Dados</div>
             <ul class="footer-links">
-                <li><a href="https://www.gold.org" target="_blank" rel="noopener">World Gold Council <i class="fas fa-external-link-alt u-fontsize9px-opacity05-marginleft4px"></i></a></li>
-                <li><a href="https://www.silverinstitute.org" target="_blank" rel="noopener">Silver Institute <i class="fas fa-external-link-alt u-fontsize9px-opacity05-marginleft4px"></i></a></li>
+                <li><a href="https://gold-api.com" target="_blank" rel="noopener">Gold API <i class="fas fa-external-link-alt u-fontsize9px-opacity05-marginleft4px"></i></a></li>
                 <li><a href="https://www.tradingview.com" target="_blank" rel="noopener">TradingView <i class="fas fa-external-link-alt u-fontsize9px-opacity05-marginleft4px"></i></a></li>
                 <li><a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko <i class="fas fa-external-link-alt u-fontsize9px-opacity05-marginleft4px"></i></a></li>
                 <li><a href="https://economia.awesomeapi.com.br" target="_blank" rel="noopener">AwesomeAPI (BRL) <i class="fas fa-external-link-alt u-fontsize9px-opacity05-marginleft4px"></i></a></li>
@@ -2175,12 +2175,14 @@
 </footer>
 
 <!-- ── FAB — Exportar PDF ── -->
-<button class="export-fab" id="export-fab" data-ev="e105" title="Exportar relatório em PDF">
+<button class="export-fab" id="export-fab" data-ev="e105" title="Exportar relatório em PDF" aria-label="Exportar Relatório em PDF">
     <i class="fas fa-file-pdf"></i>
     <span class="fab-text">Exportar Relatório</span>
 </button>
 
-<script src="/assets/multi-app-2.js?v=20261002-0505"></script>
+<link rel="stylesheet" href="/assets/fa-subset.css">
+<script src="/assets/chart.umd.min.js" defer></script>
+<script src="/assets/multi-app-2.js?v=20261002-0505" defer></script>
 
 <!-- ── EXIT-INTENT POPUP ── -->
 <div id="exit-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-headline">
@@ -2213,6 +2215,10 @@
                     <i class="fas fa-envelope"></i> Receber análises
                 </button>
             </div>
+            <label class="popup-consent popup-consent-check" for="popup-consent-input">
+                <input type="checkbox" id="popup-consent-input" />
+                <span>Aceito receber o Fechamento de Mercado por e-mail.</span>
+            </label>
             <p class="popup-consent">
                 Ao enviar, você concorda em receber o Fechamento de Mercado por e-mail e
                 autoriza o tratamento do seu endereço para esse fim, conforme a
@@ -2226,14 +2232,14 @@
 
         <div class="popup-success-msg" id="popup-success">
             <div class="success-icon">✅</div>
-            <h3>Perfeito, temos um acordo.</h3>
-            <p>Seu relatorio em PDF esta sendo gerado agora.<br>
-            Verifique sua pasta de downloads.</p>
+            <h3>Quase l&aacute;: confirme no seu e-mail.</h3>
+            <p>Enviamos um link de confirma&ccedil;&atilde;o. O Fechamento s&oacute; come&ccedil;a a chegar depois do clique.<br>
+            Seu relat&oacute;rio em PDF est&aacute; sendo gerado agora.</p>
         </div>
     </div>
 </div>
 
-<script src="/assets/multi-app-3.js?v=20261002-0505"></script>
+<script src="/assets/multi-app-3.js?v=20261002-0505" defer></script>
 
 </body>
 </html>

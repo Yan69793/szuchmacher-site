@@ -342,6 +342,41 @@ def ref_mes_anterior(data_str: str) -> tuple[int, int]:
     return mes, ano
 
 
+# Titulos oficiais do IBGE em portugues -> ingles. Padrao mais especifico antes
+# do generico (IPCA-15 antes de IPCA). Titulo desconhecido NAO e traduzido por
+# palavra solta: segue em portugues, que e o dado oficial, e entra no log.
+_IBGE_EN = [
+    (r"consumidor amplo\s*15|ipca[- ]?15", "Broad National Consumer Price Index 15 (IPCA-15)",
+     "Scheduled IBGE release of IPCA-15, the mid-month preview of Brazilian consumer inflation."),
+    (r"consumidor amplo|ipca", "Broad National Consumer Price Index (IPCA)",
+     "Scheduled IBGE release of IPCA, Brazil's official consumer inflation index."),
+    (r"inpc|consumidor(?!\s*amplo)", "National Consumer Price Index (INPC)",
+     "Scheduled IBGE release of INPC, consumer inflation for lower-income households."),
+    (r"pnad|desocupa", "Continuous PNAD (labor market survey)",
+     "Scheduled IBGE release of the continuous household labor market survey (PNAD Continua)."),
+    (r"produto interno bruto|pib", "Gross Domestic Product (GDP)",
+     "Scheduled IBGE release of GDP."),
+    (r"produ[cç][aã]o industrial|pesquisa industrial mensal", "Industrial Production",
+     "Scheduled IBGE release of monthly industrial production."),
+    (r"servi[cç]os", "Monthly Services Survey",
+     "Scheduled IBGE release of the monthly services survey."),
+    (r"com[eé]rcio", "Monthly Retail Survey",
+     "Scheduled IBGE release of the monthly retail survey."),
+    (r"pre[cç]os ao produtor|ippa?", "Producer Price Index (IPP)",
+     "Scheduled IBGE release of the producer price index."),
+]
+
+
+def traduzir_ibge_en(titulo: str) -> tuple[str, str]:
+    """Devolve (evento_en, descricao_en) para um titulo do IBGE."""
+    low = titulo.lower()
+    for pat, nome_en, desc_en in _IBGE_EN:
+        if re.search(pat, low):
+            return nome_en, desc_en
+    log(f"IBGE sem traducao EN, mantido em portugues: {titulo}")
+    return titulo, f"Scheduled IBGE release: {titulo}."
+
+
 def relevancia_ibge(titulo: str) -> str:
     t = (titulo or "").lower()
     for pat, rel in _IBGE_RELEVANCIA:
@@ -563,14 +598,15 @@ def _eventos_ibge(ini: str, fim: str) -> list[dict]:
             continue
         # IBGE devolve horário em UTC (campo sem fuso). Converter para BRT (UTC-3).
         hora_brt = (dt - timedelta(hours=3)).strftime("%H:%M")
+        evento_en, descricao_en = traduzir_ibge_en(titulo)
         eventos.append({
             "data": data_str,
             "hora_brt": hora_brt,
             "regiao": "BR",
             "evento": titulo,
-            "evento_en": titulo,
+            "evento_en": evento_en,
             "descricao": f"Divulgação programada do IBGE: {titulo}.",
-            "descricao_en": f"Scheduled IBGE release: {titulo}.",
+            "descricao_en": descricao_en,
             "fonte": "IBGE",
             "relevancia": rel,
         })
@@ -928,25 +964,25 @@ def _eventos_global_pmi(ini: str, fim: str) -> list[dict]:
     """Flash PMIs: US, Eurozone, UK, Germany, France (S&P Global, ~24th)."""
     eventos: list[dict] = []
     regioes = [
-        ("US", "EUA", "S&P Global US"),
-        ("EU", "Zona do Euro", "S&P Global Eurozone"),
-        ("UK", "Reino Unido", "S&P Global UK"),
-        ("DE", "Alemanha", "S&P Global Germany"),
+        ("US", "EUA", "US", "S&P Global US"),
+        ("EU", "Zona do Euro", "Eurozone", "S&P Global Eurozone"),
+        ("UK", "Reino Unido", "UK", "S&P Global UK"),
+        ("DE", "Alemanha", "Germany", "S&P Global Germany"),
     ]
     for data_str in GLOBAL_PMI_2026:
         if not na_janela(data_str, ini, fim):
             continue
-        for reg, nome, fonte in regioes:
+        for reg, nome, nome_en, fonte in regioes:
             eventos.append({
                 "data": data_str, "hora_brt": "10:45" if reg == "US" else "05:00", "regiao": reg,
                 "evento": f"{nome} — PMI Industrial e Serviços (Flash)",
-                "evento_en": f"{nome} — Manufacturing & Services PMI (Flash)",
+                "evento_en": f"{nome_en} — Manufacturing & Services PMI (Flash)",
                 "descricao": (
                     f"Índice de Gerentes de Compras ({nome}) — leitura preliminar (flash) "
                     f"da indústria e serviços. Abaixo de 50 indica contração. Impacto direto "
                     f"em expectativas de PIB, juros e moedas."
                 ),
-                "descricao_en": f"{nome} flash PMI for manufacturing and services. Below 50 signals contraction.",
+                "descricao_en": f"{nome_en} flash PMI for manufacturing and services. Below 50 signals contraction.",
                 "fonte": fonte, "relevancia": "alta",
             })
     return eventos

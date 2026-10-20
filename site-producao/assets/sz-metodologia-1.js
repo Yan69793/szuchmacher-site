@@ -1,15 +1,14 @@
 
-// Clarity: metodologia_view
+// Clarity: metodologia_view. So carrega com consentimento de analytics (LGPD).
 (function() {
-    if (window.SZ_CLARITY_ID && window.SZ_CLARITY_ID !== 'XXXXXXXXXX') {
-        var t = document.createElement('script');
-        t.async = 1; t.src = 'https://www.clarity.ms/tag/' + window.SZ_CLARITY_ID;
-        document.head.appendChild(t);
-        t.onload = function() {
-            if (window.clarity) {
-                window.clarity('event', 'metodologia_view', { referrer: document.referrer });
-            }
-        };
+    function fire() {
+        if (window.clarity) {
+            window.clarity('event', 'metodologia_view', { referrer: document.referrer });
+        }
     }
+    if (!window.SZ || typeof window.SZ.getConsent !== 'function') return;
+    if (window.SZ.getConsent() !== 'analytics') return;
+    if (typeof window.SZ.loadClarity === 'function') window.SZ.loadClarity();
+    setTimeout(fire, 1500);
 })();
 

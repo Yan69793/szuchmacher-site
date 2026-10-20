@@ -6,6 +6,9 @@
  * ============================================================= */
 
 window.SZ_CLARITY_ID = 'x89me5cgm8';
+/* Versao da Politica de Privacidade aceita nos formularios. Igual a
+   POLICY_VERSION do Worker (src/utils/subscriber.js); teste do Worker reprova divergencia. */
+window.SZ_POLICY_VERSION = '2026-10-15';
 window.SZ_FORMSPREE_ID    = 'mojrayrl';
 /* Payment Links reais, modo live, conferidos direto no dashboard Stripe em
    19/07/2026: pk_live_...oeMA, sem banner de ativacao pendente. Ja existiam
@@ -108,17 +111,101 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
   }
 
   /* ── Microsoft Clarity init ─────────────────────────────── */
-  if (window.SZ.clarityReady) {
+  /* LGPD: o Clarity grava cookies de terceiro (_clck/_clsk) e so pode carregar
+     depois de consentimento expresso. Escolha em localStorage 'sz-consent':
+     'analytics' (aceitou) ou 'essential' (recusou). Sem escolha, nada carrega e
+     o banner aparece. window.clarity so existe depois do aceite, entao todos os
+     window.clarity(...) do resto do arquivo viram no-op sem consentimento. */
+  var CONSENT_KEY = 'sz-consent';
+  window.SZ.getConsent = function () {
+    try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; }
+  };
+  window.SZ.loadClarity = function () {
+    if (!window.SZ.clarityReady || window.SZ._clarityLoaded) return;
+    window.SZ._clarityLoaded = true;
     (function (c, l, a, r, i, t, y) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
       t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', window.SZ_CLARITY_ID);
-  }
+  };
+  window.SZ.setConsent = function (value) {
+    try { localStorage.setItem(CONSENT_KEY, value); } catch (e) {}
+    var b = document.getElementById('sz-consent-banner');
+    if (b) b.parentNode.removeChild(b);
+    if (value === 'analytics') window.SZ.loadClarity();
+  };
+  window.SZ.showConsentBanner = function () {
+    if (!window.SZ.clarityReady || document.getElementById('sz-consent-banner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'sz-consent-banner';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Prefer\u00eancias de privacidade');
+    /* estilos via CSSOM: a CSP (style-src sem unsafe-inline) bloqueia o atributo
+       style, mas nao propriedades atribuidas por script. */
+    var s = bar.style;
+    s.position = 'fixed'; s.left = '16px'; s.right = '16px'; s.bottom = '16px'; s.zIndex = '9999';
+    s.maxWidth = '720px'; s.margin = '0 auto'; s.padding = '16px 18px'; s.borderRadius = '10px';
+    s.background = '#0a1428'; s.color = '#f3f0e8'; s.border = '1px solid #92703a';
+    s.boxShadow = '0 8px 30px rgba(0,0,0,.35)'; s.fontSize = '14px'; s.lineHeight = '1.5';
+    s.display = 'flex'; s.flexWrap = 'wrap'; s.gap = '12px'; s.alignItems = 'center';
+    var p = document.createElement('p');
+    p.style.margin = '0'; p.style.flex = '1 1 320px';
+    p.appendChild(document.createTextNode('Usamos o Microsoft Clarity para entender como o site \u00e9 usado, apenas com o seu consentimento. '));
+    var a = document.createElement('a');
+    a.href = '/privacidade.html'; a.textContent = 'Pol\u00edtica de Privacidade';
+    a.style.color = '#e2c48a'; a.style.textDecoration = 'underline';
+    p.appendChild(a);
+    function btn(label, value) {
+      var x = document.createElement('button');
+      x.type = 'button'; x.textContent = label;
+      x.setAttribute('data-consent', value);
+      var t = x.style;
+      t.minHeight = '44px'; t.minWidth = '120px'; t.padding = '10px 16px'; t.borderRadius = '6px';
+      t.border = '1px solid #e2c48a'; t.background = 'transparent'; t.color = '#f3f0e8';
+      t.fontSize = '14px'; t.cursor = 'pointer';
+      x.addEventListener('click', function () { window.SZ.setConsent(value); });
+      return x;
+    }
+    bar.appendChild(p);
+    bar.appendChild(btn('Recusar', 'essential'));
+    bar.appendChild(btn('Aceitar', 'analytics'));
+    (document.body || document.documentElement).appendChild(bar);
+  };
+  (function initConsent() {
+    var c = window.SZ.getConsent();
+    if (c === 'analytics') { window.SZ.loadClarity(); return; }
+    if (c === 'essential') return;
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.SZ.showConsentBanner);
+    else window.SZ.showConsentBanner();
+  })();
+  /* Link "Preferencias de cookies" em qualquer pagina: <a href="#" data-consent-reset>. */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-consent-reset]') : null;
+    if (!t) return;
+    ev.preventDefault();
+    try { localStorage.removeItem(CONSENT_KEY); } catch (e) {}
+    window.SZ.showConsentBanner();
+  });
 
   /* ── UTM capture (first-touch + last-touch) ───────────────── */
   var UTM_STORAGE_KEY = 'sz_attribution';
-  var UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'li_fat_id'];
+  /* So as 5 UTMs. gclid/fbclid/li_fat_id saíram em 15/10/2026: nenhum consumidor
+     usava e guardar sem uso fere a minimizacao (LGPD art. 6, III). */
+  var UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+
+  /* Valor de campanha com '@' e descartado (ferramenta de e-mail costuma por o
+     endereco do destinatario na UTM) e o resto vai truncado. Mesma regra do
+     pickAttr do Worker. */
+  function cleanAttr(v) {
+    v = typeof v === 'string' ? v : '';
+    return v.indexOf('@') >= 0 ? '' : v.slice(0, 100);
+  }
+  /* Referrer so com a origem: na mesma origem o navegador manda a URL inteira,
+     com query, e ela pode carregar dado pessoal. */
+  function refOrigin(r) {
+    try { return r ? new URL(r).origin : ''; } catch (e) { return ''; }
+  }
 
   window.SZ.captureUTMs = function () {
     try {
@@ -127,13 +214,14 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
       var has = false;
       UTM_FIELDS.forEach(function (k) {
         var v = params.get(k);
+        v = cleanAttr(v);
         if (v) { captured[k] = v; has = true; }
       });
       if (has) {
         var payload = {
           ts: Date.now(),
           landing: window.location.pathname,
-          referrer: document.referrer || '',
+          referrer: refOrigin(document.referrer),
           utms: captured
         };
         if (!localStorage.getItem(UTM_STORAGE_KEY)) {
@@ -155,6 +243,31 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     } catch (e) { return { first_touch: null, last_touch: null }; }
   };
 
+  /* Payload gravado antes de 15/10/2026 pode ter click ids, UTM com e-mail e
+     referrer completo. Regrava limpo uma vez; o first touch nao e sobrescrito
+     por captureUTMs, entao sem isto o residuo ficaria no navegador. */
+  function sanitizeStored() {
+    try {
+      var raw = localStorage.getItem(UTM_STORAGE_KEY);
+      if (!raw) return;
+      var p = JSON.parse(raw), utms = {}, has = false;
+      UTM_FIELDS.forEach(function (k) {
+        var v = cleanAttr(p && p.utms && p.utms[k]);
+        if (v) { utms[k] = v; has = true; }
+      });
+      if (!has) { localStorage.removeItem(UTM_STORAGE_KEY); return; }
+      var clean = {
+        ts: typeof p.ts === 'number' && isFinite(p.ts) ? p.ts : null,
+        landing: String(p.landing || '').split(/[?#]/)[0],
+        referrer: refOrigin(p.referrer),
+        utms: utms
+      };
+      var s = JSON.stringify(clean);
+      if (s !== raw) localStorage.setItem(UTM_STORAGE_KEY, s);
+    } catch (e) {}
+  }
+
+  sanitizeStored();
   window.SZ.captureUTMs();
 
   window.SZ.appendUTM = function (url, params) {
@@ -173,8 +286,31 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
   };
 
   /* data-ga / scroll / cliques → Clarity (sem GA4) */
+  /* Item 5.4: funil no Plausible (sem cookies), atras da flag SZ_PLAUSIBLE_DOMAIN.
+     Com a flag vazia (padrao) nada muda. So eventos do funil sao repassados e
+     as props sao filtradas: apenas valores primitivos curtos e nenhuma chave
+     que possa carregar dado pessoal (email, nome, telefone). */
+  var FUNNEL_EVENTS = {
+    lead_capture: 1, signup_submit: 1, signup_confirmed: 1, simulation_shared: 1,
+    portfolio_shared: 1, checkout_start: 1, cta_assinar_carta: 1, cta_assinar_pro: 1
+  };
+  window.SZ.funnelProps = function (p) {
+    var out = {};
+    Object.keys(p || {}).forEach(function (k) {
+      if (/mail|nome|name|phone|telefone|whats/i.test(k)) return;
+      var v = p[k];
+      if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') out[k] = String(v).slice(0, 60);
+    });
+    return out;
+  };
   window.ga = function (name, params) {
     try { if (window.clarity && window.SZ.clarityReady) window.clarity('event', name); } catch (e) {}
+    try {
+      if (window.SZ.plausibleReady && FUNNEL_EVENTS[name]) {
+        window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
+        window.plausible(name, { props: window.SZ.funnelProps(params) });
+      }
+    } catch (e) {}
     var p = params || {};
     try {
       if (window.clarity && window.SZ.clarityReady) {
@@ -250,19 +386,20 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
   function appendAttribution(data) {
     try {
       var attr = window.SZ.getAttribution();
-      if (attr.first_touch) {
-        data.append('_attrib_first_source', attr.first_touch.utms.utm_source || '');
-        data.append('_attrib_first_medium', attr.first_touch.utms.utm_medium || '');
-        data.append('_attrib_first_campaign', attr.first_touch.utms.utm_campaign || '');
-        data.append('_attrib_first_landing', attr.first_touch.landing || '');
-        data.append('_attrib_first_ts', new Date(attr.first_touch.ts).toISOString());
+      var f = attr.first_touch, l = attr.last_touch;
+      if (f && f.utms) {
+        data.append('_attrib_first_source', cleanAttr(f.utms.utm_source));
+        data.append('_attrib_first_medium', cleanAttr(f.utms.utm_medium));
+        data.append('_attrib_first_campaign', cleanAttr(f.utms.utm_campaign));
+        data.append('_attrib_first_landing', cleanAttr(String(f.landing || '').split(/[?#]/)[0]));
+        if (typeof f.ts === 'number' && isFinite(f.ts)) data.append('_attrib_first_ts', new Date(f.ts).toISOString());
       }
-      if (attr.last_touch) {
-        data.append('_attrib_last_source', attr.last_touch.utms.utm_source || '');
-        data.append('_attrib_last_medium', attr.last_touch.utms.utm_medium || '');
-        data.append('_attrib_last_campaign', attr.last_touch.utms.utm_campaign || '');
+      if (l && l.utms) {
+        data.append('_attrib_last_source', cleanAttr(l.utms.utm_source));
+        data.append('_attrib_last_medium', cleanAttr(l.utms.utm_medium));
+        data.append('_attrib_last_campaign', cleanAttr(l.utms.utm_campaign));
       }
-      data.append('_attrib_referrer', document.referrer || '');
+      data.append('_attrib_referrer', refOrigin(document.referrer));
     } catch (e) {}
   }
 
@@ -276,6 +413,7 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     if (opts.nome) data.append('nome', opts.nome);
     data.append('_origem', opts.origem || opts.form || 'lead');
     data.append('form', opts.form || 'generic');
+    data.append('_policy_version', window.SZ_POLICY_VERSION);
     if (opts.extra) {
       Object.keys(opts.extra).forEach(function (k) {
         data.append(k, opts.extra[k]);
@@ -303,6 +441,16 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
     var carta = document.querySelector('[data-stripe-carta]');
     var pro = document.querySelector('[data-stripe-pro]');
     var mail = 'yan@szuchmacher.com.br';
+    function trackCheckout(el, product) {
+      if (!el || el.getAttribute('data-checkout-tracked')) return;
+      el.setAttribute('data-checkout-tracked', '1');
+      el.addEventListener('click', function () {
+        var ready = product === 'carta' ? window.SZ.stripeCartaReady : window.SZ.stripeProReady;
+        if (ready) window.ga('checkout_start', { product: product, location: el.getAttribute('data-ga-location') || '' });
+      });
+    }
+    trackCheckout(carta, 'carta');
+    trackCheckout(pro, 'pro');
     if (carta) {
       carta.href = window.SZ.stripeCartaReady ? window.SZ_STRIPE_CARTA_URL : ('mailto:' + mail + '?subject=Assinatura%20Carta%20Szuchmacher');
       if (window.SZ.stripeCartaReady) {
@@ -394,6 +542,7 @@ window.SZ_PLAUSIBLE_DOMAIN = ''; /* ex.: 'multi-assets.com' quando Plausible clo
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
 
       var data = new FormData(formEl);
+      data.append('_policy_version', window.SZ_POLICY_VERSION);
       appendAttribution(data);
 
       fetch(formEl.action || window.SZ.formspreeUrl(), {

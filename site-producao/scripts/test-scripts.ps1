@@ -9,6 +9,7 @@ $ErrorActionPreference = 'Continue'
 $raiz = Split-Path -Parent $PSScriptRoot
 $alvos = @(
     'scripts\deploy-cloudflare.ps1',
+    'scripts\guarda-arvore.ps1',
     'scripts\deploy-all.ps1',
     'scripts\publicar-com-rollback.ps1',
     'scripts\validar-producao.ps1',

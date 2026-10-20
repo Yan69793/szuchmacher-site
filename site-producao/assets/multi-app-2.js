@@ -151,6 +151,15 @@ function fmt(n, decimals = 2) {
     return n.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
+// Numeros em pt-BR via Intl.NumberFormat (cache por configuracao). Substitui o
+// toLocaleString('en-US') que mostrava $ 4,144.80 ao lado de R$ 5,09.
+var _nfCache = {};
+function fmtNumBR(v, minDigits, maxDigits) {
+    var k = minDigits + ':' + maxDigits;
+    if (!_nfCache[k]) _nfCache[k] = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits });
+    return _nfCache[k].format(Number(v));
+}
+
 function fmtUSD(v) {
     if (v >= 1e6) return '$ ' + (v/1e6).toFixed(2).replace('.', ',') + ' M';
     return '$ '  + fmt(v, 0);
@@ -165,9 +174,9 @@ function fmtRet(final, inicial, aporte, prazo) {
 
 // ── AUTOMAÇÃO CENTRAL (preços, macro, simuladores, benchmark) ───────────────
 window.macroLive = {
-    selic: 0.145,
+    selic: 0.1375,
     ipca: 0.055,
-    cdi: 0.144,
+    cdi: 0.1365,
     usd: 5.09,
     ntnbSpread: 0.075,
     selicTerminal: 0.12
@@ -240,7 +249,7 @@ window.geoScenarios = [
         }
     },
     {
-        id: 'exogenous-shock', nome: 'Cooperacao por choque exogeno', probMin: 0.05, probMax: 0.15,
+        id: 'exogenous-shock', nome: 'Cooperação por choque exógeno', probMin: 0.05, probMax: 0.15,
         desc: 'Crise global compartilhada (pandemia, catastrofe climatica ou crise financeira sistemica) forca cooperacao pragmatica EUA-China. Acordos de estabilizacao financeira e climatica. Juros globais caem para combater recessao.',
         retornos: { gold: 0.15, silver: 0.08, platinum: 0.02, copper: -0.10, btc: 0.80, ntnb: 0.08, cdi: 0.07, ouro: 0.15, prata: 0.08, platina: 0.02, cobre: -0.10 },
         macro: { selic: [0.145,0.120,0.100,0.090,0.085], ipca: [0.055,0.045,0.040,0.038,0.035], usdbrl: [5.09,5.10,5.00,4.90,4.85], brent: [78,60,55,58,62] },
@@ -358,7 +367,7 @@ function rebuildTaxasCenario() {
 // server-side gravam lá via applyScenarioRates(). window.taxasCenario deriva delas.
 
 function getSelicAno(y) {
-    const base = window.macroLive.selic || 0.145;
+    const base = window.macroLive.selic || 0.1375;
     const terminal = window.macroLive.selicTerminal ?? 0.12;
     if (y <= 0) return base;
     if (y === 1) return base - (base - terminal) * 0.45;
@@ -511,6 +520,12 @@ function applyScenarioRates(asset, r) {
         return (n > 0 ? '+' : '') + n.toFixed(digits == null ? 1 : digits).replace('.', ',') + '%';
     }
 
+    function verdictLabel(v) {
+        if (!v) return '—';
+        var map = { COMPRAR: 'viés positivo', BUY: 'viés positivo', VENDER: 'viés negativo', SELL: 'viés negativo', MANTER: 'neutro', HOLD: 'neutro', NEUTRO: 'neutro', NEUTRAL: 'neutro' };
+        return map[String(v).trim().toUpperCase()] || String(v).toLowerCase();
+    }
+
     function confLabel(h) {
         if (!h || !h.available) return 'indisponível';
         var map = { high: 'alta', medium: 'média', limited: 'limitada', low: 'baixa' };
@@ -560,13 +575,13 @@ function applyScenarioRates(asset, r) {
             setText('btc-radar-updated', 'Atualização ' + ageLabel(d.generated_at));
 
             setText('btc-radar-regime', regimeLabel(regime.key));
-            setText('btc-radar-vol30', signedPct(regime.realized_vol_30d_pct, 1));
+            setText('btc-radar-vol30', Number.isFinite(Number(regime.realized_vol_30d_pct)) ? Number(regime.realized_vol_30d_pct).toFixed(1).replace('.', ',') + '%' : '—');
             setText(
                 'btc-radar-regime-detail',
                 'retorno 30d ' + signedPct(regime.return_30d_pct, 1)
             );
 
-            setText('btc-radar-consensus', consensus.verdict || '—');
+            setText('btc-radar-consensus', verdictLabel(consensus.verdict));
             setText(
                 'btc-radar-conviction',
                 'convicção ' + (Number.isFinite(Number(consensus.conviction))
@@ -747,7 +762,7 @@ function recalcSim(asset) {
     const _lp = window._livePrices || {};
     const _priceKey = { gold: 'gold', silver: 'silver', platinum: 'platinum', copper: 'copper', btc: 'bitcoin' }[asset];
     const _currentPrice = _lp[_priceKey];
-    const _priceLabel = _currentPrice ? `$ ${Number(_currentPrice).toLocaleString('en-US')}` : '';
+    const _priceLabel = _currentPrice ? `$ ${fmtNumBR(_currentPrice, 2, 2)}` : '';
     const elPP = document.getElementById(p + '-pess-price');
     const elBP = document.getElementById(p + '-base-price');
     const elOP = document.getElementById(p + '-otim-price');
@@ -2451,7 +2466,8 @@ function ensurePdfExportLib() {
     if (!pdfExportLibPromise) {
         pdfExportLibPromise = new Promise(function(resolve, reject) {
             var script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            // jsPDF 2.5.1 servido do proprio dominio (sha256 98ccf17a...3875, identico ao cdnjs e ao npm).
+            script.src = '/assets/jspdf.umd.min.js';
             script.async = true;
             script.onload = function() {
                 if (window.jspdf && window.jspdf.jsPDF) resolve();
@@ -2582,10 +2598,10 @@ async function exportPDF(fabEl) {
         pdf.text('Total investido', mg+122, cy+7);
 
         pdf.setFont('helvetica','bold'); pdf.setTextColor(...TEXT); pdf.setFontSize(9);
-        pdf.text('$ '+cfg.ini.toLocaleString('en'), mg+4, cy+14);
-        pdf.text('$ '+cfg.ap.toLocaleString('en'), mg+45, cy+14);
+        pdf.text('$ '+cfg.ini.toLocaleString('pt-BR'), mg+4, cy+14);
+        pdf.text('$ '+cfg.ap.toLocaleString('pt-BR'), mg+45, cy+14);
         pdf.text(cfg.prazo+' anos', mg+86, cy+14);
-        pdf.text('$ '+(Math.round(totalInv)).toLocaleString('en'), mg+122, cy+14);
+        pdf.text('$ '+(Math.round(totalInv)).toLocaleString('pt-BR'), mg+122, cy+14);
 
         divLine(cy+18, 0.06);
 
@@ -2757,19 +2773,33 @@ async function fetchBCBSerie(serie) {
 async function fetchMacroIndicators() {
     let selicPct = null, ipcaPct = null, cdiPct = null;
 
+    // AwesomeAPI responde 429 sem CORS quando passa do limite. Qualquer falha
+    // (rede, 429, corpo invalido) cai no proxy do servidor, que serve o ultimo
+    // valor com procedencia declarada (PTAX de referencia diaria, nao tick).
+    let usdAwesome = 0, usdFonteProxy = false;
     try {
         const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL', { signal: AbortSignal.timeout(8000) });
         if (res.ok) {
             const d = await res.json();
-            const usd = parseFloat(d.USDBRL?.bid || 0);
-            if (usd > 0) {
-                usdBrlLive = usd;
-                window.macroLive.usd = usd; renderResearchKpis();
-                const el = document.getElementById('macro-usd');
-                if (el) el.textContent = usd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
+            usdAwesome = parseFloat(d.USDBRL?.bid || 0);
         }
     } catch(e) {}
+    if (!(usdAwesome > 0)) {
+        try {
+            const p = await fetchMultiJson('/api/usdbrl-scenarios', { timeoutMs: 8000 });
+            const v = Number(p && p.usdbrl_bid);
+            if (v > 0) { usdAwesome = v; usdFonteProxy = true; }
+        } catch(e) {}
+    }
+    if (usdAwesome > 0) {
+        usdBrlLive = usdAwesome;
+        window.macroLive.usd = usdAwesome; renderResearchKpis();
+        const el = document.getElementById('macro-usd');
+        if (el) {
+            el.textContent = usdAwesome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            el.title = usdFonteProxy ? 'Referência diária (PTAX), não cotação em tempo real' : '';
+        }
+    }
 
     try {
         const v = await fetchBCBSerie(13522);
@@ -2844,7 +2874,7 @@ async function loadMarketData() {
         if (data.wti) {
             const el = document.getElementById('macro-wti');
             const ch = document.getElementById('macro-wti-chg');
-            if (el) el.textContent = 'US$ ' + Number(data.wti.value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (el) el.textContent = 'US$ ' + fmtNumBR(data.wti.value, 2, 2);
             if (ch) ch.textContent = rotuloCotacao(data, 'wti', fmtChg);
         }
     } catch (e) {
@@ -2865,7 +2895,7 @@ async function gerarAnaliseMacro(forcar = false) {
             if (cached) {
                 const obj = JSON.parse(cached);
                 if (Date.now() - obj.timestamp < CACHE_TTL) {
-                    renderMacro(obj.data);
+                    renderMacro(obj.data, obj.generated_at);
                     return;
                 }
             }
@@ -2888,7 +2918,7 @@ async function gerarAnaliseMacro(forcar = false) {
             data:         json.data,
         }));
 
-        renderMacro(json.data);
+        renderMacro(json.data, json.generated_at);
 
     } catch(e) {
         console.warn('macro_api.php indisponível, tentando macro_data.json:', e.message);
@@ -2905,8 +2935,9 @@ async function gerarAnaliseMacro(forcar = false) {
                 generated_at: json2.generated_at || '',
                 data:         json2.data,
             }));
-            renderMacro(json2.data);
+            renderMacro(json2.data, json2.generated_at);
         } catch(e2) {
+            _macroStampUnavailable();
             console.warn('macro_data.json indisponível, usando conteúdo estático:', e2.message);
         }
     }
@@ -2921,7 +2952,38 @@ function _showMacroStamp(generatedAt) {
     }
 }
 
-function renderMacro(d) {
+// Item 5.2: o carimbo mostrava a hora do NAVEGADOR ('Atualizado em <agora>'),
+// mesmo quando a analise tinha semanas. Agora mostra a data de geracao que o
+// servidor devolve (generated_at, formato 'dd/mm/aaaa ... BRT' ou ISO) e marca
+// como desatualizada acima de MACRO_STALE_DAYS.
+var MACRO_STALE_DAYS = 8;
+function _parseMacroGeneratedAt(s) {
+    if (!s || typeof s !== 'string') return null;
+    var m = s.match(/(\d{2})\/(\d{2})\/(\d{4})(?:\D+(\d{2}):(\d{2}))?/);
+    if (m) return new Date(Date.UTC(+m[3], +m[2] - 1, +m[1], (+m[4] || 0) + 3, +m[5] || 0));
+    var t = Date.parse(s);
+    return isNaN(t) ? null : new Date(t);
+}
+function _macroStampText(generatedAt, now, snapshot) {
+    var dt = _parseMacroGeneratedAt(generatedAt);
+    if (!dt) return 'Data de gera\u00e7\u00e3o indispon\u00edvel';
+    var label = 'Gerado em ' + dt.toLocaleDateString('pt-BR', {timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric'}) + ' \u00e0s ' + dt.toLocaleTimeString('pt-BR', {timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}) + ' BRT';
+    var ageDays = ((now || Date.now()) - dt.getTime()) / 86400000;
+    if (snapshot && snapshot.ptax_data) label += ' · dados BCB de ' + snapshot.ptax_data;
+    if (ageDays > MACRO_STALE_DAYS) label += ' \u00b7 an\u00e1lise desatualizada (' + Math.floor(ageDays) + ' dias)';
+    else if (ageDays > 1) label += ' · números do texto podem divergir dos cards ao vivo';
+    return label;
+}
+function _macroStampUnavailable() {
+    var se = document.getElementById('macro-stamp-inline');
+    var st = document.getElementById('macro-stamp-text');
+    if (se && st) {
+        st.textContent = 'Dados ao vivo indispon\u00edveis \u00b7 exibindo conte\u00fado de refer\u00eancia';
+        se.style.display = 'inline-flex';
+    }
+}
+
+function renderMacro(d, generatedAt) {
     // Sanitizar citações [N] que LLMs às vezes inserem
     const stripCites = s => typeof s === 'string' ? s.replace(/(\[\d+\])+/g, '') : s;
     // Escape HTML obrigatório: os campos vêm de LLM (macro_api.php) e entram via
@@ -2991,8 +3053,7 @@ function renderMacro(d) {
     const _se2 = document.getElementById('macro-stamp-inline');
     const _st2 = document.getElementById('macro-stamp-text');
     if (_se2 && _st2) {
-        const _now = new Date();
-        _st2.textContent = 'Atualizado em ' + _now.toLocaleDateString('pt-BR', {timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric'}) + ' às ' + _now.toLocaleTimeString('pt-BR', {timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}) + ' BRT';
+        _st2.textContent = _macroStampText(generatedAt, undefined, d && d.snapshot);
         _se2.style.display = 'inline-flex';
     }
 
@@ -3196,6 +3257,15 @@ function submitExitPopup() {
         return;
     }
 
+    // LGPD: consentimento expresso obrigatorio (o servidor tambem recusa sem ele).
+    var consentInput = document.getElementById('popup-consent-input');
+    if (consentInput && !consentInput.checked) {
+        consentInput.focus();
+        var lbl = consentInput.closest ? consentInput.closest('label') : null;
+        if (lbl) { lbl.classList.add('popup-consent-required'); setTimeout(function () { lbl.classList.remove('popup-consent-required'); }, 2500); }
+        return;
+    }
+
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
@@ -3220,7 +3290,7 @@ function submitExitPopup() {
         method: 'POST',
         signal: AbortSignal.timeout(12000),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup' })
+        body: JSON.stringify({ email: email, source: 'multiasset_exit_popup', consent: true, policy_version: '2026-10-15', attribution: (window.SZ && window.SZ.getAttribution) ? window.SZ.getAttribution() : null })
     }).then(function (r) {
         if (!r.ok) {
             var error = new Error('signup status ' + r.status);
@@ -3312,7 +3382,7 @@ async function loadLivePrices() {
         Object.entries(map).forEach(([id, val]) => {
             const el = document.getElementById(id);
             if (el) {
-                el.textContent = val ? `$ ${Number(val).toLocaleString('en-US')}` : '$ —';
+                el.textContent = val ? `$ ${fmtNumBR(val, 2, 2)}` : '$ —';
                 // Sinal honesto de cotação defasada: tooltip no próprio preço,
                 // sem mudar o layout.
                 el.title = defasado ? 'Cotação defasada: fonte ao vivo indisponível no momento' : '';

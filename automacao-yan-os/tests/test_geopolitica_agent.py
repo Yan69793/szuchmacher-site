@@ -43,10 +43,10 @@ class GeopoliticaAgentTests(unittest.TestCase):
         with patch.object(geo, "brt_now", return_value=segunda):
             self.assertEqual(geo.semana_alvo()[:3], ("2026-W37", "2026-09-07", "2026-09-13"))
 
-    def test_semana_alvo_manual_aponta_para_proxima(self):
+    def test_semana_alvo_manual_aponta_para_corrente(self):
         quarta = datetime(2026, 9, 9, 12, tzinfo=timezone(timedelta(hours=-3)))
         with patch.object(geo, "brt_now", return_value=quarta):
-            self.assertEqual(geo.semana_alvo()[:3], ("2026-W38", "2026-09-14", "2026-09-20"))
+            self.assertEqual(geo.semana_alvo()[:3], ("2026-W37", "2026-09-07", "2026-09-13"))
 
     def test_janela_domingo_respeita_exemplo_de_data_informado(self):
         self.assertEqual(geo.janela_domingo(date(2026, 9, 7))[1:], ("2026-09-08", "2026-09-13", "08 a 13 de setembro de 2026"))

@@ -23,6 +23,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
+        html, body { overflow-x: clip; }
         body {
             font-family: 'DM Sans', system-ui, sans-serif;
             background: var(--bg);
@@ -197,7 +198,7 @@
         }
         .hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
         .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.72; max-width: 38ch; margin-bottom: 36px; font-weight: 400; }
-        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; min-height: 48px; }
         .btn-primary {
             padding: 14px 22px; min-height: 48px;
             background: var(--gold); color: #0a0c10;
@@ -238,29 +239,29 @@
         .ticker-icon.gold { background: rgba(201,168,76,0.15); color:#c9a84c; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.silver { background: rgba(192,192,192,0.1); color:#c0c0c0; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.platinum { background: rgba(142,207,221,0.1); color:#8ecfdd; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
-        .ticker-icon.copper { background: rgba(184,115,51,0.14); color:#b87333; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+        .ticker-icon.copper { background: rgba(184,115,51,0.14); color:#c17936; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
         .ticker-icon.btc { background: rgba(240,122,64,0.15); color: var(--orange); }
         .ticker-icon.usd { background: rgba(76,175,125,0.15); color: var(--green); }
-        .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .ticker-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; min-height: 1.4em; }
         .ticker-sub { font-size: 11px; color: var(--muted); }
 
         /* Widget TradingView nos cards */
         .ticker-right.tv-widget-wrap {
-            width: 290px;
-            height: 58px;
+            width: 320px;
+            height: 64px;
             position: relative;
             overflow: hidden;
             border-radius: 0;
-            flex-shrink: 0;
+            flex: 0 0 320px;
         }
 
         .ticker-right.tv-widget-wrap .tradingview-widget-container {
-            width: 480px !important;
-            height: 120px !important;
+            width: 400px !important;
+            height: 100px !important;
             position: absolute;
-            top: -8px;
+            top: -4px;
             left: 0;
-            transform: scale(0.65);
+            transform: scale(0.80);
             transform-origin: top left;
             pointer-events: none;
         }
@@ -271,8 +272,8 @@
         }
 
         .ticker-right.tv-widget-wrap iframe {
-            width: 480px !important;
-            height: 120px !important;
+            width: 400px !important;
+            height: 100px !important;
             border: none !important;
             pointer-events: none;
         }
@@ -826,7 +827,7 @@
         @media (max-width: 1024px) {
             /* rede de seguranca contra scroll horizontal em telas estreitas;
                seguro aqui pois .alloc-donut-wrap ja e position:static neste breakpoint */
-            html { overflow-x: hidden; }
+            html { overflow-x: clip; }
             /* Nav â€” tablet/iPad: reduz padding e gap para caber as 6 abas */
             nav { padding: 0 24px; }
             .nav-links { gap: 16px; }
@@ -883,6 +884,8 @@
                 background: rgba(10,12,16,0.96); border-bottom: 1px solid var(--border);
                 backdrop-filter: blur(16px); -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
+                -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 28px), transparent 100%);
+                mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 28px), transparent 100%);
             }
             .mobile-section-nav::-webkit-scrollbar { display: none; }
             .mobile-section-nav a {
@@ -908,8 +911,8 @@
             .hero-ctas { flex-direction: column; }
             .btn-primary, .btn-ghost { justify-content: center; width: 100%; }
             .ticker-card { padding: 14px 16px; }
-            .ticker-right.tv-widget-wrap { width: 170px; height: 62px; }
-            .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.40); top: 5px; }
+            .ticker-right.tv-widget-wrap { width: 190px; height: 62px; flex-basis: 190px; }
+            .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.475); top: 4px; }
             /* TV tabs */
             .tv-inner { padding: 32px 16px; }
             .tv-tabs { overflow-x: auto; padding-bottom: 0; gap: 4px; }
@@ -973,9 +976,10 @@
 
         @media (max-width: 480px) {
             .hero h1 { font-size: 30px; }
-            .ticker-card { padding: 12px 14px; }
-            .ticker-right.tv-widget-wrap { width: 148px; height: 56px; }
-            .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.37); top: 6px; }
+            .ticker-card { padding: 12px 14px; flex-direction: column; align-items: stretch; gap: 10px; }
+            .ticker-left { width: 100%; }
+            .ticker-right.tv-widget-wrap { width: 100%; height: 64px; flex-basis: auto; }
+            .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.80); top: -4px; left: 0; }
             .ticker-name { font-size: 13px; }
             .macro-strip-inner { gap: 0; }
             .macro-item { min-width: 80px; padding: 0 12px; }
@@ -1009,8 +1013,8 @@
             .macro-item { min-width: 68px; padding: 0 8px; }
             .macro-value { font-size: 13px; }
             .ticker-card { padding: 10px 12px; gap: 8px; }
-            .ticker-right.tv-widget-wrap { width: 112px; height: 48px; }
-            .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.32); top: 4px; }
+            .ticker-right.tv-widget-wrap { width: 100%; height: 60px; flex-basis: auto; }
+            .ticker-right.tv-widget-wrap .tradingview-widget-container { transform: scale(0.72); top: -2px; left: 0; }
             .bench-assumptions { grid-template-columns: 1fr; }
             .bench-prazo-group, .bench-cenario-group { gap: 6px; }
             .comp-table-wrap { margin-left: -4px; margin-right: -4px; }
@@ -1132,14 +1136,16 @@
             .mc-metrics-row { grid-template-columns: repeat(3, 1fr); gap: 7px; }
             .mc-metric-value { font-size: 17px; }
             .mc-chart-wrap { height: 200px; }
-            .export-fab { bottom: 20px; right: 20px; padding: 12px 18px; }
+            .mc-brl-btn { min-width: 44px; min-height: 44px; padding: 8px 11px; }
+            .export-fab { bottom: 20px; right: 20px; min-width: 44px; min-height: 44px; padding: 12px 18px; }
             .fab-text { display: none; }
         }
         @media (max-width: 480px) {
-            .mc-metrics-row { grid-template-columns: repeat(3, 1fr); }
-            .mc-metric-card { padding: 10px 8px; }
-            .mc-metric-value { font-size: 14px; }
-            .mc-metric-label { font-size: 8px; }
+            .mc-metrics-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .mc-metric-card { padding: 12px 10px; }
+            .mc-metric-card:last-child { grid-column: 1 / -1; }
+            .mc-metric-value { font-size: 16px; }
+            .mc-metric-label { font-size: 9px; }
         }
 
         /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -2316,3 +2322,30 @@ body[data-design="multiasset-research-os-v3"] .export-fab .fab-text { font-size:
     .geo-node.me { right:0; bottom:8%; }
 }
 .sim-data-status { color: var(--muted); font-size: .8rem; line-height: 1.5; margin: 12px 0; }
+
+/* Consentimento expresso no popup (LGPD, item 3.1) */
+.popup-consent-check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; margin-top: 12px; }
+.popup-consent-check input { width: 20px; height: 20px; min-width: 20px; margin-top: 2px; accent-color: var(--gold, #c9a45c); }
+.popup-consent-required { outline: 2px solid var(--red, #c0392b); outline-offset: 4px; border-radius: 4px; }
+
+@media (max-width: 760px) {
+    .comp-table-wrap { overflow-x: auto; }
+    .comp-table { min-width: 600px; white-space: nowrap; }
+}
+
+/* Botao flutuante de PDF cobria texto no celular: vira so icone (rotulo segue
+   acessivel por clip) e o conteudo ganha folga inferior para rolar por baixo. */
+@media (max-width: 768px) {
+    body { padding-bottom: 76px; }
+    body[data-design="multiasset-research-os-v3"] .export-fab .fab-text {
+        position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+    }
+    body[data-design="multiasset-research-os-v3"] .export-fab { min-width: 48px; min-height: 48px; padding: 12px; }
+}
+
+/* Titulo do benchmark era cortado a direita em 320 px (34 px de fonte num card de 288). */
+@media (max-width: 400px) {
+    body[data-design="multiasset-research-os-v3"] .bench-title { font-size: 27px; overflow-wrap: anywhere; }
+    .bench-header > *, .bench-wrap > * { min-width: 0; }
+}

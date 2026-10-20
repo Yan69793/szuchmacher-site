@@ -10,6 +10,10 @@
       var msg = document.getElementById('reportSignupMsg');
       var btn = form.querySelector('button[type="submit"]');
       var origText = btn ? btn.textContent : '';
+      function getAttr() {
+        try { return (window.SZ && window.SZ.getAttribution) ? window.SZ.getAttribution() : null; }
+        catch (e3) { return null; }
+      }
 
       function showMsg(text, isError) {
         if (!msg) return;
@@ -22,6 +26,12 @@
         e.preventDefault();
         var email = (form.querySelector('input[name="email"]') || {}).value;
         if (!email) return;
+        var consentBox = form.querySelector('input[name="consent"]');
+        if (consentBox && !consentBox.checked) {
+          showMsg('Marque o consentimento para receber o Fechamento.', true);
+          consentBox.focus();
+          return;
+        }
 
         if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
         if (msg) msg.style.display = 'none';
@@ -29,12 +39,13 @@
         fetch('/relatorio-signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim() }),
+          body: JSON.stringify({ email: email.trim(), consent: true, policy_version: '2026-10-15', source: 'relatorio-signup', attribution: getAttr() }),
         })
           .then(function (r) { return r.json(); })
           .then(function (d) {
             if (d.ok) {
-              showMsg('Inscricao confirmada. Verifique seu email para acessar o ultimo relatorio.', false);
+              showMsg(d.message || 'Enviamos um link de confirmacao para o seu e-mail.', false);
+              try { window.ga && window.ga('signup_submit', { source: 'relatorios' }); } catch (e2) {}
               form.reset();
             } else {
               showMsg(d.error || 'Erro ao processar. Tente novamente.', true);

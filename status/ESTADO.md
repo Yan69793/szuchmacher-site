@@ -1,6 +1,6 @@
 # Estado do projeto — Site szuchmacher.com.br
 
-Última atualização: 2026-09-27 (agentes: Cline, Claude e Codex)
+Última atualização: 2026-10-20 (agentes: Cline, Claude e Codex)
 
 Leia este arquivo antes de começar qualquer trabalho, seja qual for o agente.
 Atualize a data e os itens abertos ao fechar uma sessão que mudou o estado.
@@ -66,6 +66,51 @@ muda quando checagem nova entra, use a da saída real do script.
   `scripts/run_claude_routine.ps1` é o runner da `Szuchmacher-AgendaMacro-Claude`.
 
 ## Itens abertos
+
+- **Auditoria externa de 20/10, publicada em 20/10.** Branch `fix/auditoria-20261020-all`
+  (merge de `-sz` e `-multi`), versão `cd8c503f-3dce-4177-93b8-cee79cd8c1e7`
+  (anterior `976bb520-a8ff-4b33-9319-2cd29dd30e69`, rollback automático do
+  `publicar-com-rollback.ps1`), gate 51/51. O zip do pacote não existia em
+  Downloads, a Fase A foi reaplicada pela descrição. Entregou: consent e layout
+  mobile, Clarity só com consentimento na metodologia, Panorama Macro com
+  validação contra o snapshot BCB, janela de 24h e carimbo com a data dos dados,
+  pt-BR no multi, `lastmod` automático, fallback de USD e BTC pelo proxy, Font
+  Awesome em subconjunto próprio, contraste (`--gold #806333`), tradução EN da
+  agenda. Abertos: (a) ~~a checkout está na branch `-all`~~. Em 20/10 a checkout
+  está em `reconcile/2026-10-14`, que contém `-all` inteira (`git log
+  HEAD..fix/auditoria-20261020-all` vazio). Falta levar `reconcile` para
+  `master`, que está mais de 60 commits atrás. (b) Multi mobile ficou em 64 a 66 no Lighthouse local, meta 80,
+  e o CLS desktop do multi oscila (0,001 a 0,24) sem causa achada. (c) B9a
+  contraste cobre só `--gold` e o cobre do ticker, `.mp-*` e `.offer-tag` não
+  foram medidos. (d) B12, cookie `sp` do TradingView gravado antes do
+  consentimento, só levantado: widgets carregam por scroll sem checar
+  `getConsent()`. (e) `robots.txt`: origem com Sitemap só no sz; no multi o
+  arquivo de origem substituiu o bloco gerenciado da Cloudflare e foi retirado
+  (versão `3a4676f9` ficou 4 min assim). Sitemap do multi segue sem linha no
+  robots. (f) Cron do macro de segunda 19/10 falhou com 503 do BCB SGS e
+  `/health` marca `degraded`. (g) Radar: fonte citada sem uso no texto não tem
+  correção determinística, só instrução no prompt. A poda heurística foi
+  descartada, reprovava 4 de 7 edições reais. (h) Conferir que a próxima rotina
+  automática não sobrescreve as correções. Primeira prova parcial em 20/10, a
+  `GeopoliticaAgent` publicou às 03:48 (W43) e o gate seguiu 51/51. Os três JSON
+  de dados que as rotinas deixaram sem commit (agenda 18/10, macro 16/10,
+  geopolítica 20/10) batiam por SHA-256 com produção e foram registrados no
+  commit `512e5dc`.
+
+- **Atribuição de leads e política 2026-10-15, publicado em 15/10.** Commits
+  `21f80b7` e `ea242c7`, versão `789ff049-c0da-4f09-a913-09d522d25952`
+  (rollback `12b25662-d95d-4a11-9e0f-6db82a4b9d3f`), gate 51/51, relatório
+  `site-producao/diagnosticos/publicacao_2026-10-15_0243.md`. O deploy subiu só
+  os 16 assets esperados. Daqui em diante, `deploy-cloudflare.ps1` aborta com
+  exit 3 se houver arquivo deployável não commitado (`scripts/guarda-arvore.ps1`).
+  Isso vale também para o sync das 19h. O e-mail do fechamento sai antes e não é
+  afetado, só o widget fica parado e chega alerta. Abertos: (a) decidir se a
+  política nova conta como mudança material para a seção 9 (aviso de 15 dias).
+  A leitura técnica foi que não conta, porque inscrito confirmado não ganha
+  atribuição e o envio ao Formspree ficou mais restrito do que antes. (b)
+  ~~`tests/usdbrl-scenarios.test.mjs` segue fora do git.~~ Fechado em 20/10,
+  commit `4cfb1d3`, suíte do Worker com 208 pass e 0 fail. (c) A prova viva do filtro de UTM no KV
+  depende de uma inscrição real, que ainda não foi autorizada.
 
 - **P1-001, crédito OpenRouter esgotado, aberto em 12/09.** A conta da chave de
   `config.php` (rótulo `sk-or-v1-ca7...ca6`) está acima do teto comprado:

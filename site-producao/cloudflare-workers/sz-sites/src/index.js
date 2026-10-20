@@ -8,7 +8,7 @@ import { handleRegulatorio } from './handlers/regulatorio.js';
 import { handleGeopolitica } from './handlers/geopolitica.js';
 import { handleFechamento } from './handlers/fechamento.js';
 import { handleStripeWebhook } from './handlers/stripe-webhook.js';
-import { handleRelatorioSignup } from './handlers/relatorio-signup.js';
+import { handleRelatorioSignup, handleRelatorioConfirm, handleUnsubscribe } from './handlers/relatorio-signup.js';
 import { handleBtcScenarios } from './handlers/btc-scenarios.js';
 import { handleCdiScenarios } from './handlers/cdi-scenarios.js';
 import { handleNtnbScenarios } from './handlers/ntnb-scenarios.js';
@@ -19,6 +19,7 @@ import { callDeepseekMarket } from './handlers/internal-deepseek-market.js';
 import { applySecurityHeaders } from './utils/headers.js';
 import { fetchAsset } from './utils/assets.js';
 import { runScheduledMacro } from './handlers/macro-scheduled.js';
+import { handleHealth } from './handlers/health.js';
 
 const SITE_MAP = {
   'szuchmacher.com.br': 'sz',
@@ -38,6 +39,8 @@ const API_ROUTES = {
   '/assets/geopolitica.php': (req, env, ctx) => handleGeopolitica(env, req),
   '/stripe-webhook': (req, env, ctx) => handleStripeWebhook(req, env, ctx),
   '/relatorio-signup': (req, env, ctx) => handleRelatorioSignup(req, env),
+  '/relatorio-confirm': (req, env, ctx) => handleRelatorioConfirm(req, env),
+  '/unsubscribe': (req, env, ctx) => handleUnsubscribe(req, env),
   '/api/btc-scenarios': (req, env, ctx) => handleBtcScenarios(env, ctx),
   '/api/cdi-scenarios': (req, env, ctx) => handleCdiScenarios(env, ctx),
   '/api/ntnb-scenarios': (req, env, ctx) => handleNtnbScenarios(env, ctx),
@@ -45,41 +48,6 @@ const API_ROUTES = {
   '/api/intelligence/btc': (req, env, ctx) => handleBtcIntelligence(env, ctx),
   '/health': (req, env, ctx) => handleHealth(env),
 };
-
-async function handleHealth(env) {
-  const checks = {};
-  // KV cache check
-  try {
-    const ts = Date.now();
-    await env.CACHE.put('health-check', String(ts), { expirationTtl: 60 });
-    const val = await env.CACHE.get('health-check');
-    checks.kv = val ? 'ok' : 'write-read-mismatch';
-  } catch (e) {
-    checks.kv = 'fail';
-  }
-  // Macro cache freshness
-  try {
-    const macro = await env.CACHE.get('macro-api', { type: 'json' });
-    checks.macro_cache = macro?.generated_at ?? 'empty';
-  } catch {
-    checks.macro_cache = 'unavailable';
-  }
-  try {
-    const last = await env.CACHE.get('macro-cron-last', { type: 'json' });
-    checks.macro_cron_last = last ?? 'empty';
-  } catch {
-    checks.macro_cron_last = 'unavailable';
-  }
-  return new Response(JSON.stringify({
-    status: 'ok',
-    version: 'sz-sites-worker',
-    checks,
-    ts: Math.floor(Date.now() / 1000),
-  }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
-  });
-}
 
 // Extensoes de midia que exigem suporte a Range (video/audio). O binding
 // env.ASSETS.fetch() ignora o header Range e devolve o arquivo inteiro (HTTP 200),

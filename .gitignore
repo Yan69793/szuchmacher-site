@@ -55,3 +55,6 @@ mcp-server-*.log
 # a árvore para trás. 348 MB em 16 mil arquivos, reprodutível. Fora do repositório.
 automacao-yan-os/venv-morto-3.11/
 automacao-yan-os/venv-task/
+!.env.example
+!.env.sample
+!.env.template

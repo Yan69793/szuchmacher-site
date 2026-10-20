@@ -303,8 +303,8 @@ def janela_segunda(data_execucao: date) -> tuple[str, str, str, str]:
 
 def semana_alvo() -> tuple[str, str, str, str]:
     """
-    Rotina (brief): domingo apos o fechamento gera a semana seguinte; segunda
-    de manha recupera a semana corrente; outros dias (manual) geram a proxima.
+    Rotina (brief): domingo apos o fechamento gera a semana seguinte; de segunda
+    a sabado usa sempre a semana corrente.
 
     Retorna (iso, start, end, label).
     """
@@ -313,8 +313,8 @@ def semana_alvo() -> tuple[str, str, str, str]:
         return janela_domingo(hoje.date())
     elif hoje.weekday() == 0 and hoje.hour < 14:  # segunda cedo: recuperacao
         return janela_segunda(hoje.date())
-    else:                              # manual: proxima segunda estritamente futura
-        inicio = hoje.date() - timedelta(days=hoje.weekday()) + timedelta(days=7)
+    else:                              # terca a sabado: semana corrente
+        inicio = hoje.date() - timedelta(days=hoje.weekday())
         return _semana_a_partir_de(inicio)
 
 
@@ -553,6 +553,8 @@ acoes, credito, commodities, brasil, curva_di e brl. Cada item tem direcao
 scenarios tem titulo, tipo (base|alternativo|cauda), descricao, implicacoes e probabilidade:null.
 triggers tem evento, janela e relevancia. sources tem url https, titulo, veiculo, data e tipo.
 Não crie fatos, URLs, datas ou fontes fora do dossie. Não use probabilidades numéricas.
+Em themes[].sources e teses[].sources inclua somente as fontes cujo conteúdo aparece
+no texto do próprio item; fonte que não sustenta nenhuma afirmação do item não entra.
 Se não houver novidade material em um tópico, mantenha-o apenas se continuar relevante e
 deixe isso explícito em executive_summary ou confidence.nota.
 O disclaimer deve dizer que o material é informativo e não constitui recomendação.

@@ -167,6 +167,9 @@
             .fee-fixo { flex-direction: column; align-items: flex-start; gap: 18px; padding: 26px 24px; }
             .plan { padding: 30px 24px; }
         }
+        @media (max-width: 400px) {
+            .fee-fixo p, .contact-band .cb-text { min-width: 0; }
+        }
 
         /* .ysz-lockup e .ysz-stack vêm de sz-design.css — bloco duplicado removido */
     

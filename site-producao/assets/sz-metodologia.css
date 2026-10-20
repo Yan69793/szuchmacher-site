@@ -59,6 +59,10 @@
         td:nth-child(2) { color: var(--muted); font-size: 12px; }
         td:last-child { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 11px; text-align: right; white-space: nowrap; }
 
+        @media (max-width: 900px) {
+            table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        }
+
         .disclaimer-box {
             background: var(--surface); border: 1px solid var(--border);
             padding: 20px 24px; margin-top: 48px; font-size: 12px;

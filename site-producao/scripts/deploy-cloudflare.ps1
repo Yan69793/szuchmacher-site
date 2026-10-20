@@ -4,7 +4,11 @@
 
 param(
     [switch]$DryRun,
-    [switch]$Purge
+    [switch]$Purge,
+    [switch]$SkipMacroRefresh,
+    # Publica mesmo com arquivo deployavel nao commitado. So para uso manual e
+    # consciente; nenhuma rotina agendada deve passar este switch.
+    [switch]$PermitirArvoreSuja
 )
 
 Set-StrictMode -Version Latest
@@ -16,6 +20,21 @@ $BUILD = Join-Path $PSScriptRoot 'build-cloudflare-public.ps1'
 $CONFIG = Join-Path $ROOT 'config.php'
 
 Write-Host "`n=== DEPLOY CLOUDFLARE (sz-sites) ===" -ForegroundColor Cyan
+
+# Guarda de working tree: o deploy publica o disco, e qualquer rotina agendada
+# que chegue aqui publicaria edicao nao commitada de outra sessao. Aborta antes
+# do build, entao producao fica intocada. Artefatos de pipeline (relatorio_cache,
+# agenda, macro, geopolitica) passam, e o sync das 19h segue funcionando com a
+# arvore limpa. Detalhe das regras em guarda-arvore.ps1.
+if (-not $DryRun -and -not $PermitirArvoreSuja) {
+    . (Join-Path $PSScriptRoot 'guarda-arvore.ps1')
+    $sujos = @(Get-MudancasDeployaveis (Split-Path -Parent $ROOT))
+    if ($sujos.Count -gt 0) {
+        Write-Host ("ABORTADO: arquivo deployavel nao commitado, nada foi publicado: " + ($sujos -join ', ')) -ForegroundColor Red
+        Write-Host "Commite ou reverta. Para publicar assim mesmo, de forma manual: -PermitirArvoreSuja" -ForegroundColor Yellow
+        exit 3
+    }
+}
 
 & $BUILD
 
@@ -102,7 +121,12 @@ try {
 
     Write-Host "`n=== INVALIDAR CACHE KV ===" -ForegroundColor Cyan
     try {
-        & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1') -RefreshMacro
+        if ($SkipMacroRefresh) {
+            Write-Host "  Macro refresh pulado pelo chamador." -ForegroundColor DarkGray
+            & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1')
+        } else {
+            & (Join-Path $PSScriptRoot 'invalidate-worker-cache.ps1') -RefreshMacro
+        }
     } catch {
         # O deploy ja concluiu. Falha aqui nao pode reportar exit 1 e induzir
         # rollback (ou falso alarme) de uma publicacao que foi bem.

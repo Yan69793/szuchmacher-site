@@ -77,7 +77,7 @@
 <body data-page="relatorios">
   <header>
     <div class="container header-row">
-      <a class="ysz-lockup" href="/" translate="no" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+      <a class="ysz-lockup" href="/" translate="no" aria-label="YS Szuchmacher Consultoria, Yan Szuchmacher">
         <span class="ysz-lockup__icon" aria-hidden="true">YS</span>
         <span class="ysz-lockup__type">
           <span class="ysz-lockup__firm">Szuchmacher</span>
@@ -226,11 +226,15 @@
           <div class="u-marginbottom20px signup-form">
             <h3>Receba o relatório gratuitamente</h3>
             <p>O Fechamento de Mercado diário no seu e-mail, em dias úteis, por volta das 19h BRT.</p>
-            <form id="reportSignupForm" class="u-margintop16px">
+            <form id="reportSignupForm" class="u-margintop16px" method="post" action="/relatorio-signup">
               <div class="u-displayflex-gap10px">
                 <input type="email" name="email" placeholder="Seu melhor e-mail" required class="u-flex1-marginbottom0">
                 <button type="submit" class="u-whitespacenowrap-minwidth140px btn">Inscrever</button>
               </div>
+              <label class="consent u-margintop8px">
+                <input type="checkbox" name="consent" required />
+                Aceito receber o Fechamento de Mercado por e-mail, conforme a <a href="/privacidade.html">Pol&iacute;tica de Privacidade</a>. Posso cancelar a qualquer momento.
+              </label>
               <div id="reportSignupMsg" class="u-margintop10px-fontsize088rem-displaynone"></div>
               <div class="u-margintop8px form-note">Sem spam. Cancele quando quiser.</div>
             </form>
@@ -327,6 +331,7 @@
             <input type="hidden" name="_origem" value="relatorios.html#contato" />
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="u-displaynone">
             <button type="submit" class="u-width100 btn" data-ga="cta_contato" data-ga-location="form_contato_relatorios">Solicitar contato</button>
+            <div class="form-success" id="contactFormSuccess" role="status" aria-live="polite">Solicita&ccedil;&atilde;o recebida. Retorno em at&eacute; 24 horas &uacute;teis por e-mail ou WhatsApp.</div>
             <div class="form-note">Retorno em até 24 horas úteis.</div>
           </form>
         </div>
@@ -339,7 +344,7 @@
       <div class="rel-footer-grid">
         <div>
           <div class="footer-brand">
-            <a class="ysz-stack" href="/" translate="no" aria-label="Szuchmacher Consultoria — Yan Szuchmacher">
+            <a class="ysz-stack" href="/" translate="no" aria-label="YS Szuchmacher Consultoria, Yan Szuchmacher">
               <span class="ysz-stack__icon" aria-hidden="true">YS</span>
               <span class="ysz-stack__type">
                 <span class="ysz-stack__firm">Szuchmacher</span>

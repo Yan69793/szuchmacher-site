@@ -2188,18 +2188,25 @@ textarea:focus {
 }
 
 .consent {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  display: block;
+  position: relative;
+  padding-left: 28px;
   color: var(--muted);
   font-size: 0.9rem;
   margin: 6px 0 16px 0;
 }
 
 .consent input {
+  position: absolute;
+  left: 0;
+  top: 4px;
   width: auto;
   min-height: auto;
-  margin: 4px 0 0 0;
+  margin: 0;
+}
+
+.signup-grid > * {
+  min-width: 0;
 }
 
 .form-note {
@@ -2269,6 +2276,7 @@ footer {
   font-size: 0.92rem;
   color: var(--muted);
   padding: 5px 0;
+  min-height: 24px;
   transition: color 0.2s;
 }
 
@@ -2381,7 +2389,7 @@ footer {
   }
 
   .hero-visual {
-    order: -1;
+    order: 2;
     max-width: 420px;
     margin: 0 auto;
     width: 100%;
@@ -2626,7 +2634,7 @@ footer {
   --surface-soft: #faf8f3;
   --navy: #081426;
   --navy-soft: #10233d;
-  --gold: #91713a;
+  --gold: #806333;
   --gold-soft: #b3945a;
   --gold-bright: #d2b777;
   --text: #162237;
