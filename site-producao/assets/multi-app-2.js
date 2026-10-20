@@ -511,6 +511,12 @@ function applyScenarioRates(asset, r) {
         return (n > 0 ? '+' : '') + n.toFixed(digits == null ? 1 : digits).replace('.', ',') + '%';
     }
 
+    function verdictLabel(v) {
+        if (!v) return '—';
+        var map = { COMPRAR: 'viés positivo', BUY: 'viés positivo', VENDER: 'viés negativo', SELL: 'viés negativo', MANTER: 'neutro', HOLD: 'neutro', NEUTRO: 'neutro', NEUTRAL: 'neutro' };
+        return map[String(v).trim().toUpperCase()] || String(v).toLowerCase();
+    }
+
     function confLabel(h) {
         if (!h || !h.available) return 'indisponível';
         var map = { high: 'alta', medium: 'média', limited: 'limitada', low: 'baixa' };
@@ -560,13 +566,13 @@ function applyScenarioRates(asset, r) {
             setText('btc-radar-updated', 'Atualização ' + ageLabel(d.generated_at));
 
             setText('btc-radar-regime', regimeLabel(regime.key));
-            setText('btc-radar-vol30', signedPct(regime.realized_vol_30d_pct, 1));
+            setText('btc-radar-vol30', Number.isFinite(Number(regime.realized_vol_30d_pct)) ? Number(regime.realized_vol_30d_pct).toFixed(1).replace('.', ',') + '%' : '—');
             setText(
                 'btc-radar-regime-detail',
                 'retorno 30d ' + signedPct(regime.return_30d_pct, 1)
             );
 
-            setText('btc-radar-consensus', consensus.verdict || '—');
+            setText('btc-radar-consensus', verdictLabel(consensus.verdict));
             setText(
                 'btc-radar-conviction',
                 'convicção ' + (Number.isFinite(Number(consensus.conviction))
