@@ -76,9 +76,10 @@ muda quando checagem nova entra, use a da saída real do script.
   validação contra o snapshot BCB, janela de 24h e carimbo com a data dos dados,
   pt-BR no multi, `lastmod` automático, fallback de USD e BTC pelo proxy, Font
   Awesome em subconjunto próprio, contraste (`--gold #806333`), tradução EN da
-  agenda. Abertos: (a) a checkout está na branch `-all`, não em `reconcile` nem
-  `master`; publicação automática que rode de outra branch reverte tudo, então
-  integrar antes. (b) Multi mobile ficou em 64 a 66 no Lighthouse local, meta 80,
+  agenda. Abertos: (a) ~~a checkout está na branch `-all`~~. Em 20/10 a checkout
+  está em `reconcile/2026-10-14`, que contém `-all` inteira (`git log
+  HEAD..fix/auditoria-20261020-all` vazio). Falta levar `reconcile` para
+  `master`, que está mais de 60 commits atrás. (b) Multi mobile ficou em 64 a 66 no Lighthouse local, meta 80,
   e o CLS desktop do multi oscila (0,001 a 0,24) sem causa achada. (c) B9a
   contraste cobre só `--gold` e o cobre do ticker, `.mp-*` e `.offer-tag` não
   foram medidos. (d) B12, cookie `sp` do TradingView gravado antes do
@@ -90,7 +91,11 @@ muda quando checagem nova entra, use a da saída real do script.
   `/health` marca `degraded`. (g) Radar: fonte citada sem uso no texto não tem
   correção determinística, só instrução no prompt. A poda heurística foi
   descartada, reprovava 4 de 7 edições reais. (h) Conferir que a próxima rotina
-  automática não sobrescreve as correções.
+  automática não sobrescreve as correções. Primeira prova parcial em 20/10, a
+  `GeopoliticaAgent` publicou às 03:48 (W43) e o gate seguiu 51/51. Os três JSON
+  de dados que as rotinas deixaram sem commit (agenda 18/10, macro 16/10,
+  geopolítica 20/10) batiam por SHA-256 com produção e foram registrados no
+  commit `512e5dc`.
 
 - **Atribuição de leads e política 2026-10-15, publicado em 15/10.** Commits
   `21f80b7` e `ea242c7`, versão `789ff049-c0da-4f09-a913-09d522d25952`
@@ -103,8 +108,8 @@ muda quando checagem nova entra, use a da saída real do script.
   política nova conta como mudança material para a seção 9 (aviso de 15 dias).
   A leitura técnica foi que não conta, porque inscrito confirmado não ganha
   atribuição e o envio ao Formspree ficou mais restrito do que antes. (b)
-  `tests/usdbrl-scenarios.test.mjs` segue fora do git, com 197 testes na árvore
-  e 192 só com arquivos versionados. (c) A prova viva do filtro de UTM no KV
+  ~~`tests/usdbrl-scenarios.test.mjs` segue fora do git.~~ Fechado em 20/10,
+  commit `4cfb1d3`, suíte do Worker com 208 pass e 0 fail. (c) A prova viva do filtro de UTM no KV
   depende de uma inscrição real, que ainda não foi autorizada.
 
 - **P1-001, crédito OpenRouter esgotado, aberto em 12/09.** A conta da chave de
