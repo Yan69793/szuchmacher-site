@@ -2343,3 +2343,9 @@ body[data-design="multiasset-research-os-v3"] .export-fab .fab-text { font-size:
     }
     body[data-design="multiasset-research-os-v3"] .export-fab { min-width: 48px; min-height: 48px; padding: 12px; }
 }
+
+/* Titulo do benchmark era cortado a direita em 320 px (34 px de fonte num card de 288). */
+@media (max-width: 400px) {
+    body[data-design="multiasset-research-os-v3"] .bench-title { font-size: 27px; overflow-wrap: anywhere; }
+    .bench-header > * { min-width: 0; }
+}
