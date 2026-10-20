@@ -11,7 +11,7 @@
         .catch(function() {
             return fetchMultiJson('/prices.php', { timeoutMs: 8000 }).then(function(p) {
                 if (!p || !p.ok || !(p.bitcoin > 0)) throw new Error('prices.php sem BTC');
-                return { bitcoin: { usd: p.bitcoin, usd_24h_change: null } };
+                return { bitcoin: { usd: p.bitcoin, usd_24h_change: null }, _defasado: !!(p.stale || p.source_state === 'stale') };
             });
         })
         .then(function(d) {
@@ -20,7 +20,7 @@
             if (!Number.isFinite(price) || price <= 0) throw new Error('Cotação BTC inválida');
             priceEl.textContent = '$ ' + price.toLocaleString('pt-BR', {maximumFractionDigits:0});
             if (changeEl && !Number.isFinite(change)) {
-                changeEl.textContent = 'variação 24h indisponível';
+                changeEl.textContent = d._defasado ? 'variação 24h indisponível · cotação defasada' : 'variação 24h indisponível';
                 changeEl.className = 'cripto-stat-change';
             } else if (changeEl) {
                 var sign = change >= 0 ? '+' : '';

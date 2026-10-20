@@ -2776,7 +2776,7 @@ async function fetchMacroIndicators() {
     // AwesomeAPI responde 429 sem CORS quando passa do limite. Qualquer falha
     // (rede, 429, corpo invalido) cai no proxy do servidor, que serve o ultimo
     // valor com procedencia declarada (PTAX de referencia diaria, nao tick).
-    let usdAwesome = 0;
+    let usdAwesome = 0, usdFonteProxy = false;
     try {
         const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL', { signal: AbortSignal.timeout(8000) });
         if (res.ok) {
@@ -2788,14 +2788,17 @@ async function fetchMacroIndicators() {
         try {
             const p = await fetchMultiJson('/api/usdbrl-scenarios', { timeoutMs: 8000 });
             const v = Number(p && p.usdbrl_bid);
-            if (v > 0) usdAwesome = v;
+            if (v > 0) { usdAwesome = v; usdFonteProxy = true; }
         } catch(e) {}
     }
     if (usdAwesome > 0) {
         usdBrlLive = usdAwesome;
         window.macroLive.usd = usdAwesome; renderResearchKpis();
         const el = document.getElementById('macro-usd');
-        if (el) el.textContent = usdAwesome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (el) {
+            el.textContent = usdAwesome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            el.title = usdFonteProxy ? 'Referência diária (PTAX), não cotação em tempo real' : '';
+        }
     }
 
     try {
