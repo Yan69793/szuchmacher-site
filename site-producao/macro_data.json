@@ -1,92 +1,89 @@
 {
-  "generated_at": "25/09/2026 às 18:11 BRT",
+  "generated_at": "16/10/2026 às 18:00 BRT",
   "data": {
-    "eyebrow": "Cenário Macro Global · Setembro 2026",
-    "alert_title": "Selic 13,75% · USD/BRL R$ 5,1795 · Copom de 4/11 define o timing do início do afrouxamento",
-    "alert_text": "Selic meta em 13,75% com o Copom em compasso de espera: o IPCA Focus de 4,9205% segue acima do teto de 4,50% e limita a velocidade dos cortes, com a mediana de mercado projetando 13,50% para o fim do ano — sinal de apenas um corte residual.\nO PTAX em R$ 5,1795 opera marginalmente abaixo da mediana Focus de R$ 5,20, sustentado por carry real próximo de 9% e por um DXY em correção gradual conforme o Fed se aproxima do fim do ciclo restritivo.\nO PIB projetado em 1,8805% desenha desaceleração ordenada: consumo das famílias resiliente, crédito caro travando investimento privado e indústria estagnada.\nO evento dominante é o Copom de 4 de novembro, que definirá o timing e o ritmo do ciclo de queda; um corte mais lento que o precificado reancoraria prêmios na parte longa da curva.\nPara a carteira, o carrego elevado permanece o principal motor de retorno, com diversificação em metais preciosos e posição tática em ativos de liquidez global como hedge de cauda.",
-    "alert_badge": "COPOM 04/NOV · FOCUS SEG",
+    "eyebrow": "Cenário Macro Brasil · Outubro 2026",
+    "alert_title": "Selic 13,75%, câmbio a R$ 4,9892 e IPCA de 5,01% no Focus: o Copom de novembro trava o espaço de alívio monetário",
+    "alert_text": "Selic meta segue em 13,75%, com o Focus embutindo apenas 25 bps de corte até dezembro (13,5%) — o menor grau de afrouxamento do ciclo.\nA mediana de IPCA em 5,0129% rompe o teto de 4,5% do regime de meta contínua, constrangimento estatutário que reduz a liberdade do Copom.\nO USD/BRL a R$ 4,9892 ainda está ~4,2% abaixo da mediana Focus de R$ 5,20 para o fim de 2026, sinalizando prêmio de risco fiscal e cambial à frente.\nO PIB projetado em 1,8549% indica desaceleração gradual, insuficiente para gerar folga desinflacionária relevante no curto prazo.\nCom juro real ex-ante próximo de 8,6%, o carrego continua entre os maiores do mundo, mas a âncora fiscal permanece a variável marginal de precificação.\nLeitura para a carteira: duration curta no meio da curva, prêmio real explícito em NTN-B longa e hedges de cauda (ouro, dólar, bitcoin) calibrados.",
+    "alert_badge": "COPOM 04/NOV",
     "canais": [
       {
         "variavel": "Petróleo (WTI/Brent)",
         "direcao": "neutral",
-        "mecanismo": "Demanda chinesa em desaceleração e estoques americanos acima da média pressionam a parte curta da curva.\nDo lado da oferta, a disciplina da OPEP+ e o prêmio geopolítico no Oriente Médio limitam quedas mais profundas.\nO resultado líquido é um Brent lateralizado, com volatilidade implícita comprimida e repasse inflacionário reduzido.\nPara o Brasil, preços estáveis sustentam o saldo comercial, mas retiram impulso das receitas de royalties e do setor de óleo e gás de alto custo."
+        "mecanismo": "Preços oscilam entre a normalização gradual da oferta do OPEP+ e um prêmio geopolítico persistente no Oriente Médio, sem tendência direcional clara.\nEstoques comerciais da OCDE seguem abaixo da média de cinco anos, o que limita quedas mais profundas mesmo com demanda em desaceleração.\nPara o Brasil, o efeito é ambíguo: sustenta o saldo comercial e o BRL, mas repõe pressão inflacionária via combustíveis quando o câmbio deprecia.\nAssimetria favorece posição tática, não estrutural, em beta de commodities."
       },
       {
         "variavel": "Inflação Global",
-        "direcao": "down",
-        "mecanismo": "A desinflação de bens já está consolidada e os serviços perdem tração com mercado de trabalho menos aquecido no G7.\nComponentes de moradia e salários convergem lentamente para a meta, sem choque relevante de demanda agregada.\nOs riscos são assimétricos: repasse tarifário e energia podem interromper a trajetória em episódios pontuais.\nImplicação: espaço para cortes graduais de juros, mas insuficiente para um ciclo agressivo de afrouxamento."
+        "direcao": "up",
+        "mecanismo": "Núcleos de serviços nos EUA e na zona do euro permanecem acima da meta, sustentados por mercado de trabalho ainda apertado.\nO IPCA projetado em 5,0129% rompe o teto do regime de meta contínua e contamina expectativas de médio prazo.\nPass-through cambial sobre bens industrializados e alimentos no atacado tende a piorar se o BRL caminhar para a mediana de R$ 5,20.\nDesinflação segue lenta e desigual, com risco de reprecificação altista das curvas em caso de choque de energia."
       },
       {
         "variavel": "Juros (Fed / BCB)",
-        "direcao": "down",
-        "mecanismo": "O Fed opera na fase final do afrouxamento, com cada corte condicionado a payrolls e núcleos de inflação.\nNo Brasil, o Copom deve iniciar o ciclo em novembro com 25 bps, ritmo lento diante do IPCA acima do teto.\nPrêmios reais elevados nos vértices longos continuam atraentes para estratégias de carrego escalonado.\nAssimetria central: inflação de serviços surpreendendo pode postergar cortes e achatar a parte curta da curva."
+        "direcao": "up",
+        "mecanismo": "O Fed mantém cortes graduais, mas o term premium segue elevado por dúvidas sobre a trajetória fiscal americana.\nNo Brasil, com IPCA acima do teto, o Copom tem pouco espaço: o Focus embute apenas 25 bps de corte até dezembro, para 13,5%.\nJuro real ex-ante de aproximadamente 8,6% é contracionista, porém convive com curva longa apertada por prêmio de risco.\nConsequência prática: custo de capital elevado, favorecendo duration curta no meio da curva e prêmio explícito na ponta longa indexada."
       },
       {
         "variavel": "PIB Global",
-        "direcao": "down",
-        "mecanismo": "O crescimento global converge para abaixo do potencial, com EUA desacelerando e China sem estímulo de grande porte.\nA Zona do Euro estabiliza em patamar baixo, sustentada por consumo, sem tração do setor industrial.\nO comércio internacional cresce abaixo do PIB, afetando exportadores de commodities líquidas.\nImpacto no Brasil: menor impulso externo, com o PIB de 1,8805% dependendo majoritariamente do consumo doméstico."
+        "direcao": "neutral",
+        "mecanismo": "EUA operam em desaceleração suave, com consumo resiliente e mercado de trabalho normalizando sem colapso.\nChina cresce apoiada em estímulo fiscal e exportações, mas a fragilidade do setor imobiliário limita o impulso sobre commodities.\nEuropa permanece o elo fraco, com indústria comprimida por custo de energia e perda de competitividade.\nPara o Brasil, cenário externo é neutro: sustenta exportações sem gerar choque de demanda agregada."
       },
       {
         "variavel": "Dólar (DXY)",
-        "direcao": "down",
-        "mecanismo": "A convergência do diferencial de juros com o Fed cortando reduz o prêmio de carregamento da moeda americana.\nEuropa e Japão normalizam política monetária, retirando suporte relativo ao DXY.\nRisco fiscal americano e o ciclo eleitoral legislativo injetam volatilidade episódica, sem alterar a direção estrutural.\nA tendência é de depreciação lenta, com suporte em janelas de aversão a risco global."
+        "direcao": "neutral",
+        "mecanismo": "O índice se estabiliza entre cortes do Fed e demanda por risco, com correlação instável ao longo do mês.\nA ausência de tendência forte no DXY transfere o prêmio cambial local para o componente idiossincrático brasileiro.\nEventos fiscais domésticos têm dominado o intraday do BRL mais do que o diferencial de juros.\nDXY sem direção definida = BRL dependente de fluxo de portfólio e de prêmio de risco local."
       },
       {
         "variavel": "Real (BRL)",
-        "direcao": "up",
-        "mecanismo": "O carry real próximo de 9% segue como principal suporte, atraindo fluxo de renda fixa e posições táticas de hedge funds.\nSaldo comercial ainda robusto e reservas internacionais elevadas reduzem a volatilidade cambial realizada.\nA mediana Focus de R$ 5,20 para o fim do ano sugere apreciação marginal frente ao PTAX atual de R$ 5,1795.\nRiscos: deterioração fiscal, ruído político ou reprecificação da curva americana revertem o quadro com rapidez."
+        "direcao": "down",
+        "mecanismo": "O Focus projeta R$ 5,20 para o fim de 2026, ~4,2% acima da PTAX atual de R$ 4,9892, o que embute depreciação esperada.\nO carrego segue atrativo (diferencial de cerca de 10 p.p. sobre o Fed), mas insuficiente para compensar risco fiscal e de dívida pública.\nFluxo comercial forte ajuda no curto prazo; saída de capital de portfólio reage a ruído político e a revisões de meta.\nAssimetria permanece para cima, com atuação do BCB restrita a disfuncionalidades de liquidez."
       },
       {
         "variavel": "Ouro",
         "direcao": "up",
-        "mecanismo": "Juros reais globais em queda reduzem o custo de oportunidade de carregar o metal sem rendimento.\nCompras contínuas de bancos centrais emergentes diversificando reservas sustentam um piso estrutural de demanda.\nO hedge geopolítico e a proteção contra inflação persistente permanecem relevantes no desenho de carteira.\nVolatilidade inferior à do bitcoin e correlação baixa com a bolsa brasileira reforçam o papel de diversificador."
+        "mecanismo": "Compras líquidas de bancos centrais, sobretudo em mercados emergentes, seguem sendo demanda estrutural, não tática.\nO metal funciona como hedge de moeda forte contra desancoragem fiscal e monetária, independentemente do juro real brasileiro.\nCorrelação baixa com a bolsa doméstica melhora o perfil risco-retorno da carteira consolidada.\nCorreções táticas são esperadas, mas a tendência de médio prazo permanece construtiva."
       },
       {
         "variavel": "Bitcoin",
         "direcao": "up",
-        "mecanismo": "A liquidez global em expansão após os cortes do Fed favorece ativos de duração longa e alta beta.\nA adoção institucional via ETFs e tesourarias corporativas amplia de forma estrutural a base de demanda.\nA volatilidade permanece 3 a 4 vezes a das bolsas desenvolvidas, exigindo dimensionamento disciplinado e rebalanceamento.\nAtenção: cripto ativos caem de forma correlacionada em eventos de estresse, reduzindo o benefício de diversificação intraclasse."
+        "mecanismo": "Fluxo institucional via ETFs e alocações de tesourarias corporativas sustenta demanda estrutural mesmo em liquidez restritiva.\nHá assimetria relevante em relação ao ciclo de liquidez global: cortes do Fed costumam favorecer o ativo com defasagem.\nVolatilidade permanece 3-4x a do ouro, exigindo dimensionamento pequeno e custódia institucional.\nFunciona como apólice de cauda para cenários de debasement monetário e estresse fiscal."
       }
     ],
     "brasil": [
       {
         "label": "SELIC e COPOM",
-        "text": "A Selic em 13,75% implica juro real ex-ante acima de 8%, patamar claramente contracionista e restritivo ao crédito.\nO IPCA Focus de 4,9205% segue acima do teto de 4,50%, com pressão concentrada em serviços e alimentação no domicílio.\nA comunicação do Copom aponta início de cortes em novembro, com 25 bps e sinalização explícita de ritmo gradual.\nA mediana Focus de 13,50% para o fim de 2026 implica um único corte residual no ano, mantendo a curva curta ancorada.\nImplicação de carteira: carrego elevado no curto prazo e prêmio ainda apertado para assumir duration longa sem escalonamento."
+        "text": "Selic meta em 13,75%, com Focus apontando 13,5% no fim de 2026 — apenas 25 bps de afrouxamento residual no ano.\nA mediana de IPCA em 5,0129% supera o teto de 4,5% da meta contínua, um constrangimento estatutário à flexibilização.\nO Copom deve sinalizar cautela: cortes adicionais dependem de desinflação de núcleos e de reancoragem das expectativas.\nA comunicação de 04/11 importa mais que a decisão em si, dado o baixo grau de liberdade do comitê.\nJuro real ex-ante próximo de 8,6% sustenta o carrego, mas não elimina o prêmio de risco embutido na curva."
       },
       {
         "label": "Câmbio e Contas Externas",
-        "text": "O PTAX em R$ 5,1795, abaixo da mediana Focus de R$ 5,20, reflete carry alto e fluxo comercial ainda favorável.\nO saldo comercial acumulado segue positivo, com importações de bens de capital mostrando recuperação modesta.\nReservas internacionais elevadas e baixa dívida externa líquida reduzem a vulnerabilidade a choques globais de liquidez.\nA conta corrente ainda deficitária exige financiamento via investimento direto, que permanece resiliente em volume.\nAssimetria relevante: qualquer deterioração fiscal transfere prêmio de risco à curva cambial de forma quase imediata."
+        "text": "PTAX em R$ 4,9892, contra mediana Focus de R$ 5,20 para o fechamento do ano — depreciação esperada de ~4,2%.\nO saldo comercial permanece robusto, sustentado por soja, minério e petróleo em patamares saudáveis.\nO déficit em conta corrente é financiado majoritariamente por investimento direto, de qualidade razoável, mas sensível a ruído fiscal.\nReservas internacionais elevadas funcionam como colchão, ainda que o mercado precifique prêmio político-fiscal crescente.\nDiferencial de juros de ~10 p.p. favorece carry trade, mas com volatilidade de BRL ainda acima da média histórica.\nCenário base: intervalo R$ 4,95-5,25, com assimetria para a banda superior."
       },
       {
         "label": "Renda Fixa — Prêmio em NTN-B e DI longo",
-        "text": "A curva de juros precifica apenas 25 bps de corte até dezembro, mantendo prêmio real elevado nos vértices longos.\nNTN-Bs com vencimento em 2035 ou além oferecem taxa real acima do que consideramos neutro de longo prazo.\nO breakeven de inflação implícito apresenta assimetria favorável para posições de carrego indexado.\nRisco principal: postergação dos cortes por inflação de serviços pressiona a marcação a mercado no curto prazo.\nEstratégia indicada: escalonamento por vértices, combinando liquidez pós-fixada curta com prêmio real nos longos."
+        "text": "Com IPCA no teto e incerteza fiscal, NTN-Bs longas oferecem prêmio real historicamente atrativo, sobretudo nos vértices 2035-2050.\nA DI longa embute prêmio de risco que tende a compressão apenas na confirmação do cenário base de desinflação gradual.\nA disputa entre carry curto (LFT e CDB de liquidez) e duration longa (NTN-B) favorece escalonamento em 2-3 tranches.\nRisco relevante: choque fiscal ou desancoragem de expectativas gera marcação a mercado adversa na ponta longa.\nPreferência por prêmio explícito de alta qualidade a crédito privado com spreads comprimidos.\nDiretriz tática: núcleo pós-fixado para liquidez e duration longa apenas com prêmio real acima da média dos últimos 3 anos."
       },
       {
         "label": "Atividade e Fiscal",
-        "text": "O PIB projetado em 1,8805% representa desaceleração frente ao ano anterior, com consumo das famílias ainda positivo.\nCrédito caro e comprometimento de renda limitam a aceleração do investimento privado no curto prazo.\nAgronegócio com safra robusta e serviços sustentam o crescimento, enquanto a indústria segue estagnada.\nO quadro fiscal é o principal vetor de risco: a meta de resultado primário depende de receitas não recorrentes.\nImplicação: o prêmio de risco fiscal mantém o juro real estrutural brasileiro acima do de pares emergentes comparáveis."
+        "text": "PIB projetado em 1,8549% em 2026, com perda de tração frente ao ano anterior — desaceleração sem recessão.\nO mercado de trabalho segue aquecido, com desemprego historicamente baixo, mas renda real perde para a inflação corrente.\nO quadro fiscal é o principal risco: a meta de primário pressupõe arrecadação que depende de crescimento que dificilmente se materializa.\nA curva longa tem respondido mais a notícias fiscais do que à ação do Banco Central — mudança relevante de regime de precificação.\nImplicação para carteira: prêmio de risco deve permanecer elevado, exigindo retorno esperado maior em qualquer ativo doméstico.\nTema de acompanhamento: qualidade do ajuste fiscal e credibilidade das metas plurianuais."
       }
     ],
     "beneficiados": [
-      "<strong>Ouro</strong> — juros reais globais em queda e compras contínuas de bancos centrais sustentam preço e proteção de cauda.",
-      "<strong>NTN-B longa (2035+)</strong> — prêmio real elevado com assimetria favorável para carrego indexado à inflação.",
-      "<strong>Bancos brasileiros large cap</strong> — carrego alto e reprecificação de spreads com o início do ciclo de queda da Selic.",
-      "<strong>Bitcoin</strong> — liquidez global em expansão e adoção institucional via ETFs ampliando a base de demanda.",
-      "<strong>Exportadoras de proteína animal</strong> — câmbio competitivo, demanda asiática estável e custo de grãos controlado.",
-      "<strong>Prata industrial</strong> — demanda fotovoltaica crescente e déficit estrutural de oferta pelo terceiro ano consecutivo.",
-      "<strong>Fundos de renda fixa pós-fixada curta</strong> — carrego de 13,75% com liquidez diária e baixa volatilidade de cota."
+      "<strong>Ouro e prata</strong> — hedge direto contra desancoragem fiscal, monetária e depreciação de moedas fiduciárias.",
+      "<strong>Exportadoras de commodities (petróleo, minério, agrícolas)</strong> — receita dolarizada e câmbio convergindo para R$ 5,20 ampliam margem em BRL.",
+      "<strong>Bancos de varejo com carteira conservadora</strong> — juro real alto amplia spread e receita de serviços, com inadimplência sob controle.",
+      "<strong>NTN-Bs 2035-2050</strong> — prêmio real historicamente elevado e proteção caso a desinflação se confirme no médio prazo.",
+      "<strong>Companhias com receita indexada à inflação e dívida em moeda forte pré-financiada</strong> — alavancagem nominal favorável em ambiente de IPCA acima de 5%."
     ],
     "penalizados": [
-      "<strong>Varejo discricionário</strong> — crédito caro comprime consumo e pressiona a alavancagem operacional das redes.",
-      "<strong>Construção civil e incorporação</strong> — financiamento imobiliário caro e comprometimento de renda das famílias.",
-      "<strong>FIIs de tijolo</strong> — taxa de desconto elevada pressiona valuations e dificulta novas captações no mercado.",
-      "<strong>Small caps sem geração de caixa</strong> — juro real acima de 8% penaliza fortemente a duration dos lucros futuros.",
-      "<strong>Prefixados longos de alto duration</strong> — risco de marcação a mercado caso os cortes do Copom sejam postergados.",
-      "<strong>Petróleo e gás de alto custo</strong> — Brent lateralizado retira suporte de preços sem compensação cambial suficiente.",
-      "<strong>Companhias alavancadas em moeda forte</strong> — apreciação apenas marginal do BRL não compensa o custo financeiro elevado."
+      "<strong>Varejo discricionário e e-commerce</strong> — crédito caro e renda real comprimida pela inflação corroem volume e margem.",
+      "<strong>Small caps domésticas alavancadas</strong> — custo de capital elevado e refinanciamento caro comprimem geração de caixa.",
+      "<strong>Incorporadoras e construtoras de alto padrão</strong> — juro real alto e cautela do consumidor com financiamento imobiliário.",
+      "<strong>Utilities intensivas em capex</strong> — taxa longa apertada eleva WACC e comprime múltiplos de avaliação.",
+      "<strong>Importadores com baixo poder de repasse</strong> — câmbio projetado a R$ 5,20 pressiona custos sem repasse integral ao preço final.",
+      "<strong>Prefixados longos sem prêmio de risco suficiente</strong> — vulneráveis a marcação adversa em choque fiscal ou de expectativas."
     ],
     "cenarios_brent": [
-      "<strong>Cenário 1 — Base, Brent entre US$ 65 e 75 (probabilidade ~55%):</strong> a disciplina da OPEP+ compensa a desaceleração da demanda chinesa, mantendo o mercado em equilíbrio apertado. A inflação de energia fica neutra, preservando espaço para cortes graduais do Fed e do Copom, com Brent sem efeito relevante sobre a curva de juros brasileira.",
-      "<strong>Cenário 2 — Baixista, Brent entre US$ 50 e 60 (probabilidade ~25%):</strong> excesso de oferta com retomada de produção fora da OPEP e demanda global fraca derruba os preços. O alívio inflacionário acelera cortes de juros e favorece duration em renda fixa, mas pressiona receitas fiscais de royalties e o resultado primário, elevando o prêmio de risco soberano.",
-      "<strong>Cenário 3 — Altista, Brent entre US$ 85 e 95 (probabilidade ~20%):</strong> escalada geopolítica no Oriente Médio ou corte abrupto de fornecimento gera prêmio de risco energético. A reaceleração inflacionária global interrompe os cortes do Fed, o DXY sobe e o BRL testa R$ 5,40–5,50, comprimindo múltiplos de renda variável doméstica e favorecendo ouro e ativos indexados à inflação."
+      "<strong>Cenário 1 — Brent a US$ 60-65 (baixa):</strong> desaceleração global mais forte combinada à normalização total dos cortes do OPEP+ derruba o petróleo. O Brasil ganha desinflação de combustíveis e algum espaço marginal do Copom, mas perde termos de troca e arrecadação; efeito líquido levemente favorável à curva curta de juros.",
+      "<strong>Cenário 2 — Brent a US$ 70-78 (base, mais provável):</strong> equilíbrio entre oferta administrada pelo cartel e demanda resiliente no Hemisfério Norte. Estabiliza Petrobras, saldo comercial e IPCA em patamar compatível com o Focus corrente, mantendo o Copom sem espaço para acelerar cortes.",
+      "<strong>Cenário 3 — Brent acima de US$ 90 (alto):</strong> escalada geopolítica no Oriente Médio com risco de bloqueio de rotas comprime a oferta. Desinflação global trava, IPCA doméstico sofre com combustíveis e o Copom perde grau de liberdade; benefício restrito a exportadoras de energia e hedges inflacionários."
     ],
     "ativos": {
       "ouro": {

@@ -1,175 +1,171 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:03:42-03:00",
+  "generated_at": "2026-10-20T03:47:45-03:00",
   "week": {
-    "iso": "2026-W42",
-    "start": "2026-10-12",
-    "end": "2026-10-18",
-    "label": "12 a 18 de outubro de 2026"
+    "iso": "2026-W43",
+    "start": "2026-10-19",
+    "end": "2026-10-25",
+    "label": "19 a 25 de outubro de 2026"
   },
-  "executive_summary": "A semana de 12 a 18 de outubro de 2026 começa com uma escalada simultânea em três frentes: o segundo ataque houthi em dois dias contra o aeroporto da capital saudita, a terceira ofensiva ucraniana contra a gigante tecnológica russa Yandex e a confirmação de um cessar-fogo de energia entre Rússia e Ucrânia anunciado pelos EUA. O mercado de petróleo já opera em regime de crise logística, com taxas de frete de petroleiros em recorde e discussão aberta sobre os limites do SPR americano, enquanto o Treasury de 10 anos em 5,244% e o ouro em US$ 4.216 sinalizam estresse persistente. Na Europa, a Polônia concentra tensões de segurança interna e externa, com prisão por plano de assassinato do primeiro-ministro Tusk e ataques com faca em escolas. A reunião do FMI e Banco Mundial em Bangkok coloca guerra e dívida alta no centro da agenda. Não houve novidade material em temas como a disputa diplomática Coreia do Sul-Ucrânia ou a nomeação do novo grão-mufti da Bósnia; esses itens permanecem apenas como contexto de baixa relevância para mercados.",
-  "disclaimer": "Material informativo e de análise geopolítica. Não constitui recomendação de investimento, compra ou venda de qualquer ativo. As informações refletem o dossiê disponível em 11 de outubro de 2026 e podem estar incompletas ou desatualizadas.",
+  "executive_summary": "A semana é dominada por choque energético e geopolítico no Oriente Médio: ataques a petroleiros elevam o Brent acima de US$ 110 e mantêm o barril acima de US$ 108, enquanto a Arábia Saudita cancela a edição 2026 do 'Davos no Deserto' em meio a ataques houthis e um ataque de mísseis a um campo no Iêmen mata 50 recrutas. Na Ucrânia, o presidente Zelenskyy relata restrições dos EUA ao compartilhamento de inteligência e falhas do Starshield, enquanto a ONU aponta aumento de vítimas civis e ataques energéticos; a UE discute China, Ucrânia e orçamento em cúpula. Nos EUA, a política interna e tecnológica ganha peso: investigação federal sobre Ilhan Omar, ordem para remover o DeepSeek de sistemas federais e sanções a cinco entidades chinesas por roubo de segredos de IA. A China protesta contra buscas no Reino Unido e negocia acordos com os EUA às vésperas da Apec de Shenzhen. Na Europa, a França vive protestos e toques de recolher, a Itália reduz o tráfego aéreo pela metade por falha de transmissão de dados e a Bulgária investiga sabotagem de Starlink na Alemanha. O Brasil entra na reta final do segundo turno com ataques pessoais, enquanto o Copom de novembro trava o espaço de alívio monetário com Selic a 13,75% e IPCA de 5,01% no Focus. Não houve novidade material em temas como a crise de neblina no Sudeste Asiático, a COP17 de biodiversidade ou a situação no Haiti; eles permanecem relevantes, mas sem desdobramento novo nesta edição.",
+  "disclaimer": "Material informativo. Não constitui recomendação de investimento, de compra ou de venda de qualquer ativo, nem aconselhamento jurídico, político ou estratégico. As análises refletem apenas as fontes citadas e a data de geração.",
   "confidence": {
     "overall": "media",
-    "nota": "A maior parte dos fatos materiais tem apenas uma fonte independente no dossiê, o que limita a confiança. Itens sem novidade material relevante para mercados foram mantidos apenas como contexto e estão explicitados no executive_summary. Nenhuma probabilidade numérica foi atribuída a cenários."
+    "nota": "A maior parte dos fatos centrais tem fonte primária única (BBC, Al Jazeera, DW, ONU News, SCMP, OilPrice), o que limita a verificação cruzada. Temas de risco elevado (Oriente Médio/energia e Rússia-Ucrânia) reúnem três ou mais fontes independentes. Itens sem novidade material — neblina no Sudeste Asiático, COP17 de biodiversidade, Haiti e eleições israelenses — foram mantidos apenas por relevância continuada e estão sinalizados no resumo executivo."
   },
   "themes": [
     {
       "id": "t1",
-      "titulo": "Escalada houthi contra infraestrutura saudita",
-      "fato": "O aeroporto da capital saudita foi atingido pelo segundo ataque houthi em dois dias, segundo a BBC, com o ministro da Saúde saudita visitando sobreviventes, conforme a Al Jazeera.",
-      "impacto_mercados": "Risco de prêmio adicional no petróleo Brent e no frete de petroleiros, já em recorde. Pressão sobre seguradoras de risco político e sobre a curva de energia.",
-      "proximo_gatilho": "Resposta militar saudita ou nova onda de ataques contra instalações de Aramco e infraestrutura portuária.",
-      "nivel_risco": "elevado",
-      "confianca": "media",
+      "titulo": "Choque energético no Golfo Pérsico: Brent acima de US$ 110 e cancelamento do 'Davos no Deserto'",
+      "fato": "Ataques a petroleiros ameaçam o suprimento do Golfo Pérsico e levam o Brent a superar US$ 110, com o barril mantendo-se acima de US$ 108; a Arábia Saudita cancela a edição 2026 do 'Davos no Deserto' em meio a ataques houthis, e um ataque de mísseis houthis a um campo no Iêmen mata 50 recrutas de segurança.",
+      "impacto_mercados": "Pressão altista sobre petróleo e derivados, risco inflacionário global e volatilidade em commodities energéticas; países dependentes de importação, como o Paquistão, já sentem desaceleração industrial pela crise do Estreito de Ormuz.",
+      "proximo_gatilho": "Novos ataques a petroleiros ou infraestrutura saudita e eventual resposta militar dos EUA ou de coalizão no Golfo.",
+      "nivel_risco": "critico",
+      "confianca": "alta",
       "sources": [
         {
-          "url": "https://www.bbc.co.uk/news/articles/cr93znyk44e1o?at_medium=RSS&at_campaign=rss",
-          "titulo": "Saudi capital airport hit by second Houthi strike in two days",
+          "url": "https://oilprice.com/Latest-Energy-News/World-News/Brent-Tops-110-as-Tanker-Attacks-Threaten-Persian-Gulf-Supply.html",
+          "titulo": "Brent Tops $110 as Tanker Attacks Threaten Persian Gulf Supply",
+          "veiculo": "OilPrice",
+          "data": "2026-10-20",
+          "tipo": "mercado"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/10/20/saudi-arabia-cancels-2026-davos-in-the-desert-amid-houthi-attacks?traffic_source=rss",
+          "titulo": "Saudi Arabia cancels 2026 ‘Davos in the Desert’ amid Houthi attacks",
+          "veiculo": "Al Jazeera",
+          "data": "2026-10-20",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cv0ld6lrr2zeo?at_medium=RSS&at_campaign=rss",
+          "titulo": "Houthi missile strike on Yemen camp kills 50 security recruits, local authorities say",
           "veiculo": "BBC News",
-          "data": "2026-10-11",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/saudi-health-minister-visits-survivors-of-deadly-riyadh-airport-attack?traffic_source=rss",
-          "titulo": "Saudi health minister visits survivors of deadly Riyadh airport attack",
-          "veiculo": "Al Jazeera",
-          "data": "2026-10-11",
-          "tipo": "primaria"
-        },
-        {
-          "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/is-the-yemen-war-entering-a-new-phase?traffic_source=rss",
-          "titulo": "Is the Yemen war entering a new phase?",
-          "veiculo": "Al Jazeera",
-          "data": "2026-10-11",
-          "tipo": "primaria"
+          "url": "https://oilprice.com/Latest-Energy-News/World-News/Pakistans-Growth-Slows-as-Hormuz-Crisis-Hits-Industry.html",
+          "titulo": "Pakistan’s Growth Slows as Hormuz Crisis Hits Industry",
+          "veiculo": "OilPrice",
+          "data": "2026-10-20",
+          "tipo": "mercado"
         }
       ]
     },
     {
       "id": "t2",
-      "titulo": "Guerra de infraestrutura digital Rússia-Ucrânia",
-      "fato": "A Ucrânia atingiu o data centre da Yandex na terceira ofensiva contra a gigante tecnológica russa, enquanto a Rússia intensifica ataques a data centres ucranianos, segundo a DW.",
-      "impacto_mercados": "Risco de interrupção de serviços digitais e de conectividade na região do Mar Negro. Pressão sobre ativos de tecnologia e infraestrutura de dados com exposição à região.",
-      "proximo_gatilho": "Novos ataques mútuos a infraestrutura crítica de dados ou anúncio de capacidade de reparo russo.",
+      "titulo": "Ucrânia: restrições de inteligência dos EUA, falhas do Starshield e ataques energéticos",
+      "fato": "Um assessor de Zelenskyy afirma à BBC que ucranianos morrem por causa da restrição dos EUA ao compartilhamento de inteligência; Zelenskyy cobra explicações sobre falhas do Starshield da SpaceX, e a ONU registra taxas de vítimas civis entre as mais letais em anos com a intensificação de ataques à energia. A UE discute Ucrânia em cúpula, enquanto Zelenskyy fala ao bloco em meio a atrito com Trump.",
+      "impacto_mercados": "Risco de escalada e de novas sanções, pressão sobre grãos e energia europeia, e volatilidade em ativos de defesa e tecnologia de satélites.",
+      "proximo_gatilho": "Mudança no fluxo de inteligência e de Starlink dos EUA para a Ucrânia e novos ataques à infraestrutura energética antes do inverno.",
       "nivel_risco": "elevado",
-      "confianca": "media",
+      "confianca": "alta",
       "sources": [
         {
-          "url": "https://www.bbc.co.uk/news/articles/cw0k0g57mk3zo?at_medium=RSS&at_campaign=rss",
-          "titulo": "Ukraine strikes Yandex data centre in third attack on Russian tech giant",
+          "url": "https://www.bbc.co.uk/news/articles/cmj47yx572z5o?at_medium=RSS&at_campaign=rss",
+          "titulo": "Ukrainians dying because US restricting intelligence sharing, Zelensky adviser tells BBC",
           "veiculo": "BBC News",
-          "data": "2026-10-11",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.dw.com/en/as-russia-steps-up-attacks-on-ukrainian-data-centers-could-ukraine-soon-be-offline/a-79582503?maca=en-rss-en-eu-2092-rdf",
-          "titulo": "As Russia steps up attacks on Ukrainian data centers, could Ukraine soon be offline?",
-          "veiculo": "Deutsche Welle",
-          "data": "2026-10-11",
+          "url": "https://www.aljazeera.com/video/newsfeed/2026/10/20/zelenskyy-seeks-answers-to-why-spacex-starshield-defence-is-failing?traffic_source=rss",
+          "titulo": "Zelenskyy seeks answers to why SpaceX Starshield defence is failing",
+          "veiculo": "Al Jazeera",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.dw.com/en/who-are-the-ukrainian-volunteers-under-russian-command/a-79629555?maca=en-rss-en-eu-2092-rdf",
-          "titulo": "Who are the Ukrainian 'volunteers' under Russian command?",
+          "url": "https://news.un.org/feed/view/en/story/2026/10/1168614",
+          "titulo": "Ukraine: Civilian casualty rates among ‘deadliest’ in years, as energy attacks intensify",
+          "veiculo": "ONU News",
+          "data": "2026-10-20",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.dw.com/en/ukrainian-president-zelenskyy-speaks-at-eu-summit-amid-spat-with-donald-trump/a-79684340?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Ukrainian President Zelenskyy speaks at EU summit amid spat with Donald Trump",
           "veiculo": "Deutsche Welle",
-          "data": "2026-10-11",
+          "data": "2026-10-20",
           "tipo": "primaria"
         }
       ]
     },
     {
       "id": "t3",
-      "titulo": "Cessar-fogo de energia Rússia-Ucrânia anunciado pelos EUA",
-      "fato": "Trump anunciou um cessar-fogo de energia entre Rússia e Ucrânia, recebido com boas-vindas por Zelenskyy, segundo a DW e a Al Jazeera. Um senador republicano questiona a legalidade de um acordo de diesel com a Rússia.",
-      "impacto_mercados": "Alívio potencial no prêmio de risco energético europeu, mas incerteza jurídica nos EUA pode limitar o efeito. Impacto direto em diesel e gás natural europeus.",
-      "proximo_gatilho": "Implementação efetiva do cessar-fogo ou contestação legal no Congresso americano.",
-      "nivel_risco": "moderado",
+      "titulo": "Tensão tecnológica EUA-China: DeepSeek, sanções por segredos de IA e negociações para a Apec",
+      "fato": "Os EUA ordenam a remoção do DeepSeek de sistemas federais por riscos de segurança nacional e sancionam cinco entidades chinesas por roubo de segredos comerciais de IA ligados a um ex-engenheiro do Google. Em paralelo, negociadores dos EUA e da China correm para fechar acordos concretos antes da Apec de Shenzhen, e Trump diz estar aberto a encontrar Xi e Putin na China para conversas nucleares.",
+      "impacto_mercados": "Volatilidade em semicondutores e tecnologia, risco de novas restrições a empresas chinesas e possível alívio tarifário se a Apec produzir acordos.",
+      "proximo_gatilho": "Resultado das negociações antes da Apec de Shenzhen e eventuais novas sanções ou listas de entidades.",
+      "nivel_risco": "elevado",
       "confianca": "media",
       "sources": [
         {
-          "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/zelenskyy-welcomes-us-announced-energy-ceasefire?traffic_source=rss",
-          "titulo": "Zelenskyy welcomes US-announced energy ceasefire",
-          "veiculo": "Al Jazeera",
-          "data": "2026-10-11",
+          "url": "https://www.scmp.com/news/us/article/3371431/us-orders-deepseek-removed-federal-systems-citing-national-security-risks?utm_source=rss_feed",
+          "titulo": "US orders DeepSeek removed from federal systems, citing national security risks",
+          "veiculo": "South China Morning Post",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.dw.com/en/trump-claims-russia-and-ukraine-agreed-to-energy-ceasefire/a-79634509?maca=en-rss-en-eu-2092-rdf",
-          "titulo": "Trump claims Russia and Ukraine agreed to 'energy ceasefire'",
-          "veiculo": "Deutsche Welle",
-          "data": "2026-10-11",
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3371434/us-sanctions-5-chinese-entities-over-ex-google-engineers-ai-trade-secrets-theft?utm_source=rss_feed",
+          "titulo": "US sanctions 5 Chinese entities over ex-Google engineer’s AI trade secrets theft",
+          "veiculo": "South China Morning Post",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.aljazeera.com/news/2026/10/11/republican-senator-says-trump-diesel-agreement-with-russia-may-be-illegal?traffic_source=rss",
-          "titulo": "Republican senator says Trump diesel agreement with Russia may be illegal",
-          "veiculo": "Al Jazeera",
-          "data": "2026-10-11",
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3371413/us-china-negotiators-race-nail-down-concrete-deals-shenzhen-apec-looms?utm_source=rss_feed",
+          "titulo": "US-China negotiators race to nail down concrete deals as Shenzhen Apec looms",
+          "veiculo": "South China Morning Post",
+          "data": "2026-10-20",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.scmp.com/news/us/article/3371428/trump-says-hes-open-xi-putin-meeting-china-nuclear-talks?utm_source=rss_feed",
+          "titulo": "Trump says he’s open to meeting Xi and Putin in China for nuclear talks",
+          "veiculo": "South China Morning Post",
+          "data": "2026-10-20",
           "tipo": "primaria"
         }
       ]
     },
     {
       "id": "t4",
-      "titulo": "Crise logística do petróleo e esgotamento do SPR",
-      "fato": "Taxas de frete de petroleiros atingem recorde e discussões sobre os limites do SPR americano ganham destaque, com a produção recorde de crude não resolvendo a crise de diesel nos EUA, segundo a OilPrice.",
-      "impacto_mercados": "Curva de petróleo em backwardation acentuada, prêmio de diesel elevado e risco de esgotamento da última reserva de segurança global. Impacto direto em inflação e custos de transporte.",
-      "proximo_gatilho": "Anúncio de liberação emergencial de reservas ou novo choque de oferta no Golfo.",
-      "nivel_risco": "elevado",
-      "confianca": "media",
-      "sources": [
-        {
-          "url": "https://oilprice.com/Energy/Energy-General/Tanker-Rates-Soar-to-Record-as-Oil-Crisis-Becomes-Shipping-Crisis.html",
-          "titulo": "Tanker Rates Soar to Record as Oil Crisis Becomes Shipping Crisis",
-          "veiculo": "OilPrice",
-          "data": "2026-10-11",
-          "tipo": "mercado"
-        },
-        {
-          "url": "https://oilprice.com/Energy/Crude-Oil/Emergency-Oil-Releases-Risk-Draining-the-Worlds-Last-Supply-Cushion.html",
-          "titulo": "Emergency Oil Releases Risk Draining the World’s Last Supply Cushion",
-          "veiculo": "OilPrice",
-          "data": "2026-10-11",
-          "tipo": "mercado"
-        },
-        {
-          "url": "https://oilprice.com/Energy/Crude-Oil/Why-Record-Crude-Output-Cant-Solve-Americas-Diesel-Crisis.html",
-          "titulo": "Why Record Crude Output Can’t Solve America’s Diesel Crisis",
-          "veiculo": "OilPrice",
-          "data": "2026-10-11",
-          "tipo": "mercado"
-        }
-      ]
-    },
-    {
-      "id": "t5",
-      "titulo": "Instabilidade política e de segurança na Polônia",
-      "fato": "A Polônia deteve um suspeito de planejar o assassinato do primeiro-ministro Tusk e registrou o terceiro ataque com faca em escola em uma semana, com Tusk atribuindo a violência à glorificação online.",
-      "impacto_mercados": "Risco de prêmio em ativos poloneses e de pressão sobre o zloty. Impacto limitado em mercados globais, mas relevante para a percepção de risco na Europa Central.",
-      "proximo_gatilho": "Novos incidentes de segurança ou desdobramentos judiciais do plano de assassinato.",
+      "titulo": "Instabilidade política na Europa: protestos na França, crise aérea na Itália e sabotagem de Starlink",
+      "fato": "Cidades francesas amanhecem calmas após toques de recolher impostos para conter a violência, mas protestos nacionais continuam com confrontos entre manifestantes e polícia em meio à polarização social. A Itália reduz o tráfego aéreo pela metade por problema de transmissão de dados, e a Bulgária busca suspeitos na Alemanha após sabotagem de Starlink.",
+      "impacto_mercados": "Risco de paralisia logística e de transporte na Europa, pressão sobre ativos franceses e italianos e atenção a infraestrutura crítica de comunicações.",
+      "proximo_gatilho": "Duração dos toques de recolher na França, normalização do controle aéreo italiano e desdobramento da investigação de sabotagem.",
       "nivel_risco": "moderado",
       "confianca": "media",
       "sources": [
         {
-          "url": "https://www.bbc.co.uk/news/articles/c6n9rvynl5p5o?at_medium=RSS&at_campaign=rss",
-          "titulo": "Poland detains man suspected of planning assassination of PM Tusk",
+          "url": "https://www.bbc.co.uk/news/articles/cw5yn5e8mezvo?at_medium=RSS&at_campaign=rss",
+          "titulo": "French cities calm overnight after curfews imposed to quell violence, PM says",
           "veiculo": "BBC News",
-          "data": "2026-10-11",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.bbc.co.uk/news/articles/ckp8gyd65z2go?at_medium=RSS&at_campaign=rss",
-          "titulo": "Poland stabbings driven by online glorification of violence, Tusk says",
-          "veiculo": "BBC News",
-          "data": "2026-10-11",
+          "url": "https://www.dw.com/en/france-protesters-clash-with-police-in-nationwide-protests-amid-rising-social-polarization/a-79685584?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "France: Protesters clash with police in nationwide protests, amid rising social polarization",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-10-20",
           "tipo": "primaria"
         },
         {
-          "url": "https://www.bbc.co.uk/news/articles/cv8ezd246z1wo?at_medium=RSS&at_campaign=rss",
-          "titulo": "Woman injures three people in third Poland school knife attack in a week",
-          "veiculo": "BBC News",
-          "data": "2026-10-11",
+          "url": "https://www.dw.com/en/italy-cuts-air-traffic-in-half-amid-data-transmission-issue/a-79678133?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Italy cuts air traffic in half amid data transmission issue",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-10-20",
+          "tipo": "primaria"
+        },
+        {
+          "url": "https://www.dw.com/en/bulgaria-seeks-suspects-in-germany-after-starlink-sabotage/a-79706745?maca=en-rss-en-eu-2092-rdf",
+          "titulo": "Bulgaria seeks suspects in Germany after Starlink sabotage",
+          "veiculo": "Deutsche Welle",
+          "data": "2026-10-20",
           "tipo": "primaria"
         }
       ]
@@ -177,40 +173,39 @@
   ],
   "regions": {
     "panorama_global": {
-      "titulo": "Panorama Global",
-      "resumo": "A semana combina escalada militar no Oriente Médio, guerra de infraestrutura digital entre Rússia e Ucrânia e um cessar-fogo de energia ainda não implementado. O mercado de petróleo opera em regime de crise logística, com frete em recorde e discussão sobre limites do SPR. A reunião do FMI e Banco Mundial em Bangkok coloca guerra e dívida alta no centro da agenda.",
+      "titulo": "Panorama global",
+      "resumo": "A semana combina choque energético no Golfo Pérsico, guerra na Ucrânia com restrições de inteligência dos EUA e tensão tecnológica EUA-China às vésperas da Apec de Shenzhen. Na Europa, instabilidade política e falhas de infraestrutura; no Brasil, risco eleitoral e juros altos.",
       "teses": [
         {
-          "fato": "Segundo ataque houthi em dois dias contra o aeroporto da capital saudita, terceira ofensiva ucraniana contra a Yandex e anúncio de cessar-fogo de energia entre Rússia e Ucrânia.",
-          "interpretacao": "O ambiente geopolítico está mais fragmentado e com múltiplos focos simultâneos de escalada, elevando o prêmio de risco em energia e logística.",
-          "cenario_base": "Manutenção da escalada controlada, com cessar-fogo de energia parcialmente implementado e prêmio de risco persistente no petróleo.",
-          "risco_alternativo": "Expansão do conflito no Oriente Médio ou colapso do cessar-fogo de energia, com choque adicional nos preços de energia.",
+          "fato": "Brent acima de US$ 110 por ataques a petroleiros, cancelamento do 'Davos no Deserto' e ataque houthi no Iêmen.",
+          "interpretacao": "O prêmio de risco geopolítico no Golfo se sobrepõe aos fundamentos de oferta e demanda, com risco de inflação global.",
+          "cenario_base": "Petróleo elevado e volátil, com países importadores ajustando crescimento para baixo.",
+          "risco_alternativo": "Fechamento parcial do Estreito de Ormuz e salto adicional do Brent.",
           "gatilhos": [
-            "Resposta militar saudita",
-            "Implementação do cessar-fogo de energia",
-            "Comunicado do FMI em Bangkok"
+            "Novos ataques a petroleiros",
+            "Resposta militar no Golfo"
           ],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
             {
-              "url": "https://www.bbc.co.uk/news/articles/cr93znyk44e1o?at_medium=RSS&at_campaign=rss",
-              "titulo": "Saudi capital airport hit by second Houthi strike in two days",
-              "veiculo": "BBC News",
-              "data": "2026-10-11",
-              "tipo": "primaria"
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Brent-Tops-110-as-Tanker-Attacks-Threaten-Persian-Gulf-Supply.html",
+              "titulo": "Brent Tops $110 as Tanker Attacks Threaten Persian Gulf Supply",
+              "veiculo": "OilPrice",
+              "data": "2026-10-20",
+              "tipo": "mercado"
             },
             {
-              "url": "https://www.dw.com/en/trump-claims-russia-and-ukraine-agreed-to-energy-ceasefire/a-79634509?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "Trump claims Russia and Ukraine agreed to 'energy ceasefire'",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-10-11",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.aljazeera.com/news/2026/10/11/war-and-high-debt-to-dominate-imf-world-bank-meetings-in-bangkok?traffic_source=rss",
-              "titulo": "War and high debt to dominate IMF-World Bank meetings in Bangkok",
+              "url": "https://www.aljazeera.com/news/2026/10/20/saudi-arabia-cancels-2026-davos-in-the-desert-amid-houthi-attacks?traffic_source=rss",
+              "titulo": "Saudi Arabia cancels 2026 ‘Davos in the Desert’ amid Houthi attacks",
               "veiculo": "Al Jazeera",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
+              "tipo": "primaria"
+            },
+            {
+              "url": "https://www.bbc.co.uk/news/articles/cv0ld6lrr2zeo?at_medium=RSS&at_campaign=rss",
+              "titulo": "Houthi missile strike on Yemen camp kills 50 security recruits, local authorities say",
+              "veiculo": "BBC News",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -219,39 +214,32 @@
     },
     "eua": {
       "titulo": "Estados Unidos",
-      "resumo": "O Departamento de Justiça investiga redes de TV por cobertura do pool de Trump, enquanto um senador republicano questiona a legalidade do acordo de diesel com a Rússia. A crise de diesel persiste apesar da produção recorde de crude, e o SPR está no centro do debate energético.",
+      "resumo": "A política interna e tecnológica ganha peso: investigação federal sobre Ilhan Omar criticada por Obama, ordem para remover o DeepSeek de sistemas federais e sanções a cinco entidades chinesas por segredos de IA. Trump sinaliza abertura para encontro com Xi e Putin na China.",
       "teses": [
         {
-          "fato": "Departamento de Justiça investiga redes de TV por cobertura do pool de Trump e senador republicano questiona legalidade do acordo de diesel com a Rússia.",
-          "interpretacao": "A pressão política sobre a mídia e a incerteza jurídica sobre acordos energéticos com a Rússia adicionam ruído regulatório e risco de execução.",
-          "cenario_base": "Investigação avança sem impacto imediato em mercados, mas mantém incerteza sobre o acordo de diesel.",
-          "risco_alternativo": "Contestação legal bem-sucedida do acordo de diesel, com impacto no fluxo de diesel para os EUA.",
+          "fato": "EUA ordenam remoção do DeepSeek de sistemas federais e sancionam cinco entidades chinesas por roubo de segredos de IA.",
+          "interpretacao": "A segurança nacional tecnológica se consolida como eixo da política externa dos EUA, com impacto em cadeias de tecnologia.",
+          "cenario_base": "Restrições setoriais pontuais e negociação paralela antes da Apec.",
+          "risco_alternativo": "Ampliação das listas de entidades e retaliação chinesa.",
           "gatilhos": [
-            "Decisão judicial sobre o acordo de diesel",
-            "Novos desdobramentos da investigação do Departamento de Justiça"
+            "Novas sanções",
+            "Acordos antes da Apec"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://www.bbc.co.uk/news/articles/c9vgregzk6gro?at_medium=RSS&at_campaign=rss",
-              "titulo": "US justice department investigates TV networks over Trump pool coverage",
-              "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "url": "https://www.scmp.com/news/us/article/3371431/us-orders-deepseek-removed-federal-systems-citing-national-security-risks?utm_source=rss_feed",
+              "titulo": "US orders DeepSeek removed from federal systems, citing national security risks",
+              "veiculo": "South China Morning Post",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.aljazeera.com/news/2026/10/11/republican-senator-says-trump-diesel-agreement-with-russia-may-be-illegal?traffic_source=rss",
-              "titulo": "Republican senator says Trump diesel agreement with Russia may be illegal",
-              "veiculo": "Al Jazeera",
-              "data": "2026-10-11",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3371434/us-sanctions-5-chinese-entities-over-ex-google-engineers-ai-trade-secrets-theft?utm_source=rss_feed",
+              "titulo": "US sanctions 5 Chinese entities over ex-Google engineer’s AI trade secrets theft",
+              "veiculo": "South China Morning Post",
+              "data": "2026-10-20",
               "tipo": "primaria"
-            },
-            {
-              "url": "https://oilprice.com/Energy/Crude-Oil/Why-Record-Crude-Output-Cant-Solve-Americas-Diesel-Crisis.html",
-              "titulo": "Why Record Crude Output Can’t Solve America’s Diesel Crisis",
-              "veiculo": "OilPrice",
-              "data": "2026-10-11",
-              "tipo": "mercado"
             }
           ]
         }
@@ -259,38 +247,38 @@
     },
     "europa": {
       "titulo": "Europa",
-      "resumo": "A Polônia detém suspeito de planejar o assassinato do primeiro-ministro Tusk e registra o terceiro ataque com faca em escola em uma semana. Macron e Steinmeier tentam reanimar os laços franco-alemães, enquanto a França enfrenta crise escolar e a Bulgária é apontada como possível elo fraco na defesa do Mar Negro.",
+      "resumo": "França vive protestos nacionais e toques de recolher; Itália reduz o tráfego aéreo pela metade por falha de transmissão de dados; Bulgária investiga sabotagem de Starlink na Alemanha. A UE discute China, Ucrânia e orçamento em cúpula.",
       "teses": [
         {
-          "fato": "Polônia detém suspeito de planejar assassinato de Tusk e registra terceiro ataque com faca em escola em uma semana.",
-          "interpretacao": "A combinação de ameaça política direta e violência social eleva o risco de instabilidade na Europa Central, com potencial contágio para a percepção de risco regional.",
-          "cenario_base": "Tensões permanecem contidas, com reforço de segurança e sem impacto significativo em mercados.",
-          "risco_alternativo": "Novo incidente grave ou instabilidade política ampliada na Polônia, com pressão sobre o zloty e ativos regionais.",
+          "fato": "Protestos na França, corte de tráfego aéreo na Itália e investigação de sabotagem de Starlink.",
+          "interpretacao": "A instabilidade política e as falhas de infraestrutura crítica elevam o prêmio de risco europeu.",
+          "cenario_base": "Normalização gradual com custo logístico e político.",
+          "risco_alternativo": "Prolongamento dos protestos e novos atos de sabotagem.",
           "gatilhos": [
-            "Novos incidentes de segurança na Polônia",
-            "Desdobramentos judiciais do plano de assassinato"
+            "Duração dos toques de recolher",
+            "Normalização do controle aéreo"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://www.bbc.co.uk/news/articles/c6n9rvynl5p5o?at_medium=RSS&at_campaign=rss",
-              "titulo": "Poland detains man suspected of planning assassination of PM Tusk",
+              "url": "https://www.bbc.co.uk/news/articles/cw5yn5e8mezvo?at_medium=RSS&at_campaign=rss",
+              "titulo": "French cities calm overnight after curfews imposed to quell violence, PM says",
               "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.bbc.co.uk/news/articles/ckp8gyd65z2go?at_medium=RSS&at_campaign=rss",
-              "titulo": "Poland stabbings driven by online glorification of violence, Tusk says",
-              "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "url": "https://www.dw.com/en/italy-cuts-air-traffic-in-half-amid-data-transmission-issue/a-79678133?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Italy cuts air traffic in half amid data transmission issue",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.bbc.co.uk/news/articles/cv8ezd246z1wo?at_medium=RSS&at_campaign=rss",
-              "titulo": "Woman injures three people in third Poland school knife attack in a week",
-              "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "url": "https://www.dw.com/en/bulgaria-seeks-suspects-in-germany-after-starlink-sabotage/a-79706745?maca=en-rss-en-eu-2092-rdf",
+              "titulo": "Bulgaria seeks suspects in Germany after Starlink sabotage",
+              "veiculo": "Deutsche Welle",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -299,38 +287,31 @@
     },
     "china_asia": {
       "titulo": "China e Ásia",
-      "resumo": "A China busca ampliar laços de construção naval com a Rússia, enquanto a província de Zhejiang pede limites ao poder das gigantes de tecnologia sobre o tráfego online. Taiwan enfrenta escassez de efetivo militar e a UE debate como conter Pequim sem alienar parceiros.",
+      "resumo": "A China protesta contra buscas e apreensões de celulares no Reino Unido e negocia acordos com os EUA antes da Apec de Shenzhen. Os EUA emitem alerta de 'detenção indevida' para viajantes à China, e Honduras mira lojas chinesas enquanto mantém promessa sobre Taiwan.",
       "teses": [
         {
-          "fato": "Assessor de Putin busca ampliar laços de construção naval com a China, e Zhejiang pede limites ao poder das gigantes de tecnologia sobre tráfego online.",
-          "interpretacao": "A cooperação naval Rússia-China avança em áreas sensíveis, enquanto a regulação doméstica chinesa de tecnologia segue ativa, com implicações para o setor digital.",
-          "cenario_base": "Cooperação naval avança gradualmente e regulação de tecnologia se mantém em nível provincial, sem choque imediato.",
-          "risco_alternativo": "Sanções secundárias dos EUA ou da UE contra estaleiros chineses, com impacto em cadeias de suprimento.",
+          "fato": "China protesta contra buscas no Reino Unido e negocia acordos com os EUA antes da Apec.",
+          "interpretacao": "A competição tecnológica e de espionagem convive com a busca de acordos concretos.",
+          "cenario_base": "Acordos parciais na Apec com manutenção de restrições setoriais.",
+          "risco_alternativo": "Rompimento das negociações e escalada de sanções.",
           "gatilhos": [
-            "Anúncio de novos acordos navais Rússia-China",
-            "Novas regras provinciais sobre tráfego online"
+            "Resultado da Apec",
+            "Novas medidas de retaliação"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://www.scmp.com/news/china/diplomacy/article/3370497/putin-aide-looks-boost-russian-shipbuilding-ties-china-during-visit?utm_source=rss_feed",
-              "titulo": "Putin aide looks to boost Russian shipbuilding ties with China during visit",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3371459/china-protests-uk-border-searches-phone-seizures-amid-growing-espionage-tensions?utm_source=rss_feed",
+              "titulo": "China protests UK border searches, phone seizures amid growing espionage tensions",
               "veiculo": "South China Morning Post",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.scmp.com/news/china/politics/article/3370443/chinas-zhejiang-province-calls-limit-tech-giants-power-over-online-traffic?utm_source=rss_feed",
-              "titulo": "China’s Zhejiang province calls to limit tech giants’ power over online traffic",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3371413/us-china-negotiators-race-nail-down-concrete-deals-shenzhen-apec-looms?utm_source=rss_feed",
+              "titulo": "US-China negotiators race to nail down concrete deals as Shenzhen Apec looms",
               "veiculo": "South China Morning Post",
-              "data": "2026-10-11",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.scmp.com/news/china/military/article/3370477/how-taiwans-military-manpower-shortage-undermining-its-ability-fight?utm_source=rss_feed",
-              "titulo": "How Taiwan’s military manpower shortage is undermining its ability to fight",
-              "veiculo": "South China Morning Post",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -339,38 +320,38 @@
     },
     "oriente_medio": {
       "titulo": "Oriente Médio",
-      "resumo": "O aeroporto da capital saudita foi atingido pelo segundo ataque houthi em dois dias, com o ministro da Saúde saudita visitando sobreviventes. Israel aprofunda a 'Linha Amarela' em Gaza, palestinos fogem de ataques e famílias sírias pedem libertação de detidos por Israel.",
+      "resumo": "Ataques houthis matam 50 recrutas no Iêmen e levam a Arábia Saudita a cancelar o 'Davos no Deserto'. A ONU relata ataques israelenses na Cisjordânia e em Gaza, com corte de financiamento deixando meio milhão sem assistência alimentar. Israel realiza eleições em 2026.",
       "teses": [
         {
-          "fato": "Segundo ataque houthi em dois dias contra o aeroporto da capital saudita, com visita do ministro da Saúde aos sobreviventes.",
-          "interpretacao": "A escalada houthi contra infraestrutura civil saudita eleva o risco de retaliação e de novo choque no prêmio de risco energético regional.",
-          "cenario_base": "Escalada controlada, com ataques intermitentes e sem interrupção prolongada da produção de petróleo.",
-          "risco_alternativo": "Ataque direto a instalações de Aramco ou bloqueio de rotas no Mar Vermelho, com choque nos preços do petróleo.",
+          "fato": "Ataque houthi no Iêmen e cancelamento do evento saudita; crise humanitária em Gaza e na Cisjordânia.",
+          "interpretacao": "O risco geopolítico regional se materializa em segurança de suprimentos e em pressão humanitária.",
+          "cenario_base": "Manutenção de ataques esporádicos e prêmio de risco elevado.",
+          "risco_alternativo": "Escalada regional com envolvimento direto de mais atores.",
           "gatilhos": [
-            "Resposta militar saudita",
-            "Novos ataques houthi a infraestrutura portuária"
+            "Novos ataques houthis",
+            "Resposta saudita ou de coalizão"
           ],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
             {
-              "url": "https://www.bbc.co.uk/news/articles/cr93znyk44e1o?at_medium=RSS&at_campaign=rss",
-              "titulo": "Saudi capital airport hit by second Houthi strike in two days",
+              "url": "https://www.bbc.co.uk/news/articles/cv0ld6lrr2zeo?at_medium=RSS&at_campaign=rss",
+              "titulo": "Houthi missile strike on Yemen camp kills 50 security recruits, local authorities say",
               "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/saudi-health-minister-visits-survivors-of-deadly-riyadh-airport-attack?traffic_source=rss",
-              "titulo": "Saudi health minister visits survivors of deadly Riyadh airport attack",
+              "url": "https://www.aljazeera.com/news/2026/10/20/saudi-arabia-cancels-2026-davos-in-the-desert-amid-houthi-attacks?traffic_source=rss",
+              "titulo": "Saudi Arabia cancels 2026 ‘Davos in the Desert’ amid Houthi attacks",
               "veiculo": "Al Jazeera",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/is-the-yemen-war-entering-a-new-phase?traffic_source=rss",
-              "titulo": "Is the Yemen war entering a new phase?",
-              "veiculo": "Al Jazeera",
-              "data": "2026-10-11",
+              "url": "https://news.un.org/feed/view/en/story/2026/10/1168622",
+              "titulo": "Gaza: Funding cuts leave half a million without food assistance",
+              "veiculo": "ONU News",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -379,38 +360,38 @@
     },
     "russia_ucrania": {
       "titulo": "Rússia e Ucrânia",
-      "resumo": "A Ucrânia atingiu o data centre da Yandex na terceira ofensiva contra a gigante tecnológica russa, enquanto a Rússia intensifica ataques a data centres ucranianos. Trump anunciou um cessar-fogo de energia entre os dois países, recebido com boas-vindas por Zelenskyy, mas contestado por um senador republicano.",
+      "resumo": "Zelenskyy relata restrições dos EUA ao compartilhamento de inteligência e falhas do Starshield; a ONU aponta vítimas civis entre as mais letais em anos com ataques à energia. A UE discute a Ucrânia em cúpula e Zelenskyy fala ao bloco em meio a atrito com Trump.",
       "teses": [
         {
-          "fato": "Ucrânia atinge data centre da Yandex na terceira ofensiva contra a gigante tecnológica russa, e Rússia intensifica ataques a data centres ucranianos.",
-          "interpretacao": "A guerra de infraestrutura digital se intensifica, com risco de interrupção de serviços e conectividade na região do Mar Negro.",
-          "cenario_base": "Ataques mútuos continuam, com interrupções localizadas e sem colapso total da conectividade.",
-          "risco_alternativo": "Colapso da infraestrutura digital ucraniana, com impacto em serviços essenciais e na economia.",
+          "fato": "Restrições de inteligência dos EUA, falhas do Starshield e ataques energéticos elevam vítimas civis.",
+          "interpretacao": "A dependência ucraniana de tecnologia e inteligência dos EUA se torna vulnerabilidade estratégica.",
+          "cenario_base": "Manutenção do apoio com restrições e aumento de ataques à infraestrutura no inverno.",
+          "risco_alternativo": "Suspensão mais ampla do apoio dos EUA e escalada russa.",
           "gatilhos": [
-            "Novos ataques a data centres",
-            "Anúncio de capacidade de reparo russo"
+            "Mudança no fluxo de inteligência",
+            "Novos ataques à energia"
           ],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
             {
-              "url": "https://www.bbc.co.uk/news/articles/cw0k0g57mk3zo?at_medium=RSS&at_campaign=rss",
-              "titulo": "Ukraine strikes Yandex data centre in third attack on Russian tech giant",
+              "url": "https://www.bbc.co.uk/news/articles/cmj47yx572z5o?at_medium=RSS&at_campaign=rss",
+              "titulo": "Ukrainians dying because US restricting intelligence sharing, Zelensky adviser tells BBC",
               "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.dw.com/en/as-russia-steps-up-attacks-on-ukrainian-data-centers-could-ukraine-soon-be-offline/a-79582503?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "As Russia steps up attacks on Ukrainian data centers, could Ukraine soon be offline?",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-10-11",
+              "url": "https://www.aljazeera.com/video/newsfeed/2026/10/20/zelenskyy-seeks-answers-to-why-spacex-starshield-defence-is-failing?traffic_source=rss",
+              "titulo": "Zelenskyy seeks answers to why SpaceX Starshield defence is failing",
+              "veiculo": "Al Jazeera",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.dw.com/en/trump-claims-russia-and-ukraine-agreed-to-energy-ceasefire/a-79634509?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "Trump claims Russia and Ukraine agreed to 'energy ceasefire'",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-10-11",
+              "url": "https://news.un.org/feed/view/en/story/2026/10/1168614",
+              "titulo": "Ukraine: Civilian casualty rates among ‘deadliest’ in years, as energy attacks intensify",
+              "veiculo": "ONU News",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -418,39 +399,39 @@
       ]
     },
     "energia_commodities": {
-      "titulo": "Energia e Commodities",
-      "resumo": "Taxas de frete de petroleiros atingem recorde e discussões sobre os limites do SPR americano ganham destaque. A produção recorde de crude não resolve a crise de diesel nos EUA, e a Austrália aprova extensão de carvão apesar dos compromissos de Paris.",
+      "titulo": "Energia e commodities",
+      "resumo": "Brent acima de US$ 110 e barril acima de US$ 108 por ataques a petroleiros; a crise do Estreito de Ormuz desacelera a indústria do Paquistão. O Catar oferece ao Líbano duas usinas a gás e 20 anos de GNL via Síria, e o Canadá vê inflação a 3,1% com alta de 58% no óleo combustível.",
       "teses": [
         {
-          "fato": "Taxas de frete de petroleiros em recorde e discussão sobre limites do SPR americano, com produção recorde de crude não resolvendo a crise de diesel.",
-          "interpretacao": "O mercado de petróleo opera em regime de crise logística, com prêmio de frete elevado e risco de esgotamento da última reserva de segurança global.",
-          "cenario_base": "Prêmio de frete permanece elevado, com volatilidade nos preços de diesel e crude.",
-          "risco_alternativo": "Esgotamento do SPR ou novo choque de oferta no Golfo, com salto nos preços de energia.",
+          "fato": "Brent acima de US$ 110, desaceleração no Paquistão e oferta de GNL do Catar ao Líbano.",
+          "interpretacao": "O choque de oferta no Golfo redesenha rotas e contratos de energia.",
+          "cenario_base": "Preços elevados e realocação de fluxos de GNL.",
+          "risco_alternativo": "Interrupção física de suprimentos e salto adicional de preços.",
           "gatilhos": [
-            "Anúncio de liberação emergencial de reservas",
-            "Novo choque de oferta no Golfo"
+            "Novos ataques",
+            "Acordos de GNL alternativos"
           ],
-          "confianca": "media",
+          "confianca": "alta",
           "sources": [
             {
-              "url": "https://oilprice.com/Energy/Energy-General/Tanker-Rates-Soar-to-Record-as-Oil-Crisis-Becomes-Shipping-Crisis.html",
-              "titulo": "Tanker Rates Soar to Record as Oil Crisis Becomes Shipping Crisis",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Brent-Tops-110-as-Tanker-Attacks-Threaten-Persian-Gulf-Supply.html",
+              "titulo": "Brent Tops $110 as Tanker Attacks Threaten Persian Gulf Supply",
               "veiculo": "OilPrice",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "mercado"
             },
             {
-              "url": "https://oilprice.com/Energy/Crude-Oil/Emergency-Oil-Releases-Risk-Draining-the-Worlds-Last-Supply-Cushion.html",
-              "titulo": "Emergency Oil Releases Risk Draining the World’s Last Supply Cushion",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Pakistans-Growth-Slows-as-Hormuz-Crisis-Hits-Industry.html",
+              "titulo": "Pakistan’s Growth Slows as Hormuz Crisis Hits Industry",
               "veiculo": "OilPrice",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "mercado"
             },
             {
-              "url": "https://oilprice.com/Energy/Crude-Oil/Why-Record-Crude-Output-Cant-Solve-Americas-Diesel-Crisis.html",
-              "titulo": "Why Record Crude Output Can’t Solve America’s Diesel Crisis",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Qatar-Offers-Lebanon-2-Gas-Plants-and-20-Years-of-LNG-Piped-Through-Syria.html",
+              "titulo": "Qatar Offers Lebanon 2 Gas Plants and 20 Years of LNG Piped Through Syria",
               "veiculo": "OilPrice",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "mercado"
             }
           ]
@@ -458,39 +439,32 @@
       ]
     },
     "comercio_sancoes": {
-      "titulo": "Comércio e Sanções",
-      "resumo": "A UE debate como conter a China sem alienar parceiros, enquanto a Rússia busca ampliar laços de construção naval com a China. Um senador republicano questiona a legalidade do acordo de diesel entre EUA e Rússia, e a UE retira patrocínio do evento Disinfo2026 na Lituânia.",
+      "titulo": "Comércio e sanções",
+      "resumo": "EUA sancionam cinco entidades chinesas por segredos de IA e ordenam a remoção do DeepSeek de sistemas federais; negociadores correm para fechar acordos antes da Apec de Shenzhen. A China protesta contra buscas no Reino Unido, e Honduras mira lojas chinesas.",
       "teses": [
         {
-          "fato": "UE debate como conter a China sem alienar parceiros, e senador republicano questiona legalidade do acordo de diesel entre EUA e Rússia.",
-          "interpretacao": "O ambiente de sanções e comércio permanece fragmentado, com incerteza jurídica sobre acordos energéticos e pressão sobre cadeias de suprimento.",
-          "cenario_base": "Sanções existentes são mantidas, com ajustes marginais e sem grandes rupturas comerciais.",
-          "risco_alternativo": "Novas sanções secundárias contra estaleiros chineses ou contestação legal bem-sucedida do acordo de diesel.",
+          "fato": "Sanções a entidades chinesas e negociação paralela antes da Apec.",
+          "interpretacao": "Sanções e comércio caminham juntos, com risco de escalada e espaço para acordos parciais.",
+          "cenario_base": "Acordos limitados com manutenção de sanções setoriais.",
+          "risco_alternativo": "Retaliação chinesa e ampliação das listas.",
           "gatilhos": [
-            "Decisão judicial sobre o acordo de diesel",
-            "Novas sanções da UE contra a China"
+            "Resultado da Apec",
+            "Novas sanções"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://www.scmp.com/news/china/diplomacy/article/3370482/eus-china-dilemma-how-counter-beijing-without-alienating-friends?utm_source=rss_feed",
-              "titulo": "The EU’s China dilemma: how to counter Beijing without alienating friends",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3371434/us-sanctions-5-chinese-entities-over-ex-google-engineers-ai-trade-secrets-theft?utm_source=rss_feed",
+              "titulo": "US sanctions 5 Chinese entities over ex-Google engineer’s AI trade secrets theft",
               "veiculo": "South China Morning Post",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.aljazeera.com/news/2026/10/11/republican-senator-says-trump-diesel-agreement-with-russia-may-be-illegal?traffic_source=rss",
-              "titulo": "Republican senator says Trump diesel agreement with Russia may be illegal",
-              "veiculo": "Al Jazeera",
-              "data": "2026-10-11",
-              "tipo": "primaria"
-            },
-            {
-              "url": "https://www.dw.com/en/eu-pulls-sponsorship-from-disinfo2026-event-in-lithuania/a-79599615?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "EU pulls sponsorship from Disinfo2026 event in Lithuania",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-10-11",
+              "url": "https://www.scmp.com/news/china/diplomacy/article/3371413/us-china-negotiators-race-nail-down-concrete-deals-shenzhen-apec-looms?utm_source=rss_feed",
+              "titulo": "US-China negotiators race to nail down concrete deals as Shenzhen Apec looms",
+              "veiculo": "South China Morning Post",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -498,39 +472,39 @@
       ]
     },
     "riscos_sistemicos": {
-      "titulo": "Riscos Sistêmicos",
-      "resumo": "A combinação de escalada militar no Oriente Médio, guerra de infraestrutura digital entre Rússia e Ucrânia e crise logística do petróleo eleva o risco de choques simultâneos. O Treasury de 10 anos em 5,244% e o ouro em US$ 4.216 sinalizam estresse persistente nos mercados.",
+      "titulo": "Riscos sistêmicos",
+      "resumo": "A combinação de choque energético no Golfo, restrições de inteligência na Ucrânia e tensão tecnológica EUA-China eleva o risco de inflação persistente e de volatilidade em ativos globais. Falhas de infraestrutura crítica na Europa e a dependência de satélites comerciais adicionam fragilidade.",
       "teses": [
         {
-          "fato": "Treasury de 10 anos em 5,244% e ouro em US$ 4.216, com escalada militar simultânea em múltiplas frentes.",
-          "interpretacao": "O ambiente de juros elevados e prêmio de risco geopolítico cria condições para choques sistêmicos, com correlação entre energia, inflação e juros.",
-          "cenario_base": "Estresse permanece contido, com volatilidade elevada mas sem ruptura sistêmica.",
-          "risco_alternativo": "Choque combinado de energia e juros, com disfunção em mercados de crédito e fuga para ativos de segurança.",
+          "fato": "Brent acima de US$ 110, restrições de inteligência dos EUA à Ucrânia e sanções tecnológicas EUA-China.",
+          "interpretacao": "Choques simultâneos de oferta e de tecnologia aumentam a probabilidade de estagflação e de correlação adversa entre ativos.",
+          "cenario_base": "Volatilidade elevada com prêmio de risco geopolítico persistente.",
+          "risco_alternativo": "Escalada simultânea no Golfo e na Ucrânia com choque de oferta generalizado.",
           "gatilhos": [
-            "Novo choque de oferta de petróleo",
-            "Movimento abrupto nos juros longos americanos"
+            "Novos ataques no Golfo",
+            "Mudança no apoio dos EUA à Ucrânia"
           ],
           "confianca": "media",
           "sources": [
             {
-              "url": "https://oilprice.com/Energy/Energy-General/Tanker-Rates-Soar-to-Record-as-Oil-Crisis-Becomes-Shipping-Crisis.html",
-              "titulo": "Tanker Rates Soar to Record as Oil Crisis Becomes Shipping Crisis",
+              "url": "https://oilprice.com/Latest-Energy-News/World-News/Brent-Tops-110-as-Tanker-Attacks-Threaten-Persian-Gulf-Supply.html",
+              "titulo": "Brent Tops $110 as Tanker Attacks Threaten Persian Gulf Supply",
               "veiculo": "OilPrice",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "mercado"
             },
             {
-              "url": "https://www.bbc.co.uk/news/articles/cr93znyk44e1o?at_medium=RSS&at_campaign=rss",
-              "titulo": "Saudi capital airport hit by second Houthi strike in two days",
+              "url": "https://www.bbc.co.uk/news/articles/cmj47yx572z5o?at_medium=RSS&at_campaign=rss",
+              "titulo": "Ukrainians dying because US restricting intelligence sharing, Zelensky adviser tells BBC",
               "veiculo": "BBC News",
-              "data": "2026-10-11",
+              "data": "2026-10-20",
               "tipo": "primaria"
             },
             {
-              "url": "https://www.dw.com/en/as-russia-steps-up-attacks-on-ukrainian-data-centers-could-ukraine-soon-be-offline/a-79582503?maca=en-rss-en-eu-2092-rdf",
-              "titulo": "As Russia steps up attacks on Ukrainian data centers, could Ukraine soon be offline?",
-              "veiculo": "Deutsche Welle",
-              "data": "2026-10-11",
+              "url": "https://www.scmp.com/news/us/article/3371431/us-orders-deepseek-removed-federal-systems-citing-national-security-risks?utm_source=rss_feed",
+              "titulo": "US orders DeepSeek removed from federal systems, citing national security risks",
+              "veiculo": "South China Morning Post",
+              "data": "2026-10-20",
               "tipo": "primaria"
             }
           ]
@@ -541,256 +515,237 @@
   "market_impacts": {
     "petroleo": {
       "direcao": "alta",
-      "comentario": "Escalada houthi contra infraestrutura saudita e crise logística com frete em recorde sustentam prêmio de risco elevado."
+      "comentario": "Brent acima de US$ 110 e barril acima de US$ 108 por ataques a petroleiros no Golfo Pérsico."
     },
     "inflacao": {
       "direcao": "alta",
-      "comentario": "Crise de diesel e custos de frete elevados pressionam a inflação global, especialmente em energia e transporte."
+      "comentario": "Choque de energia pressiona inflação global; Canadá já registra 3,1% com alta de 58% no óleo combustível."
     },
     "juros_globais": {
       "direcao": "alta",
-      "comentario": "Treasury de 10 anos em 5,244% e prêmio de risco geopolítico mantêm pressão sobre juros longos."
+      "comentario": "Inflação de energia reduz espaço para cortes; Copom de novembro trava alívio no Brasil."
     },
     "treasury": {
       "direcao": "volatil",
-      "comentario": "Treasury de 10 anos em 5,244% reflete estresse persistente, com volatilidade ligada a dados e geopolítica."
+      "comentario": "Treasury 10y em 5,136% em 19/10, com prêmio de risco geopolítico e inflação."
     },
     "dolar": {
-      "direcao": "alta",
-      "comentario": "DXY em 102,231 com demanda por segurança em meio a múltiplos focos de escalada geopolítica."
+      "direcao": "volatil",
+      "comentario": "DXY em 101,774 em 20/10, sensível a risco geopolítico e diferencial de juros."
     },
     "ouro": {
       "direcao": "alta",
-      "comentario": "Ouro em US$ 4.216 reflete busca por proteção diante de riscos geopolíticos e de juros elevados."
+      "comentario": "Ouro em US$ 4.149,4 (COMEX) em 20/10, sustentado por busca de proteção."
     },
     "acoes": {
       "direcao": "volatil",
-      "comentario": "S&P 500 em 7.811,54 com volatilidade ligada a energia, juros e riscos geopolíticos simultâneos."
+      "comentario": "S&P 500 em 7.690,73 em 19/10, com pressão de energia e tecnologia."
     },
     "credito": {
       "direcao": "volatil",
-      "comentario": "Prêmios de risco de crédito sensíveis a choques de energia e a revisões de crescimento global."
+      "comentario": "Prêmio de risco geopolítico e juros altos elevam custo de crédito."
     },
     "commodities": {
       "direcao": "alta",
-      "comentario": "Energia e frete em alta, com extensão de carvão na Austrália e pressão em cadeias de suprimento."
+      "comentario": "Energia lidera, com risco de contágio para alimentos e metais."
     },
     "brasil": {
       "direcao": "volatil",
-      "comentario": "Selic em 13,75% e USD/BRL em R$ 5,1795 com Copom de 4/11 no radar para o timing do afrouxamento."
+      "comentario": "Segundo turno com ataques pessoais e Copom de novembro travando alívio monetário."
     },
     "curva_di": {
-      "direcao": "volatil",
-      "comentario": "Curva DI sensível a juros globais elevados e ao risco fiscal doméstico, com Copom de 4/11 como referência."
+      "direcao": "alta",
+      "comentario": "Selic a 13,75% e IPCA de 5,01% no Focus mantêm prêmio na curva DI."
     },
     "brl": {
       "direcao": "volatil",
-      "comentario": "USD/BRL em R$ 5,1795 com pressão de dólar forte e incerteza sobre o início do afrouxamento monetário."
+      "comentario": "Câmbio a R$ 4,9892, sensível ao risco eleitoral e ao diferencial de juros."
     }
   },
   "scenarios": [
     {
-      "titulo": "Escalada controlada com prêmio de risco persistente",
+      "titulo": "Choque energético persistente",
       "tipo": "base",
-      "descricao": "Ataques houthi continuam de forma intermitente, o cessar-fogo de energia é parcialmente implementado e o mercado de petróleo mantém prêmio de frete elevado sem ruptura sistêmica.",
-      "implicacoes": "Petróleo e ouro em alta moderada, juros longos pressionados e volatilidade em ações e crédito.",
+      "descricao": "Brent permanece acima de US$ 108, com ataques esporádicos a petroleiros e manutenção do prêmio de risco no Golfo.",
+      "implicacoes": "Inflação global mais alta, juros sem alívio e volatilidade em commodities e ações.",
       "probabilidade": null
     },
     {
-      "titulo": "Choque combinado de energia e juros",
+      "titulo": "Escalada simultânea no Golfo e na Ucrânia",
       "tipo": "alternativo",
-      "descricao": "Ataque direto a instalações de Aramco ou colapso do cessar-fogo de energia eleva o prêmio de risco, com Treasury de 10 anos acima dos níveis atuais e disfunção em crédito.",
-      "implicacoes": "Salto nos preços de energia, fuga para ativos de segurança e pressão sobre mercados emergentes, incluindo o Brasil.",
+      "descricao": "Novos ataques no Golfo e ampliação das restrições dos EUA à Ucrânia elevam o risco de choque de oferta generalizado.",
+      "implicacoes": "Petróleo e ouro em alta, bolsas em queda e prêmio de risco global.",
       "probabilidade": null
     },
     {
-      "titulo": "Desescalada parcial com alívio nos mercados",
+      "titulo": "Acordo parcial na Apec e alívio tarifário",
       "tipo": "cauda",
-      "descricao": "Implementação efetiva do cessar-fogo de energia e redução dos ataques houthi levam a queda do prêmio de risco e alívio nos preços de energia.",
-      "implicacoes": "Queda do petróleo e do ouro, alívio nos juros longos e recuperação de ativos de risco.",
+      "descricao": "EUA e China fecham acordos concretos em Shenzhen, reduzindo parte das sanções tecnológicas.",
+      "implicacoes": "Alívio em tecnologia e semicondutores, com queda de volatilidade.",
       "probabilidade": null
     }
   ],
   "triggers": [
     {
-      "evento": "Resposta militar saudita aos ataques houthi",
-      "janela": "2026-10-12 a 2026-10-18",
-      "relevancia": "Pode elevar o prêmio de risco no petróleo e no frete de petroleiros."
+      "evento": "Novos ataques a petroleiros ou infraestrutura saudita no Golfo Pérsico",
+      "janela": "2026-10-19 a 2026-10-25",
+      "relevancia": "Pode elevar ainda mais o Brent e o prêmio de risco global."
     },
     {
-      "evento": "Implementação do cessar-fogo de energia Rússia-Ucrânia",
-      "janela": "2026-10-12 a 2026-10-18",
-      "relevancia": "Impacto direto em diesel e gás natural europeus e no prêmio de risco energético."
+      "evento": "Mudança no fluxo de inteligência e Starlink dos EUA para a Ucrânia",
+      "janela": "2026-10-19 a 2026-10-25",
+      "relevancia": "Afeta a capacidade de defesa ucraniana e o risco de escalada."
     },
     {
-      "evento": "Comunicado final do FMI e Banco Mundial em Bangkok",
-      "janela": "2026-10-12 a 2026-10-18",
-      "relevancia": "Pode trazer revisões de crescimento global e sinalizações sobre dívida soberana."
+      "evento": "Resultado das negociações EUA-China antes da Apec de Shenzhen",
+      "janela": "2026-10-19 a 2026-10-25",
+      "relevancia": "Pode reduzir ou ampliar sanções tecnológicas e tarifas."
     },
     {
-      "evento": "Decisão judicial ou contestação legal do acordo de diesel entre EUA e Rússia",
-      "janela": "2026-10-12 a 2026-10-18",
-      "relevancia": "Incerteza jurídica pode afetar o fluxo de diesel para os EUA e os preços de energia."
-    },
-    {
-      "evento": "Novos ataques a data centres na Rússia ou na Ucrânia",
-      "janela": "2026-10-12 a 2026-10-18",
-      "relevancia": "Risco de interrupção de serviços digitais e de conectividade na região do Mar Negro."
+      "evento": "Comunicação do Copom de novembro e resultado do segundo turno no Brasil",
+      "janela": "2026-10-19 a 2026-10-25",
+      "relevancia": "Define o espaço de alívio monetário e o prêmio de risco em BRL e na curva DI."
     }
   ],
   "sources": [
     {
-      "url": "https://www.bbc.co.uk/news/articles/cr93znyk44e1o?at_medium=RSS&at_campaign=rss",
-      "titulo": "Saudi capital airport hit by second Houthi strike in two days",
+      "url": "https://www.bbc.co.uk/news/articles/cw5yn5e8mezvo?at_medium=RSS&at_campaign=rss",
+      "titulo": "French cities calm overnight after curfews imposed to quell violence, PM says",
       "veiculo": "BBC News",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/cw0k0g57mk3zo?at_medium=RSS&at_campaign=rss",
-      "titulo": "Ukraine strikes Yandex data centre in third attack on Russian tech giant",
+      "url": "https://www.bbc.co.uk/news/articles/cmj47yx572z5o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Ukrainians dying because US restricting intelligence sharing, Zelensky adviser tells BBC",
       "veiculo": "BBC News",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/c6n9rvynl5p5o?at_medium=RSS&at_campaign=rss",
-      "titulo": "Poland detains man suspected of planning assassination of PM Tusk",
+      "url": "https://www.bbc.co.uk/news/articles/cv0ld6lrr2zeo?at_medium=RSS&at_campaign=rss",
+      "titulo": "Houthi missile strike on Yemen camp kills 50 security recruits, local authorities say",
       "veiculo": "BBC News",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/ckp8gyd65z2go?at_medium=RSS&at_campaign=rss",
-      "titulo": "Poland stabbings driven by online glorification of violence, Tusk says",
+      "url": "https://www.bbc.co.uk/news/articles/ck98zlzyqle3o?at_medium=RSS&at_campaign=rss",
+      "titulo": "Personal attacks fire up debate before Brazil's run-off vote",
       "veiculo": "BBC News",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.bbc.co.uk/news/articles/cv8ezd246z1wo?at_medium=RSS&at_campaign=rss",
-      "titulo": "Woman injures three people in third Poland school knife attack in a week",
-      "veiculo": "BBC News",
-      "data": "2026-10-11",
-      "tipo": "primaria"
-    },
-    {
-      "url": "https://www.bbc.co.uk/news/articles/c9vgregzk6gro?at_medium=RSS&at_campaign=rss",
-      "titulo": "US justice department investigates TV networks over Trump pool coverage",
-      "veiculo": "BBC News",
-      "data": "2026-10-11",
-      "tipo": "primaria"
-    },
-    {
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/zelenskyy-welcomes-us-announced-energy-ceasefire?traffic_source=rss",
-      "titulo": "Zelenskyy welcomes US-announced energy ceasefire",
+      "url": "https://www.aljazeera.com/news/2026/10/20/saudi-arabia-cancels-2026-davos-in-the-desert-amid-houthi-attacks?traffic_source=rss",
+      "titulo": "Saudi Arabia cancels 2026 ‘Davos in the Desert’ amid Houthi attacks",
       "veiculo": "Al Jazeera",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/saudi-health-minister-visits-survivors-of-deadly-riyadh-airport-attack?traffic_source=rss",
-      "titulo": "Saudi health minister visits survivors of deadly Riyadh airport attack",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/20/zelenskyy-seeks-answers-to-why-spacex-starshield-defence-is-failing?traffic_source=rss",
+      "titulo": "Zelenskyy seeks answers to why SpaceX Starshield defence is failing",
       "veiculo": "Al Jazeera",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.aljazeera.com/news/2026/10/11/republican-senator-says-trump-diesel-agreement-with-russia-may-be-illegal?traffic_source=rss",
-      "titulo": "Republican senator says Trump diesel agreement with Russia may be illegal",
-      "veiculo": "Al Jazeera",
-      "data": "2026-10-11",
-      "tipo": "primaria"
-    },
-    {
-      "url": "https://www.aljazeera.com/news/2026/10/11/war-and-high-debt-to-dominate-imf-world-bank-meetings-in-bangkok?traffic_source=rss",
-      "titulo": "War and high debt to dominate IMF-World Bank meetings in Bangkok",
-      "veiculo": "Al Jazeera",
-      "data": "2026-10-11",
-      "tipo": "primaria"
-    },
-    {
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/11/is-the-yemen-war-entering-a-new-phase?traffic_source=rss",
-      "titulo": "Is the Yemen war entering a new phase?",
-      "veiculo": "Al Jazeera",
-      "data": "2026-10-11",
-      "tipo": "primaria"
-    },
-    {
-      "url": "https://www.dw.com/en/trump-claims-russia-and-ukraine-agreed-to-energy-ceasefire/a-79634509?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "Trump claims Russia and Ukraine agreed to 'energy ceasefire'",
+      "url": "https://www.dw.com/en/france-protesters-clash-with-police-in-nationwide-protests-amid-rising-social-polarization/a-79685584?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "France: Protesters clash with police in nationwide protests, amid rising social polarization",
       "veiculo": "Deutsche Welle",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/as-russia-steps-up-attacks-on-ukrainian-data-centers-could-ukraine-soon-be-offline/a-79582503?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "As Russia steps up attacks on Ukrainian data centers, could Ukraine soon be offline?",
+      "url": "https://www.dw.com/en/italy-cuts-air-traffic-in-half-amid-data-transmission-issue/a-79678133?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Italy cuts air traffic in half amid data transmission issue",
       "veiculo": "Deutsche Welle",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/who-are-the-ukrainian-volunteers-under-russian-command/a-79629555?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "Who are the Ukrainian 'volunteers' under Russian command?",
+      "url": "https://www.dw.com/en/bulgaria-seeks-suspects-in-germany-after-starlink-sabotage/a-79706745?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Bulgaria seeks suspects in Germany after Starlink sabotage",
       "veiculo": "Deutsche Welle",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.dw.com/en/eu-pulls-sponsorship-from-disinfo2026-event-in-lithuania/a-79599615?maca=en-rss-en-eu-2092-rdf",
-      "titulo": "EU pulls sponsorship from Disinfo2026 event in Lithuania",
+      "url": "https://www.dw.com/en/ukrainian-president-zelenskyy-speaks-at-eu-summit-amid-spat-with-donald-trump/a-79684340?maca=en-rss-en-eu-2092-rdf",
+      "titulo": "Ukrainian President Zelenskyy speaks at EU summit amid spat with Donald Trump",
       "veiculo": "Deutsche Welle",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://oilprice.com/Energy/Energy-General/Tanker-Rates-Soar-to-Record-as-Oil-Crisis-Becomes-Shipping-Crisis.html",
-      "titulo": "Tanker Rates Soar to Record as Oil Crisis Becomes Shipping Crisis",
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168614",
+      "titulo": "Ukraine: Civilian casualty rates among ‘deadliest’ in years, as energy attacks intensify",
+      "veiculo": "ONU News",
+      "data": "2026-10-20",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://news.un.org/feed/view/en/story/2026/10/1168622",
+      "titulo": "Gaza: Funding cuts leave half a million without food assistance",
+      "veiculo": "ONU News",
+      "data": "2026-10-20",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Brent-Tops-110-as-Tanker-Attacks-Threaten-Persian-Gulf-Supply.html",
+      "titulo": "Brent Tops $110 as Tanker Attacks Threaten Persian Gulf Supply",
       "veiculo": "OilPrice",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Crude-Oil/Emergency-Oil-Releases-Risk-Draining-the-Worlds-Last-Supply-Cushion.html",
-      "titulo": "Emergency Oil Releases Risk Draining the World’s Last Supply Cushion",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Pakistans-Growth-Slows-as-Hormuz-Crisis-Hits-Industry.html",
+      "titulo": "Pakistan’s Growth Slows as Hormuz Crisis Hits Industry",
       "veiculo": "OilPrice",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "mercado"
     },
     {
-      "url": "https://oilprice.com/Energy/Crude-Oil/Why-Record-Crude-Output-Cant-Solve-Americas-Diesel-Crisis.html",
-      "titulo": "Why Record Crude Output Can’t Solve America’s Diesel Crisis",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Qatar-Offers-Lebanon-2-Gas-Plants-and-20-Years-of-LNG-Piped-Through-Syria.html",
+      "titulo": "Qatar Offers Lebanon 2 Gas Plants and 20 Years of LNG Piped Through Syria",
       "veiculo": "OilPrice",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "mercado"
     },
     {
-      "url": "https://www.scmp.com/news/china/diplomacy/article/3370497/putin-aide-looks-boost-russian-shipbuilding-ties-china-during-visit?utm_source=rss_feed",
-      "titulo": "Putin aide looks to boost Russian shipbuilding ties with China during visit",
+      "url": "https://www.scmp.com/news/us/article/3371431/us-orders-deepseek-removed-federal-systems-citing-national-security-risks?utm_source=rss_feed",
+      "titulo": "US orders DeepSeek removed from federal systems, citing national security risks",
       "veiculo": "South China Morning Post",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/politics/article/3370443/chinas-zhejiang-province-calls-limit-tech-giants-power-over-online-traffic?utm_source=rss_feed",
-      "titulo": "China’s Zhejiang province calls to limit tech giants’ power over online traffic",
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3371434/us-sanctions-5-chinese-entities-over-ex-google-engineers-ai-trade-secrets-theft?utm_source=rss_feed",
+      "titulo": "US sanctions 5 Chinese entities over ex-Google engineer’s AI trade secrets theft",
       "veiculo": "South China Morning Post",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/military/article/3370477/how-taiwans-military-manpower-shortage-undermining-its-ability-fight?utm_source=rss_feed",
-      "titulo": "How Taiwan’s military manpower shortage is undermining its ability to fight",
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3371413/us-china-negotiators-race-nail-down-concrete-deals-shenzhen-apec-looms?utm_source=rss_feed",
+      "titulo": "US-China negotiators race to nail down concrete deals as Shenzhen Apec looms",
       "veiculo": "South China Morning Post",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
       "tipo": "primaria"
     },
     {
-      "url": "https://www.scmp.com/news/china/diplomacy/article/3370482/eus-china-dilemma-how-counter-beijing-without-alienating-friends?utm_source=rss_feed",
-      "titulo": "The EU’s China dilemma: how to counter Beijing without alienating friends",
+      "url": "https://www.scmp.com/news/us/article/3371428/trump-says-hes-open-xi-putin-meeting-china-nuclear-talks?utm_source=rss_feed",
+      "titulo": "Trump says he’s open to meeting Xi and Putin in China for nuclear talks",
       "veiculo": "South China Morning Post",
-      "data": "2026-10-11",
+      "data": "2026-10-20",
+      "tipo": "primaria"
+    },
+    {
+      "url": "https://www.scmp.com/news/china/diplomacy/article/3371459/china-protests-uk-border-searches-phone-seizures-amid-growing-espionage-tensions?utm_source=rss_feed",
+      "titulo": "China protests UK border searches, phone seizures amid growing espionage tensions",
+      "veiculo": "South China Morning Post",
+      "data": "2026-10-20",
       "tipo": "primaria"
     }
   ]
