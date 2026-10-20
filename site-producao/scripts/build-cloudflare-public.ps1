@@ -57,6 +57,39 @@ function Add-VersionStamps([string]$SiteDir, [string]$AssetsDir) {
     }
 }
 
+# lastmod automatico no sitemap copiado para public/. A data vem do dado que a
+# pagina exibe (relatorio_cache.json, geopolitica-data.json) ou do ultimo commit
+# do HTML-fonte, nunca da data do build. Sem data confiavel, a URL fica sem
+# lastmod em vez de receber um valor inventado.
+function Set-SitemapLastmod([string]$SitemapPath, [hashtable]$DatesByLoc) {
+    if (-not (Test-Path -LiteralPath $SitemapPath)) { return }
+    $xml = [System.IO.File]::ReadAllText($SitemapPath)
+    foreach ($loc in $DatesByLoc.Keys) {
+        $date = $DatesByLoc[$loc]
+        if ($date -notmatch '^\d{4}-\d{2}-\d{2}$') { continue }
+        $locEsc = [regex]::Escape($loc)
+        $pattern = '(<url>\s*<loc>' + $locEsc + '</loc>)(\s*)(<lastmod>[^<]*</lastmod>)?'
+        $xml = [regex]::Replace($xml, $pattern, { param($m) $sep = $m.Groups[2].Value; if (-not $sep) { $sep = '' }; $m.Groups[1].Value + $sep + '<lastmod>' + $date + '</lastmod>' + $(if ($m.Groups[3].Success) { '' } else { $sep }) })
+    }
+    [System.IO.File]::WriteAllText($SitemapPath, $xml, (New-Object System.Text.UTF8Encoding($false)))
+}
+
+function Get-JsonDate([string]$JsonPath) {
+    # Regex no texto cru: ConvertFrom-Json do pwsh 7 converte generated_at ISO
+    # em DateTime e a comparacao por string deixa de casar.
+    try {
+        $raw = Get-Content -LiteralPath $JsonPath -Raw -Encoding UTF8
+        if ($raw -match '"generated_at"\s*:\s*"(\d{4}-\d{2}-\d{2})') { return $Matches[1] }
+    } catch { }
+    return $null
+}
+
+function Get-GitDate([string]$RelPath) {
+    $d = (& git -C $ROOT log -1 --format=%cs -- $RelPath 2>$null)
+    if ($LASTEXITCODE -eq 0 -and $d -match '^\d{4}-\d{2}-\d{2}$') { return $d }
+    return $null
+}
+
 function Copy-IfExists([string]$Src, [string]$Dst) {
     if (-not (Test-Path $Src)) {
         Write-Host "  SKIP   $Src" -ForegroundColor Yellow
@@ -230,6 +263,24 @@ Copy-IfExists (Join-Path $ROOT 'metodologia.html') (Join-Path $MULTI 'metodologi
 
 # Sitemap multi-assets.com. Criado em 2026-08-09, antes o dominio respondia 404.
 Copy-IfExists (Join-Path $ROOT 'sitemap-multi.xml') (Join-Path $MULTI 'sitemap.xml') | Out-Null
+
+$lastmodSz = @{}
+$dRel = Get-JsonDate (Join-Path $ROOT 'relatorio_cache.json')
+if ($dRel) { $lastmodSz['https://szuchmacher.com.br/relatorios.html'] = $dRel }
+$dGeo = Get-JsonDate (Join-Path $ROOT 'geopolitica-data.json')
+if ($dGeo) { $lastmodSz['https://szuchmacher.com.br/geopolitica.html'] = $dGeo }
+Set-SitemapLastmod (Join-Path $SZ 'sitemap.xml') $lastmodSz
+
+$lastmodMulti = @{}
+foreach ($pair in @(
+    @('https://multi-assets.com/', 'multiasset-app.html'),
+    @('https://multi-assets.com/consultoria', 'consultoria.html'),
+    @('https://multi-assets.com/metodologia', 'metodologia.html'),
+    @('https://multi-assets.com/privacidade.html', 'privacidade.html'))) {
+    $g = Get-GitDate $pair[1]
+    if ($g) { $lastmodMulti[$pair[0]] = $g }
+}
+Set-SitemapLastmod (Join-Path $MULTI 'sitemap.xml') $lastmodMulti
 
 # Imagética institucional (assets/img/*.webp), tambem usada em consultoria.html.
 # Mesmo diretorio inteiro do bloco sz, sem allowlist propria.
